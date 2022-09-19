@@ -852,7 +852,9 @@
   (fish-completion-mode)
   (setq completion-at-point-functions '(cape-file
                                         pcomplete-completions-at-point
-                                        cape-dabbrev))
+                                        cape-dabbrev)
+        mode-line-process
+        '(" " (:eval (abbreviate-file-name default-directory))))
   (abbrev-mode)
   (face-remap-set-base 'nobreak-space nil)
   (setenv "TERM" "dumb-emacs-ansi")
@@ -870,14 +872,6 @@
 
 (setq eshell-prompt-function #'my-eshell-prompt
       eshell-prompt-regexp "^[0-9]*[$#] ")
-
-(defun my-eshell-buffer-name ()
-  "Rename eshell buffer to unique name based off of current directory."
-  (rename-buffer
-   (concat "*eshell " (abbreviate-file-name default-directory) "*")
-   t))
-
-(add-hook 'eshell-before-prompt-hook #'my-eshell-buffer-name)
 
 (defun my-eshell-save-history (input)
   "Write INPUT to eshell history file."
