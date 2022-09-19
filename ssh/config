@@ -1,0 +1,12 @@
+IdentitiesOnly yes
+ForwardAgent no
+
+Host github.com github gh
+    HostName github.com
+    User git
+    PubkeyAuthentication yes
+    IdentityFile ~/.ssh/github
+
+Host *
+    PubkeyAuthentication no
+    User root
