@@ -172,9 +172,6 @@
       ];
     };
     "org/gnome/system/location" = { enabled = true; };
-    "org/gtk/settings/file-chooser" = {
-      clock-format = "12h";
-      show-hidden = true;
-    };
+    "org/gtk/settings/file-chooser" = { clock-format = "12h"; };
   };
 }
