@@ -22,12 +22,23 @@
         recursive = true;
       };
       ".ssh/config".source = ./ssh/config;
+      ".config/mpv".source = ./mpv;
+      ".config/zls.json".source = ./zls/zls.json;
     };
   };
 
   programs = {
     home-manager.enable = true;
-    bash.enable = true;
+    bash = {
+      enable = true;
+      initExtra = ''
+        if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+            && [[ -n ''${EMACS_VTERM_PATH} ]] \
+            && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
+            source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+        fi
+      '';
+    };
     emacs = {
       enable = true;
       extraPackages = epkgs:
@@ -78,6 +89,24 @@
         user = { useConfigOnly = true; };
       };
       ignores = [ "/.evc" ];
+    };
+    zathura = {
+      enable = true;
+      options = {
+        recolor = true;
+        recolor-keephue = true;
+      };
+    };
+    less = {
+      enable = true;
+      keys = ''
+        #env
+        LESS = -i -R
+      '';
+    };
+    mpv = {
+      enable = true;
+      scripts = [ pkgs.mpvScripts.mpris pkgs.mpvScripts.sponsorblock ];
     };
   };
 
