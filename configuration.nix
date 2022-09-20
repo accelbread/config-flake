@@ -167,6 +167,8 @@
     allowed-users = [ "@wheel" ];
   };
 
+  documentation.man.generateCaches = true;
+
   services = {
     fwupd.enable = true;
     tlp = {

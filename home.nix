@@ -29,6 +29,7 @@
 
   programs = {
     home-manager.enable = true;
+    man.generateCaches = true;
     bash = {
       enable = true;
       initExtra = ''
