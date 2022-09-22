@@ -166,10 +166,9 @@
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      enabled-extensions = [
-        "native-window-placement@gnome-shell-extensions.gcampax.github.com"
-        "hibernate@dafne.rocks"
-        "x11gestures@joseexposito.github.io"
+      enabled-extensions = with pkgs.gnomeExtensions; [
+        native-window-placement.extensionUuid
+        system-action-hibernate.extensionUuid
       ];
       favorite-apps = [
         "emacsclient.desktop"

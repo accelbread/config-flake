@@ -218,7 +218,6 @@
       enable = true;
       webInterface = false;
     };
-    touchegg.enable = true;
   };
 
   fonts = {
@@ -269,7 +268,6 @@
       gnome.gnome-characters
       gnome.gnome-clocks
       gnomeExtensions.system-action-hibernate
-      gnomeExtensions.x11-gestures
     ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     localBinInPath = true;
