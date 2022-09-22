@@ -136,6 +136,7 @@
         "projects"
         "playground"
         ".config/emacs"
+        ".librewolf/profile"
         {
           directory = ".ssh";
           mode = "0700";
