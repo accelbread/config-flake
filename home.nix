@@ -14,11 +14,16 @@
       clang-tools
       rust-analyzer
       zls
+      jq
       nixfmt
     ];
     file = {
       ".config/emacs" = {
         source = ./emacs;
+        recursive = true;
+      };
+      ".librewolf" = {
+        source = ./librewolf;
         recursive = true;
       };
       ".ssh/config".source = ./ssh/config;
