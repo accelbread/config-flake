@@ -195,6 +195,9 @@
       scroll-margin 0
       next-screen-context-lines 3)
 
+(when (>= emacs-major-version 29)
+  (pixel-scroll-precision-mode))
+
 
 ;;; Default to utf-8
 
