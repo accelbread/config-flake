@@ -47,6 +47,7 @@
     };
     emacs = {
       enable = true;
+      package = pkgs.unstable.emacs;
       extraPackages = epkgs:
         with epkgs; [
           meow
