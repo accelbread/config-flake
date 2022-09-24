@@ -755,9 +755,9 @@
 
 (with-eval-after-load 'comint
   (define-key comint-mode-map
-    [remap beginning-of-defun] #'comint-previous-prompt)
+              [remap beginning-of-defun] #'comint-previous-prompt)
   (define-key comint-mode-map
-    [remap end-of-defun] #'comint-next-prompt))
+              [remap end-of-defun] #'comint-next-prompt))
 
 (defun set-ls-colors ()
   "Set LS_COLORS based off of eshell-ls colors."
@@ -828,9 +828,9 @@
   (push #'eshell-truncate-buffer
         eshell-output-filter-functions)
   (define-key eshell-mode-map
-    [remap beginning-of-defun] #'eshell-previous-prompt)
+              [remap beginning-of-defun] #'eshell-previous-prompt)
   (define-key eshell-mode-map
-    [remap end-of-defun] #'eshell-next-prompt))
+              [remap end-of-defun] #'eshell-next-prompt))
 
 (with-eval-after-load 'esh-var
   ;; Have `$/' evaluate to root of current remote.
@@ -954,19 +954,19 @@
   "Keymap for vterm in normal mode.")
 
 (define-key vterm-normal-mode-map
-  [remap yank] #'vterm-yank)
+            [remap yank] #'vterm-yank)
 (define-key vterm-normal-mode-map
-  [remap xterm-paste] #'vterm-xterm-paste)
+            [remap xterm-paste] #'vterm-xterm-paste)
 (define-key vterm-normal-mode-map
-  [remap yank-pop] #'vterm-yank-pop)
+            [remap yank-pop] #'vterm-yank-pop)
 (define-key vterm-normal-mode-map
-  [remap mouse-yank-primary] #'vterm-yank-primary)
+            [remap mouse-yank-primary] #'vterm-yank-primary)
 (define-key vterm-normal-mode-map
-  [remap self-insert-command] #'vterm--self-insert)
+            [remap self-insert-command] #'vterm--self-insert)
 (define-key vterm-normal-mode-map
-  [remap beginning-of-defun] #'vterm-previous-prompt)
+            [remap beginning-of-defun] #'vterm-previous-prompt)
 (define-key vterm-normal-mode-map
-  [remap end-of-defun] #'vterm-next-prompt)
+            [remap end-of-defun] #'vterm-next-prompt)
 
 (defun meow-vterm-insert-enter ()
   "Enable vterm default binding in insert and set cursor."
@@ -1049,10 +1049,10 @@
 
 (with-eval-after-load 'term
   (define-key term-raw-map (kbd "RET")
-    (lambda ()
-      "Send line ending to the buffer's current process."
-      (interactive)
-      (term-send-raw-string term-line-ending))))
+              (lambda ()
+                "Send line ending to the buffer's current process."
+                (interactive)
+                (term-send-raw-string term-line-ending))))
 
 (defun term-line-ending-send-lf ()
   "Send `\\n' as line termination."
@@ -1584,7 +1584,7 @@ REGION-FUNCTION will be used for buffer formatting."
                        region-lines (- end-col start-col)
                        start-line start-col
                        end-line end-col))))
-   (1+ (current-line)) (current-column) (point)
+   (1+ (array-current-line)) (current-column) (point)
    (buffer-size) (count-lines (point-min) (point-max))))
 
 (defun open-serial (device)
