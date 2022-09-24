@@ -133,6 +133,7 @@
     };
     "org/gnome/desktop/interface" = {
       clock-format = "12h";
+      clock-show-weekday = true;
       color-scheme = "prefer-dark";
       locate-pointer = true;
       text-scaling-factor = 1.25;
@@ -155,6 +156,9 @@
       secondary-color = "#000000";
     };
     "org/gnome/desktop/session" = { idle-delay = mkUint32 300; };
+    "org/gnome/desktop/wm/preferences" = {
+      resize-with-right-button = true;
+    };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;

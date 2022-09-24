@@ -104,7 +104,7 @@
     "/persist" = {
       device = "shadowfang/data/persist";
       fsType = "zfs";
-      options = [ "noatime" "nosuid" "nodev" ];
+      options = [ "noatime" "nosuid" "nodev" "noexec" ];
       neededForBoot = true;
     };
     "/persist/home/archit" = {
