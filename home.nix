@@ -47,7 +47,7 @@
     };
     emacs = {
       enable = true;
-      package = pkgs.unstable.emacs;
+      package = pkgs.emacs-overlay.emacsPgtkNativeComp;
       extraPackages = epkgs:
         with epkgs; [
           meow

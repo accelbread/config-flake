@@ -818,9 +818,6 @@
     (make-variable-buffer-local v))
   (push "echo" eshell-complex-commands))
 
-(with-eval-after-load 'esh-proc
-  (push "rg" eshell-needs-pipe))
-
 (with-eval-after-load 'em-term
   (push "watch" eshell-visual-commands))
 

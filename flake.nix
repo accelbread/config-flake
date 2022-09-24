@@ -8,9 +8,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager
-    , impermanence }: {
+    , impermanence, emacs-overlay }: {
       nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
@@ -22,6 +26,7 @@
             nixpkgs.overlays = [
               (final: prev: {
                 unstable = nixpkgs-unstable.legacyPackages.${prev.system};
+                emacs-overlay = emacs-overlay.packages.${prev.system};
               })
             ];
           }
