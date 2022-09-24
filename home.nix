@@ -136,7 +136,6 @@
       clock-show-weekday = true;
       color-scheme = "prefer-dark";
       locate-pointer = true;
-      text-scaling-factor = 1.25;
     };
     "org/gnome/desktop/media-handling" = { autorun-never = true; };
     "org/gnome/desktop/privacy" = {
@@ -162,6 +161,9 @@
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
+    };
+    "org/gnome/mutter" = {
+      experimental-features = [ "scale-monitor-framebuffer" ];
     };
     "org/gnome/nautilus/preferences" = { show-delete-permanently = true; };
     "org/gnome/settings-daemon/plugins/power" = {
