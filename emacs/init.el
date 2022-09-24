@@ -9,7 +9,7 @@
 
 ;;; Default fonts
 
-(set-face-attribute 'default nil :height 100 :family "DejaVu Sans Mono")
+(set-face-attribute 'default nil :height 120 :family "DejaVu Sans Mono")
 (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono")
 (set-face-attribute 'variable-pitch nil :family "DejaVu Sans")
 
