@@ -279,6 +279,15 @@
       gnome.gnome-characters
       gnome.gnome-clocks
       gnomeExtensions.system-action-hibernate
+      (pkgs.stdenv.mkDerivation {
+        name = "emacs-terminfo";
+        dontUnpack = true;
+        nativeBuildInputs = [ ncurses ];
+        installPhase = ''
+          mkdir -p $out/share/terminfo
+          tic -x -o $out/share/terminfo ${./emacs/dumb-emacs-ansi.ti}
+        '';
+      })
     ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     localBinInPath = true;

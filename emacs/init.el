@@ -788,9 +788,6 @@
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
 
-(shell-command (concat "tic " (file-name-concat user-emacs-directory
-                                                "dumb-emacs-ansi.ti")))
-
 
 ;;; Eshell
 
