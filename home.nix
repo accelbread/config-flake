@@ -138,6 +138,7 @@
       locate-pointer = true;
     };
     "org/gnome/desktop/media-handling" = { autorun-never = true; };
+    "org/gnome/desktop/peripherals/touchpad" = { speed = 0.4; };
     "org/gnome/desktop/privacy" = {
       old-files-age = mkUint32 30;
       recent-files-max-age = -1;
@@ -155,9 +156,7 @@
       secondary-color = "#000000";
     };
     "org/gnome/desktop/session" = { idle-delay = mkUint32 300; };
-    "org/gnome/desktop/wm/preferences" = {
-      resize-with-right-button = true;
-    };
+    "org/gnome/desktop/wm/preferences" = { resize-with-right-button = true; };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
