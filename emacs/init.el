@@ -1091,6 +1091,9 @@
 
 (add-hook 'compilation-filter-hook #'compilation-ansi-color)
 
+(when (>= emacs-major-version 29)
+  (add-hook 'compilation-filter-hook #'osc-compilation-filter))
+
 
 ;;; Eglot
 
