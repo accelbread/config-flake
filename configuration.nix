@@ -74,9 +74,19 @@
     services = {
       reinit-touchpad = {
         enable = true;
-        description = "Reload i2c_hid_acpi on hibernate wakeup.";
-        after = [ "hibernate.target" "suspend-then-hibernate.target" ];
-        wantedBy = [ "hibernate.target" "suspend-then-hibernate.target" ];
+        description = "Reload i2c_hid_acpi on wakeup.";
+        after = [
+          "suspend.target"
+          "hibernate.target"
+          "hybrid-sleep.service"
+          "suspend-then-hibernate.target"
+        ];
+        wantedBy = [
+          "suspend.target"
+          "hibernate.target"
+          "hybrid-sleep.service"
+          "suspend-then-hibernate.target"
+        ];
         script = ''
           rmmod i2c_hid_acpi
           modprobe i2c_hid_acpi
