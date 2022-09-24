@@ -161,9 +161,6 @@
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
     };
-    "org/gnome/mutter" = {
-      experimental-features = [ "scale-monitor-framebuffer" ];
-    };
     "org/gnome/nautilus/preferences" = { show-delete-permanently = true; };
     "org/gnome/settings-daemon/plugins/power" = {
       power-button-action = "interactive";

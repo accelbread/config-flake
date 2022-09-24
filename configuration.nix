@@ -296,6 +296,7 @@
       MOZ_USE_XINPUT2 = "1";
       MOZ_X11_EGL = "1";
       BROWSER = "librewolf";
+      GDK_DPI_SCALE = "1.25";
     };
   };
 
