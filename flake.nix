@@ -10,7 +10,7 @@
     impermanence.url = "github:nix-community/impermanence";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
   outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager
