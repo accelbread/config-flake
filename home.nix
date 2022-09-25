@@ -4,31 +4,24 @@
     homeDirectory = "/home/archit";
     stateVersion = "22.05";
     packages = with pkgs; [
-      v4l-utils
       aspell
       aspellDicts.en
-      ripgrep
-      fd
-      tree
       fish
       clang-tools
       rust-analyzer
       zls
-      jq
       nixfmt
     ];
     file = {
-      ".config/emacs" = {
-        source = ./emacs;
+      ".config" = {
+        source = ./home/config;
         recursive = true;
       };
       ".librewolf" = {
-        source = ./librewolf;
+        source = ./home/librewolf;
         recursive = true;
       };
-      ".ssh/config".source = ./ssh/config;
-      ".config/mpv".source = ./mpv;
-      ".config/zls.json".source = ./zls/zls.json;
+      ".ssh/config".source = ./home/ssh/config;
     };
   };
 

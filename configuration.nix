@@ -268,10 +268,16 @@
   };
 
   environment = {
-    defaultPackages = [ pkgs.nano ];
+    defaultPackages = [ ];
     systemPackages = with pkgs; [
+      zile
       git
+      ripgrep
+      fd
+      tree
+      jq
       librewolf
+      v4l-utils
       gnome.nautilus
       gnome-console
       gnome.gnome-system-monitor
@@ -285,12 +291,13 @@
         nativeBuildInputs = [ ncurses ];
         installPhase = ''
           mkdir -p $out/share/terminfo
-          tic -x -o $out/share/terminfo ${./emacs/dumb-emacs-ansi.ti}
+          tic -x -o $out/share/terminfo ${./misc/dumb-emacs-ansi.ti}
         '';
       })
     ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     localBinInPath = true;
+    variables.EDITOR = "zile";
     sessionVariables = {
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_USE_XINPUT2 = "1";
