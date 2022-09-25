@@ -1,12 +1,16 @@
+StrictHostKeyChecking yes
+VerifyHostKeyDNS ask
+UpdateHostKeys ask
 IdentitiesOnly yes
 ForwardAgent no
+ForwardX11 no
 
 Host github.com github gh
-    HostName github.com
-    User git
-    PubkeyAuthentication yes
-    IdentityFile ~/.ssh/github
+  HostName github.com
+  User git
+  PubkeyAuthentication yes
+  IdentityFile ~/.ssh/github
 
 Host *
-    PubkeyAuthentication no
-    User root
+  PubkeyAuthentication no
+  User root

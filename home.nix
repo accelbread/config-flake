@@ -21,7 +21,10 @@
         source = ./home/librewolf;
         recursive = true;
       };
-      ".ssh/config".source = ./home/ssh/config;
+      ".ssh" = {
+        source = ./home/ssh;
+        recursive = true;
+      };
     };
   };
 
