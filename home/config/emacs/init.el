@@ -24,7 +24,7 @@
 (setq auth-sources '("~/.authinfo.gpg"))
 
 
-;;; Install packages
+;;; Configure packages
 
 (require 'package)
 
@@ -40,12 +40,7 @@
 
 (setq package-native-compile t
       native-comp-async-report-warnings-errors nil
-      package-quickstart t
       vterm-always-compile-module t)
-
-(unless (seq-every-p #'package-installed-p package-selected-packages)
-  (package-refresh-contents)
-  (package-install-selected-packages t))
 
 
 ;;; Config utils
