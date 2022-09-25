@@ -1385,6 +1385,17 @@ REGION-FUNCTION will be used for buffer formatting."
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
 
 
+;;; Nix
+
+(defun nix-formatter-configure ()
+  "Configure formatters for Nix files."
+  (setq format-region-function #'indent-region
+        format-buffer-function #'nix-format-buffer)
+  (format-on-save-mode))
+
+(add-hook 'nix-mode-hook #'nix-formatter-configure)
+
+
 ;;; Rust
 
 (setq rust-format-on-save nil)
