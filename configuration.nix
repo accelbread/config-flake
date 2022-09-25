@@ -63,6 +63,15 @@
         Defaults lecture = never
       '';
     };
+    tpm2 = {
+      enable = true;
+      pkcs11 = {
+        enable = true;
+        package = pkgs.tpm2-pkcs11.overrideAttrs
+          (old: { configureFlags = [ "--enable-fapi=no" ]; });
+      };
+      tctiEnvironment.enable = true;
+    };
     apparmor.enable = true;
     forcePageTableIsolation = true;
   };
@@ -151,6 +160,7 @@
           directory = ".ssh";
           mode = "0700";
         }
+        ".local/share/tpm2_pkcs11"
       ];
       files = [ ".face" ".config/monitors.xml" ];
     };
@@ -161,7 +171,7 @@
     users.archit = {
       isNormalUser = true;
       description = "Archit Gupta";
-      extraGroups = [ "wheel" "networkmanager" ];
+      extraGroups = [ "wheel" "networkmanager" "tss" ];
       uid = 1000;
       passwordFile = "/persist/vault/user_pass";
     };

@@ -3,6 +3,10 @@
     username = "archit";
     homeDirectory = "/home/archit";
     stateVersion = "22.05";
+    sessionVariables = {
+      TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
+      TSS2_LOG = "fapi+NONE";
+    };
     packages = with pkgs; [
       aspell
       aspellDicts.en
