@@ -40,20 +40,7 @@
     };
     emacs = {
       enable = true;
-      package = (pkgs.unstable.emacs.overrideAttrs (old: {
-        version = "29.0.5";
-        src = pkgs.fetchFromGitHub {
-          owner = "accelbread";
-          repo = "emacs";
-          rev = "7b1c0c34422a7e4d6c607147dfffd8631184078c";
-          sha256 = "sha256-SNqlQ4shXI48tjhtoPMIyD5b6AsFssQ37U/HnrOqjAM=";
-        };
-      })).override {
-        withPgtk = true;
-        withXinput2 = true;
-        withSQLite3 = true;
-        withWebP = true;
-      };
+      package = pkgs.emacs-overlay.emacsPgtkNativeComp;
       extraPackages = epkgs:
         with epkgs; [
           meow
