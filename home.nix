@@ -158,7 +158,7 @@
       primary-color = "#3465a4";
       secondary-color = "#000000";
     };
-    "org/gnome/desktop/session" = { idle-delay = mkUint32 300; };
+    "org/gnome/desktop/session" = { idle-delay = mkUint32 180; };
     "org/gnome/desktop/wm/preferences" = { resize-with-right-button = true; };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
@@ -167,8 +167,10 @@
     "org/gnome/nautilus/preferences" = { show-delete-permanently = true; };
     "org/gnome/settings-daemon/plugins/power" = {
       power-button-action = "interactive";
-      sleep-inactive-ac-timeout = 1800;
+      sleep-inactive-ac-timeout = 900;
+      sleep-inactive-ac-type = "hibernate";
       sleep-inactive-battery-timeout = 900;
+      sleep-inactive-battery-type = "hibernate";
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;

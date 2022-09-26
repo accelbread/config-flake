@@ -79,7 +79,7 @@
   powerManagement.powertop.enable = true;
 
   systemd = {
-    sleep.extraConfig = "HibernateDelaySec=15m";
+    sleep.extraConfig = "HibernateDelaySec=10m";
     services = {
       reinit-touchpad = {
         enable = true;
@@ -210,7 +210,10 @@
         monthly = 0;
       };
     };
-    logind.lidSwitch = "suspend-then-hibernate";
+    logind = {
+      lidSwitch = "suspend-then-hibernate";
+      killUserProcesses = true;
+    };
     pipewire = {
       enable = true;
       pulse.enable = true;
