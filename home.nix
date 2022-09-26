@@ -97,13 +97,6 @@
       };
       ignores = [ "/.evc" ];
     };
-    zathura = {
-      enable = true;
-      options = {
-        recolor = true;
-        recolor-keephue = true;
-      };
-    };
     less = {
       enable = true;
       keys = ''

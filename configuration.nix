@@ -294,6 +294,7 @@
       gnome.nautilus
       gnome-console
       gnome.gnome-system-monitor
+      gnome.evince
       gnome.eog
       gnome.gnome-characters
       gnome.gnome-clocks
