@@ -1,7 +1,7 @@
 StrictHostKeyChecking yes
 VerifyHostKeyDNS ask
 UpdateHostKeys ask
-IdentitiesOnly yes
+PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
 ForwardAgent no
 ForwardX11 no
 
@@ -9,7 +9,6 @@ Host github.com github gh
   HostName github.com
   User git
   PubkeyAuthentication yes
-  IdentityFile ~/.ssh/github
 
 Host *
   PubkeyAuthentication no
