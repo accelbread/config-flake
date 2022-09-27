@@ -156,10 +156,6 @@
         "playground"
         ".config/emacs"
         ".librewolf/profile"
-        {
-          directory = ".ssh";
-          mode = "0700";
-        }
         ".local/share/tpm2_pkcs11"
       ];
       files = [ ".face" ".config/monitors.xml" ];
