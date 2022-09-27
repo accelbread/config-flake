@@ -67,8 +67,9 @@
       enable = true;
       pkcs11 = {
         enable = true;
-        package = pkgs.tpm2-pkcs11.overrideAttrs
-          (old: { configureFlags = [ "--enable-fapi=no" ]; });
+        package = pkgs.tpm2-pkcs11.overrideAttrs (old: {
+          configureFlags = old.configureFlags or [ ] ++ [ "--enable-fapi=no" ];
+        });
       };
       tctiEnvironment.enable = true;
     };
