@@ -106,7 +106,7 @@
     };
     mpv = {
       enable = true;
-      scripts = [ pkgs.mpvScripts.mpris pkgs.mpvScripts.sponsorblock ];
+      scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
     };
   };
 
