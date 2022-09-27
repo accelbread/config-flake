@@ -39,8 +39,7 @@
          rainbow-mode))
 
 (setq package-native-compile t
-      native-comp-async-report-warnings-errors nil
-      vterm-always-compile-module t)
+      native-comp-deferred-compilation nil)
 
 
 ;;; Config utils
