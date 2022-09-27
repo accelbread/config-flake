@@ -1401,7 +1401,6 @@ REGION-FUNCTION will be used for buffer formatting."
 (setq rust-format-on-save nil)
 
 (with-eval-after-load 'eglot
-  (setf (alist-get 'rust-mode eglot-server-programs) '("rust-analyzer"))
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
                 eglot-workspace-configuration))
 
@@ -1615,9 +1614,10 @@ REGION-FUNCTION will be used for buffer formatting."
 
 ;;; Local configuration
 
-(let ((local-init (file-name-concat user-emacs-directory "local-init.el")))
-  (if (file-exists-p local-init)
-      (load-file local-init)))
+(dolist (file '("nix-init.el" "local-init.el"))
+  (let ((file (file-name-concat user-emacs-directory file)))
+    (if (file-exists-p file)
+        (load-file file))))
 
 
 ;;; Server

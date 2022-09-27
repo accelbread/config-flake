@@ -7,15 +7,7 @@
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
     };
-    packages = with pkgs; [
-      aspell
-      aspellDicts.en
-      fish
-      clang-tools
-      rust-analyzer
-      zls
-      nixfmt
-    ];
+    packages = with pkgs; [ aspellDicts.en ];
     file = {
       ".config" = {
         source = ./home/config;
@@ -29,6 +21,18 @@
         source = ./home/ssh;
         recursive = true;
       };
+      ".config/emacs/nix-init.el".source = pkgs.writeText "nix-init.el" ''
+        (setq ispell-program-name "${pkgs.aspell}/bin/aspell"
+              clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
+              rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
+              nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt"
+              fish-completion-command "${pkgs.fish}/bin/fish")
+        (with-eval-after-load 'eglot
+          (setq eglot-server-programs
+                '(((c++-mode c-mode) "${pkgs.clang-tools}/bin/clangd")
+                  (rust-mode "${pkgs.rust-analyzer}/bin/rust-analyzer")
+                  (zig-mode "${pkgs.zls}/bin/zls"))))
+      '';
     };
   };
 
