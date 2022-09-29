@@ -1249,7 +1249,7 @@ REGION-FUNCTION will be used for buffer formatting."
 
 (advice-add 'help-buffer :override
             (lambda ()
-              "Return \"*Help*\". Ignores `help-xref-following'."
+              "Return new buffer. Ignores `help-xref-following'."
               (get-buffer-create "*Help*"))
             '((name . help-xref-dont-reuse-buffer)))
 
