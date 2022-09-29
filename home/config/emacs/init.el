@@ -1392,7 +1392,10 @@ REGION-FUNCTION will be used for buffer formatting."
         format-buffer-function #'nix-format-buffer)
   (format-on-save-mode))
 
+(add-hook 'nix-mode-hook #'setup-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
+
+(put 'nix-mode-format 'completion-predicate #'ignore)
 
 
 ;;; Rust

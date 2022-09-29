@@ -45,7 +45,8 @@ with lib; {
               (setq eglot-server-programs
                     '(((c++-mode c-mode) "${pkgs.clang-tools}/bin/clangd")
                       (rust-mode "${pkgs.rust-analyzer}/bin/rust-analyzer")
-                      (zig-mode "${pkgs.zls}/bin/zls"))))
+                      (zig-mode "${pkgs.zls}/bin/zls")
+                      (nix-mode "${pkgs.rnix-lsp}/bin/rnix-lsp"))))
             (provide 'nix-paths)
           '';
         });
