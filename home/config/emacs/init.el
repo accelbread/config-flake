@@ -74,16 +74,6 @@
   "Set the header-line face to use fixed-pitch in the current buffer."
   (face-remap-add-relative 'header-line '(:inherit (fixed-pitch))))
 
-(defvar program-text-faces '(font-lock-comment-face
-                             font-lock-doc-face
-                             font-lock-string-face)
-  "Faces corresponding to text in `prog-mode' buffers.")
-
-(defun inside-program-text-p (&rest _)
-  "Check if point is in a comment, string, or doc."
-  (memq (car (ensure-list (get-text-property (1- (point)) 'face)))
-        program-text-faces))
-
 (defun capf-disable-exclusive (capf)
   "Call CAPF and set :exclusive off."
   (cape-wrap-properties capf :exclusive 'no))
@@ -706,10 +696,6 @@
 (add-hook 'flyspell-mode-hook #'flyspell-configure-jit-lock)
 
 (advice-add #'flyspell-region :around #'inhibit-redisplay-wrapper)
-
-;; flyspell-prog is broken when text has multiple faces
-(advice-add #'flyspell-generic-progmode-verify
-            :override #'inside-program-text-p)
 
 (defvar my-flyspell-map
   (let ((map (make-sparse-keymap)))
