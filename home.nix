@@ -61,6 +61,22 @@ with lib; {
       #env
       LESS = -i -R
     '';
+    readline = {
+      bindings = {
+        "\\C-p" = "history-search-backward";
+        "\\C-n" = "history-search-forward";
+      };
+      variables = {
+        bell-style = "visible";
+        colored-stats = true;
+        completion-ignore-case = true;
+        completion-prefix-display-length = 4;
+        mark-symlinked-directories = true;
+        show-all-if-ambiguous = true;
+        show-all-if-unmodified = true;
+        visible-stats = true;
+      };
+    };
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
 
