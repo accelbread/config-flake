@@ -84,6 +84,10 @@
   (memq (car (ensure-list (get-text-property (1- (point)) 'face)))
         program-text-faces))
 
+(defun capf-disable-exclusive (capf)
+  "Call CAPF and set :exclusive off."
+  (cape-wrap-properties capf :exclusive 'no))
+
 (defvar after-frame-hook nil
   "Hook for execution after first frame in daemon mode.")
 
@@ -1094,8 +1098,7 @@
 (setq eglot-stay-out-of '(eldoc-documentation-strategy)
       eglot-autoshutdown t)
 
-(advice-add #'eglot-completion-at-point
-            :before-until #'inside-program-text-p)
+(advice-add #'eglot-completion-at-point :around #'capf-disable-exclusive)
 
 (with-eval-after-load 'yasnippet
   (hide-minor-mode 'yas-minor-mode)
