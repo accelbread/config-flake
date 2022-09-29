@@ -17,21 +17,17 @@ with lib; {
     };
   };
 
-  programs = {
-    home-manager.enable = true;
+  programs = mapAttrs (name: value: value // { enable = true; }) {
+    home-manager = { };
     man.generateCaches = true;
-    bash = {
-      enable = true;
-      initExtra = ''
-        if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-            && [[ -n ''${EMACS_VTERM_PATH} ]] \
-            && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
-            source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
-        fi
-      '';
-    };
+    bash.initExtra = ''
+      if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+          && [[ -n ''${EMACS_VTERM_PATH} ]] \
+          && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
+          source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+      fi
+    '';
     emacs = {
-      enable = true;
       package = pkgs.emacs-overlay.emacsPgtkNativeComp;
       extraPackages = epkgs:
         attrsets.attrVals (map head (filter isList (split "([-a-z]+)" (head
@@ -55,24 +51,17 @@ with lib; {
         });
     };
     git = {
-      enable = true;
       extraConfig = {
         pull = { ff = "only"; };
         user = { useConfigOnly = true; };
       };
       ignores = [ "/.evc" ];
     };
-    less = {
-      enable = true;
-      keys = ''
-        #env
-        LESS = -i -R
-      '';
-    };
-    mpv = {
-      enable = true;
-      scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
-    };
+    less.keys = ''
+      #env
+      LESS = -i -R
+    '';
+    mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
 
   dconf.settings = with hm.gvariant; {
