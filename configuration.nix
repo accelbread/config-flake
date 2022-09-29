@@ -153,7 +153,7 @@ with lib; {
     users.archit = {
       isNormalUser = true;
       description = "Archit Gupta";
-      extraGroups = [ "wheel" "networkmanager" "tss" ];
+      extraGroups = [ "wheel" "networkmanager" "tss" "dialout" ];
       uid = 1000;
       passwordFile = "/persist/vault/user_pass";
     };
