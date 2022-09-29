@@ -35,7 +35,7 @@
          corfu corfu-doc cape kind-icon vertico orderless marginalia consult
          vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
          eglot yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
-         zig-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
+         zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
          rainbow-mode))
 
 (setq package-native-compile t
@@ -1611,12 +1611,16 @@ REGION-FUNCTION will be used for buffer formatting."
   (serial-term device nil t))
 
 
+;;; Set Nix store paths for executables
+
+(require 'nix-paths nil t)
+
+
 ;;; Local configuration
 
-(dolist (file '("nix-init.el" "local-init.el"))
-  (let ((file (file-name-concat user-emacs-directory file)))
-    (if (file-exists-p file)
-        (load-file file))))
+(let ((file (file-name-concat user-emacs-directory "local-init.el")))
+  (if (file-exists-p file)
+      (load-file file)))
 
 
 ;;; Server

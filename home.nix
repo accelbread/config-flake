@@ -1,4 +1,6 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }:
+with builtins;
+with lib; {
   home = {
     username = "archit";
     homeDirectory = "/home/archit";
@@ -8,31 +10,10 @@
       TSS2_LOG = "fapi+NONE";
     };
     packages = with pkgs; [ aspellDicts.en ];
-    file = {
-      ".config" = {
-        source = ./home/config;
-        recursive = true;
-      };
-      ".librewolf" = {
-        source = ./home/librewolf;
-        recursive = true;
-      };
-      ".ssh" = {
-        source = ./home/ssh;
-        recursive = true;
-      };
-      ".config/emacs/nix-init.el".source = pkgs.writeText "nix-init.el" ''
-        (setq ispell-program-name "${pkgs.aspell}/bin/aspell"
-              clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
-              rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
-              nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt"
-              fish-completion-command "${pkgs.fish}/bin/fish")
-        (with-eval-after-load 'eglot
-          (setq eglot-server-programs
-                '(((c++-mode c-mode) "${pkgs.clang-tools}/bin/clangd")
-                  (rust-mode "${pkgs.rust-analyzer}/bin/rust-analyzer")
-                  (zig-mode "${pkgs.zls}/bin/zls"))))
-      '';
+    file = mapAttrs (name: value: value // { recursive = true; }) {
+      ".config".source = ./home/config;
+      ".librewolf".source = ./home/librewolf;
+      ".ssh".source = ./home/ssh;
     };
   };
 
@@ -53,45 +34,25 @@
       enable = true;
       package = pkgs.emacs-overlay.emacsPgtkNativeComp;
       extraPackages = epkgs:
-        with epkgs; [
-          meow
-          gcmh
-          svg-lib
-          rainbow-delimiters
-          flyspell-correct
-          which-key
-          rg
-          corfu
-          corfu-doc
-          cape
-          kind-icon
-          vertico
-          orderless
-          marginalia
-          consult
-          vterm
-          fish-completion
-          magit
-          magit-todos
-          hl-todo
-          virtual-comment
-          rmsbolt
-          eglot
-          yasnippet
-          markdown-mode
-          clang-format
-          cmake-mode
-          rust-mode
-          cargo
-          zig-mode
-          scad-mode
-          nix-mode
-          toml-mode
-          yaml-mode
-          git-modes
-          pdf-tools
-          rainbow-mode
-        ];
+        attrsets.attrVals (map head (filter isList (split "([-a-z]+)" (head
+          (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
+            (readFile ./home/config/emacs/init.el)))))) epkgs ++ singleton
+        (epkgs.trivialBuild {
+          pname = "nix-paths";
+          src = pkgs.writeText "nix-paths.el" ''
+            (setq ispell-program-name "${pkgs.aspell}/bin/aspell"
+                  clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
+                  rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
+                  nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt"
+                  fish-completion-command "${pkgs.fish}/bin/fish")
+            (with-eval-after-load 'eglot
+              (setq eglot-server-programs
+                    '(((c++-mode c-mode) "${pkgs.clang-tools}/bin/clangd")
+                      (rust-mode "${pkgs.rust-analyzer}/bin/rust-analyzer")
+                      (zig-mode "${pkgs.zls}/bin/zls"))))
+            (provide 'nix-paths)
+          '';
+        });
     };
     git = {
       enable = true;
@@ -114,7 +75,7 @@
     };
   };
 
-  dconf.settings = with lib.hm.gvariant; {
+  dconf.settings = with hm.gvariant; {
     "org/gnome/desktop/background" = {
       color-shading-type = "solid";
       picture-options = "zoom";

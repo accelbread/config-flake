@@ -1,4 +1,6 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }:
+with builtins;
+with lib; {
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -82,21 +84,11 @@
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     services = {
-      reinit-touchpad = {
+      reinit-touchpad = rec {
         enable = true;
         description = "Reload i2c_hid_acpi on wakeup.";
-        after = [
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.service"
-          "suspend-then-hibernate.target"
-        ];
-        wantedBy = [
-          "suspend.target"
-          "hibernate.target"
-          "hybrid-sleep.service"
-          "suspend-then-hibernate.target"
-        ];
+        after = [ "hibernate.target" "suspend-then-hibernate.target" ];
+        wantedBy = after;
         script = ''
           rmmod i2c_hid_acpi
           modprobe i2c_hid_acpi
@@ -105,35 +97,28 @@
     };
   };
 
-  fileSystems = {
-    "/" = {
-      device = "shadowfang/sys/root";
-      fsType = "zfs";
-      options = [ "noatime" "nosuid" "nodev" ];
-    };
-    "/boot" = {
-      device = "/dev/nvme0n1p1";
-      fsType = "vfat";
-      options = [ "noatime" "nosuid" "nodev" "noexec" ];
-    };
-    "/nix" = {
-      device = "shadowfang/sys/nix";
-      fsType = "zfs";
-      options = [ "noatime" "nosuid" "nodev" ];
-    };
-    "/persist" = {
-      device = "shadowfang/data/persist";
-      fsType = "zfs";
-      options = [ "noatime" "nosuid" "nodev" "noexec" ];
-      neededForBoot = true;
-    };
-    "/persist/home/archit" = {
-      device = "shadowfang/data/home";
-      fsType = "zfs";
-      options = [ "noatime" "nosuid" "nodev" ];
-      neededForBoot = true;
-    };
-  };
+  fileSystems = mapAttrs (name: value:
+    value // {
+      options = value.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
+    }) ({
+      "/boot" = {
+        device = "/dev/nvme0n1p1";
+        fsType = "vfat";
+        options = [ "noexec" ];
+      };
+    } // mapAttrs (name: value: value // { fsType = "zfs"; }) {
+      "/".device = "shadowfang/sys/root";
+      "/nix".device = "shadowfang/sys/nix";
+      "/persist" = {
+        device = "shadowfang/data/persist";
+        options = [ "noexec" ];
+        neededForBoot = true;
+      };
+      "/persist/home/archit" = {
+        device = "shadowfang/data/home";
+        neededForBoot = true;
+      };
+    });
 
   swapDevices = [{ device = "/dev/shadowfang_vg/swap"; }];
 
@@ -243,38 +228,27 @@
 
   fonts = {
     enableDefaultFonts = false;
-    fonts = let
-      noto-color-emoji = pkgs.stdenv.mkDerivation {
-        name = "noto-fonts-color-emoji";
-        src = pkgs.noto-fonts-emoji;
-        installPhase = ''
-          mkdir -p $out/share/fonts/noto
-          cp share/fonts/noto/NotoColorEmoji.ttf $out/share/fonts/noto
-        '';
+    fonts = (with pkgs; [
+      dejavu_fonts
+      liberation_ttf
+      noto-fonts
+      noto-fonts-extra
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+    ]) ++ singleton (pkgs.stdenv.mkDerivation {
+      name = "noto-fonts-bw-emoji";
+      src = pkgs.fetchzip {
+        name = "noto-emoji";
+        url = "https://fonts.google.com/download?family=Noto%20Emoji";
+        extension = "zip";
+        stripRoot = false;
+        sha256 = "sha256-q7WpqAhmio2ecNGOI7eX7zFBicrsvX8bURF02Pru2rM=";
       };
-      noto-emoji = pkgs.stdenv.mkDerivation {
-        name = "noto-fonts-bw-emoji";
-        src = pkgs.fetchzip {
-          name = "noto-emoji";
-          url = "https://fonts.google.com/download?family=Noto%20Emoji";
-          extension = "zip";
-          stripRoot = false;
-          sha256 = "sha256-q7WpqAhmio2ecNGOI7eX7zFBicrsvX8bURF02Pru2rM=";
-        };
-        installPhase = ''
-          mkdir -p $out/share/fonts/noto
-          cp NotoEmoji-*.ttf $out/share/fonts/noto
-        '';
-      };
-    in [
-      pkgs.dejavu_fonts
-      pkgs.liberation_ttf
-      noto-color-emoji
-      noto-emoji
-      pkgs.noto-fonts
-      pkgs.noto-fonts-extra
-      pkgs.noto-fonts-cjk-sans
-    ];
+      installPhase = ''
+        mkdir -p $out/share/fonts/noto
+        cp NotoEmoji-*.ttf $out/share/fonts/noto
+      '';
+    });
   };
 
   environment = {
