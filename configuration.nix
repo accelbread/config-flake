@@ -170,7 +170,10 @@ with lib; {
     allowed-users = [ "@wheel" ];
   };
 
-  documentation.man.generateCaches = true;
+  documentation = {
+    man.generateCaches = true;
+    nixos.includeAllModules = true;
+  };
 
   services = {
     fwupd.enable = true;
