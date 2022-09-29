@@ -80,6 +80,12 @@ with lib; {
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
 
+  xdg.desktopEntries.cups = {
+    name = "Manage Printing";
+    noDisplay = true;
+    exec = null;
+  };
+
   dconf.settings = with hm.gvariant; {
     "org/gnome/desktop/background" = {
       color-shading-type = "solid";
