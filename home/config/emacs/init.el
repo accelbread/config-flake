@@ -928,7 +928,6 @@
 
 (setq vterm-max-scrollback 5000
       vterm-timer-delay 0.01
-      vterm-buffer-name-string "*vterm %s*"
       vterm-keymap-exceptions '("C-c"))
 
 (with-eval-after-load 'vterm
@@ -970,6 +969,12 @@
   (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t))
 
 (add-hook 'vterm-mode-hook #'meow-vterm-setup-hooks)
+
+(advice-add #'vterm--set-title :override
+            (lambda (title)
+              "Have `vterm' set `mode-line-process' to TITLE."
+              (setq mode-line-process `(" " ,title)))
+            '((name . vterm-set-mode-line-process)))
 
 
 ;;; Term
