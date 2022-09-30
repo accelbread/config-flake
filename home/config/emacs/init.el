@@ -928,6 +928,9 @@
 
 (setq vterm-max-scrollback 5000
       vterm-timer-delay 0.01
+      vterm-kill-buffer-on-exit nil
+      vterm-clear-scrollback-when-clearing t
+      vterm-exit-functions '(set-mode-line-process-killed)
       vterm-keymap-exceptions '("C-c"))
 
 (with-eval-after-load 'vterm
@@ -974,8 +977,14 @@
 (advice-add #'vterm--set-title :override
             (lambda (title)
               "Have `vterm' set `mode-line-process' to TITLE."
-              (setq mode-line-process `(" " ,title)))
+              (setq mode-line-process `("  " ,title)))
             '((name . vterm-set-mode-line-process)))
+
+(defun set-mode-line-process-killed (buffer desc)
+  "Indicate process killed in buffer BUFFER with reason DESC."
+  (with-current-buffer buffer
+    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
+                                          face error))))
 
 
 ;;; Term
