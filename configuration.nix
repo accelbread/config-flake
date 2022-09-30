@@ -143,6 +143,8 @@ with lib; {
         ".config/emacs"
         ".librewolf/profile"
         ".local/share/tpm2_pkcs11"
+        ".local/share/gnupg"
+        ".local/share/pass"
       ];
       files = [ ".face" ".config/monitors.xml" ];
     };
