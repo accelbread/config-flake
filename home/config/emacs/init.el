@@ -963,12 +963,13 @@
   "Use regular bindings in normal mode."
   (use-local-map vterm-normal-mode-map))
 
-(defun meow-vterm-setup-hooks ()
+(defun meow-vterm-setup ()
   "Configure insert mode for vterm."
   (add-hook 'meow-insert-enter-hook #'meow-vterm-insert-enter nil t)
-  (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t))
+  (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t)
+  (use-local-map vterm-normal-mode-map))
 
-(add-hook 'vterm-mode-hook #'meow-vterm-setup-hooks)
+(add-hook 'vterm-mode-hook #'meow-vterm-setup)
 
 (advice-add #'vterm--set-title :override
             (lambda (title)
