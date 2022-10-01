@@ -231,6 +231,8 @@ with lib; {
     };
   };
 
+  programs.bash.enableLsColors = false;
+
   fonts = {
     enableDefaultFonts = false;
     fonts = (with pkgs; [

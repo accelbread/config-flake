@@ -26,6 +26,9 @@ with lib; {
           && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
           source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
       fi
+      if [[ -z "$LS_COLORS" ]]; then
+          eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+      fi
     '';
     emacs = {
       package = pkgs.emacs-overlay.emacsPgtkNativeComp;
