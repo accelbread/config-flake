@@ -31,6 +31,11 @@
       window-resize-pixelwise t)
 
 
+;;; Disable async native compilation
+
+(setq native-comp-deferred-compilation nil)
+
+
 ;;; Theme
 
 (load-theme 'my-purple t)

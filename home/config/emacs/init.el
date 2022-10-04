@@ -38,8 +38,7 @@
          zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
          rainbow-mode))
 
-(setq package-native-compile t
-      native-comp-deferred-compilation nil)
+(setq package-native-compile t)
 
 
 ;;; Config utils
