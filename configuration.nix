@@ -202,7 +202,7 @@ with lib; {
       };
     };
     logind = {
-      lidSwitch = "suspend-then-hibernate";
+      lidSwitch = "hibernate";
       killUserProcesses = true;
     };
     pipewire = {
