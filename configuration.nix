@@ -233,6 +233,23 @@ with lib; {
       enable = true;
       webInterface = false;
     };
+    udev.packages = with pkgs;
+      singleton (stdenv.mkDerivation {
+        pname = "r8152-udev-rules";
+        version = "2.15.0";
+        src = fetchFromGitHub {
+          owner = "bb-qq";
+          repo = "r8152";
+          rev = "30c671d2a8339094eeae4767a19f1bbd4b7c72a0";
+          sha256 = "sha256-c9FnLcd0DM8OUh+PTRa7EdBtQHdeTwGLB4lBcLRl6m8=";
+        };
+        dontBuild = true;
+        dontConfigure = true;
+        installPhase = ''
+          mkdir -p $out/lib/udev/rules.d
+          cp 50-usb-realtek-net.rules $out/lib/udev/rules.d/
+        '';
+      });
   };
 
   programs.bash.enableLsColors = false;
