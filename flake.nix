@@ -8,33 +8,32 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
+    flake-utils.url = "github:numtide/flake-utils";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        flake-utils.follows = "flake-utils";
+      };
     };
   };
   outputs = { self, ... }:
-    with self.inputs; {
+    with self.inputs; rec {
+      legacyPackages.x86_64-linux = import nixpkgs {
+        system = "x86_64-linux";
+        overlays = nixpkgs.lib.singleton (final: prev: {
+          unstable = nixpkgs-unstable.legacyPackages.${prev.system};
+          emacs-overlay = emacs-overlay.packages.${prev.system};
+        });
+      };
       nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        pkgs = legacyPackages.x86_64-linux;
+        specialArgs.flakes = self.inputs;
         modules = [
           nixos-hardware.nixosModules.framework
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
-          ({ config, lib, ... }:
-            with builtins; {
-              nix = {
-                registry = mapAttrs (_: v: { flake = v; }) self.inputs;
-                nixPath = lib.mapAttrsToList (k: v: "${k}=${v.to.path}")
-                  config.nix.registry;
-              };
-              nixpkgs.overlays = [
-                (final: prev: {
-                  unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-                  emacs-overlay = emacs-overlay.packages.${prev.system};
-                })
-              ];
-            })
           ./configuration.nix
         ];
       };

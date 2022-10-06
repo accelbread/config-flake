@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flakes, ... }:
 with builtins;
 with lib; {
   boot = {
@@ -167,9 +167,14 @@ with lib; {
     users.archit = import ./home.nix;
   };
 
-  nix.settings = {
-    experimental-features = "nix-command flakes";
-    allowed-users = [ "@wheel" ];
+  nix = {
+    registry = mapAttrs (_: v: { flake = v; }) flakes;
+    nixPath =
+      lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
+    settings = {
+      experimental-features = "nix-command flakes";
+      allowed-users = [ "@wheel" ];
+    };
   };
 
   documentation = {
