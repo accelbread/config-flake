@@ -13,8 +13,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager
-    , impermanence, emacs-overlay }: {
+  outputs = { self, ... }:
+    with self.inputs; {
       nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
