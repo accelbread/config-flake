@@ -84,15 +84,11 @@ with lib; {
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     services = {
-      reinit-touchpad = rec {
+      reinit-touchpad = {
         enable = true;
         description = "Reload i2c_hid_acpi on wakeup.";
-        after = [
-          "systemd-suspend.service"
-          "systemd-hibernate.service"
-          "systemd-hybrid-sleep.service"
-        ];
-        wantedBy = [ "sleep.target" ];
+        after = [ "systemd-hibernate.service" ];
+        wantedBy = [ "systemd-hibernate.target" ];
         script = ''
           rmmod i2c_hid_acpi
           modprobe i2c_hid_acpi
