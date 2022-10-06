@@ -234,14 +234,14 @@ with lib; {
       webInterface = false;
     };
     udev.packages = with pkgs;
-      singleton (stdenv.mkDerivation {
+      singleton (stdenv.mkDerivation rec {
         pname = "r8152-udev-rules";
-        version = "2.15.0";
+        version = "v2.16.3.20220914";
         src = fetchFromGitHub {
-          owner = "bb-qq";
-          repo = "r8152";
-          rev = "30c671d2a8339094eeae4767a19f1bbd4b7c72a0";
-          sha256 = "sha256-c9FnLcd0DM8OUh+PTRa7EdBtQHdeTwGLB4lBcLRl6m8=";
+          owner = "wget";
+          repo = "realtek-r8152-linux";
+          rev = version;
+          sha256 = "sha256-5IFDqt4kfJy7vjk638yGQOELotyWSa0h84PN3nhkQbM=";
         };
         dontBuild = true;
         dontConfigure = true;
