@@ -21,15 +21,20 @@
           nixos-hardware.nixosModules.framework
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
-          (with builtins; {
-            nix.registry = mapAttrs (_: v: { flake = v; }) self.inputs;
-            nixpkgs.overlays = [
-              (final: prev: {
-                unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-                emacs-overlay = emacs-overlay.packages.${prev.system};
-              })
-            ];
-          })
+          ({ config, lib, ... }:
+            with builtins; {
+              nix = {
+                registry = mapAttrs (_: v: { flake = v; }) self.inputs;
+                nixPath = lib.mapAttrsToList (k: v: "${k}=${v.to.path}")
+                  config.nix.registry;
+              };
+              nixpkgs.overlays = [
+                (final: prev: {
+                  unstable = nixpkgs-unstable.legacyPackages.${prev.system};
+                  emacs-overlay = emacs-overlay.packages.${prev.system};
+                })
+              ];
+            })
           ./configuration.nix
         ];
       };
