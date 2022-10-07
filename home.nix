@@ -1,9 +1,10 @@
+user:
 { config, pkgs, lib, ... }:
 with builtins;
 with lib; {
   home = {
-    username = "archit";
-    homeDirectory = "/home/archit";
+    username = user.name;
+    homeDirectory = user.home;
     stateVersion = "22.05";
     sessionVariables = {
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
@@ -11,9 +12,9 @@ with lib; {
     };
     packages = with pkgs; [ aspellDicts.en ];
     file = mapAttrs (name: value: value // { recursive = true; }) {
-      ".config".source = ./home/config;
-      ".librewolf".source = ./home/librewolf;
-      ".ssh".source = ./home/ssh;
+      ".config".source = ./dotfiles/config;
+      ".librewolf".source = ./dotfiles/librewolf;
+      ".ssh".source = ./dotfiles/ssh;
     };
   };
 
@@ -35,7 +36,7 @@ with lib; {
       extraPackages = epkgs:
         attrsets.attrVals (map head (filter isList (split "([-a-z]+)" (head
           (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
-            (readFile ./home/config/emacs/init.el)))))) epkgs ++ singleton
+            (readFile ./dotfiles/config/emacs/init.el)))))) epkgs ++ singleton
         (epkgs.trivialBuild {
           pname = "nix-paths";
           src = pkgs.writeText "nix-paths.el" ''
@@ -56,8 +57,8 @@ with lib; {
     };
     git = {
       extraConfig = {
-        pull = { ff = "only"; };
-        user = { useConfigOnly = true; };
+        pull.ff = "only";
+        user.useConfigOnly = true;
       };
       ignores = [ "/.evc" ];
     };

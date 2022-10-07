@@ -163,7 +163,7 @@ with builtins; {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.archit = import ./home.nix;
+    users.archit = (import ./home.nix config.users.users.archit);
   };
 
   nix = {
