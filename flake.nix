@@ -17,7 +17,7 @@
       };
     };
   };
-  outputs = { self, ... }:
+  outputs = { self, ... }@inputs:
     with self.inputs; rec {
       legacyPackages.x86_64-linux = import nixpkgs {
         system = "x86_64-linux";
@@ -33,7 +33,7 @@
           nixos-hardware.nixosModules.framework
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
-          (import ./set-flakes.nix self.inputs)
+          (import ./set-flakes.nix inputs)
           ./configuration.nix
         ];
       };
