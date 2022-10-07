@@ -1,6 +1,5 @@
 { config, pkgs, lib, flakes, ... }:
-with builtins;
-with lib; {
+with builtins; {
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -168,9 +167,6 @@ with lib; {
   };
 
   nix = {
-    registry = mapAttrs (_: v: { flake = v; }) flakes;
-    nixPath =
-      lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     settings = {
       experimental-features = "nix-command flakes";
       allowed-users = [ "@wheel" ];
@@ -235,7 +231,7 @@ with lib; {
       webInterface = false;
     };
     udev.packages = with pkgs;
-      singleton (stdenv.mkDerivation rec {
+      lib.singleton (stdenv.mkDerivation rec {
         pname = "r8152-udev-rules";
         version = "v2.16.3.20220914";
         src = fetchFromGitHub {
@@ -264,7 +260,7 @@ with lib; {
       noto-fonts-extra
       noto-fonts-cjk-sans
       noto-fonts-emoji
-    ]) ++ singleton (pkgs.stdenv.mkDerivation {
+    ]) ++ lib.singleton (pkgs.stdenv.mkDerivation {
       name = "noto-fonts-bw-emoji";
       src = pkgs.fetchzip {
         name = "noto-emoji";

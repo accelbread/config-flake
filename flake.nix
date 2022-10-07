@@ -29,11 +29,11 @@
       nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         pkgs = legacyPackages.x86_64-linux;
-        specialArgs.flakes = self.inputs;
         modules = [
           nixos-hardware.nixosModules.framework
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
+          (import ./set-flakes.nix self.inputs)
           ./configuration.nix
         ];
       };
