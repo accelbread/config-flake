@@ -23,10 +23,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = nixpkgs.lib.singleton (final: prev: {
-          unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-          emacs-overlay = emacs-overlay.packages.${prev.system};
-        });
+        overlays = nixpkgs.lib.singleton emacs-overlay.overlays.default;
       };
     in {
       legacyPackages.x86_64-linux = pkgs;

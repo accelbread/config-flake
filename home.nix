@@ -32,7 +32,7 @@ with lib; {
       fi
     '';
     emacs = {
-      package = pkgs.emacs-overlay.emacsPgtkNativeComp;
+      package = pkgs.emacsPgtkNativeComp;
       extraPackages = epkgs:
         attrsets.attrVals (map head (filter isList (split "([-a-z]+)" (head
           (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"

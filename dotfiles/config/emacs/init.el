@@ -737,7 +737,8 @@
 ;;; Shell
 
 (setq comint-terminfo-terminal "dumb-emacs-ansi"
-      comint-prompt-read-only t)
+      comint-prompt-read-only t
+      shell-highlight-undef-enable t)
 
 (with-eval-after-load 'comint
   (define-key comint-mode-map
@@ -1090,7 +1091,7 @@
 (add-hook 'compilation-filter-hook #'compilation-ansi-color)
 
 (when (>= emacs-major-version 29)
-  (add-hook 'compilation-filter-hook #'osc-compilation-filter))
+  (add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter))
 
 
 ;;; Eglot
