@@ -18,17 +18,20 @@
     };
   };
   outputs = { self, ... }@inputs:
-    with self.inputs; rec {
-      legacyPackages.x86_64-linux = import nixpkgs {
-        system = "x86_64-linux";
+    with self.inputs;
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
         overlays = nixpkgs.lib.singleton (final: prev: {
           unstable = nixpkgs-unstable.legacyPackages.${prev.system};
           emacs-overlay = emacs-overlay.packages.${prev.system};
         });
       };
+    in {
+      legacyPackages.x86_64-linux = pkgs;
       nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        pkgs = legacyPackages.x86_64-linux;
+        inherit system pkgs;
         modules = [
           nixos-hardware.nixosModules.framework
           impermanence.nixosModules.impermanence
@@ -37,6 +40,7 @@
           ./configuration.nix
         ];
       };
+      apps.x86_64-linux = import ./provisioning-scripts.nix pkgs;
     };
 }
 
