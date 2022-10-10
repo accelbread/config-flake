@@ -6,7 +6,7 @@ with builtins; {
       systemd-boot.editor = false;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "elevator=none" ];
     kernelModules = [ "kvm-intel" "cpuid" "coretemp" ];
     kernel.sysctl = {
