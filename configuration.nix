@@ -130,15 +130,15 @@ with builtins; {
           "user_subvol_rm_allowed"
         ];
       }) {
-        "/".device = "/root";
-        "/nix".device = "/nix";
+        "/".device = "root";
+        "/nix".device = "nix";
         "/persist" = {
-          device = "/persist";
+          device = "persist";
           options = [ "noexec" ];
           neededForBoot = true;
         };
         "/persist/home" = {
-          device = "/home";
+          device = "home";
           neededForBoot = true;
         };
       });
