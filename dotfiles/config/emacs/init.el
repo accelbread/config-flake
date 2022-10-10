@@ -1501,6 +1501,11 @@ REGION-FUNCTION will be used for buffer formatting."
 (put 'zig-toggle-format-on-save 'completion-predicate #'ignore)
 
 
+;;; Sh
+
+(add-hook 'sh-mode-hook #'flymake-mode)
+
+
 ;;; PDF
 
 (pdf-loader-install)

@@ -44,6 +44,7 @@ with lib; {
                   clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
                   rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
                   nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt"
+                  sh-shellcheck-program "${pkgs.shellcheck}/bin/shellcheck"
                   fish-completion-command "${pkgs.fish}/bin/fish")
             (with-eval-after-load 'eglot
               (setq eglot-server-programs
