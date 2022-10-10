@@ -25,6 +25,14 @@ with builtins; {
         device = "/dev/nvme0n1p2";
         bypassWorkqueues = true;
       };
+      preDeviceCommands = ''
+        message="\
+        Hello, this is ${config.networking.hostName}.
+        Owner: Archit Gupta
+        Email: accelbread@gmail.com
+        "
+        printf "$message" | ${pkgs.cowsay}/bin/cowsay -n
+      '';
       postDeviceCommands = lib.mkAfter ''
         zfs rollback -r shadowfang/sys/root@blank
       '';
