@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TEMP=$(getopt -o 'n:d:g:s:' --long 'name:,disk:,gb:,swap:' -n "$0" -- "$@")
+eval set -- "$TEMP"
+unset TEMP
+
+disks=()
+
+while true; do
+    case "$1" in
+        '-n'|'--name')
+            name="$2"
+            shift 2
+            continue
+            ;;
+        '-d'|'--disk')
+            disks+=("$2")
+            shift 2
+            continue
+            ;;
+        '-g'|'--gb')
+            declare -i gb
+            gb="$2"
+            shift 2
+            continue
+            ;;
+        '-s'|'--swap')
+            declare -i swap
+            swap="$2"
+            shift 2
+            continue
+            ;;
+        '--')
+            shift
+            break
+            ;;
+        *)
+            echo 'Internal error!' >&2
+            exit 1
+            ;;
+    esac
+done
+
+for arg; do
+    echo "Unknown arg '$arg'" >&2
+    exit 1
+done
+
+if [[ -z "${name:-}" ]]; then
+    echo "System name not provided." >&2
+    exit 1
+fi
+
+if [[ "${#disks[@]}" -lt 1 ]]; then
+    echo "No disk specified." >&2
+    exit 1
+fi
+
+if [[ -z "${gb:-}" ]]; then
+    echo "Total GiB to use not provided." >&2
+    exit 1
+fi
+
+if [[ -z "${swap:-}" ]]; then
+    echo "Swap GiB to use not provided." >&2
+    exit 1
+fi
+
+declare -i i
+i=0
+
+btrfs_devices=()
+
+for disk in "${disks[@]}"; do
+    i+=1
+    parted "$disk" mklabel gpt
+    parted -a optimal "$disk" mkpart primary 1MiB 1GiB
+    parted "$disk" name 1 "${name}_EFI{$i}"
+    parted "$disk" set 1 boot on
+    parted "$disk" set 1 esp on
+    parted "$disk" mkpart primary 1GiB "${gb}GiB"
+    parted "$disk" name 2 "${name}_disk${i}_crypt"
+    mkfs.vfat -n "EFI${i}" "${disk}p1"
+    cryptsetup luksFormat "${disk}p2"
+    cryptsetup open "${disk}p2" "${name}_disk${i}"
+    pvcreate "/dev/mapper/${name}_disk${i}"
+    vgcreate "${name}_vg${i}" "/dev/mapper/${name}_disk${i}"
+    lvcreate -L "${swap}g" "${name}_vg${i}" -n swap
+    lvcreate -l +100%FREE "${name}_vg${i}" -n pool
+    mkswap -L "${name}_swap${i}" "/dev/${name}_vg${i}/swap"
+    btrfs_devices+=("/dev/${name}_vg${i}/pool")
+done
+
+if [[ "${#btrfs_devices[@]}" -eq 1 ]]; then
+    mkfs.btrfs -L "${name}_pool" -m dup -d dup "${btrfs_devices[@]}"
+else
+    mkfs.btrfs -L "${name}_pool" -m raid1 -d raid1 "${btrfs_devices[@]}"
+fi
+
+options="noatime,compress=zstd,X-mount.mkdir"
+mount -t btrfs -o "${options}" "${btrfs_devices[0]}" /mnt
+
+(cd /mnt
+ btrfs subvolume create nix
+ btrfs subvolume create persist
+ btrfs subvolume create home
+ btrfs subvolume create home/.snapshots
+ btrfs subvolume create root
+)
+
+umount /mnt
+mount -t btrfs -o "${options},subvol=/root" "${btrfs_devices[0]}" /mnt
+mount -o noatime,X-mount.mkdir "${disks[0]}p1" /mnt/boot
+mount -t btrfs -o "${options},subvol=/nix" "${btrfs_devices[0]}" /mnt/nix
+mount -t btrfs -o "${options},subvol=/persist" "${btrfs_devices[0]}" /mnt/persist
+mount -t btrfs -o "${options},subvol=/home" "${btrfs_devices[0]}" /mnt/home
+
+mkdir /mnt/persist/vault
+chmod 700 /mnt/persist/vault
+
+echo Enter user password:
+mkpasswd --method=SHA-512 > /mnt/persist/vault/user_pass
