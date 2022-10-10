@@ -10,7 +10,7 @@ rec_sub_del () {
     for child in $(btrfs sub list "$1" | awk '/top level '"$2"'/{print $2}'); do
         rec_sub_del "$1" "$child"
     done
-    btrfs subvolume delete -i "$2" "$1"
+    btrfs subvolume delete -i "$2" "$1" | sed "s|$1||"
 }
 
 id=$(btrfs subvolume show "$1" | awk '/Subvolume ID:/{print $3}')
