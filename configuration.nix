@@ -266,6 +266,11 @@ with builtins; {
       });
   };
 
+  virtualisation.containers = {
+    enable = true;
+    storage.settings.storage.driver = "btrfs";
+  };
+
   programs.bash.enableLsColors = false;
 
   fonts = {
