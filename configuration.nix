@@ -15,13 +15,9 @@ with builtins; {
       "net.core.bpf_jit_enable" = false;
       "kernel.ftrace_enabled" = false;
     };
-    zfs = {
-      devNodes = "/dev/shadowfang_vg/rootvol";
-      forceImportRoot = false;
-    };
     initrd = {
       availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
-      luks.devices.shadowfang_luksunlocked = {
+      luks.devices.shadowfang_disk1 = {
         device = "/dev/nvme0n1p2";
         bypassWorkqueues = true;
       };
@@ -34,7 +30,17 @@ with builtins; {
         printf "$message" | ${pkgs.cowsay}/bin/cowsay -n
       '';
       postDeviceCommands = lib.mkAfter ''
-        zfs rollback -r shadowfang/sys/root@blank
+        mkdir -p /mnt
+        mount -t btrfs -o noatime,compress=zstd /dev/shadowfang_vg1/pool /mnt
+        ${
+          pkgs.writeShellApplication {
+            name = "btrfs_rm";
+            runtimeInputs = with pkgs; [ btrfs-progs gawk gnused ];
+            text = readFile ./scripts/btrfs_subvol_rm_recursive;
+          }
+        }/bin/btrfs_rm /mnt/root
+        btrfs subvolume create /mnt/root
+        umount /mnt
       '';
     };
     tmpOnTmpfs = true;
@@ -113,21 +119,31 @@ with builtins; {
         fsType = "vfat";
         options = [ "noexec" ];
       };
-    } // mapAttrs (name: value: value // { fsType = "zfs"; }) {
-      "/".device = "shadowfang/sys/root";
-      "/nix".device = "shadowfang/sys/nix";
-      "/persist" = {
-        device = "shadowfang/data/persist";
-        options = [ "noexec" ];
-        neededForBoot = true;
-      };
-      "/persist/home/archit" = {
-        device = "shadowfang/data/home";
-        neededForBoot = true;
-      };
-    });
+    } // mapAttrs (name: value:
+      value // {
+        device = "/dev/shadowfang_vg1/pool";
+        fsType = "btrfs";
+        options = value.options or [ ] ++ [
+          "subvol=${value.device}"
+          "compress=zstd"
+          "autodefrag"
+          "user_subvol_rm_allowed"
+        ];
+      }) {
+        "/".device = "/root";
+        "/nix".device = "/nix";
+        "/persist" = {
+          device = "/persist";
+          options = [ "noexec" ];
+          neededForBoot = true;
+        };
+        "/persist/home" = {
+          device = "/home";
+          neededForBoot = true;
+        };
+      });
 
-  swapDevices = [{ device = "/dev/shadowfang_vg/swap"; }];
+  swapDevices = [{ device = "/dev/shadowfang_vg1/swap"; }];
 
   environment.persistence."/persist" = {
     hideMounts = true;
@@ -194,17 +210,10 @@ with builtins; {
     };
     power-profiles-daemon.enable = false;
     thermald.enable = true;
-    zfs = {
-      autoScrub.enable = true;
-      autoSnapshot = {
-        enable = true;
-        flags = "-k -p --utc";
-        frequent = 4;
-        hourly = 24;
-        daily = 7;
-        weekly = 4;
-        monthly = 0;
-      };
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+      fileSystems = [ "/" ];
     };
     logind = {
       lidSwitch = "hibernate";
