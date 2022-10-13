@@ -882,10 +882,12 @@
                         ((symbol-function #'term-exec)
                          (lambda (_ _ program _ args)
                            (defvar vterm-shell)
+                           (defvar vterm-buffer-name)
                            (let ((vterm-shell (string-join
                                                (cons (file-local-name program)
                                                      args)
-                                               " ")))
+                                               " "))
+                                 (vterm-buffer-name "*eshell-vterm*"))
                              (vterm-mode))))
                         ((symbol-function #'term-char-mode) #'ignore)
                         ((symbol-function #'term-set-escape-char) #'ignore))
