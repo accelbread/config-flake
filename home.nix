@@ -10,7 +10,7 @@ with lib; {
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
     };
-    packages = with pkgs; [ aspellDicts.en ];
+    packages = with pkgs; [ aspellDicts.en zeal ];
     file = mapAttrs (name: value: value // { recursive = true; }) {
       ".config".source = ./dotfiles/config;
       ".librewolf".source = ./dotfiles/librewolf;

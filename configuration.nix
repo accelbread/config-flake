@@ -168,6 +168,7 @@ with builtins; {
         ".local/share/tpm2_pkcs11"
         ".local/share/gnupg"
         ".local/share/pass"
+        ".local/share/Zeal"
       ];
       files = [ ".face" ".config/monitors.xml" ];
     };
@@ -336,6 +337,7 @@ with builtins; {
       MOZ_X11_EGL = "1";
       BROWSER = "librewolf";
       GDK_DPI_SCALE = "1.25";
+      QT_SCALE_FACTOR = "1.25";
     };
   };
 
