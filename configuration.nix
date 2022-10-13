@@ -73,7 +73,6 @@ with builtins; {
 
   security = {
     sudo = {
-      execWheelOnly = true;
       extraConfig = ''
         Defaults lecture = never
       '';
@@ -215,6 +214,18 @@ with builtins; {
       enable = true;
       interval = "weekly";
       fileSystems = [ "/" ];
+    };
+    btrbk.instances.btrbk = {
+      onCalendar = "*:0/10";
+      settings = {
+        timestamp_format = "long";
+        volume."/persist" = {
+          subvolume = "home";
+          snapshot_dir = ".snapshots";
+          snapshot_preserve_min = "4h";
+          snapshot_preserve = "48h 14d 4w";
+        };
+      };
     };
     logind = {
       lidSwitch = "hibernate";
