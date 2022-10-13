@@ -104,17 +104,16 @@ mount -t btrfs -o "${options}" "${btrfs_devices[0]}" /mnt
 (cd /mnt
  btrfs subvolume create nix
  btrfs subvolume create persist
- btrfs subvolume create home
- btrfs subvolume create home/.snapshots
+ btrfs subvolume create persist/home
+ btrfs subvolume create persist/.snapshots
  btrfs subvolume create root
 )
 
 umount /mnt
-mount -t btrfs -o "${options},subvol=/root" "${btrfs_devices[0]}" /mnt
+mount -t btrfs -o "${options},subvol=root" "${btrfs_devices[0]}" /mnt
 mount -o noatime,X-mount.mkdir "${disks[0]}p1" /mnt/boot
-mount -t btrfs -o "${options},subvol=/nix" "${btrfs_devices[0]}" /mnt/nix
-mount -t btrfs -o "${options},subvol=/persist" "${btrfs_devices[0]}" /mnt/persist
-mount -t btrfs -o "${options},subvol=/home" "${btrfs_devices[0]}" /mnt/home
+mount -t btrfs -o "${options},subvol=nix" "${btrfs_devices[0]}" /mnt/nix
+mount -t btrfs -o "${options},subvol=persist" "${btrfs_devices[0]}" /mnt/persist
 
 mkdir /mnt/persist/vault
 chmod 700 /mnt/persist/vault

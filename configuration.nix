@@ -138,7 +138,7 @@ with builtins; {
           neededForBoot = true;
         };
         "/persist/home" = {
-          device = "home";
+          device = "persist/home";
           neededForBoot = true;
         };
       });
