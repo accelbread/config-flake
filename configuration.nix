@@ -350,6 +350,10 @@ with builtins; {
       GDK_DPI_SCALE = "1.25";
       QT_SCALE_FACTOR = "1.25";
     };
+    wordlist = {
+      enable = true;
+      lists.WORDLIST = [ "${pkgs.miscfiles}/share/web2" ];
+    };
   };
 
   qt5 = {
