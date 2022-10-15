@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flakes, ... }:
+{ config, pkgs, lib, ... }:
 with builtins; {
   boot = {
     loader = {
@@ -109,21 +109,21 @@ with builtins; {
     };
   };
 
-  fileSystems = mapAttrs (name: value:
-    value // {
-      options = value.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
+  fileSystems = mapAttrs (_: v:
+    v // {
+      options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
     }) ({
       "/boot" = {
         device = "/dev/nvme0n1p1";
         fsType = "vfat";
         options = [ "noexec" ];
       };
-    } // mapAttrs (name: value:
-      value // {
+    } // mapAttrs (_: v:
+      v // {
         device = "/dev/shadowfang_vg1/pool";
         fsType = "btrfs";
-        options = value.options or [ ] ++ [
-          "subvol=${value.device}"
+        options = v.options or [ ] ++ [
+          "subvol=${v.device}"
           "compress=zstd"
           "autodefrag"
           "user_subvol_rm_allowed"

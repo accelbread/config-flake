@@ -12,14 +12,14 @@ with lib; {
       TSS2_LOG = "fapi+NONE";
     };
     packages = with pkgs; [ aspellDicts.en zeal ];
-    file = mapAttrs (name: value: value // { recursive = true; }) {
+    file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = ./dotfiles/config;
       ".librewolf".source = ./dotfiles/librewolf;
       ".ssh".source = ./dotfiles/ssh;
     };
   };
 
-  programs = mapAttrs (name: value: value // { enable = true; }) {
+  programs = mapAttrs (_: v: v // { enable = true; }) {
     home-manager = { };
     man.generateCaches = true;
     bash.initExtra = ''

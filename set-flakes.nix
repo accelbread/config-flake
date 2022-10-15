@@ -1,5 +1,5 @@
 flakes:
-{ config, pkgs, lib, ... }: {
+{ config, lib, ... }: {
   nix = {
     registry = builtins.mapAttrs (_: v: { flake = v; }) flakes;
     nixPath =
