@@ -17,27 +17,21 @@
       };
     };
   };
-  outputs = { self, ... }@inputs:
-    with self.inputs;
+  outputs = { self, nixpkgs, flake-utils, emacs-overlay, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = nixpkgs.lib.singleton emacs-overlay.overlays.default;
+      inherit (flake-utils.lib) eachSystem;
+      pkgsFor = system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default emacs-overlay.overlays.default ];
+        };
+    in eachSystem [ "x86_64-linux" ] (system:
+      let pkgs = pkgsFor system;
+      in {
+        packages = self.overlays.default pkgs pkgs;
+        apps = import ./nix/apps pkgs;
+      }) // {
+        overlays.default = import ./nix/overlay.nix;
+        nixosConfigurations = import ./nix/nixos inputs pkgsFor;
       };
-    in {
-      legacyPackages.x86_64-linux = pkgs;
-      nixosConfigurations.shadowfang = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
-        modules = [
-          nixos-hardware.nixosModules.framework
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          (import ./set-flakes.nix inputs)
-          ./configuration.nix
-        ];
-      };
-      apps.x86_64-linux = import ./provisioning-scripts.nix pkgs;
-    };
 }
-

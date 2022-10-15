@@ -1,7 +1,8 @@
-user:
-{ config, pkgs, lib, ... }:
-with builtins;
-with lib; {
+{ config, pkgs, lib, flakes, user, ... }:
+let
+  inherit (builtins) mapAttrs;
+  inherit (flakes) self;
+in {
   imports = [ (import ./dconf.nix) ];
   home = {
     username = user.name;
@@ -11,11 +12,11 @@ with lib; {
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
     };
-    packages = with pkgs; [ aspellDicts.en zeal ];
+    packages = with pkgs; [ emacsAccelbread aspellDicts.en zeal ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
-      ".config".source = ./dotfiles/config;
-      ".librewolf".source = ./dotfiles/librewolf;
-      ".ssh".source = ./dotfiles/ssh;
+      ".config".source = self + /dotfiles/config;
+      ".librewolf".source = self + /dotfiles/librewolf;
+      ".ssh".source = self + /dotfiles/ssh;
     };
   };
 
@@ -32,31 +33,6 @@ with lib; {
           eval "$(${pkgs.coreutils}/bin/dircolors -b)"
       fi
     '';
-    emacs = {
-      package = pkgs.emacsPgtkNativeComp;
-      extraPackages = epkgs:
-        attrsets.attrVals (map head (filter isList (split "([-a-z]+)" (head
-          (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
-            (readFile ./dotfiles/config/emacs/init.el)))))) epkgs ++ singleton
-        (epkgs.trivialBuild {
-          pname = "nix-paths";
-          src = pkgs.writeText "nix-paths.el" ''
-            (setq ispell-program-name "${pkgs.aspell}/bin/aspell"
-                  clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
-                  rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
-                  nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt"
-                  sh-shellcheck-program "${pkgs.shellcheck}/bin/shellcheck"
-                  fish-completion-command "${pkgs.fish}/bin/fish")
-            (with-eval-after-load 'eglot
-              (setq eglot-server-programs
-                    '(((c++-mode c-mode) "${pkgs.clang-tools}/bin/clangd")
-                      (rust-mode "${pkgs.rust-analyzer}/bin/rust-analyzer")
-                      (zig-mode "${pkgs.zls}/bin/zls")
-                      (nix-mode "${pkgs.rnix-lsp}/bin/rnix-lsp"))))
-            (provide 'nix-paths)
-          '';
-        });
-    };
     git = {
       extraConfig = {
         pull.ff = "only";
