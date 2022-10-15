@@ -61,7 +61,7 @@ with builtins; {
     cpu.intel.updateMicrocode = true;
     firmware = [ pkgs.linux-firmware ];
     video.hidpi.enable = true;
-    mcelog.enable = true;
+    rasdaemon.enable = true;
     pulseaudio.enable = false;
     opengl = {
       enable = true;
