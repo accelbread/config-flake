@@ -229,7 +229,7 @@ in {
 
     fonts = {
       enableDefaultFonts = false;
-      fonts = (with pkgs; [
+      fonts = (with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
         dejavu_fonts
         liberation_ttf
         noto-fonts
