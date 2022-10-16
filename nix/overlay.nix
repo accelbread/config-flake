@@ -8,8 +8,8 @@ in {
         (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
           (readFile ../dotfiles/config/emacs/init.el)))))) epkgs
       ++ lib.singleton (epkgs.trivialBuild {
-        pname = "nix-paths";
-        src = pkgs.writeText "nix-paths.el" ''
+        pname = "emacs-default-init";
+        src = pkgs.writeText "default.el" ''
           (setq ispell-program-name "${pkgs.aspell}/bin/aspell"
                 clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
                 rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"

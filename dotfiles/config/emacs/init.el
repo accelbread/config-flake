@@ -1625,11 +1625,6 @@ REGION-FUNCTION will be used for buffer formatting."
   (serial-term device nil t))
 
 
-;;; Set Nix store paths for executables
-
-(require 'nix-paths nil t)
-
-
 ;;; Local configuration
 
 (let ((file (file-name-concat user-emacs-directory "local-init.el")))
