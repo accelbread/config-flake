@@ -1160,7 +1160,8 @@
 
 ;;; Magit
 
-(setq magit-view-git-manual-method 'man
+(setq magit-diff-refine-hunk 'all
+      magit-view-git-manual-method 'man
       transient-history-file null-device
       magit-save-repository-buffers 'dontask
       magit-delete-by-moving-to-trash nil)
