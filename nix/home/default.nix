@@ -2,7 +2,8 @@
 let
   inherit (builtins) mapAttrs;
   inherit (flakes) self;
-in {
+in
+{
   imports = [ (import ./dconf.nix) ];
   home = {
     username = user.name;

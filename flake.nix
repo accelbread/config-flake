@@ -25,13 +25,17 @@
           inherit system;
           overlays = [ self.overlays.default emacs-overlay.overlays.default ];
         };
-    in eachSystem [ "x86_64-linux" ] (system:
-      let pkgs = pkgsFor system;
-      in {
-        packages = self.overlays.default pkgs pkgs;
-        apps = import ./nix/apps pkgs;
-      }) // {
-        overlays.default = import ./nix/overlay.nix;
-        nixosConfigurations = import ./nix/nixos inputs pkgsFor;
-      };
+    in
+    eachSystem [ "x86_64-linux" ]
+      (system:
+        let pkgs = pkgsFor system;
+        in
+        {
+          packages = self.overlays.default pkgs pkgs;
+          apps = import ./nix/apps pkgs;
+          formatter = pkgs.nixpkgs-fmt;
+        }) // {
+      overlays.default = import ./nix/overlay.nix;
+      nixosConfigurations = import ./nix/nixos inputs pkgsFor;
+    };
 }

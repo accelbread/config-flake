@@ -2,7 +2,8 @@
 let
   inherit (flakes) self;
   inherit (builtins) mapAttrs;
-in {
+in
+{
   options.disks = with lib; rec {
     boot = mkOption {
       type = types.str;
@@ -42,13 +43,15 @@ in {
         "kernel.ftrace_enabled" = false;
       };
       initrd = {
-        luks.devices = lib.attrsets.mapAttrs' (k: v: {
-          name = "${hostname}_${k}";
-          value = {
-            device = v;
-            bypassWorkqueues = true;
-          };
-        }) config.disks.luks;
+        luks.devices = lib.attrsets.mapAttrs'
+          (k: v: {
+            name = "${hostname}_${k}";
+            value = {
+              device = v;
+              bypassWorkqueues = true;
+            };
+          })
+          config.disks.luks;
         preDeviceCommands = ''
           message="\
           Hello, this is ${hostname}.
@@ -74,26 +77,30 @@ in {
       tmpOnTmpfs = true;
     };
 
-    fileSystems = mapAttrs (_: v:
-      v // {
-        options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
-      }) ({
+    fileSystems = mapAttrs
+      (_: v:
+        v // {
+          options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
+        })
+      ({
         "/boot" = {
           device = config.disks.boot;
           fsType = "vfat";
           options = [ "noexec" ];
         };
-      } // mapAttrs (_: v:
-        v // {
-          device = "/dev/${hostname}_vg1/pool";
-          fsType = "btrfs";
-          options = v.options or [ ] ++ [
-            "subvol=${v.device}"
-            "compress=zstd"
-            "autodefrag"
-            "user_subvol_rm_allowed"
-          ];
-        }) {
+      } // mapAttrs
+        (_: v:
+          v // {
+            device = "/dev/${hostname}_vg1/pool";
+            fsType = "btrfs";
+            options = v.options or [ ] ++ [
+              "subvol=${v.device}"
+              "compress=zstd"
+              "autodefrag"
+              "user_subvol_rm_allowed"
+            ];
+          })
+        {
           "/".device = "root";
           "/nix".device = "nix";
           "/persist" = {

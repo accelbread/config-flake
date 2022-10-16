@@ -12,6 +12,7 @@ let
         ./common
       ];
     };
-in mapAttrs (k: _: lib.nixosSystem (import (./. + "/${k}") flakes (mkSystem k)))
-(lib.attrsets.filterAttrs (k: v: (v == "directory") && (k != "common"))
-  (readDir ./.))
+in
+mapAttrs (k: _: lib.nixosSystem (import (./. + "/${k}") flakes (mkSystem k)))
+  (lib.attrsets.filterAttrs (k: v: (v == "directory") && (k != "common"))
+    (readDir ./.))

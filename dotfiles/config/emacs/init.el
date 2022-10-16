@@ -36,7 +36,7 @@
          vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
          eglot yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
          zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
-         rainbow-mode))
+         rainbow-mode reformatter))
 
 (setq package-native-compile t)
 
@@ -1152,19 +1152,6 @@
       (add-hook 'before-save-hook #'format-buffer nil t)
     (remove-hook 'before-save-hook #'format-buffer t)))
 
-(defun formatter-hook-fn (format-on-save
-                          region-function
-                          &optional buffer-function)
-  "Create hook function to set formatter.
-FORMAT-ON-SAVE enables auto-format on save. REGION-FUNCTION is a function to
-format the current region, or nil if region formatting unsupported.
-BUFFER-FUNCTION is a function to format the current buffer. If it is nil,
-REGION-FUNCTION will be used for buffer formatting."
-  (lambda ()
-    (setq format-region-function region-function)
-    (setq format-buffer-function buffer-function)
-    (when format-on-save (format-on-save-mode))))
-
 
 ;;; Transient
 
@@ -1392,16 +1379,25 @@ REGION-FUNCTION will be used for buffer formatting."
 
 ;;; Nix
 
+(reformatter-define nix-fmt-format
+  :program "nix"
+  :args `("fmt" ,input-file)
+  :stdin nil
+  :stdout nil
+  :mode nil)
+
 (defun nix-formatter-configure ()
   "Configure formatters for Nix files."
-  (setq format-region-function #'indent-region
-        format-buffer-function #'nix-format-buffer)
-  (format-on-save-mode))
+  (when (zerop (process-file-shell-command "nix flake show | grep formatter"))
+    (setq format-region-function #'indent-region
+          format-buffer-function #'nix-fmt-format-buffer)
+    (format-on-save-mode)))
 
 (add-hook 'nix-mode-hook #'setup-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
 
-(put 'nix-mode-format 'completion-predicate #'ignore)
+(dolist (sym '(nix-mode-format nix-format-buffer))
+  (put sym 'completion-predicate #'ignore))
 
 
 ;;; Rust

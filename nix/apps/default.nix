@@ -5,11 +5,14 @@ let
     program = "${drv}/bin/${name}";
   };
   mkApps = drvs:
-    builtins.listToAttrs (map (drv: rec {
-      name = drv.pname or drv.name;
-      value = mkApp drv name;
-    }) drvs);
-in mkApps [
+    builtins.listToAttrs (map
+      (drv: rec {
+        name = drv.pname or drv.name;
+        value = mkApp drv name;
+      })
+      drvs);
+in
+mkApps [
   (pkgs.writeShellApplication {
     name = "provision_disks";
     runtimeInputs = with pkgs; [
