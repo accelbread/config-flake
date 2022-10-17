@@ -105,11 +105,6 @@ in
           "/nix".device = "nix";
           "/persist" = {
             device = "persist";
-            options = [ "noexec" ];
-            neededForBoot = true;
-          };
-          "/persist/home" = {
-            device = "persist/home";
             neededForBoot = true;
           };
         });
