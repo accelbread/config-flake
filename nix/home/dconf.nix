@@ -61,7 +61,7 @@
         system-action-hibernate.extensionUuid
       ];
       favorite-apps = [
-        "emacsclient.desktop"
+        "emacs.desktop"
         "librewolf.desktop"
         "org.gnome.Nautilus.desktop"
       ];

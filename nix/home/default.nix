@@ -79,9 +79,26 @@ in
     pinentryFlavor = "gnome3";
   };
 
-  xdg.desktopEntries.cups = {
-    name = "Manage Printing";
-    noDisplay = true;
-    exec = null;
+  xdg.desktopEntries = (builtins.mapAttrs
+    (_: v: { name = v; exec = null; noDisplay = true; })
+    {
+      cups = "Manage Printing";
+      emacsclient = "Emacs (Client)";
+      emacs-mail = "Emacs (Mail)";
+      emacsclient-mail = "Emacs (Mail, Client)";
+    })
+  // {
+    emacs = {
+      name = "Emacs";
+      mimeType = [ "text/english" "text/plain" ];
+      exec = "emacsclient -ca \"\" %F";
+      icon = "emacs";
+      startupNotify = true;
+      settings.StartupWMClass = "Emacs";
+      actions.new-instance = {
+        name = "New Instance";
+        exec = "emacs %F";
+      };
+    };
   };
 }
