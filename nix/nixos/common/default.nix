@@ -206,7 +206,6 @@ in
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
-      gnome.core-utilities.enable = false;
       avahi.nssmdns = true;
       udev.packages = with pkgs;
         lib.singleton (stdenv.mkDerivation rec {
@@ -314,13 +313,6 @@ in
         jq
         librewolf
         v4l-utils
-        gnome-console
-        gnome.nautilus
-        gnome.gnome-system-monitor
-        gnome.evince
-        gnome.eog
-        gnome.gnome-characters
-        gnome.gnome-clocks
         gnomeExtensions.system-action-hibernate
         (pkgs.stdenv.mkDerivation {
           name = "emacs-terminfo";
