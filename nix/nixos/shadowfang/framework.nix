@@ -11,17 +11,6 @@
     opengl.extraPackages = with pkgs; [ intel-compute-runtime ];
   };
 
-  systemd.services.reinit-touchpad = {
-    enable = true;
-    description = "Reload i2c_hid_acpi on wakeup.";
-    after = [ "systemd-hibernate.service" ];
-    wantedBy = [ "systemd-hibernate.target" ];
-    script = ''
-      rmmod i2c_hid_acpi
-      modprobe i2c_hid_acpi
-    '';
-  };
-
   powerManagement.powertop.enable = true;
 
   services = {
