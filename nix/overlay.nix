@@ -17,6 +17,7 @@ in
                 clang-format-executable "${pkgs.clang-tools}/bin/clang-format"
                 rust-rustfmt-bin "${pkgs.rustfmt}/bin/rustfmt"
                 sh-shellcheck-program "${pkgs.shellcheck}/bin/shellcheck"
+                direnv--executable "${pkgs.direnv}/bin/direnv"
                 fish-completion-command "${pkgs.fish}/bin/fish")
           (with-eval-after-load 'eglot
             (setq eglot-server-programs

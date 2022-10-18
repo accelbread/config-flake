@@ -36,7 +36,7 @@
          vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
          eglot yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
          zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
-         rainbow-mode reformatter))
+         rainbow-mode reformatter direnv))
 
 (setq package-native-compile t)
 
@@ -1082,6 +1082,13 @@
     ("\n" " LF")
     ("\r" " CR")
     ("\r\n" " CRLF")))
+
+
+;;; Direnv
+
+(setq direnv-always-show-summary t)
+
+(direnv-mode)
 
 
 ;;; Compilation
