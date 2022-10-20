@@ -791,7 +791,6 @@
       eshell-hist-move-to-end nil
       eshell-save-history-on-exit nil
       eshell-input-filter #'eshell-input-filter-initial-space
-      eshell-destroy-buffer-when-process-dies t
       eshell-cd-on-directory nil
       eshell-ls-archive-regexp "\\`\\'"
       eshell-ls-backup-regexp "\\`\\'"
