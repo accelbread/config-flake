@@ -35,7 +35,6 @@ in
         efi.canTouchEfiVariables = true;
       };
       kernelPackages = pkgs.linuxPackages_latest;
-      kernelParams = [ "elevator=none" ];
       kernel.sysctl = {
         "kernel.kptr_restrict" = "2";
         "kernel.yama.ptrace_scope" = "1";
