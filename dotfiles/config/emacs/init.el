@@ -988,6 +988,20 @@
                                           face error))))
 
 
+;;; Direnv
+
+(setq direnv-show-paths-in-summary nil)
+
+(direnv-mode)
+
+(defun direnv-handle-dir-change ()
+  "Update direnv on switch to non-remote directory."
+  (unless (file-remote-p default-directory)
+    (direnv-update-directory-environment)))
+
+(add-hook 'eshell-directory-change-hook #'direnv-handle-dir-change)
+
+
 ;;; Term
 
 (with-eval-after-load 'term
@@ -1081,13 +1095,6 @@
     ("\n" " LF")
     ("\r" " CR")
     ("\r\n" " CRLF")))
-
-
-;;; Direnv
-
-(setq direnv-always-show-summary t)
-
-(direnv-mode)
 
 
 ;;; Compilation

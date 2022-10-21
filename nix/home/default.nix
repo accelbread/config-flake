@@ -13,7 +13,7 @@ in
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
     };
-    packages = with pkgs; [ emacsAccelbread aspellDicts.en zeal ];
+    packages = with pkgs; [ emacsAccelbread aspellDicts.en zeal direnv ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
       ".librewolf".source = self + /dotfiles/librewolf;
