@@ -37,5 +37,6 @@
         }) // {
       overlays.default = import ./nix/overlay.nix;
       nixosConfigurations = import ./nix/nixos inputs pkgsFor;
+      templates = import ./templates;
     };
 }
