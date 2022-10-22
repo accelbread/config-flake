@@ -36,7 +36,7 @@
          vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
          eglot yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
          zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
-         rainbow-mode reformatter direnv))
+         rainbow-mode reformatter direnv editorconfig))
 
 (setq package-native-compile t)
 
@@ -203,6 +203,10 @@
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
 (hide-minor-mode 'auto-fill-function " ↩️")
+
+(setq editorconfig-mode-lighter "")
+
+(editorconfig-mode)
 
 
 ;;; Misc UI
