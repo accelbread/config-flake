@@ -39,7 +39,7 @@ in
         pull.ff = "only";
         user.useConfigOnly = true;
       };
-      ignores = [ "/.evc" ];
+      ignores = [ "/.evc" ".direnv" ];
     };
     gpg.homedir = "${config.xdg.dataHome}/gnupg";
     password-store = {
