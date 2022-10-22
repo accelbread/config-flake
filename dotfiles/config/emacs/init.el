@@ -31,12 +31,12 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (setq package-selected-packages
-      '( meow gcmh svg-lib rainbow-delimiters flyspell-correct which-key rg
+      '( meow gcmh rainbow-delimiters flyspell-correct which-key rg editorconfig
          corfu corfu-doc cape kind-icon vertico orderless marginalia consult
-         vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
-         yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
-         zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
-         rainbow-mode reformatter direnv editorconfig))
+         magit magit-todos hl-todo direnv vterm fish-completion virtual-comment
+         rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
+         clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
+         toml-mode yaml-mode git-modes pdf-tools))
 
 (setq package-native-compile t)
 
