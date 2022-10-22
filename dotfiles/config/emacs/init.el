@@ -34,7 +34,7 @@
       '( meow gcmh svg-lib rainbow-delimiters flyspell-correct which-key rg
          corfu corfu-doc cape kind-icon vertico orderless marginalia consult
          vterm fish-completion magit magit-todos hl-todo virtual-comment rmsbolt
-         eglot yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
+         yasnippet markdown-mode clang-format cmake-mode rust-mode cargo
          zig-mode nix-mode scad-mode toml-mode yaml-mode git-modes pdf-tools
          rainbow-mode reformatter direnv editorconfig))
 
