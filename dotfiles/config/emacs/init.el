@@ -1001,6 +1001,17 @@
 
 (add-hook 'eshell-directory-change-hook #'direnv-handle-dir-change)
 
+(advice-add #'direnv--export :around
+            (lambda (orig-fun &rest args)
+              "Have `direnv-mode` process ansi colors in warnings."
+              (cl-letf* ((orig-buffer-string (symbol-function #'buffer-string))
+                         ((symbol-function #'buffer-string)
+                          (lambda (&rest args)
+                            (ansi-color-apply
+                             (apply orig-buffer-string args)))))
+                (apply orig-fun args)))
+            '((name . direnv-color-warnings)))
+
 
 ;;; Term
 
