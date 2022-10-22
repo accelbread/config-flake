@@ -79,14 +79,12 @@ in
     pinentryFlavor = "gnome3";
   };
 
-  xdg.desktopEntries = (builtins.mapAttrs
-    (_: v: { name = v; exec = null; noDisplay = true; })
-    {
-      cups = "Manage Printing";
-      emacsclient = "Emacs (Client)";
-      emacs-mail = "Emacs (Mail)";
-      emacsclient-mail = "Emacs (Mail, Client)";
+  xdg.desktopEntries = builtins.foldl'
+    (a: v: a // {
+      ${v} = { name = ""; exec = null; settings.Hidden = "true"; };
     })
+    { }
+    [ "cups" "emacsclient" "emacs-mail" "emacsclient-mail" ]
   // {
     emacs = {
       name = "Emacs";
