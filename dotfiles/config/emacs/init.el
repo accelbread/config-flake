@@ -1011,8 +1011,9 @@
               (cl-letf* ((orig-buffer-string (symbol-function #'buffer-string))
                          ((symbol-function #'buffer-string)
                           (lambda (&rest args)
-                            (ansi-color-apply
-                             (apply orig-buffer-string args)))))
+                            (string-trim
+                             (ansi-color-apply
+                              (apply orig-buffer-string args))))))
                 (apply orig-fun args)))
             '((name . direnv-color-warnings)))
 
