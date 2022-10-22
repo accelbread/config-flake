@@ -58,6 +58,7 @@
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
         native-window-placement.extensionUuid
+        espresso.extensionUuid
         system-action-hibernate.extensionUuid
       ];
       favorite-apps = [
