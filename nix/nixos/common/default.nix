@@ -312,6 +312,7 @@ in
         jq
         librewolf
         v4l-utils
+        gnome.gnome-session
         gnomeExtensions.system-action-hibernate
         (pkgs.stdenv.mkDerivation {
           name = "emacs-terminfo";
