@@ -277,11 +277,7 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      extraSpecialArgs = {
-        inherit flakes;
-        user = config.users.users.archit;
-      };
-      users.archit = import (self + /nix/home);
+      users.archit = self + /nix/home;
     };
 
     users = {

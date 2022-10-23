@@ -1,13 +1,11 @@
-{ config, pkgs, lib, flakes, user, ... }:
+{ config, pkgs, lib, ... }:
 let
   inherit (builtins) mapAttrs;
-  inherit (flakes) self;
+  self = ../..;
 in
 {
   imports = [ ./emacs.nix ./dconf.nix ];
   home = {
-    username = user.name;
-    homeDirectory = user.home;
     stateVersion = "22.05";
     sessionVariables = {
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
