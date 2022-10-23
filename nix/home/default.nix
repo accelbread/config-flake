@@ -18,7 +18,12 @@ in
       emacsAccelbread-terminfo
       aspellDicts.en
       direnv
+      librewolf
       zeal
+      v4l-utils
+      gnome.gnome-session
+      gnomeExtensions.espresso
+      gnomeExtensions.system-action-hibernate
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;

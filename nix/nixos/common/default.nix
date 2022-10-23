@@ -332,11 +332,6 @@ in
         fd
         tree
         jq
-        librewolf
-        v4l-utils
-        gnome.gnome-session
-        gnomeExtensions.espresso
-        gnomeExtensions.system-action-hibernate
       ];
       gnome.excludePackages = [ pkgs.gnome-tour ];
       localBinInPath = true;
