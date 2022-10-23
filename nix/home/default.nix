@@ -4,7 +4,7 @@ let
   inherit (flakes) self;
 in
 {
-  imports = [ (import ./dconf.nix) ];
+  imports = [ ./emacs.nix ./dconf.nix ];
   home = {
     username = user.name;
     homeDirectory = user.home;
@@ -14,10 +14,6 @@ in
       TSS2_LOG = "fapi+NONE";
     };
     packages = with pkgs; [
-      emacsAccelbread
-      emacsAccelbread-terminfo
-      aspellDicts.en
-      direnv
       librewolf
       zeal
       v4l-utils
@@ -36,21 +32,13 @@ in
     home-manager = { };
     man.generateCaches = true;
     bash.initExtra = ''
-      if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-          && [[ -n "$EMACS_VTERM_PATH" ]] \
-          && [[ -f "$EMACS_VTERM_PATH/etc/emacs-vterm-bash.sh" ]]; then
-          source "$EMACS_VTERM_PATH/etc/emacs-vterm-bash.sh"
-      fi
       if [[ -z "$LS_COLORS" ]]; then
           eval "$(${pkgs.coreutils}/bin/dircolors -b)"
       fi
     '';
-    git = {
-      extraConfig = {
-        pull.ff = "only";
-        user.useConfigOnly = true;
-      };
-      ignores = [ "/.evc" ".direnv" ];
+    git.extraConfig = {
+      pull.ff = "only";
+      user.useConfigOnly = true;
     };
     gpg.homedir = "${config.xdg.dataHome}/gnupg";
     password-store = {
@@ -90,24 +78,7 @@ in
     pinentryFlavor = "gnome3";
   };
 
-  xdg.desktopEntries = builtins.foldl'
-    (a: v: a // {
-      ${v} = { name = ""; exec = null; settings.Hidden = "true"; };
-    })
-    { }
-    [ "cups" "emacsclient" "emacs-mail" "emacsclient-mail" ]
-  // {
-    emacs = {
-      name = "Emacs";
-      mimeType = [ "text/english" "text/plain" ];
-      exec = "emacsclient -ca \"\" %F";
-      icon = "emacs";
-      startupNotify = true;
-      settings.StartupWMClass = "Emacs";
-      actions.new-instance = {
-        name = "New Instance";
-        exec = "emacs %F";
-      };
-    };
+  xdg.desktopEntries = {
+    cups = { name = ""; exec = null; settings.Hidden = "true"; };
   };
 }
