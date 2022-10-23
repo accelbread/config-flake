@@ -60,6 +60,28 @@ in
           printf "$message" | ${pkgs.cowsay}/bin/cowsay -n
         '';
         postDeviceCommands = lib.mkAfter ''
+          # We need to attempt to resume before wiping root
+          echo Attempting resume...
+          if test -e /sys/power/resume -a -e /sys/power/disk; then
+            resumeDevices=${toString (map (s: s.device) config.swapDevices)}
+            for sd in $resumeDevices; do
+              if waitDevice "$sd"; then
+                resumeInfo="$(udevadm info -q property "$sd")"
+                if [ "$(echo "$resumeInfo" | \
+                    sed -n 's/^ID_FS_TYPE=//p')" = "swsuspend" ]; then
+                  resumeDev="$sd"
+                  break
+                fi
+              fi
+            done
+            if test -n "$resumeDev"; then
+              resumeMajor="$(echo "$resumeInfo" | sed -n 's/^MAJOR=//p')"
+              resumeMinor="$(echo "$resumeInfo" | sed -n 's/^MINOR=//p')"
+              echo "$resumeMajor:$resumeMinor" \
+                  > /sys/power/resume 2> /dev/null || echo "Failed to resume..."
+            fi
+          fi
+
           mkdir -p /mnt
           mount -t btrfs -o noatime,compress=zstd /dev/${hostname}_vg1/pool /mnt
           ${
