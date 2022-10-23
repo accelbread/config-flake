@@ -277,7 +277,7 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.archit = self + /nix/home;
+      users.archit = self + /nix/home/nixos.nix;
     };
 
     users = {
