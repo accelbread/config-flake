@@ -23,7 +23,6 @@
       locate-pointer = true;
     };
     "org/gnome/desktop/media-handling" = { autorun-never = true; };
-    "org/gnome/desktop/peripherals/touchpad" = { speed = 0.4; };
     "org/gnome/desktop/privacy" = {
       old-files-age = mkUint32 30;
       recent-files-max-age = -1;
@@ -47,13 +46,6 @@
       night-light-temperature = mkUint32 4226;
     };
     "org/gnome/nautilus/preferences" = { show-delete-permanently = true; };
-    "org/gnome/settings-daemon/plugins/power" = {
-      power-button-action = "interactive";
-      sleep-inactive-ac-timeout = 900;
-      sleep-inactive-ac-type = "hibernate";
-      sleep-inactive-battery-timeout = 900;
-      sleep-inactive-battery-type = "hibernate";
-    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [

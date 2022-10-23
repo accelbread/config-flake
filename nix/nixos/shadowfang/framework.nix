@@ -13,6 +13,8 @@
 
   powerManagement.powertop.enable = true;
 
+  home-manager.sharedModules = [ ./home.nix ];
+
   services = {
     tlp = {
       enable = true;
