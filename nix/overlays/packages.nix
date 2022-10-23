@@ -10,7 +10,7 @@ in
       lib.attrsets.attrVals
         (map head (filter isList (split "([-a-z]+)" (head
           (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
-            (readFile (self + /dotfiles/config/emacs/init.el)))))))
+            (readFile (self + /dotfiles/emacs/init.el)))))))
         epkgs
       ++ lib.singleton (epkgs.trivialBuild {
         pname = "emacs-default-init";

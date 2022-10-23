@@ -1,10 +1,20 @@
-{ pkgs, ... }: {
-  home.packages = with pkgs; [
-    emacsAccelbread
-    emacsAccelbread-terminfo
-    aspellDicts.en
-    direnv
-  ];
+{ pkgs, ... }:
+let
+  self = ../..;
+in
+{
+  home = {
+    packages = with pkgs; [
+      emacsAccelbread
+      emacsAccelbread-terminfo
+      aspellDicts.en
+      direnv
+    ];
+    file.".config/emacs" = {
+      source = self + /dotfiles/emacs;
+      recursive = true;
+    };
+  };
 
   programs = {
     bash.initExtra = ''
