@@ -10,6 +10,7 @@ in
     packages = with pkgs; [
       librewolf
       v4l-utils
+      helvum
       gnome.gnome-session
       gnomeExtensions.espresso
       gnomeExtensions.system-action-hibernate
