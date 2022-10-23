@@ -7,6 +7,7 @@
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
     kernelModules = [ "cpuid" ];
+    kernelParams = [ "amdgpu.deep_color=1" ];
   };
 
   nixpkgs.overlays = [ flakes.self.overlays.amd-cpu ];
