@@ -27,7 +27,6 @@ in
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {
-    home-manager = { };
     man.generateCaches = true;
     bash.initExtra = ''
       if [[ -z "$LS_COLORS" ]]; then
