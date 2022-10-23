@@ -4,7 +4,7 @@ let
   inherit (builtins) mapAttrs;
 in
 {
-  options.disks = with lib; rec {
+  options.sysconfig.disks = with lib; {
     boot = mkOption {
       type = types.str;
       description = "EFI partition.";
@@ -50,7 +50,7 @@ in
               bypassWorkqueues = true;
             };
           })
-          config.disks.luks;
+          config.sysconfig.disks.luks;
         preDeviceCommands = ''
           message="\
           Hello, this is ${hostname}.
@@ -105,7 +105,7 @@ in
         })
       ({
         "/boot" = {
-          device = config.disks.boot;
+          device = config.sysconfig.disks.boot;
           fsType = "vfat";
           options = [ "noexec" ];
         };

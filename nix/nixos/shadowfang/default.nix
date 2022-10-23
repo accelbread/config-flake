@@ -4,7 +4,7 @@ mkSystem {
   modules = [
     ./framework.nix
     {
-      disks = {
+      sysconfig.disks = {
         boot = "/dev/nvme0n1p1";
         luks.disk1 = "/dev/nvme0n1p2";
       };
