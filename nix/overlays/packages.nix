@@ -28,4 +28,13 @@ in
                     (nix-mode "${rnix-lsp}/bin/rnix-lsp"))))
         '';
       }));
+  emacsAccelbread-terminfo = final.stdenv.mkDerivation {
+    name = "emacsAccelbread-terminfo";
+    dontUnpack = true;
+    nativeBuildInputs = with final; [ ncurses ];
+    installPhase = ''
+      mkdir -p $out/share/terminfo
+      tic -x -o $out/share/terminfo ${self}/misc/dumb-emacs-ansi.ti
+    '';
+  };
 }
