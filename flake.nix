@@ -35,7 +35,7 @@
           apps = import ./nix/apps pkgs;
           formatter = pkgs.nixpkgs-fmt;
         }) // {
-      overlays.default = import ./nix/overlay.nix;
+      overlays = import ./nix/overlays;
       nixosConfigurations = import ./nix/nixos inputs pkgsFor;
       templates = import ./nix/templates;
     };

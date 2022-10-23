@@ -2,8 +2,8 @@
   imports = [ flakes.nixos-hardware.nixosModules.framework ];
 
   boot = {
-    kernelModules = [ "kvm-intel" "cpuid" "coretemp" ];
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
+    kernelModules = [ "kvm-intel" "cpuid" "coretemp" ];
   };
 
   hardware = {
