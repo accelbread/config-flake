@@ -130,8 +130,6 @@ in
           };
         });
 
-    swapDevices = [{ device = "/dev/shadowfang_vg1/swap"; }];
-
     hardware = {
       firmware = [ pkgs.linux-firmware ];
       video.hidpi.enable = true;
