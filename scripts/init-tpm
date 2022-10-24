@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+read -rsp 'SSH key password: ' sshpass
+echo
+
+echo Setting up TPM
+tpm2_ptool init
+tpm2_ptool addtoken --pid=1 --label=ssh --userpin="$sshpass" --sopin="$sshpass"
+tpm2_ptool addkey --label=ssh --userpin="$sshpass" --algorithm=ecc256
+sshpass=
+
+echo Public key:
+ssh-keygen -D /run/current-system/sw/lib/libtpm2_pkcs11.so
