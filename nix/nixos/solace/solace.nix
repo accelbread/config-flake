@@ -12,6 +12,11 @@
 
   nixpkgs.overlays = [ flakes.self.overlays.amd-cpu ];
 
+  environment = {
+    persistence."/persist".users.archit.directories = [ ".mozilla" ];
+    systemPackages = with pkgs; [ firefox ];
+  };
+
   hardware.cpu.amd.updateMicrocode = true;
 }
 
