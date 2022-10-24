@@ -12,6 +12,8 @@
 
   nixpkgs.overlays = [ flakes.self.overlays.amd-cpu ];
 
+  home-manager.sharedModules = [ ./home.nix ];
+
   environment = {
     persistence."/persist".users.archit.directories = [ ".mozilla" ];
     systemPackages = with pkgs; [ firefox ];
