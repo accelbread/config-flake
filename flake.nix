@@ -24,6 +24,9 @@
         import nixpkgs {
           inherit system;
           overlays = [ self.overlays.default emacs-overlay.overlays.default ];
+          # Allow steam package for udev rules
+          config.allowUnfreePredicate = pkg:
+            (nixpkgs.lib.getName pkg) == "steam-original";
         };
     in
     eachSystem [ "x86_64-linux" ]

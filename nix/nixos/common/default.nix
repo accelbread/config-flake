@@ -136,6 +136,7 @@ in
       rasdaemon.enable = true;
       pulseaudio.enable = false;
       opengl.enable = true;
+      steam-hardware.enable = true;
     };
 
     networking = {
@@ -225,6 +226,7 @@ in
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
+      flatpak.enable = true;
       avahi.nssmdns = true;
       udev.packages = with pkgs;
         lib.singleton (stdenv.mkDerivation rec {
@@ -315,6 +317,8 @@ in
             ".local/share/gnupg"
             ".local/share/pass"
             ".local/share/Zeal"
+            ".local/share/flatpak"
+            ".var/app"
           ];
           files = [ ".face" ".config/monitors.xml" ];
         };
