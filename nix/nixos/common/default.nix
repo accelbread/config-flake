@@ -306,6 +306,7 @@ in
             "Music"
             "Pictures"
             "Videos"
+            "Library"
             "projects"
             "playground"
             ".config/emacs"
