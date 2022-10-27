@@ -1,6 +1,6 @@
 { pkgs, flakes, ... }: {
   imports = [
-    flakes.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    flakes.nixos-hardware.nixosModules.common-cpu-amd
     flakes.nixos-hardware.nixosModules.common-gpu-amd
   ];
 
