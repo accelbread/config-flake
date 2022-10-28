@@ -8,6 +8,7 @@ in
       emacsAccelbread
       emacsAccelbread-terminfo
       aspellDicts.en
+      noto-fonts-bw-emoji
       direnv
     ];
     file.".config/emacs" = {
