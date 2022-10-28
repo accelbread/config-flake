@@ -784,7 +784,7 @@
 
 (setq eshell-modules-list '( eshell-basic eshell-cmpl eshell-dirs eshell-glob
                              eshell-hist eshell-ls eshell-pred eshell-prompt
-                             eshell-term eshell-tramp eshell-unix)
+                             eshell-term eshell-unix)
       eshell-error-if-no-glob t
       eshell-glob-include-dot-dot nil
       eshell-glob-chars-list '(?\] ?\[ ?*)
