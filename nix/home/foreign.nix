@@ -12,22 +12,14 @@ in
   };
 
   home = {
-    packages = (with pkgs; [
-      zile
-      git
-      ripgrep
-      fd
-      tree
-      jq
-    ]) ++
-    (with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
+    packages = with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
       dejavu_fonts
       liberation_ttf
       noto-fonts
       noto-fonts-extra
       noto-fonts-cjk-sans
       noto-fonts-emoji
-    ]);
+    ];
   };
 
   programs.home-manager.enable = true;

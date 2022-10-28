@@ -310,15 +310,7 @@ in
           files = [ ".face" ".config/monitors.xml" ];
         };
       };
-      defaultPackages = [ ];
-      systemPackages = with pkgs; [
-        zile
-        git
-        ripgrep
-        fd
-        tree
-        jq
-      ];
+      defaultPackages = with pkgs; [ zile git ];
       gnome.excludePackages = [ pkgs.gnome-tour ];
       localBinInPath = true;
       variables.EDITOR = "zile";
