@@ -1,5 +1,6 @@
 pkgs:
 let
+  self = ../..;
   mkApp = drv: name: {
     type = "app";
     program = "${drv}/bin/${name}";
@@ -14,7 +15,7 @@ let
 in
 mkApps [
   (pkgs.writeShellApplication {
-    name = "provision_disks";
+    name = "provision-disks";
     runtimeInputs = with pkgs; [
       util-linux
       parted
@@ -24,7 +25,7 @@ mkApps [
       btrfs-progs
       mkpasswd
     ];
-    text = builtins.readFile ./provision_disks;
+    text = builtins.readFile (self + /scripts/provision-disks);
   })
 ] // {
   emacs = mkApp pkgs.emacsAccelbread "emacs";
