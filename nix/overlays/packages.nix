@@ -1,40 +1,12 @@
 final: prev:
 let
-  inherit (final) lib;
-  self = ../..;
+  inherit (builtins) readDir attrNames filter listToAttrs;
+  inherit (prev.lib.strings) hasSuffix removeSuffix;
+  inherit (prev.lib.attrsets) nameValuePair;
+  packages = map (removeSuffix ".nix") (filter (hasSuffix ".nix")
+    (attrNames (readDir ../packages)));
 in
-{
-  emacsAccelbread =
-    (final.emacsPackagesFor final.emacsPgtkNativeComp).emacsWithPackages (epkgs:
-      with builtins;
-      lib.attrsets.attrVals
-        (map head (filter isList (split "([-a-z]+)" (head
-          (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
-            (readFile (self + /dotfiles/emacs/init.el)))))))
-        epkgs
-      ++ lib.singleton (epkgs.trivialBuild {
-        pname = "emacs-default-init";
-        src = with final; writeText "default.el" ''
-          (setq ispell-program-name "${aspell}/bin/aspell"
-                clang-format-executable "${clang-tools}/bin/clang-format"
-                rust-rustfmt-bin "${rustfmt}/bin/rustfmt"
-                sh-shellcheck-program "${shellcheck}/bin/shellcheck"
-                fish-completion-command "${fish}/bin/fish")
-          (with-eval-after-load 'eglot
-            (setq eglot-server-programs
-                  '(((c++-mode c-mode) "${clang-tools}/bin/clangd")
-                    (rust-mode "${rust-analyzer}/bin/rust-analyzer")
-                    (zig-mode "${zls}/bin/zls")
-                    (nix-mode "${rnix-lsp}/bin/rnix-lsp"))))
-        '';
-      }));
-  emacsAccelbread-terminfo = final.stdenv.mkDerivation {
-    name = "emacsAccelbread-terminfo";
-    dontUnpack = true;
-    nativeBuildInputs = with final; [ ncurses ];
-    installPhase = ''
-      mkdir -p $out/share/terminfo
-      tic -x -o $out/share/terminfo ${self}/misc/dumb-emacs-ansi.ti
-    '';
-  };
-}
+listToAttrs (map
+  (p: nameValuePair p
+    (final.callPackage (../. + "/packages/${p}.nix") { }))
+  packages)
