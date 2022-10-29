@@ -815,8 +815,7 @@
   (require 'tramp))
 
 (with-eval-after-load 'esh-mode
-  (push #'eshell-truncate-buffer
-        eshell-output-filter-functions)
+  (push #'eshell-truncate-buffer eshell-output-filter-functions)
   (define-key eshell-mode-map
               [remap beginning-of-defun] #'eshell-previous-prompt)
   (define-key eshell-mode-map
@@ -833,6 +832,7 @@
 
 (defun my-eshell-init ()
   "Function to run in new eshell buffers."
+  (remove-hook 'eshell-exit-hook #'eshell-write-history t)
   (fish-completion-mode)
   (setq completion-at-point-functions '(cape-file
                                         pcomplete-completions-at-point
@@ -875,7 +875,6 @@
     (overlay-put ov 'face 'eshell-input)))
 
 (add-hook 'eshell-pre-command-hook #'my-eshell-highlight-last-input)
-
 
 (advice-add #'eshell-exec-visual :around
             (lambda (orig-fun &rest args)
