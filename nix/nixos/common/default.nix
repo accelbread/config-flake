@@ -147,6 +147,7 @@ in
       pulseaudio.enable = false;
       opengl.enable = true;
       sensor.iio.enable = true;
+      i2c.enable = true;
       steam-hardware.enable = true;
     };
 
