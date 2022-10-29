@@ -4,6 +4,7 @@
 , emacsPackagesFor
 , aspell
 , shellcheck
+, direnv
 , fish
 , clang-tools
 , rust-analyzer
@@ -21,6 +22,7 @@ let
           clang-format-executable "${clang-tools}/bin/clang-format"
           rust-rustfmt-bin "${rustfmt}/bin/rustfmt"
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
+          envrc-direnv-executable "${direnv}/bin/direnv"
           fish-completion-command "${fish}/bin/fish")
     (with-eval-after-load 'eglot
       (setq eglot-server-programs

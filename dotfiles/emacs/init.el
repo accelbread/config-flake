@@ -33,7 +33,7 @@
 (setq package-selected-packages
       '( meow gcmh rainbow-delimiters flyspell-correct which-key rg editorconfig
          corfu corfu-doc cape kind-icon vertico orderless marginalia consult
-         magit magit-todos hl-todo direnv vterm fish-completion virtual-comment
+         magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
          toml-mode yaml-mode git-modes pdf-tools))
@@ -346,7 +346,7 @@
                 "  " mode-name mode-line-process
                 (:eval (when (eq major-mode 'term-mode)
                          (term-line-ending-mode-line)))
-                minor-mode-alist
+                " " minor-mode-alist
                 "  " mode-line-misc-info))
 
 
@@ -993,28 +993,22 @@
 
 ;;; Direnv
 
-(setq direnv-show-paths-in-summary nil)
+(setq envrc-none-lighter nil
+      envrc-on-lighter '(:propertize " envrc" face warning)
+      envrc-error-lighter '(:propertize " envrc" face error))
 
-(direnv-mode)
+(envrc-global-mode)
 
-(defun direnv-handle-dir-change ()
-  "Update direnv on switch to non-remote directory."
-  (unless (file-remote-p default-directory)
-    (direnv-update-directory-environment)))
+(defun eshell-update-direnv ()
+  "Update direnv state when switching eshell directory."
+  (when envrc-mode (envrc-mode -1))
+  (and (not (file-remote-p default-directory))
+       (locate-dominating-file default-directory ".envrc")
+       (envrc-mode)))
 
-(add-hook 'eshell-directory-change-hook #'direnv-handle-dir-change)
+(add-hook 'eshell-directory-change-hook #'eshell-update-direnv)
 
-(advice-add #'direnv--export :around
-            (lambda (orig-fun &rest args)
-              "Have `direnv-mode` process ansi colors in warnings."
-              (cl-letf* ((orig-buffer-string (symbol-function #'buffer-string))
-                         ((symbol-function #'buffer-string)
-                          (lambda (&rest args)
-                            (string-trim
-                             (ansi-color-apply
-                              (apply orig-buffer-string args))))))
-                (apply orig-fun args)))
-            '((name . direnv-color-warnings)))
+(push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
 
 ;;; Term
