@@ -136,6 +136,7 @@ in
       rasdaemon.enable = true;
       pulseaudio.enable = false;
       opengl.enable = true;
+      sensor.iio.enable = true;
       steam-hardware.enable = true;
     };
 
