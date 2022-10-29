@@ -1010,6 +1010,20 @@
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
+(advice-add #'envrc--apply :after
+            (lambda (&rest _)
+              "Fix envrc eshell integration."
+              (when (derived-mode-p 'eshell-mode)
+                (eshell-set-path (getenv "PATH"))))
+            '((name . fix-envrc-eshell)))
+
+(advice-add #'envrc--clear :after
+            (lambda (&rest _)
+              "Fix envrc eshell integration."
+              (when (derived-mode-p 'eshell-mode)
+                (eshell-set-path (butlast (exec-path)))))
+            '((name . fix-envrc-eshell)))
+
 
 ;;; Term
 
