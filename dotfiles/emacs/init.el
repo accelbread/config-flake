@@ -822,11 +822,11 @@
               [remap end-of-defun] #'eshell-next-prompt))
 
 (with-eval-after-load 'esh-var
-  ;; Have `$/' evaluate to root of current remote.
-  (add-to-list
-   'eshell-variable-aliases-list
-   `("/" ,(lambda (_indices)
-            (concat (file-remote-p default-directory) "/")))))
+  (nconc eshell-variable-aliases-list
+         `(("/" ,(lambda () (concat (file-remote-p default-directory) "/"))
+            nil t)
+           ("TERM" ,(lambda () "dumb-emacs-ansi") t t)
+           ("PAGER" ,(lambda () "cat") t t))))
 
 (add-hook 'eshell-before-prompt-hook #'eshell-begin-on-new-line)
 
@@ -840,10 +840,7 @@
         mode-line-process
         '(" " (:eval (abbreviate-file-name default-directory))))
   (abbrev-mode)
-  (face-remap-set-base 'nobreak-space nil)
-  (setenv "TERM" "dumb-emacs-ansi")
-  (setenv "GIT_PAGER" "cat")
-  (setenv "PAGER" "cat"))
+  (face-remap-set-base 'nobreak-space nil))
 
 (add-hook 'eshell-mode-hook #'my-eshell-init)
 
