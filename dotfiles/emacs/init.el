@@ -806,7 +806,7 @@
                eshell-last-command-status
                eshell-last-command-result))
     (make-variable-buffer-local v))
-  (push "echo" eshell-complex-commands))
+  (push #'always eshell-complex-commands))
 
 (with-eval-after-load 'em-term
   (push "watch" eshell-visual-commands))
