@@ -18,7 +18,7 @@
         enableGamma = false;
         enableScreen = false;
       }).overrideAttrs (finalAttrs: prevAttrs: {
-        cmakeFlags = prevAttrs.cmakeFlags ++ [ "-DENABLE_YOCTOLIGHT=1" "" ];
+        cmakeFlags = prevAttrs.cmakeFlags ++ [ "-DENABLE_YOCTOLIGHT=1" ];
       });
     })
   ];

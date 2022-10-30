@@ -9,6 +9,7 @@ in
       type = types.str;
       description = "EFI partition.";
     };
+
     luks = mkOption {
       type = types.attrsOf types.str;
       description = "Attrset of LUKS partitions.";
@@ -17,13 +18,13 @@ in
 
   config = {
     nixpkgs = {
-      overlays = [
-        flakes.emacs-overlay.overlays.default
-        flakes.self.overlays.default
+      overlays = with flakes; [
+        emacs-overlay.overlays.default
+        self.overlays.default
       ];
       # Allow steam package for steam-hardware udev rules
       config.allowUnfreePredicate = pkg:
-        (pkgs.lib.getName pkg) == "steam-original";
+        (lib.getName pkg) == "steam-original";
     };
 
     nix = {
@@ -109,10 +110,9 @@ in
     };
 
     fileSystems = mapAttrs
-      (_: v:
-        v // {
-          options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
-        })
+      (_: v: v // {
+        options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
+      })
       ({
         "/boot" = {
           device = config.sysconfig.disks.boot;
@@ -120,17 +120,16 @@ in
           options = [ "noexec" ];
         };
       } // mapAttrs
-        (_: v:
-          v // {
-            device = "/dev/${hostname}_vg1/pool";
-            fsType = "btrfs";
-            options = v.options or [ ] ++ [
-              "subvol=${v.device}"
-              "compress=zstd"
-              "autodefrag"
-              "user_subvol_rm_allowed"
-            ];
-          })
+        (_: v: v // {
+          device = "/dev/${hostname}_vg1/pool";
+          fsType = "btrfs";
+          options = v.options or [ ] ++ [
+            "subvol=${v.device}"
+            "compress=zstd"
+            "autodefrag"
+            "user_subvol_rm_allowed"
+          ];
+        })
         {
           "/".device = "root";
           "/nix".device = "nix";
@@ -166,11 +165,7 @@ in
     sound.enable = true;
 
     security = {
-      sudo = {
-        extraConfig = ''
-          Defaults lecture = never
-        '';
-      };
+      sudo.extraConfig = "Defaults lecture = never";
       tpm2 = {
         enable = true;
         pkcs11 = {

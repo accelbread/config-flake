@@ -18,23 +18,20 @@
     };
   };
   outputs = { self, nixpkgs, flake-utils, emacs-overlay, ... }@inputs:
-    let
-      inherit (flake-utils.lib) eachSystem;
-      pkgsFor = system:
-        import nixpkgs {
-          inherit system;
-          overlays = [ self.overlays.default emacs-overlay.overlays.default ];
-        };
-    in
-    eachSystem [ "x86_64-linux" ]
+    flake-utils.lib.eachSystem [ "x86_64-linux" ]
       (system:
-        let pkgs = pkgsFor system;
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ emacs-overlay.overlays.default self.overlays.default ];
+          };
         in
         {
           packages = self.overlays.default pkgs pkgs;
           apps = import ./nix/apps pkgs;
           formatter = pkgs.nixpkgs-fmt;
-        }) // {
+        })
+    // {
       overlays = import ./nix/overlays;
       nixosConfigurations = import ./nix/nixos inputs;
       templates = import ./nix/templates;
