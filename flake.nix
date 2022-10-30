@@ -34,6 +34,7 @@
     // {
       overlays = import ./nix/overlays;
       nixosConfigurations = import ./nix/nixos inputs;
+      nixosModules = import ./nix/home;
       templates = import ./nix/templates;
     };
 }
