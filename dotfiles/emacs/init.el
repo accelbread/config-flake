@@ -36,7 +36,7 @@
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
-         toml-mode yaml-mode git-modes pdf-tools))
+         toml-mode yaml-mode git-modes pdf-tools inheritenv))
 
 (setq package-native-compile t)
 
@@ -890,7 +890,7 @@
                              (vterm-mode))))
                         ((symbol-function #'term-char-mode) #'ignore)
                         ((symbol-function #'term-set-escape-char) #'ignore))
-                (apply orig-fun args)))
+                (apply #'inheritenv-apply orig-fun args)))
             '((name . eshell-visual-vterm)))
 
 (advice-add #'eshell-term-sentinel :around
