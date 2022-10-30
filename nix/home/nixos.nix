@@ -4,7 +4,7 @@ let
   self = ../..;
 in
 {
-  imports = [ ./. ./dconf.nix ];
+  imports = [ ./common.nix ./dconf.nix ];
 
   home = {
     stateVersion = "22.05";

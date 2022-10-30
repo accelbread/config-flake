@@ -4,7 +4,7 @@ let
   self = ../..;
 in
 {
-  imports = [ ./. ];
+  imports = [ ./common.nix ];
 
   nix = {
     package = pkgs.nix;
