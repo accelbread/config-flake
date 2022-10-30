@@ -883,11 +883,10 @@
                            (defvar vterm-shell)
                            (defvar vterm-buffer-name)
                            (let ((vterm-shell
-                                  (string-join
-                                   (mapcar #'shell-quote-argument
-                                           (cons (file-local-name program)
-                                                 args))
-                                   " "))
+                                  (mapconcat #'shell-quote-argument
+                                             (cons (file-local-name program)
+                                                   args)
+                                             " "))
                                  (vterm-buffer-name "*eshell-vterm*"))
                              (vterm-mode))))
                         ((symbol-function #'term-char-mode) #'ignore)
