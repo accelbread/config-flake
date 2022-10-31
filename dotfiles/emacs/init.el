@@ -36,7 +36,7 @@
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
-         toml-mode yaml-mode git-modes pdf-tools inheritenv))
+         toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv))
 
 (setq package-native-compile t)
 
@@ -1132,7 +1132,8 @@
 
 ;;; Eglot
 
-(setq eglot-stay-out-of '(eldoc-documentation-strategy)
+(setq eglot-stay-out-of '(eldoc-documentation-strategy
+                          flymake-diagnostic-functions)
       eglot-autoshutdown t)
 
 (advice-add #'eglot-completion-at-point :around #'capf-disable-exclusive)
@@ -1147,7 +1148,16 @@
   "Enable eglot and its dependencies."
   (yas-minor-mode)
   (require 'eglot)
+  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
+
+
+;;; Vale
+
+(setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
+                            message-mode c-mode c++-mode rust-mode python-mode))
+
+(add-hook 'find-file-hook 'flymake-vale-maybe-load)
 
 
 ;;; Formatting
@@ -1385,7 +1395,9 @@
       (goto-char (org-babel-where-is-src-block-result))
       (ansi-color-apply-on-region (point) (org-babel-result-end)))))
 
-(add-hook 'org-babel-after-execute-hook 'org-babel-apply-ansi-color)
+(add-hook 'org-babel-after-execute-hook #'org-babel-apply-ansi-color)
+
+(add-hook 'org-mode-hook #'flymake-mode)
 
 
 ;;; Markdown
@@ -1410,6 +1422,7 @@
   (setq page-delimiter markdown-regex-hr))
 
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
+(add-hook 'markdown-mode-hook #'flymake-mode)
 
 
 ;;; Nix

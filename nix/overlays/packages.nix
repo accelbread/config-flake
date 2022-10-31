@@ -7,5 +7,5 @@ let
     (attrNames (readDir ../packages)));
 in
 listToAttrs (map
-  (p: nameValuePair p (final.callPackage (../. + "/packages/${p}.nix") { }))
+  (p: nameValuePair p (final.callPackage (../packages + "/${p}.nix") { }))
   packages)
