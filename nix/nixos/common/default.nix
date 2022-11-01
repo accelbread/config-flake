@@ -4,6 +4,8 @@ let
   inherit (builtins) mapAttrs;
 in
 {
+  imports = [ ./usbguard.nix ];
+
   options.sysconfig.disks = with lib; {
     boot = mkOption {
       type = types.str;
@@ -294,7 +296,10 @@ in
           "/var/log"
           "/var/lib/systemd/coredump"
         ];
-        files = [ "/etc/machine-id" ];
+        files = [
+          "/etc/machine-id"
+          "/var/lib/usbguard/rules.conf"
+        ];
         users.archit = {
           directories = [
             "Documents"
