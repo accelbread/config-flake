@@ -310,6 +310,7 @@ in
             "Library"
             "projects"
             "playground"
+            ".ssh"
             ".config/emacs"
             ".librewolf/profile"
             ".local/share/tpm2_pkcs11"

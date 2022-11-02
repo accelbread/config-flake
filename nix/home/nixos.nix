@@ -50,7 +50,7 @@ in
         PASSWORD_STORE_CLIP_TIME = "10";
         PASSWORD_STORE_GENERATED_LENGTH = "16";
         PASSWORD_STORE_DIR = "${config.xdg.dataHome}/pass";
-        PASSWORD_STORE_SIGNING_KEY = "570BE31ADF804E920FD226321F90781ED8448A79";
+        PASSWORD_STORE_SIGNING_KEY = "C4F4D63E4C22651B053D0848DE26C77562110E92";
       };
     };
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
