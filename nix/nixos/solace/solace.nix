@@ -6,7 +6,7 @@
 
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
-    kernelModules = [ "cpuid" ];
+    kernelModules = [ "cpuid" "k10temp" "it87" ];
     kernelParams = [ "amdgpu.deep_color=1" ];
   };
 
