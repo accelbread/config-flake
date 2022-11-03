@@ -21,6 +21,7 @@ in
       v4l-utils
       helvum
       gnome.gnome-session
+      gnome.dconf-editor
       gnomeExtensions.espresso
       gnomeExtensions.system-action-hibernate
     ];
