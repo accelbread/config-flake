@@ -23,6 +23,8 @@
     })
   ];
 
+  systemd.sleep.extraConfig = "AllowSuspend=no";
+
   services.clight = {
     enable = true;
     settings = {
