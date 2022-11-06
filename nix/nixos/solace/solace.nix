@@ -25,19 +25,22 @@
 
   systemd.sleep.extraConfig = "AllowSuspend=no";
 
-  services.clight = {
-    enable = true;
-    settings = {
-      backlight = {
-        trans_step = 0.01;
-        trans_timeout = 3;
-        ac_timeouts = [ 10 60 10 ];
+  services = {
+    logind.extraConfig = "IdleAction=lock";
+    clight = {
+      enable = true;
+      settings = {
+        backlight = {
+          trans_step = 0.01;
+          trans_timeout = 3;
+          ac_timeouts = [ 10 60 10 ];
+        };
+        keyboard.disabled = true;
+        gamma.disabled = true;
+        dimmer.disabled = true;
+        dpms.disabled = true;
+        screen.disabled = true;
       };
-      keyboard.disabled = true;
-      gamma.disabled = true;
-      dimmer.disabled = true;
-      dpms.disabled = true;
-      screen.disabled = true;
     };
   };
 
