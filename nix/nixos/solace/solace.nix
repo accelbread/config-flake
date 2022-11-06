@@ -23,8 +23,6 @@
     })
   ];
 
-  systemd.sleep.extraConfig = "AllowSuspend=no";
-
   services = {
     logind.extraConfig = "IdleAction=lock";
     clight = {
