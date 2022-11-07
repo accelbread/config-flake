@@ -22,6 +22,7 @@
       pull.ff = "only";
       user.useConfigOnly = true;
       advice.detachedHead = false;
+      init.defaultBranch = "master";
     };
     less.keys = ''
       #env
