@@ -20,7 +20,7 @@ let
   inherit (builtins) readDir attrNames filter listToAttrs;
   inherit (lib.strings) hasSuffix removeSuffix;
   inherit (lib.attrsets) nameValuePair;
-  self = ../..;
+  self = ../.;
   elispPackages = map (removeSuffix ".nix") (filter (hasSuffix ".nix")
     (attrNames (readDir ./elisp-packages)));
   extendPkgs = epkgs: epkgs // listToAttrs (map

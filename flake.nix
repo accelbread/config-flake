@@ -28,13 +28,13 @@
         in
         {
           packages = self.overlays.default pkgs pkgs;
-          apps = import ./nix/apps pkgs;
+          apps = import ./apps pkgs;
           formatter = pkgs.nixpkgs-fmt;
         })
     // {
-      overlays = import ./nix/overlays;
-      nixosConfigurations = import ./nix/nixos inputs;
-      nixosModules = import ./nix/home;
-      templates = import ./nix/templates;
+      overlays = import ./overlays;
+      nixosConfigurations = import ./nixos inputs;
+      nixosModules = import ./home;
+      templates = import ./templates;
     };
 }

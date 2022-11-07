@@ -1,6 +1,6 @@
 pkgs:
 let
-  self = ../..;
+  self = ../.;
   mkApp = drv: name: {
     type = "app";
     program = "${drv}/bin/${name}";

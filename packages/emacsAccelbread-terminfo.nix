@@ -2,7 +2,7 @@
 , ncurses
 }:
 let
-  self = ../..;
+  self = ../.;
 in
 stdenv.mkDerivation {
   name = "emacsAccelbread-terminfo";

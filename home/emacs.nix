@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  self = ../..;
+  self = ../.;
 in
 {
   home = {
