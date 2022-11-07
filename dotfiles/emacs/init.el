@@ -36,7 +36,8 @@
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
-         toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv))
+         toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv
+         meow-term))
 
 (setq package-native-compile t)
 
@@ -1012,55 +1013,9 @@
 ;;; Term
 
 (with-eval-after-load 'term
-  (set-keymap-parent term-raw-escape-map nil)
-  (define-key term-raw-escape-map (kbd "ESC") #'term-send-raw)
-  (define-key term-mode-map (kbd "C-c ESC") #'term-send-raw))
+  (set-keymap-parent term-raw-escape-map nil))
 
-(defvar-local meow-term-char t)
-
-(advice-add #'term-char-mode :before-while
-            (lambda ()
-              "Set intended input mode to char and switch only in insert mode."
-              (setq meow-term-char t)
-              (term-update-mode-line)
-              (meow-insert-mode-p))
-            '((name . meow-term)))
-
-(advice-add #'term-line-mode :before
-            (lambda ()
-              "Set intended input mode to line and switch."
-              (setq meow-term-char nil)
-              (term-update-mode-line))
-            '((name . meow-term)))
-
-(defun meow-term-insert-enter ()
-  "Switch keybinds to char mode if char mode set."
-  (when meow-term-char (term-char-mode)))
-
-(defun meow-term-insert-exit ()
-  "Switch to line keybinds if in char mode."
-  (when meow-term-char
-    (term-line-mode)
-    (setq meow-term-char t)
-    (term-update-mode-line)))
-
-(defun meow-term-setup-hooks ()
-  "Ensure line keybindings outside of insert mode."
-  (add-hook 'meow-insert-enter-hook #'meow-term-insert-enter nil t)
-  (add-hook 'meow-insert-exit-hook #'meow-term-insert-exit nil t))
-
-(add-hook 'term-mode-hook #'meow-term-setup-hooks)
-
-(advice-add #'term-update-mode-line :around
-            (lambda (oldfun)
-              "Show intended term input mode in mode line."
-              (if meow-term-char
-                  (let ((real-map (current-local-map)))
-                    (use-local-map term-raw-map)
-                    (funcall oldfun)
-                    (use-local-map real-map))
-                (funcall oldfun)))
-            '((name . meow-term)))
+(meow-term-enable)
 
 (defvar-local term-line-ending "\n"
   "Line ending to use for sending to process in `term-mode'.")
