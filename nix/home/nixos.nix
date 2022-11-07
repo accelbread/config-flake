@@ -57,7 +57,7 @@ in
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
     git = {
       userName = "Archit Gupta";
-      userEmail = "accelbread@gmail.com";
+      userEmail = "archit@accelbread.com";
     };
   };
 
