@@ -1037,6 +1037,8 @@
 
 (add-hook 'compilation-filter-hook #'compilation-ansi-color)
 
+(setq ansi-osc-for-compilation-buffer t)
+
 (when (>= emacs-major-version 29)
   (add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter))
 
