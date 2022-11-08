@@ -897,69 +897,6 @@
       ("gitsub" "git submodule update --init --recursive --depth 1"))))
 
 
-;;; Vterm
-
-(setq vterm-max-scrollback 5000
-      vterm-timer-delay 0.01
-      vterm-kill-buffer-on-exit nil
-      vterm-clear-scrollback-when-clearing t
-      vterm-exit-functions '(set-mode-line-process-killed)
-      vterm-keymap-exceptions '("C-c"))
-
-(with-eval-after-load 'vterm
-  (define-key vterm-mode-map (kbd "C-c ESC") #'vterm-send-escape))
-
-(defvar vterm-normal-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") #'vterm-send-return)
-    map)
-  "Keymap for vterm in normal mode.")
-
-(define-key vterm-normal-mode-map
-            [remap yank] #'vterm-yank)
-(define-key vterm-normal-mode-map
-            [remap xterm-paste] #'vterm-xterm-paste)
-(define-key vterm-normal-mode-map
-            [remap yank-pop] #'vterm-yank-pop)
-(define-key vterm-normal-mode-map
-            [remap mouse-yank-primary] #'vterm-yank-primary)
-(define-key vterm-normal-mode-map
-            [remap self-insert-command] #'vterm--self-insert)
-(define-key vterm-normal-mode-map
-            [remap beginning-of-defun] #'vterm-previous-prompt)
-(define-key vterm-normal-mode-map
-            [remap end-of-defun] #'vterm-next-prompt)
-
-(defun meow-vterm-insert-enter ()
-  "Enable vterm default binding in insert and set cursor."
-  (use-local-map vterm-mode-map)
-  (vterm-goto-char (point)))
-
-(defun meow-vterm-insert-exit ()
-  "Use regular bindings in normal mode."
-  (use-local-map vterm-normal-mode-map))
-
-(defun meow-vterm-setup ()
-  "Configure insert mode for vterm."
-  (add-hook 'meow-insert-enter-hook #'meow-vterm-insert-enter nil t)
-  (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t)
-  (use-local-map vterm-normal-mode-map))
-
-(add-hook 'vterm-mode-hook #'meow-vterm-setup)
-
-(advice-add #'vterm--set-title :override
-            (lambda (title)
-              "Have `vterm' set `mode-line-process' to TITLE."
-              (setq mode-line-process `("  " ,title)))
-            '((name . vterm-set-mode-line-process)))
-
-(defun set-mode-line-process-killed (buffer desc)
-  "Indicate process killed in buffer BUFFER with reason DESC."
-  (with-current-buffer buffer
-    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
-                                          face error))))
-
-
 ;;; Direnv
 
 (setq envrc-none-lighter nil
@@ -1027,6 +964,69 @@
     ("\n" " LF")
     ("\r" " CR")
     ("\r\n" " CRLF")))
+
+
+;;; Vterm
+
+(setq vterm-max-scrollback 5000
+      vterm-timer-delay 0.01
+      vterm-kill-buffer-on-exit nil
+      vterm-clear-scrollback-when-clearing t
+      vterm-exit-functions '(set-mode-line-process-killed)
+      vterm-keymap-exceptions '("C-c"))
+
+(with-eval-after-load 'vterm
+  (define-key vterm-mode-map (kbd "C-c ESC") #'vterm-send-escape))
+
+(defvar vterm-normal-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "RET") #'vterm-send-return)
+    map)
+  "Keymap for vterm in normal mode.")
+
+(define-key vterm-normal-mode-map
+            [remap yank] #'vterm-yank)
+(define-key vterm-normal-mode-map
+            [remap xterm-paste] #'vterm-xterm-paste)
+(define-key vterm-normal-mode-map
+            [remap yank-pop] #'vterm-yank-pop)
+(define-key vterm-normal-mode-map
+            [remap mouse-yank-primary] #'vterm-yank-primary)
+(define-key vterm-normal-mode-map
+            [remap self-insert-command] #'vterm--self-insert)
+(define-key vterm-normal-mode-map
+            [remap beginning-of-defun] #'vterm-previous-prompt)
+(define-key vterm-normal-mode-map
+            [remap end-of-defun] #'vterm-next-prompt)
+
+(defun meow-vterm-insert-enter ()
+  "Enable vterm default binding in insert and set cursor."
+  (use-local-map vterm-mode-map)
+  (vterm-goto-char (point)))
+
+(defun meow-vterm-insert-exit ()
+  "Use regular bindings in normal mode."
+  (use-local-map vterm-normal-mode-map))
+
+(defun meow-vterm-setup ()
+  "Configure insert mode for vterm."
+  (add-hook 'meow-insert-enter-hook #'meow-vterm-insert-enter nil t)
+  (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t)
+  (use-local-map vterm-normal-mode-map))
+
+(add-hook 'vterm-mode-hook #'meow-vterm-setup)
+
+(advice-add #'vterm--set-title :override
+            (lambda (title)
+              "Have `vterm' set `mode-line-process' to TITLE."
+              (setq mode-line-process `("  " ,title)))
+            '((name . vterm-set-mode-line-process)))
+
+(defun set-mode-line-process-killed (buffer desc)
+  "Indicate process killed in buffer BUFFER with reason DESC."
+  (with-current-buffer buffer
+    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
+                                          face error))))
 
 
 ;;; Compilation
