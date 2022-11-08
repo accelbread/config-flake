@@ -37,7 +37,7 @@
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
          toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv
-         meow-term eshell-visual-vterm))
+         meow-term))
 
 (setq package-native-compile t)
 
@@ -873,8 +873,6 @@
     (overlay-put ov 'face 'eshell-input)))
 
 (add-hook 'eshell-pre-command-hook #'my-eshell-highlight-last-input)
-
-(eshell-visual-vterm-mode)
 
 (defun eshell/e (&rest args)
   "Open files in ARGS."
