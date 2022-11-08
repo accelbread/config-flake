@@ -1068,7 +1068,7 @@
 ;;; Vale
 
 (setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
-                            message-mode c-mode c++-mode rust-mode python-mode))
+                            message-mode))
 
 (add-hook 'find-file-hook 'flymake-vale-maybe-load)
 
