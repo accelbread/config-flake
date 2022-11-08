@@ -37,7 +37,7 @@
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
          toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv
-         meow-term))
+         meow-term eshell-visual-vterm))
 
 (setq package-native-compile t)
 
@@ -874,35 +874,7 @@
 
 (add-hook 'eshell-pre-command-hook #'my-eshell-highlight-last-input)
 
-(advice-add #'eshell-exec-visual :around
-            (lambda (orig-fun &rest args)
-              "Advise `eshell-exec-visual' to use vterm."
-              (require 'vterm)
-              (cl-letf (((symbol-function #'term-mode) #'ignore)
-                        ((symbol-function #'term-exec)
-                         (lambda (_ _ program _ args)
-                           (defvar vterm-shell)
-                           (defvar vterm-buffer-name)
-                           (let ((vterm-shell
-                                  (mapconcat #'shell-quote-argument
-                                             (cons (file-local-name program)
-                                                   args)
-                                             " "))
-                                 (vterm-buffer-name "*eshell-vterm*"))
-                             (vterm-mode))))
-                        ((symbol-function #'term-char-mode) #'ignore)
-                        ((symbol-function #'term-set-escape-char) #'ignore))
-                (apply #'inheritenv-apply orig-fun args)))
-            '((name . eshell-visual-vterm)))
-
-(advice-add #'eshell-term-sentinel :around
-            (lambda (orig-fun &rest args)
-              "Advise `eshell-term-sentinel' to use vterm."
-              (defvar vterm-kill-buffer-on-exit)
-              (cl-letf ((vterm-kill-buffer-on-exit nil)
-                        ((symbol-function #'term-sentinel) #'vterm--sentinel))
-                (apply orig-fun args)))
-            '((name . eshell-visual-vterm)))
+(eshell-visual-vterm-mode)
 
 (defun eshell/e (&rest args)
   "Open files in ARGS."
