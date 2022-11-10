@@ -798,6 +798,7 @@
       eshell-input-filter #'eshell-input-filter-initial-space
       eshell-cd-on-directory nil
       eshell-plain-echo-behavior t
+      eshell-glob-show-progress t
       eshell-ls-archive-regexp "\\`\\'"
       eshell-ls-backup-regexp "\\`\\'"
       eshell-ls-clutter-regexp "\\`\\'"
