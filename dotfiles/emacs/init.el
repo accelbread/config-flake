@@ -785,7 +785,7 @@
 
 (setq eshell-modules-list '( eshell-basic eshell-cmpl eshell-dirs eshell-glob
                              eshell-hist eshell-ls eshell-pred eshell-prompt
-                             eshell-term eshell-unix)
+                             eshell-term)
       eshell-error-if-no-glob t
       eshell-glob-include-dot-dot nil
       eshell-glob-chars-list '(?\] ?\[ ?*)
@@ -797,6 +797,7 @@
       eshell-save-history-on-exit nil
       eshell-input-filter #'eshell-input-filter-initial-space
       eshell-cd-on-directory nil
+      eshell-plain-echo-behavior t
       eshell-ls-archive-regexp "\\`\\'"
       eshell-ls-backup-regexp "\\`\\'"
       eshell-ls-clutter-regexp "\\`\\'"
