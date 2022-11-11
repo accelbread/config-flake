@@ -6,7 +6,17 @@
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
     };
-    packages = with pkgs; [ git ripgrep fd tree jq zeal podman ];
+    packages = with pkgs; [
+      man-pages
+      man-pages-posix
+      git
+      ripgrep
+      fd
+      tree
+      jq
+      zeal
+      podman
+    ];
   };
 
   fonts.fontconfig.enable = true;
