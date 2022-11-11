@@ -13,6 +13,7 @@
       ripgrep
       fd
       tree
+      moreutils
       jq
       zeal
       podman
