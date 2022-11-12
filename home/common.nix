@@ -15,6 +15,7 @@
       tree
       moreutils
       jq
+      parted
       zeal
       podman
     ];
