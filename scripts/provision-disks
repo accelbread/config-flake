@@ -76,7 +76,7 @@ for disk in "${disks[@]}"; do
     i+=1
     parted "$disk" mklabel gpt
     parted -a optimal "$disk" mkpart primary 1MiB 1GiB
-    parted "$disk" name 1 "${name}_EFI{$i}"
+    parted "$disk" name 1 "${name}_EFI${i}"
     parted "$disk" set 1 boot on
     parted "$disk" set 1 esp on
     parted "$disk" mkpart primary 1GiB "${gb}GiB"
