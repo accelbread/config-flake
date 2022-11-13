@@ -1556,6 +1556,18 @@
 
 ;;; Commands
 
+(defun reload-buffer ()
+  "Kill current buffer and reopen its visited file."
+  (interactive)
+  (let ((file buffer-file-name)
+        (prev-point (point))
+        (prev-window-start (window-start))
+        (inhibit-redisplay t))
+    (kill-buffer)
+    (find-file file)
+    (goto-char prev-point)
+    (set-window-start nil prev-window-start)))
+
 (defun pin-buffer ()
   "Toggle whether current window is dedicated to its buffer."
   (interactive)
