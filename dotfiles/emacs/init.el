@@ -1457,7 +1457,7 @@
   (format-on-save-mode))
 
 (add-hook 'zig-mode-hook #'setup-eglot)
-(add-hook 'zig-mode-hook #'zig-format-buffer)
+(add-hook 'zig-mode-hook #'zig-formatter-configure)
 
 (put 'zig-toggle-format-on-save 'completion-predicate #'ignore)
 
