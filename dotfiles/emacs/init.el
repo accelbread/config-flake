@@ -317,6 +317,7 @@
                          ('(t nil) "🔒")
                          ('(t t) "🔏")))
                 (:eval (when (file-remote-p default-directory) "✈️"))
+                (server-buffer-clients "🚨")
                 (:eval (when (buffer-narrowed-p) "🔎"))
                 (:eval (propertize
                         " %l " 'display
