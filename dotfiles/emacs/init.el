@@ -1045,6 +1045,20 @@
   (add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter))
 
 
+;;; Project
+
+(defun project-nix-store (dir)
+  "Return transient project if DIR is in the nix store."
+  (when (string-prefix-p "/nix/store/" dir)
+    (let ((store-path (string-remove-suffix
+                       (string-trim-left dir "/nix/store/[^/]+")
+                       dir)))
+      (cons 'transient store-path))))
+
+(with-eval-after-load 'project
+  (add-hook 'project-find-functions #'project-nix-store))
+
+
 ;;; Eglot
 
 (setq eglot-stay-out-of '(eldoc-documentation-strategy
