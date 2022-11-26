@@ -12,6 +12,7 @@
 , rustfmt
 , zls
 , rnix-lsp
+, openscad
 , symlinkJoin
 , vale-proselint
 , vale-write-good
@@ -49,6 +50,7 @@ let
           flymake-vale-program-args '("--config=${valeConfig}")
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
           envrc-direnv-executable "${direnv}/bin/direnv"
+          scad-command "${openscad}/bin/openscad"
           fish-completion-command "${fish}/bin/fish")
     (with-eval-after-load 'eglot
       (setq eglot-server-programs
