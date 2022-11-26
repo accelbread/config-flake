@@ -24,7 +24,7 @@
   services = {
     logind.extraConfig = "IdleAction=lock";
     clight = {
-      enable = false;
+      enable = true;
       settings = {
         backlight = {
           trans_step = 0.01;
