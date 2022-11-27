@@ -4,7 +4,7 @@ let
   inherit (builtins) mapAttrs;
 in
 {
-  imports = [ ./usbguard.nix ];
+  imports = [ ./usbguard-dbus.nix ];
 
   options.sysconfig.disks = with lib; {
     boot = mkOption {
@@ -224,6 +224,11 @@ in
       logind = {
         lidSwitch = "hibernate";
         killUserProcesses = true;
+      };
+      usbguard = {
+        enable = true;
+        dbus.enable = true;
+        IPCAllowedGroups = [ "wheel" ];
       };
       pipewire = {
         enable = true;
