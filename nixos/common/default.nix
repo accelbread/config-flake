@@ -4,7 +4,7 @@ let
   inherit (builtins) mapAttrs;
 in
 {
-  imports = [ ./usbguard-dbus.nix ];
+  imports = [ ./usbguard-dbus.nix ./flatpak-fonts.nix ];
 
   options.sysconfig.disks = with lib; {
     boot = mkOption {
@@ -240,7 +240,10 @@ in
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
-      flatpak.enable = true;
+      flatpak = {
+        enable = true;
+        fonts-dir.enable = true;
+      };
       avahi.nssmdns = true;
       udev.packages = with pkgs;
         lib.singleton (stdenv.mkDerivation rec {
