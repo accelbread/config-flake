@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: {
+{ lib, ... }: {
   dconf.settings = with lib.hm.gvariant; {
     "org/gnome/desktop/peripherals/touchpad" = { speed = 0.6; };
     "org/gnome/settings-daemon/plugins/power" = {

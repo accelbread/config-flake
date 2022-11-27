@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ pkgs, ... }: {
   imports = [ ./emacs.nix ];
 
   home = {

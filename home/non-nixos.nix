@@ -1,7 +1,6 @@
-{ config, pkgs, lib, flakes, ... }:
+{ pkgs, flakes, ... }:
 let
   inherit (builtins) mapAttrs;
-  self = ../.;
 in
 {
   imports = [ ./common.nix ];

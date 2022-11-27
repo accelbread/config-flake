@@ -1,7 +1,13 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 let
   inherit (builtins) mapAttrs;
   self = ../.;
+  firefox-vertical-tabs = pkgs.fetchFromGitHub {
+    owner = "ranmaru22";
+    repo = "firefox-vertical-tabs";
+    rev = "v5.5";
+    sha256 = "sha256-9RoF7oaxL/LPhRXRNvl1QRke9vJFTlwMKa1hXrES8PY=";
+  };
 in
 {
   imports = [ ./common.nix ./dconf.nix ];
@@ -25,22 +31,13 @@ in
       gnomeExtensions.espresso
       gnomeExtensions.system-action-hibernate
     ];
-    file =
-      let
-        firefox-vertical-tabs = pkgs.fetchFromGitHub {
-          owner = "ranmaru22";
-          repo = "firefox-vertical-tabs";
-          rev = "v5.5";
-          sha256 = "sha256-9RoF7oaxL/LPhRXRNvl1QRke9vJFTlwMKa1hXrES8PY=";
-        };
-      in
-      mapAttrs (_: v: v // { recursive = true; }) {
-        ".config".source = self + /dotfiles/config;
-        ".ssh".source = self + /dotfiles/ssh;
-        ".librewolf".source = self + /dotfiles/librewolf;
-        ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
-          firefox-vertical-tabs + /userChrome.css;
-      };
+    file = mapAttrs (_: v: v // { recursive = true; }) {
+      ".config".source = self + /dotfiles/config;
+      ".ssh".source = self + /dotfiles/ssh;
+      ".librewolf".source = self + /dotfiles/librewolf;
+      ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
+        firefox-vertical-tabs + /userChrome.css;
+    };
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {
