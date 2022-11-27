@@ -23,6 +23,7 @@ in
       overlays = with flakes; [
         emacs-overlay.overlays.default
         self.overlays.default
+        nixgl.overlays.default
       ];
       # Allow steam package for steam-hardware udev rules
       config.allowUnfreePredicate = pkg:

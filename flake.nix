@@ -16,6 +16,13 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    nixgl = {
+      url = "github:guibou/nixGL";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
   outputs = { self, nixpkgs, flake-utils, emacs-overlay, ... }@inputs:
     flake-utils.lib.eachSystem [ "x86_64-linux" ]
