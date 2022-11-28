@@ -18,17 +18,9 @@
 , vale-write-good
 }:
 let
-  inherit (builtins) readDir attrNames filter;
-  inherit (lib) pipe fix singleton hasSuffix removeSuffix genAttrs attrVals;
+  inherit (lib) pipe singleton attrVals;
   self = ../.;
-  elispPackages = pipe (readDir ./elisp-packages) [
-    attrNames
-    (filter (hasSuffix ".nix"))
-    (map (removeSuffix ".nix"))
-  ];
-  extendEpkgs = epkgs: fix (self: epkgs // (genAttrs elispPackages
-    (p: self.callPackage (./elisp-packages + "/${p}.nix") { })));
-  emacsConfigPkgNames = pipe (self + /dotfiles/emacs/init.el) (with builtins; [
+  configPackages = pipe (self + /dotfiles/emacs/init.el) (with builtins; [
     readFile
     (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*")
     head
@@ -66,9 +58,8 @@ let
   '';
   emacsWithPackages = (emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages;
 in
-emacsWithPackages (epkgs:
-  attrVals emacsConfigPkgNames (extendEpkgs epkgs)
+emacsWithPackages (epkgs: attrVals configPackages epkgs
   ++ singleton (epkgs.trivialBuild {
-    pname = "emacs-default-init";
-    src = default-init;
-  }))
+  pname = "emacs-default-init";
+  src = default-init;
+}))
