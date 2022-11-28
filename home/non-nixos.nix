@@ -1,6 +1,7 @@
 { config, pkgs, lib, flakes, ... }:
 let
-  inherit (builtins) mapAttrs readDir;
+  inherit (builtins) mapAttrs readDir attrNames;
+  inherit (lib) mkOption types;
 
   nixGLWrapDrv = drv: pkgs.symlinkJoin {
     name = (drv.name + "-nixGLWrapper");
