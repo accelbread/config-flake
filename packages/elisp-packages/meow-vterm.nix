@@ -1,12 +1,13 @@
 { elpaBuild
 , fetchFromGitHub
 , meow
+, vterm
 }:
 elpaBuild rec {
   pname = "meow-vterm";
   version = "1.0.0";
 
-  packageRequires = [ meow ];
+  packageRequires = [ meow vterm ];
 
   src = (fetchFromGitHub {
     owner = "accelbread";
