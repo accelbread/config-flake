@@ -37,7 +37,7 @@
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
          toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv
-         meow-term))
+         meow-term meow-vterm))
 
 (setq package-native-compile t)
 
@@ -978,46 +978,7 @@
       vterm-exit-functions '(set-mode-line-process-killed)
       vterm-keymap-exceptions '("C-c"))
 
-(with-eval-after-load 'vterm
-  (define-key vterm-mode-map (kbd "C-c ESC") #'vterm-send-escape))
-
-(defvar vterm-normal-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") #'vterm-send-return)
-    map)
-  "Keymap for vterm in normal mode.")
-
-(define-key vterm-normal-mode-map
-            [remap yank] #'vterm-yank)
-(define-key vterm-normal-mode-map
-            [remap xterm-paste] #'vterm-xterm-paste)
-(define-key vterm-normal-mode-map
-            [remap yank-pop] #'vterm-yank-pop)
-(define-key vterm-normal-mode-map
-            [remap mouse-yank-primary] #'vterm-yank-primary)
-(define-key vterm-normal-mode-map
-            [remap self-insert-command] #'vterm--self-insert)
-(define-key vterm-normal-mode-map
-            [remap beginning-of-defun] #'vterm-previous-prompt)
-(define-key vterm-normal-mode-map
-            [remap end-of-defun] #'vterm-next-prompt)
-
-(defun meow-vterm-insert-enter ()
-  "Enable vterm default binding in insert and set cursor."
-  (use-local-map vterm-mode-map)
-  (vterm-goto-char (point)))
-
-(defun meow-vterm-insert-exit ()
-  "Use regular bindings in normal mode."
-  (use-local-map vterm-normal-mode-map))
-
-(defun meow-vterm-setup ()
-  "Configure insert mode for vterm."
-  (add-hook 'meow-insert-enter-hook #'meow-vterm-insert-enter nil t)
-  (add-hook 'meow-insert-exit-hook #'meow-vterm-insert-exit nil t)
-  (use-local-map vterm-normal-mode-map))
-
-(add-hook 'vterm-mode-hook #'meow-vterm-setup)
+(meow-vterm-enable)
 
 (advice-add #'vterm--set-title :override
             (lambda (title)
