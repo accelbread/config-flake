@@ -10,7 +10,7 @@ let
   };
 in
 {
-  imports = [ ./common.nix ./dconf.nix ];
+  imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];
 
   home = {
     stateVersion = "22.05";
