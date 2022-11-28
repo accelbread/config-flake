@@ -8,5 +8,9 @@
       sleep-inactive-battery-timeout = 900;
       sleep-inactive-battery-type = "hibernate";
     };
+    "org/gnome/shell/extensions/gsconnect" = {
+      id = "e7b312b7-01ea-4602-a520-ab95aada92f8";
+      name = "shadowfang";
+    };
   };
 }
