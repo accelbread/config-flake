@@ -34,7 +34,11 @@
           };
         in
         {
-          packages = self.overlays.default pkgs pkgs;
+          packages = with pkgs.lib; pipe (self.overlays.default pkgs pkgs) [
+            attrNames
+            (flip genAttrs (p: pkgs.${p}))
+            (filterAttrs (_: isDerivation))
+          ];
           apps = import ./apps pkgs;
           formatter = pkgs.nixpkgs-fmt;
         })
