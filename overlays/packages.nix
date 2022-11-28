@@ -1,11 +1,11 @@
 final: prev:
 let
-  inherit (builtins) readDir attrNames filter listToAttrs;
-  inherit (prev.lib.strings) hasSuffix removeSuffix;
-  inherit (prev.lib.attrsets) nameValuePair;
-  packages = map (removeSuffix ".nix") (filter (hasSuffix ".nix")
-    (attrNames (readDir ../packages)));
+  inherit (builtins) readDir attrNames filter;
+  inherit (prev.lib) pipe hasSuffix removeSuffix nameValuePair genAttrs;
+  packages = pipe (readDir ../packages) [
+    attrNames
+    (filter (hasSuffix ".nix"))
+    (map (removeSuffix ".nix"))
+  ];
 in
-listToAttrs (map
-  (p: nameValuePair p (final.callPackage (../packages + "/${p}.nix") { }))
-  packages)
+genAttrs packages (p: (final.callPackage (../packages + "/${p}.nix") { }))

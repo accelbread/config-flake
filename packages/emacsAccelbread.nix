@@ -18,19 +18,24 @@
 , vale-write-good
 }:
 let
-  inherit (builtins) readDir attrNames filter listToAttrs;
-  inherit (lib.strings) hasSuffix removeSuffix;
-  inherit (lib.attrsets) nameValuePair;
+  inherit (builtins) readDir attrNames filter;
+  inherit (lib) pipe fix singleton hasSuffix removeSuffix genAttrs attrVals;
   self = ../.;
-  elispPackages = map (removeSuffix ".nix") (filter (hasSuffix ".nix")
-    (attrNames (readDir ./elisp-packages)));
-  extendPkgs = epkgs: epkgs // listToAttrs (map
-    (p: nameValuePair p
-      (epkgs.callPackage (./elisp-packages + "/${p}.nix") { }))
-    elispPackages);
-  cfgPkgNames = with builtins; (map head (filter isList (split "([-a-z]+)" (head
-    (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*"
-      (readFile (self + /dotfiles/emacs/init.el)))))));
+  elispPackages = pipe (readDir ./elisp-packages) [
+    attrNames
+    (filter (hasSuffix ".nix"))
+    (map (removeSuffix ".nix"))
+  ];
+  extendEpkgs = epkgs: fix (self: epkgs // (genAttrs elispPackages
+    (p: self.callPackage (./elisp-packages + "/${p}.nix") { })));
+  emacsConfigPkgNames = pipe (self + /dotfiles/emacs/init.el) (with builtins; [
+    readFile
+    (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*")
+    head
+    (split "([-a-z]+)")
+    (filter isList)
+    (map head)
+  ]);
   valeStyles = symlinkJoin {
     name = "vale-styles";
     paths = [ vale-proselint vale-write-good ];
@@ -62,8 +67,8 @@ let
   emacsWithPackages = (emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages;
 in
 emacsWithPackages (epkgs:
-  lib.attrsets.attrVals cfgPkgNames (extendPkgs epkgs)
-  ++ lib.singleton (epkgs.trivialBuild {
+  attrVals emacsConfigPkgNames (extendEpkgs epkgs)
+  ++ singleton (epkgs.trivialBuild {
     pname = "emacs-default-init";
     src = default-init;
   }))
