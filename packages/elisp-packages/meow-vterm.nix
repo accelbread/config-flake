@@ -12,6 +12,6 @@ elpaBuild rec {
     owner = "accelbread";
     repo = pname;
     rev = version;
-    sha256 = "sha256-4o67WtQ2d+DyXD1jHT7S7OLVYwCBbzt3k509EHUBF3g=";
+    sha256 = "sha256-qdR3JnovqDG2mkpeXjOxtjC0ZkBTElxuiOj8qiN/LtY=";
   }) + "/${pname}.el";
 }
