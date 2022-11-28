@@ -265,7 +265,13 @@ in
         });
     };
 
-    programs.bash.enableLsColors = false;
+    programs = {
+      bash.enableLsColors = false;
+      kdeconnect = {
+        enable = true;
+        package = pkgs.gnomeExtensions.gsconnect;
+      };
+    };
 
     fonts = {
       enableDefaultFonts = false;
@@ -321,6 +327,7 @@ in
             "playground"
             ".ssh"
             ".config/emacs"
+            ".config/gsconnect"
             ".librewolf/profile"
             ".local/share/tpm2_pkcs11"
             ".local/share/gnupg"
