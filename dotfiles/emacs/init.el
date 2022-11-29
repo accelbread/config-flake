@@ -1017,8 +1017,14 @@
                        dir)))
       (cons 'transient store-path))))
 
+(defun project-nix-flake (dir)
+  "Return transient project if DIR is in a nix flake."
+  (when-let* ((flake-path (locate-dominating-file dir "flake.nix")))
+    (cons 'transient flake-path)))
+
 (with-eval-after-load 'project
-  (add-hook 'project-find-functions #'project-nix-store))
+  (add-hook 'project-find-functions #'project-nix-store 95)
+  (add-hook 'project-find-functions #'project-nix-flake 95))
 
 
 ;;; Eglot
