@@ -4,10 +4,10 @@
       color-shading-type = "solid";
       picture-options = "zoom";
       picture-uri =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.jpg";
+        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.webp";
       picture-uri-dark =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-d.jpg";
-      primary-color = "#3465a4";
+        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-d.webp";
+      primary-color = "#3071AE";
       secondary-color = "#000000";
     };
     "org/gnome/desktop/input-sources" = {
@@ -35,8 +35,8 @@
       lock-delay = mkUint32 30;
       picture-options = "zoom";
       picture-uri =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.jpg";
-      primary-color = "#3465a4";
+        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.webp";
+      primary-color = "#3071AE";
       secondary-color = "#000000";
     };
     "org/gnome/desktop/session" = { idle-delay = mkUint32 180; };
@@ -49,9 +49,7 @@
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
-        native-window-placement.extensionUuid
         espresso.extensionUuid
-        system-action-hibernate.extensionUuid
         gsconnect.extensionUuid
       ];
       favorite-apps = [

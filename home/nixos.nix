@@ -29,7 +29,6 @@ in
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
-      gnomeExtensions.system-action-hibernate
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
