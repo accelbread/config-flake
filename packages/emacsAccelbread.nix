@@ -15,6 +15,7 @@
 , rnix-lsp
 , haskell-language-server
 , ghc
+, stylish-haskell
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -50,6 +51,8 @@ let
     (setq ispell-program-name "${aspell}/bin/aspell"
           clang-format-executable "${clang-tools}/bin/clang-format"
           rust-rustfmt-bin "${rustfmt}/bin/rustfmt"
+          haskell-mode-stylish-haskell-path
+          "${stylish-haskell}/bin/stylish-haskell"
           flymake-vale-program "${vale}/bin/vale"
           flymake-vale-program-args '("--config=${valeConfig}")
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"

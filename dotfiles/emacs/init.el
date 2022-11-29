@@ -1446,7 +1446,19 @@
 
 ;;; Haskell
 
+(setq haskell-process-suggest-remove-import-lines t
+      haskell-process-auto-import-loaded-modules t
+      haskell-process-log t)
+
+(defun haskell-formatter-configure ()
+  "Configure formatters for Haskell files."
+  (setq format-region-function nil
+        format-buffer-function #'haskell-mode-stylish-buffer)
+  (format-on-save-mode))
+
+(add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook #'setup-eglot)
+(add-hook 'haskell-mode-hook #'haskell-formatter-configure)
 
 
 ;;; Sh
