@@ -35,9 +35,9 @@
          corfu corfu-doc cape kind-icon vertico orderless marginalia consult
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
-         clang-format cmake-mode rust-mode cargo zig-mode nix-mode scad-mode
-         toml-mode yaml-mode git-modes pdf-tools flymake-vale inheritenv
-         meow-term meow-vterm))
+         clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
+         scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale
+         inheritenv meow-term meow-vterm))
 
 (setq package-native-compile t)
 
@@ -1442,6 +1442,11 @@
 (add-hook 'zig-mode-hook #'zig-formatter-configure)
 
 (put 'zig-toggle-format-on-save 'completion-predicate #'ignore)
+
+
+;;; Haskell
+
+(add-hook 'haskell-mode-hook #'setup-eglot)
 
 
 ;;; Sh

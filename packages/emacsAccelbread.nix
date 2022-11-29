@@ -1,5 +1,6 @@
 { lib
 , writeText
+, writeShellScript
 , emacsPgtkNativeComp
 , emacsPackagesFor
 , aspell
@@ -12,6 +13,8 @@
 , rustfmt
 , zls
 , rnix-lsp
+, haskell-language-server
+, ghc
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -39,6 +42,10 @@ let
     BasedOnStyles = proselint, write-good
     write-good.E-Prime = NO
   '';
+  hls-wrapper = writeShellScript "hls-wrapper" ''
+    export PATH=${haskell-language-server}/bin:${ghc}/bin:$PATH
+    exec ${haskell-language-server}/bin/haskell-language-server-wrapper "$@"
+  '';
   default-init = writeText "default.el" ''
     (setq ispell-program-name "${aspell}/bin/aspell"
           clang-format-executable "${clang-tools}/bin/clang-format"
@@ -51,15 +58,27 @@ let
           fish-completion-command "${fish}/bin/fish")
     (with-eval-after-load 'eglot
       (setq eglot-server-programs
-            '(((c++-mode c-mode) "${clang-tools}/bin/clangd")
-              (rust-mode "${rust-analyzer}/bin/rust-analyzer")
-              (zig-mode "${zls}/bin/zls")
-              (nix-mode "${rnix-lsp}/bin/rnix-lsp"))))
+            `(((c++-mode c-mode) .
+               ,(eglot-alternatives
+                 '("clangd" "${clang-tools}/bin/clangd")))
+              (rust-mode .
+               ,(eglot-alternatives
+                 '("rust-analyzer" "${rust-analyzer}/bin/rust-analyzer")))
+              (zig-mode .
+               ,(eglot-alternatives
+                 '("zls" "${zls}/bin/zls")))
+              (nix-mode .
+               ,(eglot-alternatives
+                 '("rnix-lsp" "${rnix-lsp}/bin/rnix-lsp")))
+              (haskell-mode .
+               ,(eglot-alternatives
+                 '(("haskell-language-server-wrapper" "--lsp")
+                   ("${hls-wrapper}" "--lsp")))))))
   '';
   emacsWithPackages = (emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
-  ++ singleton (epkgs.trivialBuild {
+++ singleton (epkgs.trivialBuild {
   pname = "emacs-default-init";
   src = default-init;
 }))
