@@ -78,7 +78,8 @@ let
                  '(("haskell-language-server-wrapper" "--lsp")
                    ("${hls-wrapper}" "--lsp")))))))
   '';
-  emacsWithPackages = (emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages;
+  baseEmacs = emacsPgtkNativeComp.override { withWebP = true; };
+  emacsWithPackages = (emacsPackagesFor baseEmacs).emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
 ++ singleton (epkgs.trivialBuild {
