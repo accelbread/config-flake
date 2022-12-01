@@ -995,6 +995,12 @@
 
 ;;; Compilation
 
+(defun set-term-ansi-color ()
+  "Set term env variable to enable color output."
+  (setenv "TERM" "dumb-emacs-ansi"))
+
+(add-hook 'compilation-mode-hook #'set-term-ansi-color)
+
 (defun compilation-ansi-color ()
   "Apply ansi-color to compilation buffer output."
   (ansi-color-apply-on-region compilation-filter-start (point)))
