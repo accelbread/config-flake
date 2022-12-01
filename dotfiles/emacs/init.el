@@ -224,7 +224,6 @@
 (blink-cursor-mode -1)
 (window-divider-mode)
 (fringe-mode 9)
-(column-number-mode)
 (global-whitespace-mode)
 (global-prettify-symbols-mode)
 (global-hl-todo-mode)
