@@ -214,6 +214,7 @@
 
 (setq whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
       whitespace-global-modes '(prog-mode text-mode conf-mode)
+      global-display-fill-column-indicator-modes '(prog-mode text-mode)
       resize-mini-windows t
       enable-recursive-minibuffers t
       suggest-key-bindings nil
@@ -225,12 +226,10 @@
 (window-divider-mode)
 (fringe-mode 9)
 (global-whitespace-mode)
+(global-display-fill-column-indicator-mode)
 (global-prettify-symbols-mode)
 (global-hl-todo-mode)
 (context-menu-mode)
-
-(dolist (hook '(prog-mode-hook text-mode-hook))
-  (add-hook hook #'display-fill-column-indicator-mode))
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
