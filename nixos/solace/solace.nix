@@ -35,11 +35,6 @@
 
   home-manager.sharedModules = [ ./home.nix ];
 
-  environment = {
-    persistence."/persist".users.archit.directories = [ ".mozilla" ];
-    systemPackages = with pkgs; [ firefox ];
-  };
-
   hardware.cpu.amd.updateMicrocode = true;
 }
 
