@@ -18,8 +18,6 @@
       clock-show-weekday = true;
       color-scheme = "prefer-dark";
       gtk-theme = "Adwaita-dark";
-      font-antialiasing = "rgba";
-      font-hinting = "slight";
       locate-pointer = true;
     };
     "org/gnome/desktop/media-handling" = { autorun-never = true; };
