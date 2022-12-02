@@ -20,7 +20,9 @@
       gtk-theme = "Adwaita-dark";
       locate-pointer = true;
     };
-    "org/gnome/desktop/media-handling" = { autorun-never = true; };
+    "org/gnome/desktop/media-handling" = {
+      autorun-never = true;
+    };
     "org/gnome/desktop/privacy" = {
       old-files-age = mkUint32 30;
       recent-files-max-age = -1;
@@ -29,21 +31,27 @@
       remove-old-trash-files = true;
     };
     "org/gnome/desktop/screensaver" = {
-      color-shading-type = "solid";
       lock-delay = mkUint32 30;
+      color-shading-type = "solid";
       picture-options = "zoom";
       picture-uri =
         "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.webp";
       primary-color = "#3071AE";
       secondary-color = "#000000";
     };
-    "org/gnome/desktop/session" = { idle-delay = mkUint32 180; };
-    "org/gnome/desktop/wm/preferences" = { resize-with-right-button = true; };
+    "org/gnome/desktop/session" = {
+      idle-delay = mkUint32 180;
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      resize-with-right-button = true;
+    };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
     };
-    "org/gnome/nautilus/preferences" = { show-delete-permanently = true; };
+    "org/gnome/nautilus/preferences" = {
+      show-delete-permanently = true;
+    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
@@ -56,7 +64,11 @@
         "org.gnome.Nautilus.desktop"
       ];
     };
-    "org/gnome/system/location" = { enabled = true; };
-    "org/gtk/settings/file-chooser" = { clock-format = "12h"; };
+    "org/gnome/system/location" = {
+      enabled = true;
+    };
+    "org/gtk/settings/file-chooser" = {
+      clock-format = "12h";
+    };
   };
 }
