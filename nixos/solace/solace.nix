@@ -22,7 +22,7 @@
         backlight = {
           trans_step = 0.01;
           trans_timeout = 3;
-          ac_timeouts = [ 10 60 10 ];
+          ac_timeouts = [ 10 10 10 ];
         };
         keyboard.disabled = true;
         gamma.disabled = true;
