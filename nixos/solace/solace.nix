@@ -10,14 +10,7 @@
     kernelParams = [ "amdgpu.deep_color=1" ];
   };
 
-  nixpkgs.overlays = [
-    flakes.self.overlays.amd-cpu
-    (final: prev: {
-      clightd = prev.clightd.overrideAttrs (finalAttrs: prevAttrs: {
-        cmakeFlags = prevAttrs.cmakeFlags ++ [ "-DENABLE_YOCTOLIGHT=1" ];
-      });
-    })
-  ];
+  nixpkgs.overlays = [ flakes.self.overlays.amd-cpu ];
 
   systemd.sleep.extraConfig = "AllowSuspend=no";
 
