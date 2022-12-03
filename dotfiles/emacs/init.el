@@ -32,12 +32,12 @@
 
 (setq package-selected-packages
       '( meow gcmh rainbow-delimiters flyspell-correct which-key rg editorconfig
-         corfu corfu-doc cape kind-icon vertico orderless marginalia consult
+         corfu cape kind-icon vertico orderless marginalia consult inheritenv
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
          scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale
-         inheritenv meow-term meow-vterm))
+         meow-term meow-vterm))
 
 (setq package-native-compile t)
 
@@ -650,6 +650,8 @@
       cape-dabbrev-min-length 3
       corfu-auto t
       corfu-auto-prefix 1
+      corfu-popupinfo-delay '(0.5 . 0)
+      corfu-popupinfo-hide nil
       corfu-margin-formatters '(kind-icon-margin-formatter)
       kind-icon-default-face 'corfu-default
       kind-icon-blend-background nil
@@ -658,13 +660,11 @@
 (vertico-mode)
 (marginalia-mode)
 (global-corfu-mode)
-
-(after-frame
- (corfu-doc-mode))
+(corfu-popupinfo-mode)
 
 (define-key corfu-map (kbd "RET") nil)
-(define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
-(define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
+(define-key corfu-map (kbd "M-p") #'corfu-popupinfo-scroll-down)
+(define-key corfu-map (kbd "M-n") #'corfu-popupinfo-scroll-up)
 
 (defun cleanup-corfu ()
   "Close corfu popup if it is active."
