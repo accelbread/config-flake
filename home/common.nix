@@ -15,6 +15,7 @@
       tree
       moreutils
       jq
+      gnutar
       parted
       zeal
       podman
