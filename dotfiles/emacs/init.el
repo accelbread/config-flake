@@ -1027,6 +1027,7 @@
     (cons 'transient flake-path)))
 
 (with-eval-after-load 'project
+  (require 'vc-git) ; project-find-file fails if vc-git is not loaded
   (add-hook 'project-find-functions #'project-nix-store 95)
   (add-hook 'project-find-functions #'project-nix-flake 95))
 
