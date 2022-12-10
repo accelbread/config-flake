@@ -12,7 +12,7 @@
 , rust-analyzer
 , rustfmt
 , zls
-, rnix-lsp
+, nil
 , haskell-language-server
 , ghc
 , stylish-haskell
@@ -72,7 +72,7 @@ let
                  '("zls" "${zls}/bin/zls")))
               (nix-mode .
                ,(eglot-alternatives
-                 '("rnix-lsp" "${rnix-lsp}/bin/rnix-lsp")))
+                 '("nil" "rnix-lsp" "${nil}/bin/nil")))
               (haskell-mode .
                ,(eglot-alternatives
                  '(("haskell-language-server-wrapper" "--lsp")
