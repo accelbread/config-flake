@@ -29,6 +29,7 @@ in
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
+      cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
