@@ -7,7 +7,8 @@
 ## Configure system
 
 ```sh
-nix run .#provision_disks -- -n ${MACHINE_NAME} -d ${DISK1} -d ${DISK2} \
+blkdiscard ${disk} # trim ssd devices
+nix run .#provision-disks -- -n ${MACHINE_NAME} -d ${DISK1} -d ${DISK2} \
     -g ${DISK_SIZE} -s ${SWAP_SIZE}
 ```
 
