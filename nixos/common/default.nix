@@ -181,7 +181,11 @@ in
 
     documentation.man.generateCaches = true;
 
-    systemd.sleep.extraConfig = "HibernateDelaySec=10m";
+    systemd = {
+      sleep.extraConfig = "HibernateDelaySec=10m";
+      additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
+      services.systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
+    };
 
     services = {
       fwupd.enable = true;
