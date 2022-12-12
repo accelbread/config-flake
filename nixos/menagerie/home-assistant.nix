@@ -20,6 +20,7 @@
 
   services.home-assistant = {
     enable = true;
+    configDir = "/persist/config/hass";
     openFirewall = true;
     configWritable = true;
     lovelaceConfigWritable = true;
