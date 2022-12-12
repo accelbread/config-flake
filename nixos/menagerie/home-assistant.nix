@@ -23,7 +23,6 @@
     configDir = "/persist/config/hass";
     openFirewall = true;
     configWritable = true;
-    lovelaceConfigWritable = true;
     config = {
       http.server_host = [ "0.0.0.0" ];
       homeassistant = {
@@ -32,6 +31,5 @@
       };
       default_config = { };
     };
-    lovelaceConfig = { };
   };
 }
