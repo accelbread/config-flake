@@ -29,7 +29,19 @@
         name = "Archit Home";
         internal_url = "http://${hostname}.local:8123";
       };
-      default_config = { };
+      automation = "!include automations.yaml";
+      scene = "!include scenes.yaml";
+      script = "!include scripts.yaml";
+      dhcp = { };
+      zeroconf = { };
+      sun = { };
+      schedule = { };
+      config = { };
+      frontend = { };
+      history = { };
+      image = { };
+      logbook = { };
+      mobile_app = { };
     };
   };
 }
