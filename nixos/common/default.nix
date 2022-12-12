@@ -4,7 +4,7 @@ let
   inherit (builtins) mapAttrs;
 in
 {
-  imports = [ ./usbguard-dbus.nix ./flatpak-fonts.nix ];
+  imports = [ ./usbguard-dbus.nix ./flatpak-fonts.nix ./desktop.nix ];
 
   options.sysconfig.disks = with lib; {
     boot = mkOption {
@@ -19,16 +19,11 @@ in
   };
 
   config = {
-    nixpkgs = {
-      overlays = with flakes; [
-        emacs-overlay.overlays.default
-        self.overlays.default
-        nixgl.overlays.default
-      ];
-      # Allow steam package for steam-hardware udev rules
-      config.allowUnfreePredicate = pkg:
-        (lib.getName pkg) == "steam-original";
-    };
+    nixpkgs.overlays = with flakes; [
+      emacs-overlay.overlays.default
+      self.overlays.default
+      nixgl.overlays.default
+    ];
 
     nix = {
       registry = mapAttrs (_: v: { flake = v; }) flakes;
@@ -147,10 +142,7 @@ in
       video.hidpi.enable = true;
       rasdaemon.enable = true;
       pulseaudio.enable = false;
-      opengl.enable = true;
-      sensor.iio.enable = true;
       i2c.enable = true;
-      steam-hardware.enable = true;
     };
 
     networking = {
@@ -164,8 +156,6 @@ in
     time.timeZone = "America/Los_Angeles";
 
     location.provider = "geoclue2";
-
-    sound.enable = true;
 
     security = {
       sudo.extraConfig = "Defaults lecture = never";
@@ -231,20 +221,6 @@ in
         dbus.enable = true;
         IPCAllowedGroups = [ "wheel" ];
       };
-      pipewire = {
-        enable = true;
-        pulse.enable = true;
-      };
-      xserver = {
-        enable = true;
-        excludePackages = [ pkgs.xterm ];
-        desktopManager.gnome.enable = true;
-        displayManager.gdm.enable = true;
-      };
-      flatpak = {
-        enable = true;
-        fonts-dir.enable = true;
-      };
       avahi = {
         enable = true;
         nssmdns = true;
@@ -273,14 +249,6 @@ in
         });
     };
 
-    programs = {
-      bash.enableLsColors = false;
-      kdeconnect = {
-        enable = true;
-        package = pkgs.gnomeExtensions.gsconnect;
-      };
-    };
-
     fonts = {
       enableDefaultFonts = false;
       fonts = with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
@@ -291,12 +259,6 @@ in
         noto-fonts-cjk-sans
         noto-fonts-emoji
       ];
-    };
-
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      users.archit = self + /home/nixos.nix;
     };
 
     users = {
@@ -323,38 +285,11 @@ in
           "/etc/machine-id"
           "/var/lib/usbguard/rules.conf"
         ];
-        users.archit = {
-          directories = [
-            "Documents"
-            "Downloads"
-            "Music"
-            "Pictures"
-            "Videos"
-            "Library"
-            "projects"
-            "playground"
-            ".ssh"
-            ".config/emacs"
-            ".config/gsconnect"
-            ".librewolf/profile"
-            ".local/share/tpm2_pkcs11"
-            ".local/share/gnupg"
-            ".local/share/pass"
-            ".local/share/Zeal"
-            ".local/share/flatpak"
-            ".var/app"
-          ];
-          files = [ ".face" ".config/monitors.xml" ];
-        };
       };
       defaultPackages = with pkgs; [ zile git ];
       gnome.excludePackages = [ pkgs.gnome-tour ];
       localBinInPath = true;
       variables.EDITOR = "zile";
-      wordlist = {
-        enable = true;
-        lists.WORDLIST = [ "${pkgs.miscfiles}/share/web2" ];
-      };
     };
 
     qt5 = {

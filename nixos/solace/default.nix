@@ -4,11 +4,14 @@ mkSystem {
   modules = [
     ./solace.nix
     {
-      sysconfig.disks = {
-        boot = "/dev/nvme0n1p1";
-        luks = {
-          disk1 = "/dev/nvme0n1p2";
-          disk2 = "/dev/nvme1n1p2";
+      sysconfig = {
+        desktop = true;
+        disks = {
+          boot = "/dev/nvme0n1p1";
+          luks = {
+            disk1 = "/dev/nvme0n1p2";
+            disk2 = "/dev/nvme1n1p2";
+          };
         };
       };
       swapDevices = [
