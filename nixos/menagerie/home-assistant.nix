@@ -1,7 +1,8 @@
-{ config, pkgs, flakes, hostname, ... }: {
+{ config, lib, pkgs, flakes, hostname, ... }: {
   imports = [ flakes.nixos-hardware.nixosModules.raspberry-pi-4 ];
 
   boot = {
+    kernelPackages = lib.mkForce pkgs.linuxPackages_rpi4;
     loader.generic-extlinux-compatible.enable = false;
     initrd.kernelModules = [ "tpm_tis_spi" ];
   };
