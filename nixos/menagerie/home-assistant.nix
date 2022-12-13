@@ -18,6 +18,8 @@
       '';
     };
 
+  networking.enableIPv6 = false;
+
   services.home-assistant = {
     enable = true;
     configDir = "/persist/config/hass";
