@@ -1,7 +1,10 @@
 { config, pkgs, flakes, hostname, ... }: {
   imports = [ flakes.nixos-hardware.nixosModules.raspberry-pi-4 ];
 
-  boot.loader.generic-extlinux-compatible.enable = false;
+  boot = {
+    loader.generic-extlinux-compatible.enable = false;
+    initrd.kernelModules = [ "tpm_tis_spi" ];
+  };
 
   # DNSCrypt-proxy needs NTP which needs DNS; use public resolver for boot
   networking.nameservers = [ "1.1.1.1" ];
@@ -46,4 +49,54 @@
       mobile_app = { };
     };
   };
+
+  hardware.deviceTree.overlays = [{
+    name = "letstrust-tpm-overlay";
+    dtsText = ''
+      /*
+       * Device Tree overlay for the LetsTrust TPM (Infineon SLB9670) for the RPI
+       *
+       */
+
+      /dts-v1/;
+      /plugin/;
+
+      / {
+        compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+        fragment@0 {
+          target = <&spi0>;
+          __overlay__ {
+            status = "okay";
+          };
+        };
+
+        fragment@1 {
+          target = <&spidev1>;
+          __overlay__ {
+            status = "disabled";
+          };
+        };
+
+        fragment@2 {
+          target = <&spi0>;
+          __overlay__ {
+            /* needed to avoid dtc warning */
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            slb9670: slb9670@0{
+              compatible = "infineon,slb9670";
+              reg = <1>;  /* CE1 */
+              #address-cells = <1>;
+              #size-cells = <0>;
+              spi-max-frequency = <32000000>;
+              status = "okay";
+            };
+
+          };
+        };
+      };
+    '';
+  }];
 }
