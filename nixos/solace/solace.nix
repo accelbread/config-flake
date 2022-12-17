@@ -1,7 +1,8 @@
-{ pkgs, flakes, ... }: {
+{ flakes, ... }: {
   imports = [
     flakes.nixos-hardware.nixosModules.common-cpu-amd
     flakes.nixos-hardware.nixosModules.common-gpu-amd
+    ./home-assistant.nix
   ];
 
   boot = {
@@ -9,8 +10,6 @@
     kernelModules = [ "cpuid" "k10temp" "it87" ];
     kernelParams = [ "amdgpu.deep_color=1" ];
   };
-
-  nixpkgs.overlays = [ flakes.self.overlays.amd-cpu ];
 
   systemd.sleep.extraConfig = "AllowSuspend=no";
 
