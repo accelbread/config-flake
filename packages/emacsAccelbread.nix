@@ -1,7 +1,7 @@
 { lib
 , writeText
 , writeShellScript
-, emacsPgtkNativeComp
+, emacsPgtk
 , emacsPackagesFor
 , aspell
 , vale
@@ -78,7 +78,7 @@ let
                  '(("haskell-language-server-wrapper" "--lsp")
                    ("${hls-wrapper}" "--lsp")))))))
   '';
-  baseEmacs = emacsPgtkNativeComp.override { withWebP = true; };
+  baseEmacs = emacsPgtk;
   emacsWithPackages = (emacsPackagesFor baseEmacs).emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
