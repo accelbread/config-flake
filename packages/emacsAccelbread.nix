@@ -4,6 +4,7 @@
 , emacsPgtk
 , emacsPackagesFor
 , aspell
+, git
 , vale
 , shellcheck
 , direnv
@@ -49,6 +50,7 @@ let
   '';
   default-init = writeText "default.el" ''
     (setq ispell-program-name "${aspell}/bin/aspell"
+          magit-git-executable "${git}/bin/git"
           clang-format-executable "${clang-tools}/bin/clang-format"
           rust-rustfmt-bin "${rustfmt}/bin/rustfmt"
           haskell-mode-stylish-haskell-path
