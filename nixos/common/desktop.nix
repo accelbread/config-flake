@@ -29,10 +29,7 @@ in
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
-      flatpak = {
-        enable = true;
-        fonts-dir.enable = true;
-      };
+      flatpak.enable = true;
     };
 
     programs = {
