@@ -1,6 +1,11 @@
 {
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs }:
+    let
+      systems = [ "x86_64-linux" "aarch64-linux" ];
+      eachSystem = with nixpkgs.lib; f: foldAttrs mergeAttrs { }
+        (map (s: mapAttrs (_: v: { ${s} = v; }) (f s)) systems);
+    in
+    eachSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in
