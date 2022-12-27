@@ -36,8 +36,8 @@
          magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
-         scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale
-         meow-term meow-vterm))
+         geiser-guile scad-mode toml-mode yaml-mode git-modes pdf-tools
+         flymake-vale meow-term meow-vterm))
 
 (setq package-native-compile t)
 
@@ -1348,6 +1348,12 @@
 
 (dolist (sym '(nix-mode-format nix-format-buffer))
   (put sym 'completion-predicate #'ignore))
+
+
+;;; Scheme
+
+(setq geiser-repl-per-project-p t
+      geiser-mode-start-repl-p t)
 
 
 ;;; Rust
