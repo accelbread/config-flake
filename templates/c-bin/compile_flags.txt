@@ -1,0 +1,5 @@
+-std=gnu17
+-Wall
+-Wextra
+-Weverything
+-Isrc

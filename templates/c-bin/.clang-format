@@ -1,0 +1,19 @@
+---
+Language: Cpp
+BasedOnStyle: WebKit
+AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Left
+AlignEscapedNewlines: DontAlign
+AlignOperands: Align
+AllowShortEnumsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Attach
+ColumnLimit: 80
+DeriveLineEnding: false
+IndentWrappedFunctionNames: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+SeparateDefinitionBlocks: Always
+SpaceAfterCStyleCast: true
+...
