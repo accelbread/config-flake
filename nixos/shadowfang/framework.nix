@@ -17,6 +17,7 @@
 
   services = {
     logind.extraConfig = "IdleAction=hibernate";
+    usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     tlp = {
       enable = true;
       settings = { PCIE_ASPM_ON_BAT = "powersupersave"; };
