@@ -3,6 +3,7 @@
     flakes.nixos-hardware.nixosModules.common-cpu-amd
     flakes.nixos-hardware.nixosModules.common-gpu-amd
     ./home-assistant.nix
+    ./ups.nix
   ];
 
   boot = {
