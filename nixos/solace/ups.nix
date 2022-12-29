@@ -2,11 +2,12 @@
 let
   sudo = "/run/wrappers/bin/sudo";
   poweroff = "/run/current-system/sw/bin/poweroff";
-  notify-send = "${pkgs.libnotify}/bin/notify-send";
+  notify-send = pkgs.writeShellScript "notify-send-wrapper" ''
+    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
+      ${pkgs.libnotify}/bin/notify-send "$@"
+  '';
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
-    ${sudo} -u archit \
-      DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
-      ${notify-send} -c critical "$1"
+    ${sudo} -u archit ${notify-send} -c critical "$1"
   '';
 in
 {
@@ -67,7 +68,7 @@ in
 
   security.sudo.extraConfig = ''
     nut ALL=(root) NOPASSWD: ${poweroff}
-    nut ALL=(archit) NOPASSWD: SETENV: ${notify-send}
+    nut ALL=(archit) NOPASSWD: ${notify-send}
   '';
 }
 
