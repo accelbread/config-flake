@@ -288,7 +288,6 @@ in
         files = [
           "/etc/machine-id"
           "/var/lib/systemd/timesync/clock"
-          "/var/lib/usbguard/rules.conf"
         ];
       };
       defaultPackages = with pkgs; [ zile git ];

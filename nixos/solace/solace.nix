@@ -16,6 +16,7 @@
 
   services = {
     logind.extraConfig = "IdleAction=lock";
+    usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     clight = {
       enable = true;
       settings = {
