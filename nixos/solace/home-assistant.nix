@@ -69,19 +69,20 @@
             domain = "light";
           }
           {
-            platform = "sun";
-            event = "sunrise";
+            platform = "time";
+            at = "08:00:00";
           }
           {
-            platform = "sun";
-            event = "sunset";
+            platform = "time";
+            at = "20:00:00";
           }
         ];
         action = [{
           "if" = [{
-            condition = "sun";
-            after = "sunrise";
-            before = "sunset";
+            condition = "time";
+            after = "08:00:00";
+            before = "20:00:00";
+            weekday = [ "sun" "mon" "tue" "wed" "thu" "fri" "sat" ];
           }];
           "then" = [{
             service = "scene.turn_on";

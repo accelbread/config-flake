@@ -48,6 +48,9 @@
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
+      night-light-schedule-automatic = false;
+      night-light-schedule-from = 20.0;
+      night-light-schedule-to = 8.0;
     };
     "org/gnome/nautilus/preferences" = {
       show-delete-permanently = true;
