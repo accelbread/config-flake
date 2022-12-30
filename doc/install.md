@@ -6,25 +6,21 @@
 
 ## Configure system
 
-```sh
-blkdiscard ${disk} # trim ssd devices
-nix run .#provision-disks -- -n ${MACHINE_NAME} -d ${DISK1} -d ${DISK2} \
-    -g ${DISK_SIZE} -s ${SWAP_SIZE}
-```
-
+Add nixos config for system.
 Get networking.hostId from `head -c4 /dev/urandom | od -A none -t x4`.
-Set drive ids in config.
-Set `services.usbguard.implictPolicyTarget` to `"keep"`.
+Set `services.usbguard.implictPolicyTarget = "keep"`.
 
 ```sh
-nixos-install --no-root-passwd --flake .#${MACHINE_NAME}
+export NIX_CONFIG="extra-experimental-features = nix-command flakes"
+nix run .#nixosFullInstall -- ${SYSTEM}
 ```
 
 ## Post-install
 
 (as root, with necessary devices plugged in)
+
 ```sh
-usbguard generate-policy > /var/lib/usbguard/rules.conf
+usbguard generate-policy > usbguard-rules.conf
 ```
 
-Unset `services.usbguard.implictPolicyTarget`.
+Replace `usbguard.implictPolicyTarget` with `usbguard.rules`.

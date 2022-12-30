@@ -42,7 +42,7 @@
             (flip genAttrs (p: pkgs.${p}))
             (filterAttrs (_: isDerivation))
           ];
-          apps = import ./apps pkgs;
+          apps = import ./apps self pkgs;
           formatter = pkgs.nixpkgs-fmt;
         })
     // {

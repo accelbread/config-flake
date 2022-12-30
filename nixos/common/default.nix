@@ -8,7 +8,7 @@ in
     ./usbguard-dbus.nix
     ./flatpak-fonts.nix
     ./desktop.nix
-    ./disks.nix
+    ./disks
   ];
 
   nixpkgs.overlays = with flakes; [

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -xeuo pipefail
+
+export PATH=@path@
+
+disksPart=(@devicesPart@)
+name=@hostname@
+
+for i in $(seq 1 ${#disksPart[@]}); do
+    diskPart=${disksPart[$i-1]}
+    cryptsetup open "${diskPart}2" "${name}_disk${i}"
+done
+
+pool="/dev/${name}_vg1/pool"
+options="noatime,compress=zstd,X-mount.mkdir"
+
+mount -t btrfs -o "${options},subvol=root" "$pool" /mnt
+mount -o noatime,X-mount.mkdir "${disksPart[0]}1" /mnt/boot
+mount -t btrfs -o "${options},subvol=nix" "$pool" /mnt/nix
+mount -t btrfs -o "${options},subvol=persist" "$pool" /mnt/persist
