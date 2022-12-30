@@ -172,6 +172,7 @@ in
       };
       apparmor.enable = true;
       forcePageTableIsolation = true;
+      rtkit.enable = true;
     };
 
     virtualisation.containers = {
