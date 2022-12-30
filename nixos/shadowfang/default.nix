@@ -7,8 +7,9 @@ mkSystem {
       sysconfig = {
         desktop = true;
         disks = {
-          boot = "/dev/nvme0n1p1";
-          luks.disk1 = "/dev/nvme0n1p2";
+          devices = [ "/dev/nvme0n1" ];
+          size = "900GiB";
+          swap = "32g";
         };
       };
       swapDevices = [{ device = "/dev/shadowfang_vg1/swap"; }];
