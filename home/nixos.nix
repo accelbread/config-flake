@@ -26,6 +26,7 @@ in
       librewolf
       v4l-utils
       helvum
+      easyeffects
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
