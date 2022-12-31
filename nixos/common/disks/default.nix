@@ -119,5 +119,18 @@ in
         cryptsetup
       ]);
     };
+
+    system.build.unmountScript = pkgs.substituteAll {
+      src = ./unmount-disks;
+      isExecutable = true;
+      inherit hostname;
+      devicesPart = map getPartPrefix cfg.devices;
+      path = lib.makeBinPath (with pkgs; [
+        coreutils
+        util-linux
+        lvm2
+        cryptsetup
+      ]);
+    };
   };
 }

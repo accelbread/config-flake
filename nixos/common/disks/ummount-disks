@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -xeuo pipefail
+
+export PATH=@path@
+
+disksPart=(@devicesPart@)
+name=@hostname@
+
+unmount /mnt/persist
+unmount /mnt/nix
+unmount /mnt/boot
+unmount /mnt
+
+for i in $(seq 1 ${#disksPart[@]}); do
+    vgchange -a n "${name}_vg${i}"
+    cryptsetup close "${name}_disk${i}"
+done
