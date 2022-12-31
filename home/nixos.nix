@@ -64,7 +64,13 @@ in
     pinentryFlavor = "gnome3";
   };
 
-  xdg.desktopEntries = {
-    cups = { name = ""; exec = null; settings.Hidden = "true"; };
+  xdg = {
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "audio/mpeg" = "umpv.desktop";
+      };
+    };
+    desktopEntries.cups = { name = ""; exec = null; settings.Hidden = "true"; };
   };
 }
