@@ -30,6 +30,7 @@ in
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
+      git-annex
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
