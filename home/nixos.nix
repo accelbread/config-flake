@@ -2,12 +2,6 @@
 let
   inherit (builtins) mapAttrs;
   self = ../.;
-  firefox-vertical-tabs = pkgs.fetchFromGitHub {
-    owner = "ranmaru22";
-    repo = "firefox-vertical-tabs";
-    rev = "v5.5";
-    sha256 = "sha256-9RoF7oaxL/LPhRXRNvl1QRke9vJFTlwMKa1hXrES8PY=";
-  };
 in
 {
   imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];
@@ -38,7 +32,7 @@ in
       ".ssh".source = self + /dotfiles/ssh;
       ".librewolf".source = self + /dotfiles/librewolf;
       ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
-        firefox-vertical-tabs + /userChrome.css;
+        pkgs.firefox-vertical-tabs + /userChrome.css;
     };
     activation.configureFlathub =
       let flatpak = "${pkgs.flatpak}/bin/flatpak"; in
