@@ -78,6 +78,7 @@ in
         "audio/mpeg" = "umpv.desktop";
       };
     };
+    configFile."mimeapps.list".force = true;
     desktopEntries.cups = { name = ""; exec = null; settings.Hidden = "true"; };
   };
 }
