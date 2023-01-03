@@ -1,4 +1,11 @@
-;;; my-purple-theme.el -*- lexical-binding: t; -*-
+;;; my-purple-theme.el --- Custom theme -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;; Personal custom theme
+
+;;; Code:
+
 (deftheme my-purple)
 
 (custom-theme-set-faces
@@ -99,6 +106,8 @@
  '(eshell-syntax-highlighting-alias-face ((t (:inherit (font-lock-constant-face)))))
  '(eshell-syntax-highlighting-file-arg-face ((t (:inherit (eshell-ls-directory)))))
  '(eshell-syntax-highlighting-directory-face ((t (:inherit (eshell-ls-directory)))))
+ '(git-annex-dired-annexed-available ((t (:inherit (dired-symlink)))))
+ '(git-annex-dired-annexed-unavailable ((t (:inherit (dired-broken-symlink)))))
  '(org-block ((t (:inherit (fixed-pitch)))))
  '(org-code ((t (:inherit (fixed-pitch)))))
  '(term-color-black ((t (:foreground "#1A1821" :background "#1A1821"))))
@@ -153,3 +162,6 @@
                           rainbow-delimiters-depth-6-face]))
 
 (provide-theme 'my-purple)
+
+(provide 'my-purple-theme)
+;;; my-purple-theme.el ends here
