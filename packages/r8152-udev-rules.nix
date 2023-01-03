@@ -3,12 +3,12 @@
 }:
 stdenv.mkDerivation rec {
   pname = "r8152-udev-rules";
-  version = "v2.16.3.20220914";
+  version = "v2.16.3.20221209";
   src = fetchFromGitHub {
     owner = "wget";
     repo = "realtek-r8152-linux";
     rev = version;
-    sha256 = "sha256-5IFDqt4kfJy7vjk638yGQOELotyWSa0h84PN3nhkQbM=";
+    sha256 = "sha256-RaYuprQFbWAy8CtSZOau0Qlo3jtZnE1AhHBgzASopSA=";
   };
   dontBuild = true;
   dontConfigure = true;
