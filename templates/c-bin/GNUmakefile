@@ -34,7 +34,7 @@ MAKEFLAGS += --no-builtin-rules
 
 all: $(BIN)
 
-$(EXE): $(OBJS)
+$(BIN): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 $(BUILDDIR)/%.d: %.c $(MAKEFILE_LIST)
