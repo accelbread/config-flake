@@ -37,9 +37,9 @@
             license = licenses.agpl3Plus;
             platforms = platforms.linux;
           };
-        };
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ clang-tools ];
+          shellHook = ''
+            export PATH=${pkgs.clang-tools}/bin:$PATH
+          '';
         };
         formatter = pkgs.nixpkgs-fmt;
       });
