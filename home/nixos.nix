@@ -34,12 +34,6 @@ in
       ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
         pkgs.firefox-vertical-tabs + /userChrome.css;
     };
-    activation.configureFlathub =
-      let flatpak = "${pkgs.flatpak}/bin/flatpak"; in
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD ${flatpak} --user remote-add --if-not-exists $VERBOSE_ARG \
-          flathub https://flathub.org/repo/flathub.flatpakrepo
-      '';
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {
