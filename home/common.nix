@@ -32,11 +32,15 @@
           eval "$(${pkgs.coreutils}/bin/dircolors -b)"
       fi
     '';
-    git.extraConfig = {
-      pull.ff = "only";
-      user.useConfigOnly = true;
-      advice.detachedHead = false;
-      init.defaultBranch = "master";
+    git = {
+      extraConfig = {
+        pull.ff = "only";
+        user.useConfigOnly = true;
+        advice.detachedHead = false;
+        init.defaultBranch = "master";
+        "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
+      };
+      attributes = [ "*.el diff=lisp" ];
     };
     less.keys = ''
       #env
