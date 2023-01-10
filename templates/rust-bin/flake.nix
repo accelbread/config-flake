@@ -23,9 +23,8 @@
       url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
-  outputs = { self, nixpkgs, crane, treefmt-nix }:
+  outputs = { self, nixpkgs, crane }:
     let
       systems = [ "x86_64-linux" "aarch64-linux" ];
       eachSystem = with nixpkgs.lib; f: foldAttrs mergeAttrs { }
@@ -38,14 +37,9 @@
         pkgs = nixpkgs.legacyPackages.${system};
         craneLib = crane.lib.${system};
         cargoArtifacts = craneLib.buildDepsOnly { inherit src; };
-        fmtCfg = {
-          projectRootFile = "flake.nix";
-          programs = {
-            rustfmt = { enable = true; inherit (cargoToml.package) edition; };
-            nixpkgs-fmt.enable = true;
-            prettier.enable = true;
-          };
-        };
+        runCheck = cmd: deps: pkgs.runCommand "check"
+          { nativeBuildInputs = deps; }
+          "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
       in
       rec {
         packages.default = craneLib.buildPackage {
@@ -66,9 +60,9 @@
             inherit src cargoArtifacts;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
-          formatting =
-            (treefmt-nix.lib.evalModule pkgs fmtCfg).config.build.check self;
+          formatting = runCheck "HOME=$TMPDIR treefmt --fail-on-change"
+            (with pkgs; [ treefmt rustfmt nixpkgs-fmt nodePackages.prettier ]);
         };
-        formatter = treefmt-nix.lib.mkWrapper pkgs fmtCfg;
+        formatter = pkgs.treefmt;
       });
 }
