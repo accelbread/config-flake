@@ -17,6 +17,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 {
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-22.11";
+  };
   outputs = { self, nixpkgs }:
     let
       systems = [ "x86_64-linux" "aarch64-linux" ];
@@ -26,8 +29,11 @@
     eachSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        inherit (pkgs) lib;
+        runCheck = cmd: pkgs.runCommand "check" { }
+          "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
       in
-      {
+      rec {
         packages.default = pkgs.stdenv.mkDerivation {
           name = "hello_world";
           src = ./.;
@@ -37,10 +43,24 @@
             license = licenses.agpl3Plus;
             platforms = platforms.linux;
           };
-          shellHook = ''
-            export PATH=${pkgs.clang-tools}/bin:$PATH
-          '';
         };
-        formatter = pkgs.nixpkgs-fmt;
+        devShells.default = pkgs.mkShell {
+          inputsFrom = builtins.attrValues checks;
+        };
+        checks = {
+          package = packages.default;
+          formatting = runCheck
+            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
+        };
+        formatter = pkgs.writeScriptBin "treefmt" ''
+          PATH=${lib.makeBinPath (with pkgs; [
+            treefmt
+            clang-tools
+            coreutils
+            nixpkgs-fmt
+            nodePackages.prettier
+          ])}
+          exec treefmt "$@"
+        '';
       });
 }
