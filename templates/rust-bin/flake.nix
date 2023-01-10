@@ -35,10 +35,10 @@
     eachSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        inherit (pkgs) lib;
         craneLib = crane.lib.${system};
         cargoArtifacts = craneLib.buildDepsOnly { inherit src; };
-        runCheck = cmd: deps: pkgs.runCommand "check"
-          { nativeBuildInputs = deps; }
+        runCheck = cmd: pkgs.runCommand "check" { }
           "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
       in
       rec {
@@ -60,9 +60,17 @@
             inherit src cargoArtifacts;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
-          formatting = runCheck "HOME=$TMPDIR treefmt --fail-on-change"
-            (with pkgs; [ treefmt rustfmt nixpkgs-fmt nodePackages.prettier ]);
+          formatting = runCheck
+            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
         };
-        formatter = pkgs.treefmt;
+        formatter = pkgs.writeScriptBin "treefmt" ''
+          PATH=${lib.makeBinPath (with pkgs; [
+            treefmt
+            rustfmt
+            nixpkgs-fmt
+            nodePackages.prettier
+          ])}
+          exec treefmt "$@"
+        '';
       });
 }
