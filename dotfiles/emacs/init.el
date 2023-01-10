@@ -1339,6 +1339,7 @@
   :args `("fmt" ,input-file)
   :stdin nil
   :stdout nil
+  :input-file (reformatter-temp-file-in-current-directory ".nix")
   :mode nil)
 
 (defun nix-formatter-configure ()
