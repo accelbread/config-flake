@@ -63,6 +63,7 @@
  '(whitespace-trailing ((t (:inherit (secondary-selection)))))
  '(whitespace-missing-newline-at-eof ((t (:inherit (isearch-fail)))))
  '(page-break-lines ((t (:inherit (shadow)))))
+ '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
  '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
  '(evil-ex-substitute-matches ((t (:strike-through t :inherit (error)))))
  '(evil-ex-substitute-replacement ((t (:inherit (success)))))

@@ -37,7 +37,7 @@
          rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
          geiser-guile scad-mode toml-mode yaml-mode git-modes pdf-tools
-         flymake-vale meow-term meow-vterm git-annex magit-annex))
+         flymake-vale meow-term meow-vterm vundo git-annex magit-annex))
 
 (setq package-native-compile t)
 
@@ -162,12 +162,15 @@
   (savehist-mode))
 
 
-;;; Increase undo history
+;;; Undo
 
 (setq undo-limit (* 4 1024 1024)
       undo-strong-limit (* 6 1024 1024)
       kill-ring-max 512
       kill-do-not-save-duplicates t)
+
+(with-eval-after-load 'vundo
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 
 
 ;;; Update files modified on disk
