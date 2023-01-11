@@ -233,7 +233,7 @@
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 (hide-minor-mode 'abbrev-mode)
-(hide-minor-mode 'global-whitespace-mode)
+(hide-minor-mode 'whitespace-mode)
 
 (with-eval-after-load 'face-remap
   (hide-minor-mode 'buffer-face-mode))
