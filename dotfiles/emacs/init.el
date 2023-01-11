@@ -620,6 +620,10 @@
                                         (beginning . backward)
                                         (end . forward)))
 
+(pcase-dolist (`(,k ,v) '((minibufferp meow--update-cursor-insert)
+                          (meow--cursor-null-p ignore)))
+  (setf (alist-get k meow-update-cursor-functions-alist) v))
+
 (meow-global-mode)
 
 (defvar meow-previous-selected-buffer nil
