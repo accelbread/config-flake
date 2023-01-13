@@ -14,13 +14,7 @@ in
 genPackages ../packages final.callPackage
   // {
   emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
-    (final: prev:
-      prev.melpaPackages //
-      prev.melpaStablePackages //
-      prev.nongnuPackages //
-      prev.elpaPackages //
-      prev.manualPackages //
-      genPackages ../packages/elisp-packages final.callPackage);
+    (final: prev: genPackages ../packages/elisp-packages final.callPackage);
   nut = prev.nut.overrideAttrs (old: {
     postPatch = ">conf/Makefile.am";
     configureFlags = old.configureFlags ++
