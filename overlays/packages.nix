@@ -15,16 +15,4 @@ genPackages ../packages final.callPackage
   // {
   emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
     (final: prev: genPackages ../packages/elisp-packages final.callPackage);
-  nut = prev.nut.overrideAttrs (old: {
-    postPatch = ">conf/Makefile.am";
-    configureFlags = old.configureFlags ++
-    [
-      "--with-drivers=usbhid-ups"
-      "--without-dev"
-      "--with-user=nut"
-      "--with-group=nut"
-      "--sysconfdir=/etc/nut"
-      "--with-statepath=/var/lib/nut"
-    ];
-  });
 }
