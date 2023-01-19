@@ -38,7 +38,7 @@
          clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
          geiser-guile scad-mode toml-mode yaml-mode git-modes pdf-tools
          flymake-vale meow-term meow-vterm vundo git-annex magit-annex
-         coterm))
+         coterm eat))
 
 (setq package-native-compile t)
 
@@ -895,7 +895,7 @@
   (push #'always eshell-complex-commands))
 
 (with-eval-after-load 'em-term
-  (push "watch" eshell-visual-commands))
+  (setq eshell-visual-commands nil))
 
 (with-eval-after-load 'em-tramp
   (require 'tramp))
@@ -919,6 +919,7 @@
 (defun my-eshell-init ()
   "Function to run in new eshell buffers."
   (remove-hook 'eshell-exit-hook #'eshell-write-history t)
+  (eat-eshell-mode)
   (fish-completion-mode)
   (setq completion-at-point-functions '(cape-file
                                         pcomplete-completions-at-point
@@ -980,6 +981,38 @@
   (define-abbrev-table 'eshell-mode-abbrev-table
     '(("gitcl" "git clone --filter=blob:none")
       ("gitsub" "git submodule update --init --recursive --depth 1"))))
+
+(advice-add 'eat-eshell-mode :after
+            (lambda (&rest _)
+              "Remove eat-eshell's terminfo path override."
+              (setq eshell-variable-aliases-list
+                    (delete '("TERMINFO" eat-term-terminfo-directory t)
+                            eshell-variable-aliases-list)))
+            '((name . eat-eshell-remove-terminfo-override)))
+
+(advice-add 'eat-eshell-emacs-mode :around
+            (lambda (orig-fun &rest args)
+              "Only run if eat terminal is active."
+              (when eat--terminal
+                (apply orig-fun args)))
+            '((name . eat-eshell-only-when-active)))
+
+(with-eval-after-load 'eat
+  (setq eat-eshell-char-mode-map
+        (let ((map (eat-term-make-keymap
+                    #'eat-self-input
+                    '(:ascii :arrow :navigation :function)
+                    '([?\C-c]))))
+          (define-key map [?\C-c ?\C-c] #'eat-self-input)
+          (define-key map [?\C-c ?\e] #'eat-self-input)
+          map)))
+
+(defun meow-eat-eshell-setup-hooks ()
+  "Ensure non-char-mode keybindings outside of insert mode."
+  (add-hook 'meow-insert-enter-hook #'eat-eshell-char-mode nil t)
+  (add-hook 'meow-insert-exit-hook #'eat-eshell-emacs-mode nil t))
+
+(add-hook 'eat-eshell-mode-hook #'meow-eat-eshell-setup-hooks)
 
 
 ;;; Direnv

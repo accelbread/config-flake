@@ -7,6 +7,7 @@ in
     packages = with pkgs; [
       emacsAccelbread
       emacsAccelbread-terminfo
+      emacs-eat-terminfo
       aspellDicts.en
       noto-fonts-bw-emoji
     ];
