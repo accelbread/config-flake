@@ -33,12 +33,11 @@
 (setq package-selected-packages
       '( meow gcmh rainbow-delimiters flyspell-correct which-key rg editorconfig
          corfu cape kind-icon vertico orderless marginalia consult inheritenv
-         magit magit-todos hl-todo envrc vterm fish-completion virtual-comment
-         rmsbolt yasnippet rainbow-mode svg-lib reformatter markdown-mode
-         clang-format cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode
-         geiser-guile scad-mode toml-mode yaml-mode git-modes pdf-tools
-         flymake-vale meow-term meow-vterm vundo git-annex magit-annex
-         coterm eat))
+         magit magit-todos hl-todo magit-annex git-annex virtual-comment vundo
+         envrc fish-completion eat coterm meow-term vterm meow-vterm rmsbolt
+         yasnippet rainbow-mode svg-lib reformatter markdown-mode clang-format
+         cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode geiser-guile
+         scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
 
 (setq package-native-compile t)
 
