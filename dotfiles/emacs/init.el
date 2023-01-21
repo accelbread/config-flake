@@ -1115,11 +1115,7 @@
 
 (add-hook 'compilation-mode-hook #'set-term-ansi-color)
 
-(defun compilation-ansi-color ()
-  "Apply ansi-color to compilation buffer output."
-  (ansi-color-apply-on-region compilation-filter-start (point)))
-
-(add-hook 'compilation-filter-hook #'compilation-ansi-color)
+(add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
 
 (setq ansi-osc-for-compilation-buffer t)
 
