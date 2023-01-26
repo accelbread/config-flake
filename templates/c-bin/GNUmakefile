@@ -16,7 +16,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-CFLAGS ?= -std=gnu17 -O3 -Wall -Wextra
+CFLAGS ?= -std=gnu17 -O3 -flto -Wall -Wextra
 BUILDDIR ?= build
 DESTDIR ?= /usr/local
 
@@ -35,7 +35,7 @@ MAKEFLAGS += --no-builtin-rules
 all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 $(BUILDDIR)/%.d: %.c $(MAKEFILE_LIST)
 	@mkdir -p $(@D)
