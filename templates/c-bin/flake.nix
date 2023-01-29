@@ -1,4 +1,4 @@
-# Template C application
+# hello-world -- Template C application
 # Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
 #
 # This program is free software: you can redistribute it and/or modify it under
@@ -35,11 +35,11 @@
       in
       rec {
         packages.default = pkgs.stdenv.mkDerivation {
-          name = "hello_world";
+          name = "hello-world";
           src = ./.;
           installPhase = "make DESTDIR=$out install";
           meta = with pkgs.lib; {
-            description = "Template C application project.";
+            description = "Template C application.";
             license = licenses.agpl3Plus;
             platforms = platforms.linux;
           };

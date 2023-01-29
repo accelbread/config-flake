@@ -1,3 +1,3 @@
-# rust-bin
+# hello-world
 
-Template for Rust application
+Template Rust application.

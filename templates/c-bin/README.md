@@ -1,3 +1,3 @@
-# hello_world
+# hello-world
 
-Template for C application
+Template C application.

@@ -1,4 +1,4 @@
-/* Template C application
+/* hello-world -- Template C application
  * Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
  *
  * This program is free software: you can redistribute it and/or modify it under

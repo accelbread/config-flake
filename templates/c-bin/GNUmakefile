@@ -1,4 +1,4 @@
-# Template C application
+# hello-world -- Template C application
 # Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
 #
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +20,7 @@ CFLAGS ?= -std=gnu17 -O3 -flto -Wall -Wextra
 BUILDDIR ?= build
 DESTDIR ?= /usr/local
 
-NAME := hello_world
+NAME := hello-world
 
 BIN := $(BUILDDIR)/$(NAME)
 SRCS := $(shell find src -name '*.c')

@@ -1,10 +1,10 @@
 [package]
-name = "rust-bin"
+name = "hello-world"
 version = "0.1.0"
 authors = ["Archit Gupta <accelbread@gmail.com>"]
 edition = "2021"
-description = "Template for Rust application."
-repository = "https://github.com/accelbread/rust-bin"
+description = "Template Rust application."
+repository = "https://github.com/accelbread/hello-world"
 license = "AGPL-3.0-or-later"
 keywords = ["template"]
 categories = ["command-line-utilities"]
