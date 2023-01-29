@@ -25,6 +25,7 @@ in
       gnome.dconf-editor
       gnomeExtensions.espresso
       git-annex
+      gimp
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
