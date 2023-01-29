@@ -2,14 +2,22 @@ rec {
   default = shell;
   shell = {
     path = ./shell;
-    description = "Template for Nix devShells.";
+    description = "Template Nix devShell.";
   };
   elisp-package = {
     path = ./elisp-package;
-    description = "Template for new Emacs packages.";
+    description = "Template Emacs package.";
   };
   c-bin = {
     path = ./c-bin;
-    description = "Template for C applications.";
+    description = "Template C application.";
+  };
+  rust-bin = {
+    path = ./rust-bin;
+    description = "Template Rust application.";
+  };
+  zig-bin = {
+    path = ./zig-bin;
+    description = "Template Zig application.";
   };
 }
