@@ -206,10 +206,10 @@ in
         "/var/lib/bluetooth"
         "/var/log"
         "/var/lib/systemd/coredump"
+        "/var/lib/systemd/timesync"
       ];
       files = [
         "/etc/machine-id"
-        "/var/lib/systemd/timesync/clock"
       ];
     };
     defaultPackages = with pkgs; [ zile git ];
