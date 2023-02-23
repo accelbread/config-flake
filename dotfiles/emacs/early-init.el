@@ -33,7 +33,7 @@
 
 ;;; Disable async native compilation
 
-(setq inhibit-automatic-native-compilation t)
+(setq native-comp-jit-compilation nil)
 
 
 ;;; Theme

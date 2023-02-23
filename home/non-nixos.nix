@@ -9,7 +9,7 @@ let
     name = (drv.name + "-nixGLWrapper");
     paths = (map
       (bin: pkgs.writeShellScriptBin bin ''
-        exec ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel ${drv}/bin/${bin} "$@"
+        exec ${lib.getExe config.nixGL.package} ${drv}/bin/${bin} "$@"
       '')
       (attrNames (readDir "${drv}/bin"))
     ) ++ [ drv ];
@@ -19,10 +19,16 @@ in
   imports = [ ./common.nix ];
 
   options = {
-    nixGLPackages = mkOption {
-      type = types.listOf types.string;
-      default = [ ];
-      description = "Packages to wrap with nixGL.";
+    nixGL = {
+      package = mkOption {
+        type = types.package;
+        default = pkgs.nixgl.nixGLMesa;
+      };
+      wrappedPackages = mkOption {
+        type = types.listOf types.string;
+        default = [ ];
+        description = "Packages to wrap with nixGL.";
+      };
     };
   };
 
@@ -50,7 +56,7 @@ in
       ];
     };
 
-    nixGLPackages = [ "zeal" ];
+    nixGL.wrappedPackages = [ "zeal" ];
 
     programs.home-manager.enable = true;
   };

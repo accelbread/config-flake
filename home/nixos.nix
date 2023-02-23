@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flakes, ... }:
 let
   inherit (builtins) mapAttrs;
   self = ../.;
+  system = pkgs.stdenv.hostPlatform.system;
+  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
 in
 {
   imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];
@@ -16,10 +18,9 @@ in
       GDK_DPI_SCALE = "1.25";
       QT_SCALE_FACTOR = "1.25";
     };
-    packages = with pkgs; [
+    packages = (with pkgs; [
       librewolf
       v4l-utils
-      helvum
       easyeffects
       gnome.gnome-session
       gnome.dconf-editor
@@ -27,7 +28,7 @@ in
       git-annex
       gimp
       cockatrice
-    ];
+    ]) ++ (with pkgs-unstable; [ helvum ]);
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
       ".ssh".source = self + /dotfiles/ssh;

@@ -19,7 +19,6 @@
       parted
       zeal
       podman
-      nixgl.nixGLIntel
     ];
   };
 

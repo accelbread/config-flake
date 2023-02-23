@@ -48,6 +48,7 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       users.archit = self + /home/nixos.nix;
+      extraSpecialArgs = { inherit flakes; };
     };
 
     environment = {

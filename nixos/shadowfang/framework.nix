@@ -31,5 +31,7 @@
       webInterface = false;
     };
   };
+
+  environment.systemPackages = with pkgs; [ nixgl.nixGLIntel ];
 }
 
