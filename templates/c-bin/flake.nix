@@ -32,6 +32,13 @@
         inherit (pkgs) lib;
         runCheck = cmd: pkgs.runCommand "check" { }
           "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
+        formatters = with pkgs; [
+          treefmt
+          clang-tools
+          coreutils
+          nixpkgs-fmt
+          nodePackages.prettier
+        ];
       in
       rec {
         packages.default = pkgs.stdenv.mkDerivation {
@@ -46,6 +53,7 @@
         };
         devShells.default = pkgs.mkShell {
           inputsFrom = builtins.attrValues checks;
+          packages = with pkgs; [ clang-tools ] ++ formatters;
         };
         checks = {
           package = packages.default;
@@ -53,13 +61,7 @@
             "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
         };
         formatter = pkgs.writeScriptBin "treefmt" ''
-          PATH=${lib.makeBinPath (with pkgs; [
-            treefmt
-            clang-tools
-            coreutils
-            nixpkgs-fmt
-            nodePackages.prettier
-          ])}
+          PATH=${lib.makeBinPath formatters}
           exec treefmt "$@"
         '';
       });

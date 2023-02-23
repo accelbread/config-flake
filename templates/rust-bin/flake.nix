@@ -40,6 +40,12 @@
         cargoArtifacts = craneLib.buildDepsOnly { inherit src; };
         runCheck = cmd: pkgs.runCommand "check" { }
           "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
+        formatters = with pkgs; [
+          treefmt
+          rustfmt
+          nixpkgs-fmt
+          nodePackages.prettier
+        ];
       in
       rec {
         packages.default = craneLib.buildPackage {
@@ -52,7 +58,7 @@
         };
         devShells.default = pkgs.mkShell {
           inputsFrom = builtins.attrValues checks;
-          packages = with pkgs; [ rust-analyzer ];
+          packages = with pkgs; [ rust-analyzer rustc ] ++ formatters;
         };
         checks = {
           package = packages.default;
@@ -64,12 +70,7 @@
             "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
         };
         formatter = pkgs.writeScriptBin "treefmt" ''
-          PATH=${lib.makeBinPath (with pkgs; [
-            treefmt
-            rustfmt
-            nixpkgs-fmt
-            nodePackages.prettier
-          ])}
+          PATH=${lib.makeBinPath formatters}
           exec treefmt "$@"
         '';
       });
