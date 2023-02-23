@@ -2,6 +2,8 @@
 let
   inherit (flakes) self;
   inherit (builtins) mapAttrs;
+  system = pkgs.stdenv.hostPlatform.system;
+  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
 in
 {
   imports = [
@@ -177,7 +179,7 @@ in
 
   fonts = {
     enableDefaultFonts = false;
-    fonts = with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
+    fonts = with pkgs-unstable; [
       dejavu_fonts
       liberation_ttf
       noto-fonts

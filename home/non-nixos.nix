@@ -2,6 +2,8 @@
 let
   inherit (builtins) mapAttrs readDir attrNames;
   inherit (lib) mkOption types;
+  system = pkgs.stdenv.hostPlatform.system;
+  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
 
   nixGLWrapDrv = drv: pkgs.symlinkJoin {
     name = (drv.name + "-nixGLWrapper");
@@ -38,7 +40,7 @@ in
     ];
 
     home = {
-      packages = with flakes.nixpkgs-unstable.legacyPackages.x86_64-linux; [
+      packages = with pkgs-unstable; [
         dejavu_fonts
         liberation_ttf
         noto-fonts
