@@ -14,10 +14,10 @@ in
   ];
 
   nixpkgs.overlays = with flakes; [
-    emacs-overlay.overlays.default
-    self.overlays.default
     self.overlays.overrides
+    emacs-overlay.overlays.default
     nixgl.overlays.default
+    self.overlays.default
   ];
 
   nix = {
