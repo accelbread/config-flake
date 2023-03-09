@@ -1,5 +1,9 @@
 { lib, pkgs, ... }: {
   dconf.settings = with lib.hm.gvariant; {
+    "org/gnome/clocks" = {
+      world-clocks =
+        "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
+    };
     "org/gnome/desktop/background" = {
       color-shading-type = "solid";
       picture-options = "zoom";
