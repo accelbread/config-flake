@@ -28,6 +28,8 @@ in
       git-annex
       gimp
       cockatrice
+      firefox
+      ungoogled-chromium
     ]) ++ (with pkgs-unstable; [ helvum ]);
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
