@@ -68,7 +68,7 @@
           XDG_CACHE_HOME = ".cache";
           buildPhase = ''
             mkdir -p $out
-            zig build -Drelease-safe -Dcpu=baseline --prefix $out
+            zig build -Doptimize=ReleaseSafe -Dcpu=baseline --prefix $out
           '';
           meta = with lib; {
             description = "Template Zig application.";
