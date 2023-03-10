@@ -18,9 +18,10 @@ in
       GDK_DPI_SCALE = "1.25";
       QT_SCALE_FACTOR = "1.25";
     };
-    packages = (with pkgs; [
+    packages = with pkgs; [
       librewolf
       v4l-utils
+      helvum
       easyeffects
       gnome.gnome-session
       gnome.dconf-editor
@@ -30,7 +31,7 @@ in
       cockatrice
       firefox
       ungoogled-chromium
-    ]) ++ (with pkgs-unstable; [ helvum ]);
+    ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
       ".ssh".source = self + /dotfiles/ssh;
