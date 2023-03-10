@@ -175,6 +175,7 @@ in
       };
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
+    nscd.enableNsncd = true;
   };
 
   fonts = {
