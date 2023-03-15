@@ -41,7 +41,7 @@ in
 
     nixpkgs.overlays = [
       flakes.nixgl.overlays.default
-      (final: prev: lib.genAttrs config.nixGLPackages
+      (final: prev: lib.genAttrs config.nixGL.wrappedPackages
         (pkg: nixGLWrapDrv prev.${pkg}))
     ];
 
