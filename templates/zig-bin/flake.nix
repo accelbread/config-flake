@@ -85,7 +85,7 @@
           test = runCheck
             "HOME=$TMPDIR ${lib.getExe pkgs.zig} build test";
           formatting = runCheck
-            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
+            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change --no-cache";
         };
         formatter = pkgs.writeScriptBin "treefmt" ''
           PATH=${lib.makeBinPath formatters}

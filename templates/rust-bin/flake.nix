@@ -68,7 +68,7 @@
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
           formatting = runCheck
-            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change";
+            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change --no-cache";
         };
         formatter = pkgs.writeScriptBin "treefmt" ''
           PATH=${lib.makeBinPath formatters}
