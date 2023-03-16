@@ -39,7 +39,7 @@
         craneLib = crane.lib.${system};
         cargoArtifacts = craneLib.buildDepsOnly { inherit src; };
         runCheck = cmd: pkgs.runCommand "check" { }
-          "cp --no-preserve=mode -r ${./.} src; cd src; ${cmd}; touch $out";
+          "cp --no-preserve=mode -r ${./.} src; cd src\n${cmd}\ntouch $out";
         formatters = with pkgs; [
           treefmt
           rustfmt
