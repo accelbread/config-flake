@@ -1125,6 +1125,8 @@
 
 ;;; Project
 
+(setq project-vc-extra-root-markers '("flake.nix"))
+
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
   (when (string-prefix-p "/nix/store/" dir)
@@ -1133,15 +1135,9 @@
                        dir)))
       (cons 'transient store-path))))
 
-(defun project-nix-flake (dir)
-  "Return transient project if DIR is in a nix flake."
-  (when-let* ((flake-path (locate-dominating-file dir "flake.nix")))
-    (cons 'transient flake-path)))
-
 (with-eval-after-load 'project
   (require 'vc-git) ; project-find-file fails if vc-git is not loaded
-  (add-hook 'project-find-functions #'project-nix-store 95)
-  (add-hook 'project-find-functions #'project-nix-flake 95))
+  (add-hook 'project-find-functions #'project-nix-store 95))
 
 
 ;;; Eglot
