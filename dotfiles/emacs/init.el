@@ -926,7 +926,8 @@
         mode-line-process
         '(" " (:eval (abbreviate-file-name default-directory))))
   (abbrev-mode)
-  (face-remap-set-base 'nobreak-space nil))
+  (face-remap-set-base 'nobreak-space nil)
+  (buffer-disable-undo))
 
 (add-hook 'eshell-mode-hook #'my-eshell-init)
 
