@@ -8,7 +8,7 @@ stdenv.mkDerivation {
     url = "https://fonts.google.com/download?family=Noto%20Emoji";
     extension = "zip";
     stripRoot = false;
-    sha256 = "sha256-q7WpqAhmio2ecNGOI7eX7zFBicrsvX8bURF02Pru2rM=";
+    hash = "sha256-NYWUlDy5D1hP0zAIPWLJJEZWwEXLFiAN2cRm0F52u/s=";
   };
   installPhase = ''
     mkdir -p $out/share/fonts/noto
