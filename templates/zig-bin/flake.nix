@@ -85,6 +85,8 @@
             ${lib.getExe formatter} .
             ${pkgs.diffutils}/bin/diff -qr ${./.} . |\
               sed 's/Files .* and \(.*\) differ/File \1 not formatted/g'
+            ${lib.getExe pkgs.editorconfig-checker} \
+              -disable-indent-size -disable-max-line-length
           '';
         };
         formatter = pkgs.writeShellScriptBin "formatter" ''
