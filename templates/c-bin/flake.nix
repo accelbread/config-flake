@@ -55,7 +55,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues checks;
+          inputsFrom = [ packages.default ];
           packages = with pkgs; [ clang-tools ] ++ formatters;
         };
         checks = {

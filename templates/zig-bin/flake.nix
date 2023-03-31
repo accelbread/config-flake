@@ -74,7 +74,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues checks;
+          inputsFrom = [ packages.default ];
           packages = [ pkgs.zls ] ++ formatters;
         };
         checks = {

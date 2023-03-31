@@ -52,7 +52,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues checks;
+          inputsFrom = [ packages.default ];
           packages = with pkgs; [ rust-analyzer rustc ] ++ formatters;
           RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
         };
