@@ -11,7 +11,9 @@ stdenv.mkDerivation {
     hash = "sha256-NYWUlDy5D1hP0zAIPWLJJEZWwEXLFiAN2cRm0F52u/s=";
   };
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/share/fonts/noto
     cp NotoEmoji-*.ttf $out/share/fonts/noto
+    runHook postInstall
   '';
 }

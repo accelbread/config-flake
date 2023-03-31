@@ -67,8 +67,10 @@
           dontInstall = true;
           XDG_CACHE_HOME = ".cache";
           buildPhase = ''
+            runHook preBuild
             mkdir -p $out
             zig build -Doptimize=ReleaseSafe -Dcpu=baseline --prefix $out
+            runHook postBuild
           '';
           meta = with lib; {
             description = "Template Zig application.";

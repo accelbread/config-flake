@@ -11,7 +11,9 @@ stdenv.mkDerivation {
     sha256 = "sha256-A0vuV4BdumbCb14wxiH5Sc9S75Yx8xwQqWzpfi43+ls=";
   };
   installPhase = ''
+    runHook preInstall
     mkdir -p $out
     cp -r write-good $out/
+    runHook postInstall
   '';
 }

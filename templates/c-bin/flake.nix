@@ -44,7 +44,11 @@
         packages.default = pkgs.stdenv.mkDerivation {
           name = "hello-world";
           src = ./.;
-          installPhase = "make DESTDIR=$out install";
+          installPhase = ''
+            runHook preInstall
+            make DESTDIR=$out install
+            runHook postInstall
+          '';
           meta = with pkgs.lib; {
             description = "Template C application.";
             license = licenses.agpl3Plus;

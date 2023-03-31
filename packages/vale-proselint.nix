@@ -11,7 +11,9 @@ stdenv.mkDerivation {
     sha256 = "sha256-faeWr1bRhnKsycJY89WqnRv8qIowUmz3EQvDyjtl63w=";
   };
   installPhase = ''
+    runHook preInstall
     mkdir -p $out
     cp -r proselint $out/
+    runHook postInstall
   '';
 }

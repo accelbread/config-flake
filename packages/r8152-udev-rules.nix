@@ -13,7 +13,9 @@ stdenv.mkDerivation rec {
   dontBuild = true;
   dontConfigure = true;
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/lib/udev/rules.d
     cp 50-usb-realtek-net.rules $out/lib/udev/rules.d/
+    runHook postInstall
   '';
 }
