@@ -33,7 +33,6 @@
         runCheck = cmd: pkgs.runCommand "check" { }
           "cp --no-preserve=mode -r ${./.} src; cd src\n${cmd}\ntouch $out";
         formatters = with pkgs; [
-          treefmt
           clang-tools
           coreutils
           nixpkgs-fmt
@@ -61,12 +60,20 @@
         };
         checks = {
           package = packages.default;
-          formatting = runCheck
-            "HOME=$TMPDIR ${lib.getExe formatter} --fail-on-change --no-cache";
+          formatting = runCheck ''
+            ${lib.getExe formatter} .
+            ${pkgs.diffutils}/bin/diff -qr ${./.} . |\
+              sed 's/Files .* and \(.*\) differ/File \1 not formatted/g'
+          '';
         };
-        formatter = pkgs.writeScriptBin "treefmt" ''
+        formatter = pkgs.writeShellScriptBin "formatter" ''
           PATH=${lib.makeBinPath formatters}
-          exec treefmt "$@"
+          for f in "$@"; do case "$f" in
+            *.c | *.h) clang-format -i "$f";;
+            *.nix) nixpkgs-fmt "$f";;
+            *.md) prettier --write "$f";;
+            *) if [ -d "$f" ]; then ${pkgs.fd}/bin/fd "$f" -Htf -x "$0"; fi;;
+          esac done &>/dev/null
         '';
       });
 }
