@@ -187,6 +187,8 @@
       next-screen-context-lines 3)
 
 (when (>= emacs-major-version 29)
+  (setq pixel-scroll-precision-large-scroll-height 10.0
+        pixel-scroll-precision-interpolate-page t)
   (pixel-scroll-precision-mode))
 
 
