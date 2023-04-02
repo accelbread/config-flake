@@ -51,7 +51,7 @@
           meta = with pkgs.lib; {
             description = "Template C application.";
             license = licenses.agpl3Plus;
-            platforms = platforms.linux;
+            platforms = [ system ];
           };
         };
         devShells.default = pkgs.mkShell {

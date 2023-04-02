@@ -48,7 +48,7 @@
           meta = with pkgs.lib; {
             description = cargoToml.package.description;
             license = licenses.agpl3Plus;
-            platforms = platforms.linux;
+            platforms = [ system ];
           };
         };
         devShells.default = pkgs.mkShell {

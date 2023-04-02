@@ -70,7 +70,7 @@
           meta = with lib; {
             description = "Template Zig application.";
             license = licenses.agpl3Plus;
-            platforms = platforms.linux;
+            platforms = [ system ];
           };
         };
         devShells.default = pkgs.mkShell {
