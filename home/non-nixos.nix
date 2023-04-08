@@ -36,7 +36,10 @@ in
     nix = {
       package = pkgs.nix;
       registry = mapAttrs (_: v: { flake = v; }) flakes;
-      settings.experimental-features = "nix-command flakes";
+      settings = {
+        experimental-features = "nix-command flakes";
+        keep-outputs = true;
+      };
     };
 
     nixpkgs.overlays = [
