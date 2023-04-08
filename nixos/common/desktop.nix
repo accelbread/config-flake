@@ -10,6 +10,8 @@ in
     nixpkgs.config.allowUnfreePredicate = pkg:
       (lib.getName pkg) == "steam-original";
 
+    nix.settings.keep-outputs = true;
+
     hardware = {
       opengl.enable = true;
       sensor.iio.enable = true;
