@@ -45,6 +45,7 @@
       rec {
         packages.default = craneLib.buildPackage {
           inherit src cargoArtifacts;
+          doCheck = false;
           meta = with pkgs.lib; {
             description = cargoToml.package.description;
             license = licenses.agpl3Plus;
@@ -58,6 +59,9 @@
         };
         checks = {
           package = packages.default;
+          test = craneLib.cargoTest {
+            inherit src cargoArtifacts;
+          };
           clippy = craneLib.cargoClippy {
             inherit src cargoArtifacts;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
