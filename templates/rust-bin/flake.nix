@@ -22,7 +22,5 @@
     flakelite-rust.url = "github:accelbread/flakelite-rust";
   };
   outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. inputs {
-      license = "agpl3Plus";
-    };
+    flakelite.lib.mkFlake ./. inputs { };
 }

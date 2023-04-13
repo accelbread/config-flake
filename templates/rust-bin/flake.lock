@@ -76,11 +76,11 @@
         "flakelite": "flakelite_2"
       },
       "locked": {
-        "lastModified": 1681373447,
-        "narHash": "sha256-0hcw/qN/dGoLYmefXtBOc8yz00z0/OPDLj9GDE3n0i4=",
+        "lastModified": 1681374701,
+        "narHash": "sha256-IQS8Fdefac7BGNq99NjfmrndFTRK+zG3MtkxqI2kOJY=",
         "owner": "accelbread",
         "repo": "flakelite-rust",
-        "rev": "b606bed6d24af88e9883b3986a3904e85f9ca2e9",
+        "rev": "c1f65e40581dfa1a943bd13ee5f95741c322faaf",
         "type": "github"
       },
       "original": {
