@@ -29,8 +29,6 @@ in
       git-annex
       gimp
       cockatrice
-      firefox
-      ungoogled-chromium
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
