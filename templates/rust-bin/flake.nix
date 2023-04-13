@@ -18,70 +18,11 @@
 
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.11";
-    crane = {
-      url = "github:ipetkov/crane";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flakelite.url = "github:accelbread/flakelite";
+    flakelite-rust.url = "github:accelbread/flakelite-rust";
   };
-  outputs = { self, nixpkgs, crane }:
-    let
-      systems = [ "x86_64-linux" "aarch64-linux" ];
-      eachSystem = with nixpkgs.lib; f: foldAttrs mergeAttrs { }
-        (map (s: mapAttrs (_: v: { ${s} = v; }) (f s)) systems);
-      src = ./.;
-      cargoToml = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
-    in
-    eachSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs) lib;
-        craneLib = crane.lib.${system};
-        cargoArtifacts = craneLib.buildDepsOnly { inherit src; };
-        runCheck = cmd: pkgs.runCommand "check" { }
-          "cp --no-preserve=mode -r ${./.} src; cd src\n${cmd}\ntouch $out";
-        formatters = with pkgs; [ rustfmt nixpkgs-fmt nodePackages.prettier ];
-      in
-      rec {
-        packages.default = craneLib.buildPackage {
-          inherit src cargoArtifacts;
-          doCheck = false;
-          meta = with pkgs.lib; {
-            description = cargoToml.package.description;
-            license = licenses.agpl3Plus;
-            platforms = [ system ];
-          };
-        };
-        devShells.default = pkgs.mkShell {
-          inputsFrom = [ packages.default ];
-          packages = with pkgs; [ rust-analyzer rustc ] ++ formatters;
-          RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
-        };
-        checks = {
-          package = packages.default;
-          test = craneLib.cargoTest {
-            inherit src cargoArtifacts;
-          };
-          clippy = craneLib.cargoClippy {
-            inherit src cargoArtifacts;
-            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          };
-          formatting = runCheck ''
-            ${lib.getExe formatter} .
-            ${pkgs.diffutils}/bin/diff -qr ${./.} . |\
-              sed 's/Files .* and \(.*\) differ/File \1 not formatted/g'
-            ${lib.getExe pkgs.editorconfig-checker} \
-              -disable-indent-size -disable-max-line-length
-          '';
-        };
-        formatter = pkgs.writeShellScriptBin "formatter" ''
-          PATH=${lib.makeBinPath formatters}
-          for f in "$@"; do case "$f" in
-            *.rs) rustfmt "$f";;
-            *.nix) nixpkgs-fmt "$f";;
-            *.md) prettier --write "$f";;
-            *) if [ -d "$f" ]; then ${pkgs.fd}/bin/fd "$f" -Htf -x "$0"; fi;;
-          esac done &>/dev/null
-        '';
-      });
+  outputs = { flakelite, ... }@inputs:
+    flakelite.lib.mkFlake ./. inputs {
+      license = "agpl3Plus";
+    };
 }

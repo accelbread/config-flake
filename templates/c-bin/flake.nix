@@ -18,29 +18,14 @@
 
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.11";
+    flakelite.url = "github:accelbread/flakelite";
   };
-  outputs = { self, nixpkgs }:
-    let
-      systems = [ "x86_64-linux" "aarch64-linux" ];
-      eachSystem = with nixpkgs.lib; f: foldAttrs mergeAttrs { }
-        (map (s: mapAttrs (_: v: { ${s} = v; }) (f s)) systems);
-    in
-    eachSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs) lib;
-        runCheck = cmd: pkgs.runCommand "check" { }
-          "cp --no-preserve=mode -r ${./.} src; cd src\n${cmd}\ntouch $out";
-        formatters = with pkgs; [
-          clang-tools
-          coreutils
-          nixpkgs-fmt
-          nodePackages.prettier
-        ];
-      in
-      rec {
-        packages.default = pkgs.stdenv.mkDerivation {
+  outputs = { flakelite, ... }@inputs:
+    flakelite.lib.mkFlake ./. inputs {
+      description = "Template C application.";
+      license = "agpl3Plus";
+      package = { stdenv, flakelite, ... }:
+        stdenv.mkDerivation {
           name = "hello-world";
           src = ./.;
           installPhase = ''
@@ -48,34 +33,9 @@
             make DESTDIR=$out install
             runHook postInstall
           '';
-          meta = with pkgs.lib; {
-            description = "Template C application.";
-            license = licenses.agpl3Plus;
-            platforms = [ system ];
-          };
+          inherit (flakelite) meta;
         };
-        devShells.default = pkgs.mkShell {
-          inputsFrom = [ packages.default ];
-          packages = with pkgs; [ clang-tools ] ++ formatters;
-        };
-        checks = {
-          package = packages.default;
-          formatting = runCheck ''
-            ${lib.getExe formatter} .
-            ${pkgs.diffutils}/bin/diff -qr ${./.} . |\
-              sed 's/Files .* and \(.*\) differ/File \1 not formatted/g'
-            ${lib.getExe pkgs.editorconfig-checker} \
-              -disable-indent-size -disable-max-line-length
-          '';
-        };
-        formatter = pkgs.writeShellScriptBin "formatter" ''
-          PATH=${lib.makeBinPath formatters}
-          for f in "$@"; do case "$f" in
-            *.c | *.h) clang-format -i "$f";;
-            *.nix) nixpkgs-fmt "$f";;
-            *.md) prettier --write "$f";;
-            *) if [ -d "$f" ]; then ${pkgs.fd}/bin/fd "$f" -Htf -x "$0"; fi;;
-          esac done &>/dev/null
-        '';
-      });
+      devTools = pkgs: with pkgs; [ clang-tools coreutils ];
+      formatters."*.c | *.h" = "clang-format -i";
+    };
 }
