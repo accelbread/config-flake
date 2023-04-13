@@ -10,27 +10,17 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager/release-22.11";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
-      inputs = {
-        nixpkgs.follows = "nixpkgs-unstable";
-        flake-utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nixgl = {
       url = "github:guibou/nixGL";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
   };
   outputs = { self, flakelite, emacs-overlay, ... }@inputs:
     with flakelite.lib; mkFlake ./. inputs {
