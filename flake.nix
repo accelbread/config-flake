@@ -36,4 +36,5 @@
       nixosConfigurations = import ./nixos inputs;
       templates = import ./templates;
     };
+  nixConfig.commit-lockfile-summary = "flake: Update inputs";
 }
