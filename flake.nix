@@ -14,7 +14,7 @@
     };
     impermanence.url = "github:nix-community/impermanence";
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
+      url = "github:nix-community/emacs-overlay/3655d1502e02bafa2668a74e511166ce5415c247";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nixgl = {
