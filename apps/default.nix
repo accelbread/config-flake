@@ -1,6 +1,5 @@
 self: pkgs:
 let
-  mkApp = program: { type = "app"; program = "${program}"; };
   nix = ''nix --extra-experimental-features "nix-command flakes"'';
   mkBuildScript = script: pkgs.writeShellScript script ''
     set -eu
@@ -10,7 +9,7 @@ let
     sudo $script
   '';
 in
-pkgs.lib.mapAttrs (_: mkApp) rec {
+rec {
   emacs = "${pkgs.emacsAccelbread}/bin/emacs";
 
   nixosProvision = mkBuildScript "provisionScript";
