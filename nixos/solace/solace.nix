@@ -1,7 +1,7 @@
-{ pkgs, flakes, ... }: {
+{ pkgs, inputs, ... }: {
   imports = [
-    flakes.nixos-hardware.nixosModules.common-cpu-amd
-    flakes.nixos-hardware.nixosModules.common-gpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
     ./home-assistant.nix
     ./ups.nix
   ];

@@ -1,9 +1,9 @@
-{ config, pkgs, lib, flakes, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   inherit (builtins) mapAttrs readDir attrNames;
   inherit (lib) mkOption types;
   system = pkgs.stdenv.hostPlatform.system;
-  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
+  pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
 
   nixGLWrapDrv = drv: pkgs.symlinkJoin {
     name = (drv.name + "-nixGLWrapper");
@@ -35,7 +35,7 @@ in
   config = {
     nix = {
       package = pkgs.nix;
-      registry = mapAttrs (_: v: { flake = v; }) flakes;
+      registry = mapAttrs (_: v: { flake = v; }) inputs;
       settings = {
         experimental-features = "nix-command flakes";
         keep-outputs = true;
@@ -43,7 +43,7 @@ in
     };
 
     nixpkgs.overlays = [
-      flakes.nixgl.overlays.default
+      inputs.nixgl.overlays.default
       (final: prev: lib.genAttrs config.nixGL.wrappedPackages
         (pkg: nixGLWrapDrv prev.${pkg}))
     ];

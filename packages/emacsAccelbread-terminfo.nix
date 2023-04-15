@@ -1,8 +1,9 @@
 { stdenv
 , ncurses
+, flakelite
 }:
 let
-  self = ../.;
+  inherit (flakelite.inputs) self;
 in
 stdenv.mkDerivation {
   name = "emacsAccelbread-terminfo";

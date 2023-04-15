@@ -1,5 +1,6 @@
-self: pkgs:
+pkgs:
 let
+  inherit (pkgs.flakelite.inputs) self;
   nix = ''nix --extra-experimental-features "nix-command flakes"'';
   mkBuildScript = script: pkgs.writeShellScript script ''
     set -eu

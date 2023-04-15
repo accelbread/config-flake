@@ -1,17 +1,17 @@
-flakes:
+{ inputs, ... }:
 let
   inherit (builtins) readDir mapAttrs;
-  inherit (flakes.nixpkgs.lib) pipe nixosSystem filterAttrs;
+  inherit (inputs.nixpkgs.lib) pipe nixosSystem filterAttrs;
   mkSystem = hostname: cfg: cfg // {
-    specialArgs = { inherit flakes hostname; };
+    specialArgs = { inherit inputs hostname; };
     modules = cfg.modules ++ [
-      flakes.impermanence.nixosModules.impermanence
-      flakes.home-manager.nixosModules.home-manager
+      inputs.impermanence.nixosModules.impermanence
+      inputs.home-manager.nixosModules.home-manager
       ./common
     ];
   };
 in
 pipe (readDir ./.) [
   (filterAttrs (k: v: (v == "directory") && (k != "common")))
-  (mapAttrs (k: _: nixosSystem (import (./. + "/${k}") flakes (mkSystem k))))
+  (mapAttrs (k: _: nixosSystem (import (./. + "/${k}") inputs (mkSystem k))))
 ]

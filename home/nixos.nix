@@ -1,9 +1,7 @@
-{ config, pkgs, lib, flakes, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   inherit (builtins) mapAttrs;
-  self = ../.;
-  system = pkgs.stdenv.hostPlatform.system;
-  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
+  inherit (inputs) self;
 in
 {
   imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];

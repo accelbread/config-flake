@@ -1,4 +1,4 @@
-flakes: mkSystem:
+inputs: mkSystem:
 mkSystem {
   system = "x86_64-linux";
   modules = [

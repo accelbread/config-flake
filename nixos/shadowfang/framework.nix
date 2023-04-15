@@ -1,5 +1,5 @@
-{ pkgs, flakes, ... }: {
-  imports = [ flakes.nixos-hardware.nixosModules.framework ];
+{ pkgs, inputs, ... }: {
+  imports = [ inputs.nixos-hardware.nixosModules.framework ];
 
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];

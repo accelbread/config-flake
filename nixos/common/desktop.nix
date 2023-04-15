@@ -1,6 +1,6 @@
-{ config, pkgs, lib, flakes, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
-  inherit (flakes) self;
+  inherit (inputs) self;
 in
 {
   options.sysconfig.desktop = lib.mkEnableOption "desktop system configuration";
@@ -50,7 +50,7 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       users.archit = self + /home/nixos.nix;
-      extraSpecialArgs = { inherit flakes; };
+      extraSpecialArgs = { inherit inputs; };
     };
 
     environment = {

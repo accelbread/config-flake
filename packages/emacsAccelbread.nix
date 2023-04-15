@@ -14,10 +14,11 @@
 , symlinkJoin
 , vale-proselint
 , vale-write-good
+, flakelite
 }:
 let
   inherit (lib) pipe singleton attrVals;
-  self = ../.;
+  inherit (flakelite.inputs) self;
   configPackages = pipe (self + /dotfiles/emacs/init.el) (with builtins; [
     readFile
     (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*")

@@ -1,8 +1,4 @@
-{ pkgs, ... }:
-let
-  self = ../.;
-in
-{
+{ pkgs, inputs, ... }: {
   home = {
     packages = with pkgs; [
       emacsAccelbread
@@ -12,7 +8,7 @@ in
       noto-fonts-bw-emoji
     ];
     file.".config/emacs" = {
-      source = self + /dotfiles/emacs;
+      source = inputs.self + /dotfiles/emacs;
       recursive = true;
     };
   };

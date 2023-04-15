@@ -31,9 +31,9 @@
       packages = loadNixDir ./packages;
       elispPackages = loadNixDir ./packages/elisp-packages;
       overlays = loadNixDir ./overlays;
-      apps = pkgs: import ./apps self pkgs;
+      apps = import ./apps;
       nixosModules = import ./home;
-      nixosConfigurations = import ./nixos inputs;
+      nixosConfigurations = import ./nixos;
       templates = import ./templates;
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";

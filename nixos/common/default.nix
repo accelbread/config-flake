@@ -1,9 +1,9 @@
-{ config, pkgs, lib, flakes, hostname, ... }:
+{ config, pkgs, lib, inputs, hostname, ... }:
 let
-  inherit (flakes) self;
+  inherit (inputs) self;
   inherit (builtins) mapAttrs;
   system = pkgs.stdenv.hostPlatform.system;
-  pkgs-unstable = flakes.nixpkgs-unstable.legacyPackages.${system};
+  pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
 in
 {
   imports = [
@@ -13,7 +13,7 @@ in
     ./disks
   ];
 
-  nixpkgs.overlays = with flakes; [
+  nixpkgs.overlays = with inputs; [
     self.overlays.overrides
     emacs-overlay.overlays.default
     nixgl.overlays.default
@@ -21,7 +21,7 @@ in
   ];
 
   nix = {
-    registry = mapAttrs (_: v: { flake = v; }) flakes;
+    registry = mapAttrs (_: v: { flake = v; }) inputs;
     nixPath =
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     settings = {
