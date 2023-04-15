@@ -28,13 +28,9 @@
         emacs-overlay.overlays.default
         (import ./overlays/overrides.nix)
       ];
-      packages = loadNixDir ./packages;
-      elispPackages = loadNixDir ./packages/elisp-packages;
-      overlays = loadNixDir ./overlays;
-      apps = import ./apps;
-      nixosModules = import ./home;
+      nixDir = ./.;
       nixosConfigurations = import ./nixos;
-      templates = import ./templates;
+      nixosModules = import ./home;
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";
 }
