@@ -1221,7 +1221,8 @@
       magit-view-git-manual-method 'man
       transient-history-file null-device
       magit-save-repository-buffers 'dontask
-      magit-delete-by-moving-to-trash nil)
+      magit-delete-by-moving-to-trash nil
+      git-commit-summary-max-length 50)
 
 (with-eval-after-load 'magit
   (remove-hook 'server-switch-hook #'magit-commit-diff)
@@ -1233,6 +1234,12 @@
         meow-motion-prev-function #'magit-section-backward))
 
 (add-hook 'magit-mode-hook #'meow-magit-movement-configure)
+
+(defun configure-git-commit-mode ()
+  "Set buffer-local configurations for `git-commit-mode'."
+  (setq fill-column 72))
+
+(add-hook 'git-commit-mode-hook #'configure-git-commit-mode)
 
 
 ;;; Ediff
