@@ -21,10 +21,11 @@
     flakelite.url = "github:accelbread/flakelite";
   };
   outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. inputs {
+    flakelite.lib.mkFlake ./. {
+      inherit inputs;
       description = "Template C application.";
       license = "agpl3Plus";
-      package = { stdenv, flakelite, ... }:
+      package = { stdenv, flakelite }:
         stdenv.mkDerivation {
           name = "hello-world";
           src = ./.;

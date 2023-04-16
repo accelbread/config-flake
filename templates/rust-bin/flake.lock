@@ -57,11 +57,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1681373306,
-        "narHash": "sha256-llJCNMyRmPmrD2e4tfLdZ3VGfbryhOG2cY8u/rdQ9uU=",
+        "lastModified": 1681614694,
+        "narHash": "sha256-Q264+3VAQVakv1RbO7974jXcDagcP5EpFC0A+c632eg=",
         "owner": "accelbread",
         "repo": "flakelite",
-        "rev": "4ec111408edc0351809eb673f9c3d682ea0eec73",
+        "rev": "9e3bb803c629c48bd561c0fa698979fe2f15445a",
         "type": "github"
       },
       "original": {
@@ -76,11 +76,11 @@
         "flakelite": "flakelite_2"
       },
       "locked": {
-        "lastModified": 1681374701,
-        "narHash": "sha256-IQS8Fdefac7BGNq99NjfmrndFTRK+zG3MtkxqI2kOJY=",
+        "lastModified": 1681616793,
+        "narHash": "sha256-RUJF2pQOV/I7aHbXdIetkGO31EmMOWH+7ud9sB7xiSQ=",
         "owner": "accelbread",
         "repo": "flakelite-rust",
-        "rev": "c1f65e40581dfa1a943bd13ee5f95741c322faaf",
+        "rev": "92aa743a895b882d0c15e668846400a818eb663b",
         "type": "github"
       },
       "original": {
@@ -94,11 +94,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1681373306,
-        "narHash": "sha256-llJCNMyRmPmrD2e4tfLdZ3VGfbryhOG2cY8u/rdQ9uU=",
+        "lastModified": 1681614694,
+        "narHash": "sha256-Q264+3VAQVakv1RbO7974jXcDagcP5EpFC0A+c632eg=",
         "owner": "accelbread",
         "repo": "flakelite",
-        "rev": "4ec111408edc0351809eb673f9c3d682ea0eec73",
+        "rev": "9e3bb803c629c48bd561c0fa698979fe2f15445a",
         "type": "github"
       },
       "original": {

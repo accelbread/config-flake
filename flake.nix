@@ -23,7 +23,8 @@
     };
   };
   outputs = { self, flakelite, emacs-overlay, ... }@inputs:
-    with flakelite.lib; mkFlake ./. inputs {
+    flakelite.lib.mkFlake ./. {
+      inputs = inputs;
       withOverlays = [
         emacs-overlay.overlays.default
         (import ./overlays/overrides.nix)
