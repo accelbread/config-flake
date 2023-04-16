@@ -18,6 +18,7 @@
 
 {
   inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
     flakelite.url = "github:accelbread/flakelite";
     flakelite-rust.url = "github:accelbread/flakelite-rust";
   };
