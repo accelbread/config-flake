@@ -1222,6 +1222,7 @@
       transient-history-file null-device
       magit-save-repository-buffers 'dontask
       magit-delete-by-moving-to-trash nil
+      magit-process-finish-apply-ansi-colors t
       git-commit-summary-max-length 50)
 
 (with-eval-after-load 'magit
