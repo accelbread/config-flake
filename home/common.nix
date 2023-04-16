@@ -24,13 +24,14 @@
 
   fonts.fontconfig.enable = true;
 
-  programs = builtins.mapAttrs (_: v: v // { enable = true; }) {
+  programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
     man.generateCaches = true;
     bash.initExtra = ''
       if [[ -z "$LS_COLORS" ]]; then
           eval "$(${pkgs.coreutils}/bin/dircolors -b)"
       fi
     '';
+    direnv.nix-direnv.enable = true;
     git = {
       extraConfig = {
         pull.ff = "only";
