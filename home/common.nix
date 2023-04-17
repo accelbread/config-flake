@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }:
+let
+  inherit (inputs) self;
+in
+{
   imports = [ ./emacs.nix ];
 
   home = {
@@ -37,7 +41,10 @@
         pull.ff = "only";
         user.useConfigOnly = true;
         advice.detachedHead = false;
-        init.defaultBranch = "master";
+        init = {
+          defaultBranch = "master";
+          templateDir = self + /dotfiles/git-template;
+        };
         "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
       };
       attributes = [ "*.el diff=lisp" ];

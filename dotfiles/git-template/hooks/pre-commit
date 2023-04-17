@@ -1,0 +1,9 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash --pure -p coreutils nix git gnutar
+set -euo pipefail
+
+if [ -f flake.nix ]; then
+  TREE=$(mktemp -d)
+  git archive "$(git write-tree)" | tar -xC "$TREE"
+  nix flake check "$TREE"
+fi
