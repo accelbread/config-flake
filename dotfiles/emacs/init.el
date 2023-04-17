@@ -1475,6 +1475,9 @@
 (dolist (sym '(nix-mode-format nix-format-buffer))
   (put sym 'completion-predicate #'ignore))
 
+(autoload 'nix-shebang-mode "nix-shebang" nil t)
+(add-to-list 'interpreter-mode-alist '("nix-shell" . nix-shebang-mode))
+
 
 ;;; Scheme
 
