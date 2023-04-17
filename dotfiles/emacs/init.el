@@ -1475,6 +1475,15 @@
 (dolist (sym '(nix-mode-format nix-format-buffer))
   (put sym 'completion-predicate #'ignore))
 
+(defun nix-shebang-set-shell-type ()
+  "Set `sh-mode' shell type to `nix-shell' interpreter."
+  (when (save-excursion (goto-char (point-min))
+                        (looking-at "#! */usr/bin/env nix-shell"))
+    (sh-set-shell (nix-shebang-get-interpreter))
+    (add-hook 'hack-local-variables-hook #'nix-shebang-set-shell-type nil t)))
+
+(add-hook 'sh-mode-hook #'nix-shebang-set-shell-type)
+
 (autoload 'nix-shebang-mode "nix-shebang" nil t)
 (add-to-list 'interpreter-mode-alist '("nix-shell" . nix-shebang-mode))
 
