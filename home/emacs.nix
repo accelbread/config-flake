@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, ... }: {
   home = {
     packages = with pkgs; [
       emacsAccelbread
@@ -8,7 +8,7 @@
       noto-fonts-bw-emoji
     ];
     file.".config/emacs" = {
-      source = inputs.self + /dotfiles/emacs;
+      source = ../dotfiles/emacs;
       recursive = true;
     };
   };
