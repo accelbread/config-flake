@@ -23,5 +23,5 @@
     flakelite-rust.url = "github:accelbread/flakelite-rust";
   };
   outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. { inherit inputs; };
+    flakelite ./. { inherit inputs; };
 }

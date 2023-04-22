@@ -57,11 +57,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1681614694,
-        "narHash": "sha256-Q264+3VAQVakv1RbO7974jXcDagcP5EpFC0A+c632eg=",
+        "lastModified": 1682195643,
+        "narHash": "sha256-o00fxLsKWx0K9Qi60cLFyqSU2pjUwWEVwL+qNGyvKVQ=",
         "owner": "accelbread",
         "repo": "flakelite",
-        "rev": "9e3bb803c629c48bd561c0fa698979fe2f15445a",
+        "rev": "d871fd7cbf7529ff401dddef2e80562bdbb68495",
         "type": "github"
       },
       "original": {

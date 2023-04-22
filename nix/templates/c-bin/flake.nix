@@ -22,7 +22,7 @@
     flakelite.url = "github:accelbread/flakelite";
   };
   outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. {
+    flakelite ./. {
       inherit inputs;
       description = "Template C application.";
       license = "agpl3Plus";

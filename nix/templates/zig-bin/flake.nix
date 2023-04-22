@@ -23,7 +23,7 @@
     flakelite-zig.url = "github:accelbread/flakelite-zig";
   };
   outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. {
+    flakelite ./. {
       inherit inputs;
       name = "hello-world";
       description = "Template Zig application.";
