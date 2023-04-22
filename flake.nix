@@ -22,8 +22,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, flakelite, emacs-overlay, ... }@inputs:
-    flakelite.lib.mkFlake ./. {
+  outputs = { flakelite, emacs-overlay, ... }@inputs:
+    flakelite ./. {
       inputs = inputs;
       withOverlays = [
         emacs-overlay.overlays.default
