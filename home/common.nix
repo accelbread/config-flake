@@ -23,10 +23,14 @@ in
       parted
       zeal
       podman
+      direnv
     ];
   };
 
   fonts.fontconfig.enable = true;
+
+  xdg.configFile."direnv/direnvrc".text =
+    "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc";
 
   programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
     man.generateCaches = true;
@@ -35,7 +39,6 @@ in
           eval "$(${pkgs.coreutils}/bin/dircolors -b)"
       fi
     '';
-    direnv.nix-direnv.enable = true;
     git = {
       extraConfig = {
         pull.ff = "only";
