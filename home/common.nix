@@ -14,6 +14,7 @@ in
       man-pages
       man-pages-posix
       git
+      git-absorb
       ripgrep
       fd
       tree
