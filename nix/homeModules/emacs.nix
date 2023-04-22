@@ -8,7 +8,7 @@
       noto-fonts-bw-emoji
     ];
     file.".config/emacs" = {
-      source = ../dotfiles/emacs;
+      source = ../../dotfiles/emacs;
       recursive = true;
     };
   };

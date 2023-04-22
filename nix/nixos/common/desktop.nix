@@ -1,8 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
-let
-  inherit (inputs) self;
-in
-{
+{ config, pkgs, lib, inputs, ... }: {
   options.sysconfig.desktop = lib.mkEnableOption "desktop system configuration";
 
   config = lib.mkIf config.sysconfig.desktop {
@@ -49,7 +45,7 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.archit = self + /home/nixos.nix;
+      users.archit = ../../homeModules/nixos.nix;
       extraSpecialArgs = { inherit inputs; };
     };
 

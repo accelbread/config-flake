@@ -24,14 +24,11 @@
   };
   outputs = { flakelite, emacs-overlay, ... }@inputs:
     flakelite ./. {
-      inputs = inputs;
+      inherit inputs;
       withOverlays = [
         emacs-overlay.overlays.default
-        (import ./overlays/overrides.nix)
+        (import ./nix/overlays/overrides.nix)
       ];
-      nixDir = ./.;
-      nixosConfigurations = import ./nixos;
-      nixosModules = import ./home;
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";
 }

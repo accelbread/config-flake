@@ -1,8 +1,4 @@
-{ pkgs, inputs, ... }:
-let
-  inherit (inputs) self;
-in
-{
+{ pkgs, inputs, ... }: {
   imports = [ ./emacs.nix ];
 
   home = {
@@ -47,7 +43,7 @@ in
         advice.detachedHead = false;
         init = {
           defaultBranch = "master";
-          templateDir = self + /dotfiles/git-template;
+          templateDir = "${../../dotfiles/git-template}";
         };
         "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
       };
