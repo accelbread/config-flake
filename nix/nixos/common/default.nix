@@ -2,8 +2,6 @@
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs;
-  system = pkgs.stdenv.hostPlatform.system;
-  pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
 in
 {
   imports = [
@@ -91,12 +89,11 @@ in
         umount /mnt
       '';
     };
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
   };
 
   hardware = {
     firmware = [ pkgs.linux-firmware ];
-    video.hidpi.enable = true;
     rasdaemon.enable = true;
     pulseaudio.enable = false;
     i2c.enable = true;
@@ -176,12 +173,11 @@ in
       };
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
-    nscd.enableNsncd = true;
   };
 
   fonts = {
     enableDefaultFonts = false;
-    fonts = with pkgs-unstable; [
+    fonts = with pkgs; [
       dejavu_fonts
       liberation_ttf
       noto-fonts
@@ -222,7 +218,7 @@ in
     variables.EDITOR = "zile";
   };
 
-  qt5 = {
+  qt = {
     enable = true;
     platformTheme = "gnome";
     style = "adwaita-dark";

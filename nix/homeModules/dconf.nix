@@ -27,6 +27,9 @@
     "org/gnome/desktop/media-handling" = {
       autorun-never = true;
     };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      natural-scroll = true;
+    };
     "org/gnome/desktop/privacy" = {
       old-files-age = mkUint32 30;
       recent-files-max-age = -1;
@@ -49,15 +52,21 @@
     "org/gnome/desktop/wm/preferences" = {
       resize-with-right-button = true;
     };
+    "org/gnome/mutter" = {
+      current-workspace-only = false;
+      dynamic-workspaces = true;
+      edge-tiling = true;
+      workspaces-only-on-primary = true;
+    };
+    "org/gnome/nautilus/preferences" = {
+      show-delete-permanently = true;
+    };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
       night-light-schedule-automatic = false;
       night-light-schedule-from = 20.0;
       night-light-schedule-to = 8.0;
-    };
-    "org/gnome/nautilus/preferences" = {
-      show-delete-permanently = true;
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;
