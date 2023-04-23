@@ -71,6 +71,9 @@
         "org.gnome.Nautilus.desktop"
       ];
     };
+    "org/gnome/shell/world-clocks" = {
+      locations = "[<(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>]";
+    };
     "org/gnome/system/location" = {
       enabled = true;
     };
