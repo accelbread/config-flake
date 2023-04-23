@@ -1,10 +1,6 @@
 { stdenv
 , ncurses
-, flakelite
 }:
-let
-  inherit (flakelite.inputs) self;
-in
 stdenv.mkDerivation {
   name = "emacsAccelbread-terminfo";
   dontUnpack = true;
@@ -12,7 +8,7 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/share/terminfo
-    tic -x -o $out/share/terminfo ${self}/misc/dumb-emacs-ansi.ti
+    tic -x -o $out/share/terminfo ${../../misc/dumb-emacs-ansi.ti}
     runHook postInstall
   '';
 }
