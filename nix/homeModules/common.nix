@@ -22,6 +22,7 @@
       podman
       direnv
     ];
+    file.".fdignore".source = ../../dotfiles/fdignore;
   };
 
   fonts.fontconfig.enable = true;
