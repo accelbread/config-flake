@@ -30,7 +30,7 @@ CPPFLAGS += -Isrc
 MAKEFLAGS += --no-builtin-rules
 .DELETE_ON_ERROR:
 
-.PHONY: all clean
+.PHONY: all clean install
 
 all: $(BIN)
 
