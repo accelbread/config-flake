@@ -18,6 +18,7 @@
       jq
       gnutar
       parted
+      zile
       zeal
       podman
       direnv
