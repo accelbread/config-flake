@@ -33,11 +33,16 @@
 
   programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
     man.generateCaches = true;
-    bash.initExtra = ''
-      if [[ -z "$LS_COLORS" ]]; then
-          eval "$(${pkgs.coreutils}/bin/dircolors -b)"
-      fi
-    '';
+    bash = {
+      initExtra = ''
+        if [[ -z "$LS_COLORS" ]]; then
+            eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+        fi
+      '';
+      profileExtra = ''
+        export CMAKE_EXPORT_COMPILE_COMMANDS=ON
+      '';
+    };
     git = {
       extraConfig = {
         pull.ff = "only";
