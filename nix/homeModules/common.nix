@@ -38,6 +38,8 @@
         if [[ -z "$LS_COLORS" ]]; then
             eval "$(${pkgs.coreutils}/bin/dircolors -b)"
         fi
+
+        HISTCONTROL=ignoreboth
       '';
       profileExtra = ''
         export CMAKE_EXPORT_COMPILE_COMMANDS=ON
