@@ -1,7 +1,16 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+  rawGvariant = str: {
+    _type = "gvariant";
+    type = "";
+    value = null;
+    __toString = _: str;
+  };
+in
+{
   dconf.settings = with lib.hm.gvariant; {
     "org/gnome/clocks" = {
-      world-clocks =
+      world-clocks = rawGvariant
         "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
     };
     "org/gnome/desktop/background" = {
@@ -81,7 +90,8 @@
       ];
     };
     "org/gnome/shell/world-clocks" = {
-      locations = "[<(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>]";
+      locations = rawGvariant
+        "[<(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>]";
     };
     "org/gnome/system/location" = {
       enabled = true;
