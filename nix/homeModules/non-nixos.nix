@@ -63,6 +63,7 @@ in
       bash.profileExtra = ''
         export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
         export TERMINFO_DIRS="$HOME/.nix-profile/share/terminfo:$TERMINFO_DIRS"
+        export ASPELL_CONF="dict-dir $HOME/.nix-profile/lib/aspell"
         export EDITOR=zile
       '';
       home-manager.enable = true;
