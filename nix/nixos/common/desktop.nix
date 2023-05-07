@@ -44,6 +44,10 @@
               pubkey = "c4Z0DD+bt2w/rbEfxLoR1PfnnwAMca3uZhWAFA5aLCc=";
               address = "10.66.0.2";
             }
+            {
+              pubkey = "PiRUxoB31ZguERlT+z1xDRS0rdqoMbunA0CbJQkB8g8=";
+              address = "10.66.0.3";
+            }
           ];
         };
       };

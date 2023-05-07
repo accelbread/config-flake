@@ -13,7 +13,10 @@ mkSystem {
         };
       };
       swapDevices = [{ device = "/dev/shadowfang_vg1/swap"; }];
-      networking.hostId = "fefcc72a";
+      networking = {
+        hostId = "fefcc72a";
+        wireguard.interfaces.wg0.ips = [ "10.66.0.3/24" ];
+      };
       system.stateVersion = "22.05";
     }
   ];
