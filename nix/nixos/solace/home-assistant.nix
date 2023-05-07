@@ -7,6 +7,7 @@
     config = {
       homeassistant = {
         name = "Archit Home";
+        country = "US";
         internal_url =
           let
             host = config.services.avahi.hostName;
