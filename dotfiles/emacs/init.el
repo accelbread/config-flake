@@ -31,12 +31,12 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (setq package-selected-packages
-      '( meow gcmh rainbow-delimiters flyspell-correct which-key rg editorconfig
-         corfu cape kind-icon vertico orderless marginalia consult inheritenv
-         magit magit-todos hl-todo magit-annex git-annex virtual-comment vundo
-         envrc fish-completion eat coterm meow-term vterm meow-vterm rmsbolt
-         yasnippet rainbow-mode svg-lib reformatter markdown-mode clang-format
-         cmake-mode rust-mode cargo zig-mode nix-mode haskell-mode geiser-guile
+      '( meow gcmh rainbow-delimiters jinx which-key rg editorconfig inheritenv
+         corfu cape kind-icon vertico orderless marginalia consult vundo envrc
+         magit magit-todos hl-todo magit-annex git-annex virtual-comment rmsbolt
+         fish-completion eat coterm meow-term vterm meow-vterm yasnippet svg-lib
+         rainbow-mode reformatter markdown-mode clang-format cmake-mode
+         rust-mode cargo zig-mode nix-mode haskell-mode geiser-guile
          scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
 
 (setq package-native-compile t)
@@ -683,59 +683,17 @@
 
 ;;; Spell checking
 
-(setq ispell-dictionary "en_US"
-      ispell-program-name "aspell"
-      ispell-extra-args '("--camel-case")
-      flyspell-issue-message-flag nil
-      flyspell-mode-line-string nil
-      flyspell-duplicate-distance 0
-      flyspell-use-meta-tab nil)
+(setq jinx-camel-modes t)
 
-(setq-default flyspell-prog-text-faces '(tree-sitter-hl-face:comment
-                                         tree-sitter-hl-face:doc
-                                         tree-sitter-hl-face:string
-                                         font-lock-comment-face
-                                         font-lock-doc-face
-                                         font-lock-string-face))
+(defvar-keymap my-jinx-overlay-map
+  :doc "Custom keymap for spell checker errors."
+  "TAB" #'jinx-correct)
 
-(defun flyspell-configure-jit-lock ()
-  "Set `flyspell-region' in jit-lock functions matching `flyspell-mode'."
-  (if flyspell-mode
-      (jit-lock-register #'flyspell-region)
-    (jit-lock-unregister #'flyspell-region)))
+(with-eval-after-load 'jinx
+  (hide-minor-mode 'jinx-mode)
+  (put 'jinx-overlay 'keymap my-jinx-overlay-map))
 
-(add-hook 'flyspell-mode-hook #'flyspell-configure-jit-lock)
-
-(advice-add #'flyspell-region :around #'inhibit-redisplay-wrapper)
-
-(defvar my-flyspell-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "TAB") #'flyspell-correct-at-point)
-    map)
-  "Keymap for flyspell correction.")
-
-(advice-add #'make-flyspell-overlay :filter-return
-            (lambda (overlay)
-              "Add custom keymap to OVERLAY."
-              (overlay-put overlay 'keymap my-flyspell-map)
-              overlay)
-            '((name . flyspell-correct-with-tab)))
-
-(defun enable-flyspell-after-locals ()
-  "Enable `flyspell-mode' if not read-only."
-  (unless buffer-read-only
-    (if (derived-mode-p 'prog-mode)
-        (flyspell-prog-mode)
-      (flyspell-mode))))
-
-(defun enable-flyspell ()
-  "Enable `flyspell-mode' if buffer can be modified."
-  (add-hook 'hack-local-variables-hook
-            #'enable-flyspell-after-locals
-            nil t))
-
-(add-hook 'text-mode-hook #'enable-flyspell)
-(add-hook 'prog-mode-hook #'enable-flyspell)
+(global-jinx-mode)
 
 
 ;;; Tramp

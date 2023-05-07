@@ -64,6 +64,8 @@
  '(whitespace-missing-newline-at-eof ((t (:inherit (isearch-fail)))))
  '(page-break-lines ((t (:inherit (shadow)))))
  '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
+ '(jinx-misspelled ((t (:underline (:style wave :color "#FF0000")))))
+ '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
  '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
  '(evil-ex-substitute-matches ((t (:strike-through t :inherit (error)))))
  '(evil-ex-substitute-replacement ((t (:inherit (success)))))

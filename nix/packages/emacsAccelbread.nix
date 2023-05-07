@@ -2,7 +2,6 @@
 , writeText
 , emacsPgtk
 , emacsPackagesFor
-, aspell
 , git
 , vale
 , shellcheck
@@ -37,8 +36,7 @@ let
     write-good.E-Prime = NO
   '';
   default-init = writeText "default.el" ''
-    (setq ispell-program-name "${aspell}/bin/aspell"
-          magit-git-executable "${git}/bin/git"
+    (setq magit-git-executable "${git}/bin/git"
           flymake-vale-program "${vale}/bin/vale"
           flymake-vale-program-args '("--config=${valeConfig}")
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
