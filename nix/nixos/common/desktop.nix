@@ -68,6 +68,10 @@
         enable = true;
         package = pkgs.gnomeExtensions.gsconnect;
       };
+      wireshark = {
+        enable = true;
+        package = pkgs.wireshark;
+      };
     };
 
     home-manager = {
