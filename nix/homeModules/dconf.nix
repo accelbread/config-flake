@@ -6,6 +6,13 @@ let
     value = null;
     __toString = _: str;
   };
+
+  background = {
+    color-shading-type = "solid";
+    picture-uri = "none";
+    picture-uri-dark = "none";
+    primary-color = "#7767B2";
+  };
 in
 {
   dconf.settings = with lib.hm.gvariant; {
@@ -13,16 +20,7 @@ in
       world-clocks = rawGvariant
         "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
     };
-    "org/gnome/desktop/background" = {
-      color-shading-type = "solid";
-      picture-options = "zoom";
-      picture-uri =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.webp";
-      picture-uri-dark =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-d.webp";
-      primary-color = "#3071AE";
-      secondary-color = "#000000";
-    };
+    "org/gnome/desktop/background" = background;
     "org/gnome/desktop/input-sources" = {
       xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
     };
@@ -46,14 +44,8 @@ in
       remove-old-temp-files = true;
       remove-old-trash-files = true;
     };
-    "org/gnome/desktop/screensaver" = {
+    "org/gnome/desktop/screensaver" = background // {
       lock-delay = mkUint32 30;
-      color-shading-type = "solid";
-      picture-options = "zoom";
-      picture-uri =
-        "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.webp";
-      primary-color = "#3071AE";
-      secondary-color = "#000000";
     };
     "org/gnome/desktop/session" = {
       idle-delay = mkUint32 180;
