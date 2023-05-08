@@ -26,6 +26,8 @@ in
       gnomeExtensions.espresso
       git-annex
       gimp
+      libreoffice
+      hunspellDicts.en_US
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
