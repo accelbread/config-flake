@@ -41,7 +41,7 @@ in
     kernel.sysctl = {
       "kernel.kptr_restrict" = "2";
       "kernel.yama.ptrace_scope" = "1";
-      "net.core.bpf_jit_enable" = false;
+      "net.core.bpf_jit_harden" = "2";
       "kernel.ftrace_enabled" = false;
     };
     initrd = {
