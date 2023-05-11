@@ -129,6 +129,7 @@ in
       enable = true;
       dns = "none";
     };
+    firewall.checkReversePath = "loose";
   };
 
   time.timeZone = "America/Los_Angeles";
