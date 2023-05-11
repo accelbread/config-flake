@@ -38,11 +38,25 @@ in
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "init_on_alloc=1"
+      "init_on_free=1"
+      "randomize_kstack_offset=on"
+      "slab_nomerge"
+      "pti=on"
+      "iommu.passthrough=0"
+      "iommu.strict=1"
+    ] ++ lib.optionals (config.nixpkgs.system == "x86_64-linux") [
+      "vsyscall=none"
+    ];
     kernel.sysctl = {
       "kernel.kptr_restrict" = 2;
       "kernel.yama.ptrace_scope" = 1;
       "net.core.bpf_jit_harden" = 2;
       "kernel.ftrace_enabled" = false;
+      "kernel.kexec_load_disabled" = 1;
+      "kernel.unprivileged_bpf_disabled" = 1;
+      "dev.tty.ldisc_autoload" = 0;
       "net.ipv4.conf.all.accept_redirects" = false;
       "net.ipv4.conf.all.secure_redirects" = false;
       "net.ipv4.conf.all.send_redirects" = false;
