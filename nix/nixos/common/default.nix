@@ -112,7 +112,10 @@ in
   location.provider = "geoclue2";
 
   security = {
-    sudo.extraConfig = "Defaults lecture = never";
+    sudo = {
+      extraConfig = "Defaults lecture = never";
+      execWheelOnly = true;
+    };
     tpm2 = {
       enable = true;
       pkcs11 = {
