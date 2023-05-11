@@ -51,6 +51,8 @@ in
       "net.ipv4.conf.default.send_redirects" = false;
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.default.accept_redirects" = false;
+      "net.ipv4.conf.all.rp_filter" = 2;
+      "net.ipv4.conf.default.rp_filter" = 2;
     };
     initrd = {
       preDeviceCommands = ''
