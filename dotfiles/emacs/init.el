@@ -349,7 +349,8 @@
                                              flymake-mode-line-note-counter))))
                 "  " mode-name mode-line-process
                 (:eval (when (eq major-mode 'term-mode)
-                         (term-line-ending-mode-line)))
+                         (list (term-line-ending-mode-line)
+                               (when term-enable-local-echo " echo"))))
                 " " minor-mode-alist
                 "  " mode-line-misc-info))
 
@@ -1002,11 +1003,22 @@
 
 (meow-term-enable)
 
+(defvar-local term-enable-local-echo nil
+  "Whether to emulate echo for inferiors without built-in echo.")
+
+(defun term-toggle-local-echo ()
+  "Toggle emulating echo for inferiors without built-in echo."
+  (declare (modes term-mode))
+  (interactive)
+  (setq-local term-enable-local-echo (not term-enable-local-echo)))
+
 (defvar-local term-line-ending "\n"
   "Line ending to use for sending to process in `term-mode'.")
 
 (defun term-line-ending-sender (proc string)
   "Function to send PROC input STRING and line ending."
+  (when term-enable-local-echo
+    (term-emulate-terminal proc (concat string "\r\n")))
   (term-send-string proc (concat string term-line-ending)))
 
 (setq term-input-sender #'term-line-ending-sender)
