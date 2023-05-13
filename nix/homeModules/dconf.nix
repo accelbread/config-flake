@@ -16,6 +16,9 @@ let
 in
 {
   dconf.settings = with lib.hm.gvariant; {
+    "ca/desrt/dconf-editor" = {
+      show-warning = false;
+    };
     "org/gnome/clocks" = {
       world-clocks = rawGvariant
         "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
