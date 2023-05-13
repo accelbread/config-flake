@@ -43,7 +43,6 @@ in
       "init_on_free=1"
       "randomize_kstack_offset=on"
       "slab_nomerge"
-      "pti=on"
       "iommu.passthrough=0"
       "iommu.strict=1"
     ] ++ lib.optionals (config.nixpkgs.system == "x86_64-linux") [
