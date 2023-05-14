@@ -72,7 +72,7 @@
           "Library"
           "projects"
           "playground"
-          ".ssh"
+          ".ssh/config.d"
           ".config/emacs"
           ".config/gsconnect"
           ".librewolf/profile"
