@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   inherit (builtins) mapAttrs;
   inherit (inputs) self;
@@ -38,6 +38,19 @@ in
       ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
         pkgs.firefox-vertical-tabs + /userChrome.css;
     };
+    activation.codecommit-username =
+      let
+        default = builtins.toFile "default-codecommit-config" ''
+          Host codecommit
+            User <missing-username>
+        '';
+      in
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
+          $DRY_RUN_CMD mkdir -p $HOME/.ssh/config.d
+          $DRY_RUN_CMD cp ${default} $HOME/.ssh/config.d/codecommit
+        fi
+      '';
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {
