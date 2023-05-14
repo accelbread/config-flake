@@ -34,35 +34,10 @@
         displayManager.gdm.enable = true;
       };
       flatpak.enable = true;
-      wgautomesh = {
-        enable = true;
-        gossipSecretFile = "/persist/vault/wgautomeshkey";
-        enablePersistence = false;
-        settings = {
-          interface = "wg0";
-          gossip_port = 47588;
-          peers = [
-            {
-              pubkey = "c4Z0DD+bt2w/rbEfxLoR1PfnnwAMca3uZhWAFA5aLCc=";
-              address = "10.66.0.2";
-            }
-            {
-              pubkey = "PiRUxoB31ZguERlT+z1xDRS0rdqoMbunA0CbJQkB8g8=";
-              address = "10.66.0.3";
-            }
-          ];
-        };
-      };
+      tailscale.enable = true;
     };
 
-    networking = {
-      wireguard.interfaces.wg0 = {
-        listenPort = 54391;
-        privateKeyFile = "/persist/vault/wgkey";
-        generatePrivateKeyFile = true;
-      };
-      firewall.allowedUDPPorts = [ 54391 ];
-    };
+    networking.firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 
     programs = {
       bash.enableLsColors = false;

@@ -234,6 +234,7 @@ in
         "/var/log"
         "/var/lib/systemd/coredump"
         "/var/lib/systemd/timesync"
+        "/var/lib/tailscale"
       ];
       files = [
         "/etc/machine-id"

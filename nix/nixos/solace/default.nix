@@ -12,10 +12,7 @@ mkSystem {
           swap = "64g";
         };
       };
-      networking = {
-        hostId = "41188d2a";
-        wireguard.interfaces.wg0.ips = [ "10.66.0.2/24" ];
-      };
+      networking.hostId = "41188d2a";
       system.stateVersion = "22.05";
     }
   ];
