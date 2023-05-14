@@ -38,19 +38,35 @@ in
       ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
         pkgs.firefox-vertical-tabs + /userChrome.css;
     };
-    activation.codecommit-username =
-      let
-        default = builtins.toFile "default-codecommit-config" ''
-          Host codecommit
-            User <missing-username>
+    activation = {
+      passGitConfig =
+        let
+          cfg = config.programs.password-store.settings;
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          if [[ ! -e "${cfg.PASSWORD_STORE_DIR}/.git" ]]; then
+            $DRY_RUN_CMD mkdir -p "${cfg.PASSWORD_STORE_DIR}"
+            $DRY_RUN_CMD pass git init
+            $DRY_RUN_CMD pass git remote add aws ssh://codecommit/v1/repos/pass
+          fi
+          $DRY_RUN_CMD pass git config pass.signcommits true
+          $DRY_RUN_CMD pass git config user.signingkey \
+            "${cfg.PASSWORD_STORE_SIGNING_KEY}"
         '';
-      in
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
-          $DRY_RUN_CMD mkdir -p $HOME/.ssh/config.d
-          $DRY_RUN_CMD cat ${default} > $HOME/.ssh/config.d/codecommit
-        fi
-      '';
+      codecommitUsername =
+        let
+          default = builtins.toFile "default-codecommit-config" ''
+            Host codecommit
+              User <missing-username>
+          '';
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
+            $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
+            $DRY_RUN_CMD cat ${default} > "$HOME/.ssh/config.d/codecommit"
+          fi
+        '';
+    };
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {

@@ -1,3 +1,0 @@
-#!/bin/sh
-pass git config user.signingkey DE26C77562110E92
-pass git config pass.signcommits true
