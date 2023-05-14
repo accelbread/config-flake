@@ -37,14 +37,16 @@
       tailscale.enable = true;
     };
 
-    networking.firewall.allowedUDPPorts = [ config.services.tailscale.port ];
+    networking.firewall = {
+      allowedUDPPorts = [ config.services.tailscale.port ];
+      interfaces."tailscale0" = rec {
+        allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
+        allowedUDPPortRanges = allowedTCPPortRanges;
+      };
+    };
 
     programs = {
       bash.enableLsColors = false;
-      kdeconnect = {
-        enable = true;
-        package = pkgs.gnomeExtensions.gsconnect;
-      };
       wireshark = {
         enable = true;
         package = pkgs.wireshark;

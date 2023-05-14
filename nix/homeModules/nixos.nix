@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 let
   inherit (builtins) mapAttrs;
   inherit (inputs) self;
@@ -24,6 +24,7 @@ in
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
+      gnomeExtensions.gsconnect
       git-annex
       gimp
       libreoffice
