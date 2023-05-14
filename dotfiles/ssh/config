@@ -12,6 +12,10 @@ Host github.com github gh
   User git
   PubkeyAuthentication yes
 
+Host codecommit
+  HostName git-codecommit.us-west-2.amazonaws.com
+  PubkeyAuthentication yes
+
 Host *
   PubkeyAuthentication no
   User root
