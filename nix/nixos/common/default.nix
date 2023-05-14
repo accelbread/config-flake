@@ -219,7 +219,7 @@ in
     users.archit = {
       isNormalUser = true;
       description = "Archit Gupta";
-      extraGroups = [ "wheel" "networkmanager" "tss" "dialout" "wireshark" ];
+      extraGroups = [ "wheel" "networkmanager" "tss" ];
       uid = 1000;
       passwordFile = "/persist/vault/user_pass";
     };

@@ -8,6 +8,8 @@
 
     nix.settings.keep-outputs = true;
 
+    users.users.archit.extraGroups = [ "dialout" "wireshark" "adbusers" ];
+
     hardware = {
       opengl.enable = true;
       sensor.iio.enable = true;
@@ -72,6 +74,7 @@
         enable = true;
         package = pkgs.wireshark;
       };
+      adb.enable = true;
     };
 
     home-manager = {
