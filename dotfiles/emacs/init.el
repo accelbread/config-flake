@@ -1435,7 +1435,8 @@
 
 (defun nix-formatter-configure ()
   "Configure formatters for Nix files."
-  (when (zerop (process-file-shell-command "nix flake show | grep formatter"))
+  (when (zerop (process-file-shell-command
+                "nix eval .#formatter --apply 'x: assert x != {}; true'"))
     (setq format-region-function #'indent-region
           format-buffer-function #'nix-fmt-format-buffer)
     (format-on-save-mode)))
