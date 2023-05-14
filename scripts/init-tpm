@@ -8,6 +8,7 @@ echo Setting up TPM
 tpm2_ptool init
 tpm2_ptool addtoken --pid=1 --label=ssh --userpin="$sshpass" --sopin="$sshpass"
 tpm2_ptool addkey --label=ssh --userpin="$sshpass" --algorithm=ecc256
+tpm2_ptool addkey --label=ssh --userpin="$sshpass" --algorithm=rsa2048
 sshpass=
 
 echo Public key:
