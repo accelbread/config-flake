@@ -48,7 +48,7 @@ in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
           $DRY_RUN_CMD mkdir -p $HOME/.ssh/config.d
-          $DRY_RUN_CMD cp ${default} $HOME/.ssh/config.d/codecommit
+          $DRY_RUN_CMD cat ${default} > $HOME/.ssh/config.d/codecommit
         fi
       '';
   };
