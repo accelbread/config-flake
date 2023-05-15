@@ -44,14 +44,16 @@ in
           cfg = config.programs.password-store.settings;
         in
         lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          if [[ ! -e "${cfg.PASSWORD_STORE_DIR}/.git" ]]; then
-            $DRY_RUN_CMD mkdir -p "${cfg.PASSWORD_STORE_DIR}"
+          export PASSWORD_STORE_DIR="${cfg.PASSWORD_STORE_DIR}"
+          export PASSWORD_STORE_SIGNING_KEY="${cfg.PASSWORD_STORE_SIGNING_KEY}"
+          if [[ ! -e "$PASSWORD_STORE_DIR/.git" ]]; then
+            $DRY_RUN_CMD mkdir -p "$PASSWORD_STORE_DIR"
             $DRY_RUN_CMD pass git init
             $DRY_RUN_CMD pass git remote add aws ssh://codecommit/v1/repos/pass
           fi
           $DRY_RUN_CMD pass git config pass.signcommits true
           $DRY_RUN_CMD pass git config user.signingkey \
-            "${cfg.PASSWORD_STORE_SIGNING_KEY}"
+            "$PASSWORD_STORE_SIGNING_KEY"
         '';
       codecommitUsername =
         let
