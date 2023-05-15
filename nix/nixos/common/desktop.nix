@@ -89,6 +89,9 @@
         enable = true;
         lists.WORDLIST = [ "${pkgs.miscfiles}/share/web2" ];
       };
+      etc."nixos/flake.nix".source = pkgs.runCommandLocal "flake-symlink" { } ''
+        ln -s "/home/archit/projects/config-flake/flake.nix" $out
+      '';
     };
   };
 }
