@@ -224,7 +224,8 @@
       suggest-key-bindings nil
       truncate-partial-width-windows 83
       mouse-drag-and-drop-region t
-      mouse-yank-at-point t)
+      mouse-yank-at-point t
+      isearch-lazy-count t)
 
 (blink-cursor-mode -1)
 (window-divider-mode)
