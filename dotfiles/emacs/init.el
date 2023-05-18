@@ -1055,6 +1055,23 @@
     ("\r" " CR")
     ("\r\n" " CRLF")))
 
+(put 'serial-term 'interactive-form
+     '(interactive
+       (list (read-file-name
+              "Serial port: " "/dev/" "" t nil
+              (lambda (file)
+                (let* ((attr (file-attributes file 'string))
+                       (type (string-to-char (file-attribute-modes attr)))
+                       (group (file-attribute-group-id attr)))
+                  (and (= type ?c)
+                       (string= group "dialout")))))
+             (let ((speed (completing-read
+                           "Speed: "
+                           '("nil" "115200" "9600" "1200" "2400" "4800" "19200"
+                             "38400" "57600"))))
+               (if (string= speed "nil") nil (string-to-number speed)))
+             (not current-prefix-arg))))
+
 
 ;;; Vterm
 
@@ -1701,19 +1718,6 @@
                        end-line end-col))))
    (1+ (array-current-line)) (current-column) (point)
    (buffer-size) (count-lines (point-min) (point-max))))
-
-(defun open-serial (device)
-  "Run `serial-term' on DEVICE with auto baud rate."
-  (interactive
-   (list (read-file-name
-          "Serial port: " "/dev/" "" t nil
-          (lambda (file)
-            (let* ((attr (file-attributes file 'string))
-                   (type (string-to-char (file-attribute-modes attr)))
-                   (group (file-attribute-group-id attr)))
-              (and (= type ?c)
-                   (string= group "dialout")))))))
-  (serial-term device nil t))
 
 
 ;;; Local configuration
