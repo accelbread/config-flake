@@ -7,6 +7,7 @@ in
   imports = [
     self.nixosModules.usbguard-dbus
     self.nixosModules.bind-fonts-icons
+    self.nixosModules.tpm2-tss-fapi
     ./desktop.nix
     ./disks
   ];
