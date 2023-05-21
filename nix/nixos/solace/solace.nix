@@ -17,21 +17,7 @@
   services = {
     logind.extraConfig = "IdleAction=lock";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
-    clight = {
-      enable = true;
-      settings = {
-        backlight = {
-          trans_step = 0.01;
-          trans_timeout = 3;
-          ac_timeouts = [ 10 10 10 ];
-        };
-        keyboard.disabled = true;
-        gamma.disabled = true;
-        dimmer.disabled = true;
-        dpms.disabled = true;
-        screen.disabled = true;
-      };
-    };
+    clight.enable = true;
   };
 
   home-manager.sharedModules = [ ./home.nix ];
@@ -40,4 +26,3 @@
 
   environment.systemPackages = with pkgs; [ nixgl.nixGLMesa ];
 }
-

@@ -12,7 +12,6 @@ mkSystem {
           swap = "32g";
         };
       };
-      swapDevices = [{ device = "/dev/shadowfang_vg1/swap"; }];
       networking.hostId = "fefcc72a";
       system.stateVersion = "22.05";
     }

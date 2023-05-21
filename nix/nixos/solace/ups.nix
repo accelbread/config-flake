@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let
   sudo = "/run/wrappers/bin/sudo";
   poweroff = "/run/current-system/sw/bin/poweroff";

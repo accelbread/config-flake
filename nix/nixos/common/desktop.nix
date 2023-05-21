@@ -33,6 +33,18 @@
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
+      clight.settings = {
+        backlight = {
+          trans_step = 0.01;
+          trans_timeout = 3;
+          ac_timeouts = [ 10 10 10 ];
+        };
+        keyboard.disabled = true;
+        gamma.disabled = true;
+        dimmer.disabled = true;
+        dpms.disabled = true;
+        screen.disabled = true;
+      };
       flatpak.enable = true;
       tailscale.enable = true;
     };
