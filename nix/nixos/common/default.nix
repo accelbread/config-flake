@@ -5,8 +5,8 @@ let
 in
 {
   imports = [
-    ./usbguard-dbus.nix
-    ./flatpak-fonts.nix
+    self.nixosModules.usbguard-dbus
+    self.nixosModules.bind-fonts-icons
     ./desktop.nix
     ./disks
   ];
