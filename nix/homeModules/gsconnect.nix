@@ -39,7 +39,7 @@ lib.mkIf (hasAttr hostName id) {
         kN/8Dk1L3ErshiqBy4S39UlgVF75nGXRbAmX/AJOewfuVEPScZ1iGx27Vg==
         -----END CERTIFICATE-----
       '';
-      disabled-plugins = [ "clipboard" ];
+      disabled-plugins = [ "clipboard" "mousepad" "sftp" "photo" ];
       incoming-capabilities = [
         "kdeconnect.battery"
         "kdeconnect.battery.request"
