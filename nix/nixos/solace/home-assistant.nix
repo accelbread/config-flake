@@ -2,7 +2,7 @@
   services.home-assistant = {
     enable = true;
     configDir = "/persist/hass";
-    openFirewall = true;
+    openFirewall = false;
     configWritable = true;
     config = {
       homeassistant = {
@@ -97,5 +97,8 @@
       }];
     };
   };
-}
 
+  networking.firewall.interfaces."tailscale0".allowedTCPPorts = [
+    config.services.home-assistant.config.http.server_port
+  ];
+}
