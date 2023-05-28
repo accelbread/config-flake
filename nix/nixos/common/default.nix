@@ -147,13 +147,7 @@ in
     sudo.extraConfig = "Defaults lecture = never";
     tpm2 = {
       enable = true;
-      pkcs11 = {
-        enable = true;
-        package = pkgs.tpm2-pkcs11.overrideAttrs (old: {
-          configureFlags = old.configureFlags or [ ]
-            ++ [ "--enable-fapi=no" ];
-        });
-      };
+      pkcs11.enable = true;
       tctiEnvironment.enable = true;
     };
     apparmor.enable = true;
