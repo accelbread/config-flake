@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{
   dconf.settings = {
     "org/gnome/desktop/peripherals/touchpad" = {
       speed = 0.4;
