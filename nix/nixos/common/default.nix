@@ -40,7 +40,6 @@ in
     };
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
-      "efi=disable_early_pci_dma"
       "init_on_alloc=1"
       "init_on_free=1"
       "iommu.passthrough=0"
