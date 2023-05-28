@@ -51,6 +51,7 @@ in
     ];
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
+      "dev.tty.legacy_tiocsti" = false;
       "kernel.ftrace_enabled" = false;
       "kernel.kexec_load_disabled" = true;
       "kernel.kptr_restrict" = 2;
