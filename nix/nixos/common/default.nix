@@ -40,21 +40,25 @@ in
     };
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
+      "efi=disable_early_pci_dma"
       "init_on_alloc=1"
       "init_on_free=1"
-      "randomize_kstack_offset=on"
-      "slab_nomerge"
       "iommu.passthrough=0"
       "iommu.strict=1"
-    ] ++ lib.optionals (config.nixpkgs.system == "x86_64-linux") [
+      "randomize_kstack_offset=on"
+      "slab_nomerge"
       "vsyscall=none"
     ];
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
       "dev.tty.legacy_tiocsti" = false;
+      "fs.protected_fifos" = 2;
+      "fs.protected_regular" = 2;
+      "kernel.dmesg_restrict" = true;
       "kernel.ftrace_enabled" = false;
       "kernel.kexec_load_disabled" = true;
       "kernel.kptr_restrict" = 2;
+      "kernel.sysrq" = 0;
       "kernel.unprivileged_bpf_disabled" = 1;
       "kernel.yama.ptrace_scope" = 1;
       "net.core.bpf_jit_harden" = 2;
@@ -68,6 +72,8 @@ in
       "net.ipv4.conf.default.send_redirects" = false;
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.default.accept_redirects" = false;
+      "vm.mmap_rnd_bits" = 32;
+      "vm.mmap_rnd_compat_bits" = 16;
     };
     initrd = {
       preDeviceCommands = ''
