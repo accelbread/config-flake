@@ -6,10 +6,10 @@ export PATH=@path@
 disksPart=(@devicesPart@)
 name=@hostname@
 
-unmount /mnt/persist
-unmount /mnt/nix
-unmount /mnt/boot
-unmount /mnt
+umount /mnt/persist
+umount /mnt/nix
+umount /mnt/boot
+umount /mnt
 
 for i in $(seq 1 ${#disksPart[@]}); do
     vgchange -a n "${name}_vg${i}"
