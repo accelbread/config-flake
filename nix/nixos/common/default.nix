@@ -191,11 +191,6 @@ in
     avahi = {
       enable = true;
       nssmdns = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        userServices = true;
-      };
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
   };
