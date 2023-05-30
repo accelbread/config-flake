@@ -14,6 +14,8 @@ done
 pool="/dev/${name}_vg1/pool"
 options="noatime,compress=zstd,X-mount.mkdir"
 
+sleep 1
+
 mount -t btrfs -o "${options},subvol=root" "$pool" /mnt
 mount -o noatime,X-mount.mkdir "${disksPart[0]}1" /mnt/boot
 mount -t btrfs -o "${options},subvol=nix" "$pool" /mnt/nix
