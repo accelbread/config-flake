@@ -135,7 +135,10 @@ in
       enable = true;
       dns = "none";
     };
-    firewall.checkReversePath = "loose";
+    firewall = {
+      checkReversePath = "loose";
+      allowedUDPPorts = [ config.services.tailscale.port ];
+    };
   };
 
   time.timeZone = "America/Los_Angeles";
@@ -193,6 +196,7 @@ in
       nssmdns = true;
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
+    tailscale.enable = true;
   };
 
   fonts = {
