@@ -35,7 +35,7 @@
          corfu cape kind-icon vertico orderless marginalia consult vundo envrc
          magit magit-todos hl-todo magit-annex git-annex virtual-comment rmsbolt
          fish-completion eat coterm meow-term vterm meow-vterm yasnippet svg-lib
-         rainbow-mode reformatter markdown-mode clang-format cmake-mode
+         rainbow-mode reformatter devdocs markdown-mode clang-format cmake-mode
          rust-mode cargo zig-mode nix-mode haskell-mode geiser-guile
          scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
 
