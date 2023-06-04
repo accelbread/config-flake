@@ -985,7 +985,9 @@
       envrc-on-lighter '(:propertize " envrc" face warning)
       envrc-error-lighter '(:propertize " envrc" face error))
 
-(envrc-global-mode)
+(push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
+
+(add-hook 'after-init-hook #'envrc-global-mode)
 
 (defun eshell-update-direnv ()
   "Update direnv state when switching eshell directory."
@@ -995,8 +997,6 @@
        (envrc-mode)))
 
 (add-hook 'eshell-directory-change-hook #'eshell-update-direnv)
-
-(push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
 
 ;;; Term
