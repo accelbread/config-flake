@@ -13,7 +13,6 @@ mkSystem {
       };
       networking.hostId = "3c679a5b";
       system.stateVersion = "22.05";
-      services.usbguard.implictPolicyTarget = "keep";
     }
   ];
 }

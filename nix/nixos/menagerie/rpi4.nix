@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }: {
+{ config, pkgs, inputs, ... }: {
   imports = [ inputs.nixos-hardware.nixosModules.raspberry-pi-4 ];
 
   boot.loader.generic-extlinux-compatible.enable = false;
@@ -19,5 +19,7 @@
     };
 
   networking.enableIPv6 = false;
+
+  services.usbguard.rules = builtins.readFile ./usbguard-rules.conf;
 }
 
