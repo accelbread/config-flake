@@ -1231,6 +1231,9 @@
 
 (add-hook 'git-commit-mode-hook #'configure-git-commit-mode)
 
+(with-eval-after-load 'project
+  (require 'magit-extras))
+
 
 ;;; Ediff
 
