@@ -1,6 +1,6 @@
 { lib
 , writeText
-, emacsPgtk
+, emacs-pgtk
 , emacsPackagesFor
 , git
 , vale
@@ -51,10 +51,7 @@ let
                ,(eglot-alternatives '("nil" "rnix-lsp" "${nil}/bin/nil")))
               . ,eglot-server-programs)))
   '';
-  baseEmacs = emacsPgtk.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++
-      [ ./misc/0001-Revert-Better-compilation-of-arguments-to-ignore.patch ];
-  });
+  baseEmacs = emacs-pgtk;
   emacsWithPackages = (emacsPackagesFor baseEmacs).emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
