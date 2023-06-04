@@ -21,7 +21,6 @@
       zile
       zeal
       podman
-      direnv
     ];
     file.".fdignore".source = ../../dotfiles/fdignore;
   };

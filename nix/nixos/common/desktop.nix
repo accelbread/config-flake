@@ -49,12 +49,9 @@
       tailscale.enable = true;
     };
 
-    networking.firewall = {
-      allowedUDPPorts = [ config.services.tailscale.port ];
-      interfaces."tailscale0" = rec {
-        allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
-        allowedUDPPortRanges = allowedTCPPortRanges;
-      };
+    networking.firewall.interfaces."tailscale0" = rec {
+      allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
+      allowedUDPPortRanges = allowedTCPPortRanges;
     };
 
     programs = {
