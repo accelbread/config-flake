@@ -26,9 +26,8 @@
 
 ;;; Configure packages
 
-(require 'package)
-
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(with-eval-after-load 'package
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
 (setq package-selected-packages
       '( meow gcmh rainbow-delimiters jinx which-key rg editorconfig inheritenv
@@ -43,6 +42,9 @@
 
 
 ;;; Config utils
+
+(eval-when-compile
+  (require 'cl-lib))
 
 (defun y-or-n-p-always-y-wrapper (orig-fun &rest args)
   "Call ORIG-FUN with ARGS, automatically using `y' for `y-or-n-p' questions."
