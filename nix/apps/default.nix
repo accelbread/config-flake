@@ -11,7 +11,14 @@ let
   '';
 in
 rec {
-  emacs = "${pkgs.emacsAccelbread}/bin/emacs";
+  emacs = pkgs.writeShellScript "emacsWithConfig" ''
+    set -eu
+    emacs_dir=$(mktemp -d)
+    cleanup() { rm -rf "$emacs_dir"; }
+    trap cleanup EXIT
+    cp -rT "${self + /dotfiles/emacs}" "$emacs_dir"
+    ${pkgs.emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
+  '';
 
   nixosProvision = mkBuildScript "provisionScript";
   nixosMount = mkBuildScript "mountScript";
