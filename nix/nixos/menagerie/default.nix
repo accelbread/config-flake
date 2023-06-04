@@ -3,6 +3,7 @@ mkSystem {
   system = "aarch64-linux";
   modules = [
     ./rpi4.nix
+    ./home-assistant.nix
     {
       sysconfig = {
         disks = {

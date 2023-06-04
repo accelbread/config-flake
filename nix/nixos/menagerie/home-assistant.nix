@@ -10,7 +10,7 @@
         country = "US";
         internal_url =
           let
-            host = config.services.avahi.hostName;
+            host = config.networking.hostName;
             port = config.services.home-assistant.config.http.server_port;
           in
           "http://${host}.local:${toString port}";

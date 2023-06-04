@@ -2,7 +2,6 @@
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
-    ./home-assistant.nix
     ./ups.nix
   ];
 
