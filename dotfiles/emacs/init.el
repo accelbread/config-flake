@@ -826,6 +826,11 @@
                 ('t " Char")
                 ('nil " Line"))))
 
+(defun comint-disable-echo ()
+  "Set `comint-process-echoes' to t in current buffer."
+  (interactive)
+  (setq comint-process-echoes t))
+
 
 ;;; Eshell
 
@@ -1481,6 +1486,8 @@
 
 (autoload 'nix-shebang-mode "nix-shebang" nil t)
 (add-to-list 'interpreter-mode-alist '("nix-shell" . nix-shebang-mode))
+
+(add-hook 'nix-repl-mode-hook #'comint-disable-echo)
 
 
 ;;; Scheme
