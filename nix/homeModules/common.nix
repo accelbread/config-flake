@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  imports = [ ./emacs.nix ];
+  imports = [ ./emacs.nix ./gui-only-programs.nix ];
 
   home = {
     sessionVariables = {
@@ -20,9 +20,9 @@
       strace
       parted
       zile
-      zeal
       podman
     ];
+    gui-packages = with pkgs; [ zeal ];
     file.".fdignore".source = ../../dotfiles/fdignore;
   };
 

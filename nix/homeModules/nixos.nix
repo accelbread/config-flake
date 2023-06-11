@@ -17,18 +17,20 @@ in
       QT_SCALE_FACTOR = "1.25";
     };
     packages = with pkgs; [
-      librewolf
-      v4l-utils
-      helvum
-      easyeffects
       gnome.gnome-session
       gnome.dconf-editor
       gnomeExtensions.espresso
       gnomeExtensions.gsconnect
       git-annex
+      hunspellDicts.en_US
+    ];
+    gui-packages = with pkgs; [
+      librewolf
+      v4l-utils
+      helvum
+      easyeffects
       gimp
       libreoffice
-      hunspellDicts.en_US
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
