@@ -17,6 +17,7 @@
       moreutils
       jq
       gnutar
+      strace
       parted
       zile
       zeal
