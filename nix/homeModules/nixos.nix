@@ -23,6 +23,7 @@ in
       gnomeExtensions.gsconnect
       git-annex
       hunspellDicts.en_US
+      shattered-pixel-dungeon-xdg
     ];
     gui-packages = with pkgs; [
       librewolf
@@ -32,6 +33,8 @@ in
       gimp
       libreoffice
       cockatrice
+      zeroad
+      airshipper
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
