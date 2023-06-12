@@ -104,6 +104,7 @@ in
       enable = true;
       defaultApplications = {
         "audio/mpeg" = "umpv.desktop";
+        "application/pdf" = "org.gnome.Evince.desktop";
       };
     };
     configFile."mimeapps.list".force = true;
