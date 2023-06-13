@@ -35,6 +35,7 @@ in
       locate-pointer = true;
     };
     "org/gnome/desktop/media-handling" = {
+      automount = false;
       autorun-never = true;
     };
     "org/gnome/desktop/peripherals/touchpad" = {
