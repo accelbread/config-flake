@@ -18,7 +18,6 @@ in
     };
     packages = with pkgs; [
       gnome.gnome-session
-      gnome.dconf-editor
       gnomeExtensions.espresso
       gnomeExtensions.gsconnect
       git-annex
@@ -26,6 +25,7 @@ in
       shattered-pixel-dungeon-xdg
     ];
     gui-packages = with pkgs; [
+      gnome.dconf-editor
       librewolf
       v4l-utils
       helvum
