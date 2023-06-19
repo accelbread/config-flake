@@ -21,7 +21,6 @@
       parted
       zile
       podman
-      lkl
     ];
     gui-packages = with pkgs; [ zeal ];
     file.".fdignore".source = ../../dotfiles/fdignore;

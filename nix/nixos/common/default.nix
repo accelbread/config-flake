@@ -256,6 +256,7 @@ in
       ];
     };
     defaultPackages = with pkgs; [ zile git ];
+    systemPackages = with pkgs; [ lkl ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     localBinInPath = true;
     variables.EDITOR = "zile";
