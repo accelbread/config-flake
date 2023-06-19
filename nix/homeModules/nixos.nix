@@ -105,6 +105,8 @@ in
       defaultApplications = {
         "audio/mpeg" = "umpv.desktop";
         "application/pdf" = "org.gnome.Evince.desktop";
+        "image/png" = "org.gnome.eog.desktop";
+        "image/jpeg" = "org.gnome.eog.desktop";
       };
     };
     configFile."mimeapps.list".force = true;
