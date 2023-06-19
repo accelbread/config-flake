@@ -148,6 +148,8 @@ in
     networkmanager = {
       enable = true;
       dns = "none";
+      wifi.macAddress = "random";
+      ethernet.macAddress = "stable";
     };
     firewall = {
       checkReversePath = "loose";
