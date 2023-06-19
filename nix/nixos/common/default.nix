@@ -169,6 +169,7 @@ in
     apparmor.enable = true;
     forcePageTableIsolation = true;
     unprivilegedUsernsClone = true;
+    pam.mount.fuseMountOptions = [ "noatime" "nosuid" "nodev" ];
     rtkit.enable = true;
   };
 
