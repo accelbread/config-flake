@@ -38,13 +38,28 @@ in
       };
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_hardened;
+    kernelPatches = [{
+      name = "extra-config";
+      patch = null;
+      extraStructuredConfig = with lib.kernel; {
+        HW_RANDOM_TPM = yes;
+        INIT_STACK_ALL_ZERO = yes;
+        OVERLAY_FS_UNPRIVILEGED = yes;
+        UBSAN = yes;
+        UBSAN_BOUNDS = yes;
+        UBSAN_SANITIZE_ALL = yes;
+        UBSAN_TRAP = yes;
+        ZERO_CALL_USED_REGS = yes;
+      };
+    }];
     kernelParams = [
       "init_on_alloc=1"
       "init_on_free=1"
       "iommu.passthrough=0"
       "iommu.strict=1"
       "randomize_kstack_offset=on"
+      "page_alloc.shuffle=1"
       "slab_nomerge"
       "vsyscall=none"
     ];
@@ -57,6 +72,7 @@ in
       "kernel.ftrace_enabled" = false;
       "kernel.kexec_load_disabled" = true;
       "kernel.kptr_restrict" = 2;
+      "kernel.perf_event_paranoid" = 3;
       "kernel.sysrq" = 0;
       "kernel.unprivileged_bpf_disabled" = 1;
       "kernel.yama.ptrace_scope" = 1;
@@ -71,8 +87,6 @@ in
       "net.ipv4.conf.default.send_redirects" = false;
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.default.accept_redirects" = false;
-      "vm.mmap_rnd_bits" = 32;
-      "vm.mmap_rnd_compat_bits" = 16;
     };
     initrd = {
       preDeviceCommands = ''
@@ -154,6 +168,7 @@ in
     };
     apparmor.enable = true;
     forcePageTableIsolation = true;
+    unprivilegedUsernsClone = true;
     rtkit.enable = true;
   };
 
