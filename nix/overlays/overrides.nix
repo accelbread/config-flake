@@ -13,4 +13,9 @@ final: prev: {
   tpm2-pkcs11 = prev.tpm2-pkcs11.overrideAttrs (old: {
     configureFlags = old.configureFlags or [ ] ++ [ "--enable-fapi=no" ];
   });
+  lkl = prev.lkl.overrideAttrs (old: {
+    postFixup = ''
+      ln -s $out/bin/lklfuse $out/bin/mount.fuse.lklfuse
+    '';
+  });
 }
