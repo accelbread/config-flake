@@ -8,7 +8,7 @@
 
     nix.settings.keep-outputs = true;
 
-    users.users.archit.extraGroups = [ "dialout" "wireshark" "adbusers" ];
+    users.users.archit.extraGroups = [ "dialout" "wireshark" ];
 
     hardware = {
       opengl.enable = true;
