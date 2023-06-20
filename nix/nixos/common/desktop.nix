@@ -47,6 +47,14 @@
       };
       flatpak.enable = true;
       tailscale.enable = true;
+      # uaccess rules must come before 73-seat-late.rules
+      udev.packages = lib.singleton (pkgs.writeTextFile {
+        name = "usb-disk-udev-rules";
+        destination = "/etc/udev/rules.d/70-usb-disks.rules";
+        text = ''
+          SUBSYSTEMS=="usb", SUBSYSTEM=="block", TAG+="uaccess"
+        '';
+      });
     };
 
     networking.firewall.interfaces."tailscale0" = rec {
