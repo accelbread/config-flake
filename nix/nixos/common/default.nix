@@ -43,6 +43,7 @@ in
       name = "extra-config";
       patch = null;
       extraStructuredConfig = with lib.kernel; {
+        BPF_JIT_ALWAYS_ON = lib.mkForce yes;
         HW_RANDOM_TPM = yes;
         INIT_STACK_ALL_ZERO = yes;
         OVERLAY_FS_UNPRIVILEGED = yes;
@@ -50,6 +51,8 @@ in
         UBSAN_BOUNDS = yes;
         UBSAN_SANITIZE_ALL = yes;
         UBSAN_TRAP = yes;
+        USERFAULTFD = lib.mkForce no;
+        X86_IOPL_IOPERM = no;
         ZERO_CALL_USED_REGS = yes;
       };
     }];
@@ -61,6 +64,7 @@ in
       "randomize_kstack_offset=on"
       "page_alloc.shuffle=1"
       "slab_nomerge"
+      "mce=0"
       "vsyscall=none"
     ];
     kernel.sysctl = {
