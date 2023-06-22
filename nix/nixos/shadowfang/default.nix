@@ -8,8 +8,8 @@ mkSystem {
         desktop = true;
         disks = {
           devices = [ "/dev/nvme0n1" ];
-          size = "900GiB";
-          swap = "32g";
+          size = "3500GiB";
+          swap = "64g";
         };
       };
       networking.hostId = "fefcc72a";
