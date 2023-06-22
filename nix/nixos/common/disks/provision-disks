@@ -24,8 +24,9 @@ for i in $(seq 1 ${#disks[@]}); do
     parted "$disk" mkpart primary 1GiB "$size"
     parted "$disk" name 2 "${name}_disk${i}_crypt"
     mkfs.vfat -n "EFI${i}" "${diskPart}1"
-    cryptsetup luksFormat "${diskPart}2"
-    cryptsetup open "${diskPart}2" "${name}_disk${i}"
+    cryptsetup luksFormat "${diskPart}2" --integrity hmac-sha256
+    cryptsetup open "${diskPart}2" "${name}_disk${i}" \
+        --persistent --integrity-no-journal
     pvcreate "/dev/mapper/${name}_disk${i}"
     vgcreate "${name}_vg${i}" "/dev/mapper/${name}_disk${i}"
     lvcreate -L "$swap" "${name}_vg${i}" -n swap
