@@ -2,7 +2,15 @@
 
 [See link](https://wiki.archlinux.org/title/Advanced_Format)
 
-`nix shell nixpkgs#nvme-cli -c nvme format ${DISK} -b 4096`
+`nix shell nixpkgs#nvme-cli`
+
+Check LBA formats available:
+
+`nvme id-ns -H /dev/nvme0n1`
+
+Format to LBA format #:
+
+`nvme format --lbaf=<#> /dev/nvme0n1`
 
 ## Configure system
 
