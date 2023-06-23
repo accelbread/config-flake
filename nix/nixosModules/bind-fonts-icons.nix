@@ -4,6 +4,7 @@
     (_: v: v // {
       fsType = "fuse.bindfs";
       options = [ "ro" "resolve-symlinks" "x-gvfs-hide" ];
+      noCheck = true;
     })
     {
       "/usr/share/icons".device = "/run/current-system/sw/share/icons";
