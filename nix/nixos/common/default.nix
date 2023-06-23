@@ -193,7 +193,10 @@ in
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
-    services.systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
+    services = {
+      systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
+      plymouth-quit.enable = config.boot.plymouth.enable;
+    };
   };
 
   services = {
