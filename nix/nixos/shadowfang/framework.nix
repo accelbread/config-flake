@@ -4,6 +4,7 @@
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
     kernelModules = [ "kvm-intel" "cpuid" "coretemp" ];
+    blacklistedKernelModules = [ "cros-usbpd-charger" ];
   };
 
   hardware = {
