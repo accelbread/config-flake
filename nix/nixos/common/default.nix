@@ -142,7 +142,6 @@ in
         umount /mnt
       '';
     };
-    tmp.useTmpfs = true;
   };
 
   hardware = {
