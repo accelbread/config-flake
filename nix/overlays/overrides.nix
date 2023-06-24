@@ -1,4 +1,8 @@
-final: prev: {
+final: prev:
+let
+  inherit (builtins) compareVersions;
+in
+{
   nut = prev.nut.overrideAttrs (old: {
     postPatch = ">conf/Makefile.am";
     configureFlags = old.configureFlags ++ [
@@ -19,11 +23,14 @@ final: prev: {
     '';
   });
   linuxPackages_hardened = prev.linuxPackages_hardened.extend (_: lprev: {
-    lkrg = lprev.lkrg.overrideAttrs (old:
+    lkrg = assert compareVersions lprev.lkrg.version "0.9.6" < 0;
       let
-        systemd-coredump-pkg = final.symlinkJoin { name = "systemd"; paths = [ final.systemd ]; };
+        systemd-coredump-pkg = final.symlinkJoin {
+          name = "systemd";
+          paths = [ final.systemd ];
+        };
       in
-      rec {
+      lprev.lkrg.overrideAttrs (old: rec {
         version = "0.9.6";
         src = prev.fetchFromGitHub {
           owner = "lkrg-org";
@@ -47,7 +54,7 @@ final: prev: {
         '';
       });
   });
-  clightd = assert builtins.compareVersions prev.clightd.version "5.8" < 0;
+  clightd = assert compareVersions prev.clightd.version "5.8" < 0;
     prev.clightd.overrideAttrs (old: rec {
       version = "5.8";
       src = prev.fetchFromGitHub {
