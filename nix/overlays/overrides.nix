@@ -47,4 +47,14 @@ final: prev: {
         '';
       });
   });
+  clightd = assert builtins.compareVersions prev.clightd.version "5.8" < 0;
+    prev.clightd.overrideAttrs (old: rec {
+      version = "5.8";
+      src = prev.fetchFromGitHub {
+        owner = "FedeDP";
+        repo = "Clightd";
+        rev = version;
+        sha256 = "sha256-Lmno/TJVCQVNzfpKNZzuDf2OM6w6rbz+zJTr3zVo/CM=";
+      };
+    });
 }
