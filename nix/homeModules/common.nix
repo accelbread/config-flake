@@ -50,6 +50,7 @@
         pull.ff = "only";
         user.useConfigOnly = true;
         advice.detachedHead = false;
+        diff.algorithm = "histogram";
         init = {
           defaultBranch = "master";
           templateDir = "${../../dotfiles/git-template}";
