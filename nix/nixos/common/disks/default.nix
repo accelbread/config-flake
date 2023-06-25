@@ -61,7 +61,12 @@ in
         "/boot" = {
           device = getPart 1 (head cfg.devices);
           fsType = "fuse.lklfuse";
-          options = [ "type=vfat" "noexec" ];
+          options = [
+            "type=vfat"
+            "allow_other"
+            "default_permissions"
+            "noexec"
+          ];
         };
       } // mapAttrs (_: mkBtrfs) {
         "/".device = "root";
