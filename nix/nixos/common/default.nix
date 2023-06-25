@@ -39,23 +39,35 @@ in
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_hardened;
-    kernelPatches = [{
-      name = "extra-config";
-      patch = null;
-      extraStructuredConfig = with lib.kernel; {
-        BPF_JIT_ALWAYS_ON = lib.mkForce yes;
-        HW_RANDOM_TPM = yes;
-        INIT_STACK_ALL_ZERO = yes;
-        OVERLAY_FS_UNPRIVILEGED = yes;
-        UBSAN = yes;
-        UBSAN_BOUNDS = yes;
-        UBSAN_SANITIZE_ALL = yes;
-        UBSAN_TRAP = yes;
-        USERFAULTFD = lib.mkForce no;
-        X86_IOPL_IOPERM = no;
-        ZERO_CALL_USED_REGS = yes;
-      };
-    }];
+    kernelPatches = [
+      {
+        name = "hardening";
+        patch = null;
+        extraStructuredConfig = with lib.kernel; {
+          BPF_JIT_ALWAYS_ON = lib.mkForce yes;
+          HW_RANDOM_TPM = yes;
+          INIT_STACK_ALL_ZERO = yes;
+          OVERLAY_FS_UNPRIVILEGED = yes;
+          UBSAN = yes;
+          UBSAN_BOUNDS = yes;
+          UBSAN_SANITIZE_ALL = yes;
+          UBSAN_TRAP = yes;
+          USERFAULTFD = lib.mkForce no;
+          X86_IOPL_IOPERM = no;
+          ZERO_CALL_USED_REGS = yes;
+        };
+      }
+      {
+        name = "lkrg-in-tree";
+        patch = pkgs.lkrg-in-tree-patch;
+        extraStructuredConfig = with lib.kernel; {
+          SECURITY_LKRG = yes;
+          SECURITY_SELINUX = no;
+          SECURITY_SELINUX_DISABLE = lib.mkForce (option no);
+          OVERLAY_FS = yes;
+        };
+      }
+    ];
     kernelParams = [
       "init_on_alloc=1"
       "init_on_free=1"
@@ -66,6 +78,7 @@ in
       "slab_nomerge"
       "mce=0"
       "vsyscall=none"
+      "lkrg.umh_validate=0"
     ];
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
@@ -92,8 +105,6 @@ in
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.default.accept_redirects" = false;
     };
-    extraModulePackages = with config.boot.kernelPackages; [ lkrg ];
-    kernelModules = [ "lkrg" ];
     extraModprobeConfig = ''
       softdep lkrg pre: overlay
     '';
