@@ -38,6 +38,7 @@ in
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;
+      ".local".source = self + /dotfiles/local;
       ".ssh".source = self + /dotfiles/ssh;
       ".librewolf".source = self + /dotfiles/librewolf;
       ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
