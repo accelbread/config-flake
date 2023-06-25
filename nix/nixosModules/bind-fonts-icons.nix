@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: {
-  system.fsPackages = [ pkgs.bindfs ];
+  environment.systemPackages = [ pkgs.bindfs ];
   fileSystems = lib.mapAttrs
     (_: v: v // {
       fsType = "fuse.bindfs";
