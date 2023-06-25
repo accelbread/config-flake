@@ -104,9 +104,6 @@ in
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.default.accept_redirects" = false;
     };
-    extraModprobeConfig = ''
-      softdep lkrg pre: overlay
-    '';
     initrd = {
       preDeviceCommands = ''
         message="\
