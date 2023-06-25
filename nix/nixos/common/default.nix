@@ -221,9 +221,11 @@ in
         "/var/lib/systemd/coredump"
         "/var/lib/systemd/timesync"
         "/var/lib/tailscale"
+        "/root/.tpm2_pkcs11"
       ];
       files = [
         "/etc/machine-id"
+        "/root/.ssh/tpm2-cert.pub"
       ];
     };
     defaultPackages = with pkgs; [ zile git ];
@@ -232,9 +234,24 @@ in
     variables.EDITOR = "zile";
   };
 
-  programs.bash.interactiveShellInit = ''
-    HISTCONTROL=ignoreboth
-  '';
+  programs = {
+    bash.interactiveShellInit = ''
+      HISTCONTROL=ignoreboth
+    '';
+    ssh = {
+      knownHosts."*" = {
+        publicKeyFile = self + /misc/ssh_ca_host_key.pub;
+        certAuthority = true;
+      };
+      extraConfig = ''
+        PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
+        CertificateFile ~/.ssh/tpm2-cert.pub
+        StrictHostKeyChecking yes
+        VerifyHostKeyDNS ask
+        UpdateHostKeys ask
+      '';
+    };
+  };
 
   qt = {
     enable = true;

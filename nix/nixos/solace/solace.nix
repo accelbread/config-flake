@@ -23,8 +23,5 @@
 
   hardware.cpu.amd.updateMicrocode = true;
 
-  environment = {
-    systemPackages = with pkgs; [ nixgl.nixGLMesa ];
-    persistence."/persist".directories = [ "/root/.tpm2_pkcs11" ];
-  };
+  environment.systemPackages = with pkgs; [ nixgl.nixGLMesa ];
 }
