@@ -46,7 +46,6 @@
         screen.disabled = true;
       };
       flatpak.enable = true;
-      tailscale.enable = true;
       # uaccess rules must come before 73-seat-late.rules
       udev.packages = lib.singleton (pkgs.writeTextFile {
         name = "usb-disk-udev-rules";
@@ -103,7 +102,7 @@
           ".local/share/0ad"
           ".var/app"
         ];
-        files = [ ".face" ".config/monitors.xml" ];
+        files = [ ".face" ".config/monitors.xml" ".ssh/tpm2-cert.pub" ];
       };
       wordlist = {
         enable = true;

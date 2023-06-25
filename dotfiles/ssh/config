@@ -2,6 +2,7 @@ StrictHostKeyChecking yes
 VerifyHostKeyDNS ask
 UpdateHostKeys ask
 PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
+CertificateFile ~/.ssh/tpm2-cert.pub
 ForwardAgent no
 ForwardX11 no
 
@@ -10,17 +11,10 @@ Include config.d/*
 Host github.com github gh
   HostName github.com
   User git
-  PubkeyAuthentication yes
 
 Host gitlab.com gitlab gl
   HostName gitlab.com
   User git
-  PubkeyAuthentication yes
 
 Host codecommit
   HostName git-codecommit.us-west-2.amazonaws.com
-  PubkeyAuthentication yes
-
-Host *
-  PubkeyAuthentication no
-  User root

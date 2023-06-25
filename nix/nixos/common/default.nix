@@ -104,6 +104,7 @@ in
     firewall = {
       checkReversePath = "loose";
       allowedUDPPorts = [ config.services.tailscale.port ];
+      interfaces."tailscale0".allowedTCPPorts = [ 22 ];
     };
   };
 
@@ -165,6 +166,26 @@ in
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
     tailscale.enable = true;
+    openssh = {
+      enable = true;
+      openFirewall = false;
+      allowSFTP = false;
+      settings = {
+        PermitRootLogin = "no";
+        AllowGroups = "users";
+        AuthenticationMethods = "publickey";
+        PasswordAuthentication = false;
+        ChallengeResponseAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        X11Forwarding = false;
+        TrustedUserCAKeys = "${self + /misc/ssh_ca_user_key.pub}";
+        HostCertificate = "/persist/vault/ssh_host_ed25519_key-cert.pub";
+      };
+      hostKeys = [{
+        path = "/persist/vault/ssh_host_ed25519_key";
+        type = "ed25519";
+      }];
+    };
   };
 
   fonts = {
