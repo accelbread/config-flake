@@ -47,7 +47,6 @@ in
           BPF_JIT_ALWAYS_ON = lib.mkForce yes;
           HW_RANDOM_TPM = yes;
           INIT_STACK_ALL_ZERO = yes;
-          OVERLAY_FS_UNPRIVILEGED = yes;
           UBSAN = yes;
           UBSAN_BOUNDS = yes;
           UBSAN_SANITIZE_ALL = yes;
