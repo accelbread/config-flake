@@ -232,6 +232,10 @@ in
     variables.EDITOR = "zile";
   };
 
+  programs.bash.interactiveShellInit = ''
+    HISTCONTROL=ignoreboth
+  '';
+
   qt = {
     enable = true;
     platformTheme = "gnome";
