@@ -27,6 +27,8 @@ in
   };
 
   config = lib.mkIf (cfg.devices != [ ]) {
+    environment.systemPackages = [ pkgs.lkl ];
+
     boot.initrd.luks.devices = listToAttrs (eachDevice
       (n: d: {
         name = "${hostname}_disk${toString n}";
@@ -58,8 +60,8 @@ in
       mapAttrs (_: setSharedOpts) ({
         "/boot" = {
           device = getPart 1 (head cfg.devices);
-          fsType = "vfat";
-          options = [ "noexec" ];
+          fsType = "fuse.lklfuse";
+          options = [ "type=vfat" "noexec" ];
         };
       } // mapAttrs (_: mkBtrfs) {
         "/".device = "root";
@@ -90,47 +92,49 @@ in
       };
     };
 
-    system.build.provisionScript = pkgs.substituteAll {
-      src = ./provision-disks;
-      isExecutable = true;
-      inherit hostname;
-      inherit (cfg) devices size swap;
-      devicesPart = map getPartPrefix cfg.devices;
-      path = lib.makeBinPath (with pkgs; [
-        coreutils
-        util-linux
-        parted
-        dosfstools
-        cryptsetup
-        lvm2
-        btrfs-progs
-        mkpasswd
-      ]);
-    };
+    system.build = {
+      provisionScript = pkgs.substituteAll {
+        src = ./provision-disks;
+        isExecutable = true;
+        inherit hostname;
+        inherit (cfg) devices size swap;
+        devicesPart = map getPartPrefix cfg.devices;
+        path = lib.makeBinPath (with pkgs; [
+          coreutils
+          util-linux
+          parted
+          dosfstools
+          cryptsetup
+          lvm2
+          btrfs-progs
+          mkpasswd
+        ]);
+      };
 
-    system.build.mountScript = pkgs.substituteAll {
-      src = ./mount-disks;
-      isExecutable = true;
-      inherit hostname;
-      devicesPart = map getPartPrefix cfg.devices;
-      path = lib.makeBinPath (with pkgs; [
-        coreutils
-        util-linux
-        cryptsetup
-      ]);
-    };
+      mountScript = pkgs.substituteAll {
+        src = ./mount-disks;
+        isExecutable = true;
+        inherit hostname;
+        devicesPart = map getPartPrefix cfg.devices;
+        path = lib.makeBinPath (with pkgs; [
+          coreutils
+          util-linux
+          cryptsetup
+        ]);
+      };
 
-    system.build.unmountScript = pkgs.substituteAll {
-      src = ./unmount-disks;
-      isExecutable = true;
-      inherit hostname;
-      devicesPart = map getPartPrefix cfg.devices;
-      path = lib.makeBinPath (with pkgs; [
-        coreutils
-        util-linux
-        lvm2
-        cryptsetup
-      ]);
+      unmountScript = pkgs.substituteAll {
+        src = ./unmount-disks;
+        isExecutable = true;
+        inherit hostname;
+        devicesPart = map getPartPrefix cfg.devices;
+        path = lib.makeBinPath (with pkgs; [
+          coreutils
+          util-linux
+          lvm2
+          cryptsetup
+        ]);
+      };
     };
   };
 }
