@@ -69,13 +69,11 @@ in
         };
       in
       mapAttrs (_: setSharedOpts) ({
-        "/boot" = rec {
+        "/boot" = {
           device = getPart 1 (head cfg.devices);
           fsType = "fuse.lklfuse";
           options = [
             "type=vfat"
-            "blkdev"
-            "fsname=${device}"
             "allow_other"
             "default_permissions"
             "noexec"
