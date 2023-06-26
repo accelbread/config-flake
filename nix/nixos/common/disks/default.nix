@@ -108,7 +108,7 @@ in
       };
       beesd.filesystems.root = {
         spec = "/";
-        verbosity = "warning";
+        verbosity = "err";
         extraOptions = [ "--loadavg-target" "4.0" ];
       };
     };
