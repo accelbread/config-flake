@@ -27,6 +27,18 @@ in
   };
 
   config = lib.mkIf (cfg.devices != [ ]) {
+    systemd.package = pkgs.runCommand pkgs.systemd.name
+      {
+        inherit (pkgs.systemd) outputs passthru meta pname version;
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+      } ''
+      cp -r ${pkgs.systemd} $out
+      ln -s ${pkgs.systemd.man} $man
+      ln -s ${pkgs.systemd.dev} $dev
+      chmod -R u+w $out
+      wrapProgram $out/bin/bootctl --set SYSTEMD_RELAX_ESP_CHECKS 1
+    '';
+
     environment.systemPackages = [ pkgs.lkl ];
 
     boot.initrd.luks.devices = listToAttrs (eachDevice
