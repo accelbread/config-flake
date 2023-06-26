@@ -52,7 +52,6 @@ in
           options = v.options or [ ] ++ [
             "subvol=${v.device}"
             "compress=zstd"
-            "autodefrag"
             "user_subvol_rm_allowed"
           ];
         };
@@ -94,6 +93,11 @@ in
             snapshot_preserve = "48h 14d 4w";
           };
         };
+      };
+      beesd.filesystems.root = {
+        spec = "/";
+        verbosity = "warning";
+        extraOptions = [ "--loadavg-target" "4.0" ];
       };
     };
 
