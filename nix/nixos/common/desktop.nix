@@ -100,7 +100,7 @@
           ".local/share/veloren"
           ".local/share/.shatteredpixel/shattered-pixel-dungeon"
           ".local/share/0ad"
-          ".var/app"
+          ".var/app/com.valvesoftware.Steam"
         ];
         files = [ ".face" ".config/monitors.xml" ".ssh/tpm2-cert.pub" ];
       };
