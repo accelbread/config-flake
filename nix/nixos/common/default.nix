@@ -28,7 +28,18 @@ in
       experimental-features = "nix-command flakes";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
+      builders-use-substitutes = true;
     };
+    distributedBuilds = true;
+    buildMachines = lib.optionals (hostname != "solace") [{
+      hostName = "solace.fluffy-bebop.ts.net";
+      system = "x86_64-linux";
+      supportedFeatures = [ "kvm" "big-parallel" ];
+      sshUser = "nix-ssh";
+      speedFactor = 2;
+      protocol = "ssh-ng";
+      maxJobs = 32;
+    }];
   };
 
   boot = {
@@ -175,7 +186,7 @@ in
       openFirewall = false;
       settings = {
         PermitRootLogin = "no";
-        AllowGroups = "users";
+        AllowGroups = "users nix-ssh";
         AuthenticationMethods = "publickey";
         PasswordAuthentication = false;
         ChallengeResponseAuthentication = false;

@@ -24,4 +24,17 @@
   hardware.cpu.amd.updateMicrocode = true;
 
   environment.systemPackages = with pkgs; [ nixgl.nixGLMesa ];
+
+  nix = {
+    sshServe = {
+      enable = true;
+      write = true;
+      protocol = "ssh-ng";
+    };
+    settings = {
+      allowed-users = [ "nix-ssh" ];
+      # Not needed with nix 2.16?
+      trusted-users = [ "nix-ssh" ];
+    };
+  };
 }
