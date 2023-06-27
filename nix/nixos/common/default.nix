@@ -169,7 +169,6 @@ in
     openssh = {
       enable = true;
       openFirewall = false;
-      allowSFTP = false;
       settings = {
         PermitRootLogin = "no";
         AllowGroups = "users";
