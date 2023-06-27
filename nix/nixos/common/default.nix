@@ -106,6 +106,7 @@ in
       allowedUDPPorts = [ config.services.tailscale.port ];
       interfaces."tailscale0".allowedTCPPorts = [ 22 ];
     };
+    search = [ "fluffy-bebop.ts.net" ];
   };
 
   time.timeZone = "America/Los_Angeles";
@@ -149,6 +150,9 @@ in
         require_dnssec = true;
         dnscrypt_ephemeral_keys = true;
         tls_disable_session_tickets = true;
+        forwarding_rules = pkgs.writeText "forwarding-rules.txt" ''
+          ts.net 100.100.100.100
+        '';
       };
     };
     logind = {
