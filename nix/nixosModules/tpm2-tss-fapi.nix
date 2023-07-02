@@ -1,9 +1,6 @@
 { pkgs, lib, config, ... }:
 with lib;
 let
-  inherit (builtins) fromJSON readFile toFile toJSON unsafeDiscardStringContext;
-  inherit (lib) pipe removePrefix;
-
   cfg = config.security.tpm2;
   tctiCfg = cfg.tctiEnvironment;
 
@@ -16,19 +13,11 @@ in
 {
   config = mkIf (cfg.enable && tctiCfg.enable) {
     environment.sessionVariables = {
-      TSS2_FAPICONF =
-        pipe (pkg + /etc/tpm2-tss/fapi-config.json) [
-          readFile
-          unsafeDiscardStringContext
-          fromJSON
-          (prev: prev // {
-            system_dir = removePrefix "${pkg}" prev.system_dir;
-            log_dir = removePrefix "${pkg}" prev.log_dir;
-            inherit tcti;
-          })
-          toJSON
-          (toFile "fapi-config.json")
-        ];
+      TSS2_FAPICONF = pkgs.runCommand "fapi-config.json" { } ''
+        cp ${pkg}/etc/tpm2-tss/fapi-config.json $out
+        sed -i 's|/nix/store/[^/]*/var|/var|' $out
+        sed -i 's|"tcti":.*$|"tcti": "${tcti}",|' $out
+      '';
       TPM2TOOLS_TCTI = tcti;
       TPM2_PKCS11_TCTI = tcti;
     };
