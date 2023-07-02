@@ -244,7 +244,7 @@ in
       ];
       files = [
         "/etc/machine-id"
-        "/root/.ssh/tpm2-cert.pub"
+        "/root/.ssh/nix-ssh-cert.pub"
       ];
     };
     defaultPackages = with pkgs; [ zile git ];
@@ -267,7 +267,8 @@ in
       };
       extraConfig = ''
         PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
-        CertificateFile ~/.ssh/tpm2-cert.pub
+        CertificateFile ~/.ssh/ssh-cert.pub
+        CertificateFile ~/.ssh/nix-ssh-cert.pub
         StrictHostKeyChecking yes
         VerifyHostKeyDNS ask
         UpdateHostKeys ask

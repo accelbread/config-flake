@@ -102,7 +102,12 @@
           ".local/share/0ad"
           ".var/app/com.valvesoftware.Steam"
         ];
-        files = [ ".face" ".config/monitors.xml" ".ssh/tpm2-cert.pub" ];
+        files = [
+          ".face"
+          ".config/monitors.xml"
+          ".ssh/ssh-cert.pub"
+          ".ssh/nix-ssh-cert.pub"
+        ];
       };
       wordlist = {
         enable = true;
