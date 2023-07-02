@@ -11,21 +11,26 @@ let
   tctiOption =
     if tctiCfg.interface == "tabrmd" then
       tctiCfg.tabrmdConf else tctiCfg.deviceConf;
+  tcti = "${tctiCfg.interface}:${tctiOption}";
 in
 {
   config = mkIf (cfg.enable && tctiCfg.enable) {
-    environment.variables.TSS2_FAPICONF =
-      pipe (pkg + /etc/tpm2-tss/fapi-config.json) [
-        readFile
-        unsafeDiscardStringContext
-        fromJSON
-        (prev: prev // {
-          system_dir = removePrefix "${pkg}" prev.system_dir;
-          log_dir = removePrefix "${pkg}" prev.log_dir;
-          tcti = "${tctiCfg.interface}:${tctiOption}";
-        })
-        toJSON
-        (toFile "fapi-config.json")
-      ];
+    environment.sessionVariables = {
+      TSS2_FAPICONF =
+        pipe (pkg + /etc/tpm2-tss/fapi-config.json) [
+          readFile
+          unsafeDiscardStringContext
+          fromJSON
+          (prev: prev // {
+            system_dir = removePrefix "${pkg}" prev.system_dir;
+            log_dir = removePrefix "${pkg}" prev.log_dir;
+            inherit tcti;
+          })
+          toJSON
+          (toFile "fapi-config.json")
+        ];
+      TPM2TOOLS_TCTI = tcti;
+      TPM2_PKCS11_TCTI = tcti;
+    };
   };
 }
