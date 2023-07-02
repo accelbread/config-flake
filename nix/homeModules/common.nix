@@ -55,6 +55,7 @@
           defaultBranch = "master";
           templateDir = "${../../dotfiles/git-template}";
         };
+        checkout.workers = 0;
         "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
       };
       attributes = [ "*.el diff=lisp" ];
