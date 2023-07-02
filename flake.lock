@@ -117,11 +117,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1684033521,
-        "narHash": "sha256-XaYp6C0P+J9TZih/9tW/hlaCesk0LV8Zrv8QntlG4QU=",
+        "lastModified": 1688323343,
+        "narHash": "sha256-wIr9O4mHfJVlucrUUEBwUm3nqSqs8LezKbJqcwoBrNo=",
         "owner": "accelbread",
         "repo": "flakelite",
-        "rev": "af3e7f7a6fb2792df008cbca27203cc094846c7d",
+        "rev": "50c4ad5cffa98ac9ca5c6085c96280198838e35b",
         "type": "github"
       },
       "original": {
