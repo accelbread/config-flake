@@ -5,6 +5,7 @@ let
 in
 {
   imports = [
+    inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.usbguard-dbus
     self.nixosModules.bind-fonts-icons
     self.nixosModules.tpm2-tss-fapi
@@ -43,9 +44,13 @@ in
   };
 
   boot = {
+    lanzaboote = {
+      enable = pkgs.system == "x86_64-linux";
+      pkiBundle = "/persist/vault/secureboot";
+    };
     loader = {
       systemd-boot = {
-        enable = true;
+        enable = !config.boot.lanzaboote.enable;
         editor = false;
       };
       efi.canTouchEfiVariables = true;
@@ -243,6 +248,9 @@ in
       ];
     };
     defaultPackages = with pkgs; [ zile git ];
+    systemPackages = lib.singleton (pkgs.sbctl.override {
+      databasePath = "/persist/vault/secureboot";
+    });
     gnome.excludePackages = [ pkgs.gnome-tour ];
     localBinInPath = true;
     variables.EDITOR = "zile";
