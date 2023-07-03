@@ -1225,6 +1225,10 @@
   (remove-hook 'server-switch-hook #'magit-commit-diff)
   (magit-todos-mode))
 
+(with-eval-after-load 'magit-commit
+  (transient-replace-suffix 'magit-commit 'magit-commit-autofixup
+    '("x" "Absorb changes" magit-commit-absorb)))
+
 (defun meow-magit-movement-configure ()
   "Set j/k in motion mode for `magit'."
   (setq meow-motion-next-function #'magit-section-forward
