@@ -252,7 +252,6 @@ in
       databasePath = "/persist/vault/secureboot";
     });
     gnome.excludePackages = [ pkgs.gnome-tour ];
-    localBinInPath = true;
     variables.EDITOR = "zile";
     sessionVariables.TPM2_PKCS11_LOG_LEVEL = "0";
   };
