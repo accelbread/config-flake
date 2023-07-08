@@ -6,7 +6,6 @@ in
 {
   imports = [
     inputs.lanzaboote.nixosModules.lanzaboote
-    self.nixosModules.usbguard-dbus
     self.nixosModules.bind-fonts-icons
     self.nixosModules.tpm2-tss-fapi
     ./kernel.nix
@@ -150,10 +149,7 @@ in
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
-    services = {
-      systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
-      plymouth-quit.enable = config.boot.plymouth.enable;
-    };
+    services.systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
   };
 
   services = {
