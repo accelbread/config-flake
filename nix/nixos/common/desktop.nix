@@ -35,8 +35,7 @@
       };
       clight.settings = {
         backlight = {
-          trans_step = 0.01;
-          trans_timeout = 3;
+          no_smooth_transition = true;
           ac_timeouts = [ 10 10 10 ];
         };
         keyboard.disabled = true;
