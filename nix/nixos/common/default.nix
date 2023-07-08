@@ -193,6 +193,9 @@ in
         ChallengeResponseAuthentication = false;
         KbdInteractiveAuthentication = false;
         X11Forwarding = false;
+        AllowTcpForwarding = false;
+        AllowAgentForwarding = false;
+        AllowStreamLocalForwarding = false;
         TrustedUserCAKeys = "${self + /misc/ssh_ca_user_key.pub}";
         HostCertificate = "/persist/vault/ssh_host_ed25519_key-cert.pub";
       };
