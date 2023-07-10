@@ -24,7 +24,6 @@ in
       gnomeExtensions.gsconnect
       git-annex
       hunspellDicts.en_US
-      shattered-pixel-dungeon-xdg
     ];
     gui-packages = with pkgs; [
       gnome.dconf-editor
@@ -35,6 +34,7 @@ in
       gimp
       libreoffice
       cockatrice
+      shattered-pixel-dungeon
       zeroad
       airshipper
     ];
