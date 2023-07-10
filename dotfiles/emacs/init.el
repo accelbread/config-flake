@@ -1332,6 +1332,9 @@
               (get-buffer-create "*Help*"))
             '((name . help-xref-dont-reuse-buffer)))
 
+(add-hook 'help-fns-describe-function-functions
+          #'shortdoc-help-fns-examples-function)
+
 
 ;;; Info
 
