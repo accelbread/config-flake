@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   sudo = "/run/wrappers/bin/sudo";
   poweroff = "/run/current-system/sw/bin/poweroff";
@@ -11,6 +11,11 @@ let
   '';
 in
 {
+  power.ups = {
+    enable = true;
+    ups.desk = { driver = "usbhid-ups"; port = "auto"; };
+  };
+
   users = {
     groups.nut = { };
     users.nut = {
@@ -24,51 +29,47 @@ in
 
   services.udev.packages = [ pkgs.nut ];
 
-  systemd = {
-    packages = [ pkgs.nut ];
-    services = {
-      nut-server.wantedBy = [ "multi-user.target" ];
-      nut-monitor.wantedBy = [ "multi-user.target" ];
-    };
+  systemd.services = {
+    upsd.script = lib.mkForce "${pkgs.nut}/sbin/upsd -u nut";
+    upsmon.script = lib.mkForce "${pkgs.nut}/sbin/upsmon -u nut";
+    upsdrv.script = lib.mkForce "${pkgs.nut}/bin/upsdrvctl -u nut start";
   };
 
-  environment = {
-    etc = {
-      "nut/nut.conf".text = ''
-        MODE = standalone
-      '';
-      "nut/ups.conf".text = ''
-        [desk]
-        driver = usbhid-ups
-        port = auto
-      '';
-    } // builtins.mapAttrs (_: v: v // { mode = "0640"; group = "nut"; }) {
+  environment.etc = builtins.mapAttrs
+    (_: v: v // { mode = "0640"; group = "nut"; })
+    {
       "nut/upsd.conf".text = "";
       "nut/upsd.users".text = ''
         [monuser]
         password = upsmon_pass
         upsmon master
       '';
-      "nut/upsmon.conf".text =
-        ''
-          SHUTDOWNCMD "${sudo} ${poweroff}"
-          NOTIFYCMD ${notifycmd}
-          NOTIFYFLAG ONLINE SYSLOG+EXEC
-          NOTIFYFLAG ONBATT SYSLOG+EXEC
-          NOTIFYFLAG FSD SYSLOG+EXEC
-          NOTIFYFLAG COMMOK SYSLOG+EXEC
-          NOTIFYFLAG COMMBAD SYSLOG+EXEC
-          NOTIFYFLAG SHUTDOWN SYSLOG+EXEC
-          NOTIFYFLAG REPLBATT SYSLOG+EXEC
-          NOTIFYFLAG NOCOMM SYSLOG+EXEC
-          MONITOR desk 1 monuser upsmon_pass master
-        '';
+      "nut/upsmon.conf".text = ''
+        SHUTDOWNCMD "${sudo} ${poweroff}"
+        NOTIFYCMD ${notifycmd}
+        NOTIFYFLAG ONLINE SYSLOG+EXEC
+        NOTIFYFLAG ONBATT SYSLOG+EXEC
+        NOTIFYFLAG FSD SYSLOG+EXEC
+        NOTIFYFLAG COMMOK SYSLOG+EXEC
+        NOTIFYFLAG COMMBAD SYSLOG+EXEC
+        NOTIFYFLAG SHUTDOWN SYSLOG+EXEC
+        NOTIFYFLAG REPLBATT SYSLOG+EXEC
+        NOTIFYFLAG NOCOMM SYSLOG+EXEC
+        MONITOR desk 1 monuser upsmon_pass master
+      '';
     };
-  };
 
-  security.sudo.extraConfig = ''
-    nut ALL=(root) NOPASSWD: ${poweroff}
-    nut ALL=(archit) NOPASSWD: ${notify-send}
-  '';
+  security.sudo.extraRules = [
+    {
+      users = [ "nut" ];
+      runAs = "root";
+      commands = [{ command = "${poweroff}"; options = [ "NOPASSWD" ]; }];
+    }
+    {
+      users = [ "nut" ];
+      runAs = "archit";
+      commands = [{ command = "${notify-send}"; options = [ "NOPASSWD" ]; }];
+    }
+  ];
 }
 
