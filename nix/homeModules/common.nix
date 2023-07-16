@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  imports = [ ./emacs.nix ./gui-only-programs.nix ];
+  imports = [ ./emacs.nix ./gui-only-programs.nix ./rnnoise.nix ];
 
   home = {
     packages = with pkgs; [
@@ -77,4 +77,6 @@
       };
     };
   };
+
+  services.rnnoise.enable = true;
 }
