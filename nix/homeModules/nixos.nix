@@ -30,7 +30,7 @@ in
       librewolf
       v4l-utils
       helvum
-      easyeffects
+      jamesdsp
       gimp
       libreoffice
       cockatrice
