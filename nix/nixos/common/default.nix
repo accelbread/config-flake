@@ -173,7 +173,6 @@ in
     };
     usbguard = {
       enable = true;
-      dbus.enable = true;
       IPCAllowedGroups = [ "wheel" ];
     };
     avahi = {

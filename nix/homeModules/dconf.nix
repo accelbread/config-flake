@@ -47,8 +47,6 @@ in
       remember-recent-files = false;
       remove-old-temp-files = true;
       remove-old-trash-files = true;
-      usb-protection = true;
-      usb-protection-level = "always";
     };
     "org/gnome/desktop/screensaver" = background // {
       lock-delay = mkUint32 30;
