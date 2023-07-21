@@ -31,42 +31,39 @@ in
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."pipewire/pipewire.conf.d/99-input-denoising.conf" = {
-      text = ''
-        context.modules = [{
-          name = libpipewire-module-filter-chain
-          args = {
-            node.description = "RNNoise"
-            media.name = "RNNoise"
-            filter.graph = {
-              nodes = [{
-                type = ladspa
-                name = rnnoise
-                plugin = ${cfg.package}/lib/ladspa/librnnoise_ladspa.so
-                label = ${label}
-                control = {
-                  "VAD Threshold (%)" = ${toString cfg.vadThreshold}
-                  "VAD Grace Period (ms)" = ${toString cfg.vadGracePeriod}
-                  "Retroactive VAD Grace (ms)" = ${toString
-                    cfg.retroactiveVadGracePeriod}
-                }
-              }]
-            }
-            capture.props = {
-              node.name = "capture.rnnoise_source"
-              node.description = "RNNoise capture"
-              node.passive = true
-              audio.rate = 48000
-            }
-            playback.props = {
-              node.name = "rnnoise_source"
-              media.class = Audio/Source
-              audio.rate = 48000
-            }
+    xdg.configFile."pipewire/pipewire.conf.d/99-input-denoising.conf".text = ''
+      context.modules = [{
+        name = libpipewire-module-filter-chain
+        args = {
+          node.description = "RNNoise"
+          media.name = "RNNoise"
+          filter.graph = {
+            nodes = [{
+              type = ladspa
+              name = rnnoise
+              plugin = ${cfg.package}/lib/ladspa/librnnoise_ladspa.so
+              label = ${label}
+              control = {
+                "VAD Threshold (%)" = ${toString cfg.vadThreshold}
+                "VAD Grace Period (ms)" = ${toString cfg.vadGracePeriod}
+                "Retroactive VAD Grace (ms)" = ${toString
+                  cfg.retroactiveVadGracePeriod}
+              }
+            }]
           }
-        }]
-      '';
-      onChange = "systemctl restart --user pipewire.service";
-    };
+          capture.props = {
+            node.name = "capture.rnnoise_source"
+            node.description = "RNNoise capture"
+            node.passive = true
+            audio.rate = 48000
+          }
+          playback.props = {
+            node.name = "rnnoise_source"
+            media.class = Audio/Source
+            audio.rate = 48000
+          }
+        }
+      }]
+    '';
   };
 }
