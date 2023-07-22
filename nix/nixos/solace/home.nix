@@ -10,6 +10,9 @@
     let
       defaultNodes = builtins.toFile "wireplumber-default-nodes" ''
         [default-nodes]
+        default.configured.audio.sink=bluez_output.88_C9_E8_1F_5A_99.1
+        default.configured.audio.sink.0=bluez_output.88_C9_E8_1F_5A_99.1
+        default.configured.audio.sink.1=alsa_output.pci-0000_0f_00.4.analog-stereo
         default.configured.audio.source=rnnoise_source
         default.configured.audio.source.0=rnnoise_source
         default.configured.audio.source.1=alsa_input.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00.mono-fallback
