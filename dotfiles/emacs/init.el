@@ -658,7 +658,7 @@
       orderless-component-separator #'orderless-escapable-split-on-space
       completion-at-point-functions (list #'cape-file
                                           (cape-super-capf #'cape-dabbrev
-                                                           #'cape-ispell))
+                                                           #'cape-dict))
       cape-dabbrev-min-length 3
       corfu-auto t
       corfu-auto-prefix 1
