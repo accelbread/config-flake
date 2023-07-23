@@ -38,6 +38,9 @@ in
       automount = false;
       autorun-never = true;
     };
+    "org/gnome/desktop/peripherals/mouse" = {
+      accel-profile = "flat";
+    };
     "org/gnome/desktop/peripherals/touchpad" = {
       natural-scroll = true;
     };
