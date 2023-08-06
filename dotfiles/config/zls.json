@@ -1,4 +1,5 @@
 {
   "warn_style": true,
-  "use_comptime_interpreter": true
+  "use_comptime_interpreter": true,
+  "include_at_in_builtins": true
 }
