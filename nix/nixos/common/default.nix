@@ -207,8 +207,8 @@ in
   };
 
   fonts = {
-    enableDefaultFonts = false;
-    fonts = with pkgs; [
+    enableDefaultPackages = false;
+    packages = with pkgs; [
       dejavu_fonts
       liberation_ttf
       noto-fonts

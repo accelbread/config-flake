@@ -11,7 +11,7 @@
       "/usr/share/fonts".device = pkgs.buildEnv
         {
           name = "system-fonts";
-          paths = config.fonts.fonts;
+          paths = config.fonts.packages;
           pathsToLink = [ "/share/fonts" ];
         } + "/share/fonts";
     };
