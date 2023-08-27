@@ -1,11 +1,11 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    flakelite = {
-      url = "github:accelbread/flakelite";
+    flakelight = {
+      url = "github:accelbread/flakelight";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flakelite-elisp.url = "github:accelbread/flakelite-elisp";
+    flakelight-elisp.url = "github:accelbread/flakelight-elisp";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -25,8 +25,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { flakelite, emacs-overlay, ... }@inputs:
-    flakelite ./. {
+  outputs = { flakelight, flakelight-elisp, emacs-overlay, ... }@inputs:
+    flakelight ./. {
+      imports = [ flakelight-elisp.flakelightModules.default ];
       inherit inputs;
       withOverlays = [
         emacs-overlay.overlays.default

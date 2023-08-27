@@ -1,4 +1,4 @@
-{ inputs }:
+{ inputs, ... }:
 let
   inherit (builtins) readDir mapAttrs;
   inherit (inputs.nixpkgs.lib) pipe nixosSystem filterAttrs;

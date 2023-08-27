@@ -1,8 +1,8 @@
-{ pkgs, flakelite }:
+{ writeShellScript, emacsAccelbread, ... }:
 let
-  inherit (flakelite.inputs) self;
+  self = ../..;
   nix = ''nix --extra-experimental-features "nix-command flakes"'';
-  mkBuildScript = script: pkgs.writeShellScript script ''
+  mkBuildScript = script: writeShellScript script ''
     set -eu
     ref="${self}#nixosConfigurations.$1.config.system.build.${script}"
     ${nix} build --no-link "$ref"
@@ -11,23 +11,23 @@ let
   '';
 in
 rec {
-  emacs = pkgs.writeShellScript "emacsWithConfig" ''
+  emacs = writeShellScript "emacsWithConfig" ''
     set -eu
     emacs_dir=$(mktemp -d)
     cleanup() { rm -rf "$emacs_dir"; }
     trap cleanup EXIT
     cp -rT "${self + /dotfiles/emacs}" "$emacs_dir"
-    ${pkgs.emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
+    ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
   '';
 
   nixosProvision = mkBuildScript "provisionScript";
   nixosMount = mkBuildScript "mountScript";
   nixosUnmount = mkBuildScript "unmountScript";
-  nixosInstall = pkgs.writeShellScript "nixos-install" ''
+  nixosInstall = writeShellScript "nixos-install" ''
     set -eu
     sudo nixos-install --no-root-passwd --flake ${self}#$1
   '';
-  nixosFullInstall = pkgs.writeShellScript "nixos-fullinstall" ''
+  nixosFullInstall = writeShellScript "nixos-fullinstall" ''
     set -xeu
     ${nixosProvision} $1
     ${nixosMount} $1

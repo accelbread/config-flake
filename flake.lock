@@ -143,59 +143,59 @@
         "type": "github"
       }
     },
-    "flakelite": {
+    "flakelight": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1688483366,
-        "narHash": "sha256-W1yQvURZW3JRVgP50Qzfp+kBqpamzCFqZfpGsn6TZhA=",
+        "lastModified": 1693124380,
+        "narHash": "sha256-6nkMvVruhLl3as5YDQlj81dLS35kSnG3cIErBRcb0qI=",
         "owner": "accelbread",
-        "repo": "flakelite",
-        "rev": "4df2ca87b5719b8477a2cbc41f8e649d133e2ed7",
+        "repo": "flakelight",
+        "rev": "62b7dba619cc651673e3f2a0d385250378e2a57d",
         "type": "github"
       },
       "original": {
         "owner": "accelbread",
-        "repo": "flakelite",
+        "repo": "flakelight",
         "type": "github"
       }
     },
-    "flakelite-elisp": {
+    "flakelight-elisp": {
       "inputs": {
-        "flakelite": "flakelite_2"
+        "flakelight": "flakelight_2"
       },
       "locked": {
-        "lastModified": 1682196963,
-        "narHash": "sha256-+6/tZ5ZwExFAqT3HWKpvzSxr3LNRVDFQQNkhmfQBVHc=",
+        "lastModified": 1693126279,
+        "narHash": "sha256-QgG5LWtl0COfxTNqs5Qq50r2LZ7nyvGDs060mg0w8+8=",
         "owner": "accelbread",
-        "repo": "flakelite-elisp",
-        "rev": "1b672ecdf6686984c3ab14d2f1c71cf1c1c3fe7d",
+        "repo": "flakelight-elisp",
+        "rev": "5827d3df742e822b0bc133ddc699c8f59b7172ad",
         "type": "github"
       },
       "original": {
         "owner": "accelbread",
-        "repo": "flakelite-elisp",
+        "repo": "flakelight-elisp",
         "type": "github"
       }
     },
-    "flakelite_2": {
+    "flakelight_2": {
       "inputs": {
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1682195643,
-        "narHash": "sha256-o00fxLsKWx0K9Qi60cLFyqSU2pjUwWEVwL+qNGyvKVQ=",
+        "lastModified": 1693119708,
+        "narHash": "sha256-gGCDFeUQyeQyU8iAA2sGmHBELful+fO2UgPaXOQo0R4=",
         "owner": "accelbread",
-        "repo": "flakelite",
-        "rev": "d871fd7cbf7529ff401dddef2e80562bdbb68495",
+        "repo": "flakelight",
+        "rev": "838e383c50b81ff0d596c8a31f531c0592652401",
         "type": "github"
       },
       "original": {
         "owner": "accelbread",
-        "repo": "flakelite",
+        "repo": "flakelight",
         "type": "github"
       }
     },
@@ -321,16 +321,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1680665430,
-        "narHash": "sha256-MTVhTukwza1Jlq2gECITZPFnhROmylP2uv3O3cSqQCE=",
+        "lastModified": 1692447944,
+        "narHash": "sha256-fkJGNjEmTPvqBs215EQU4r9ivecV5Qge5cF/QDLVn3U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5233fd2ba76a3accb5aaa999c00509a11fd0793c",
+        "rev": "d680ded26da5cf104dd2735a51e88d2d8f487b4d",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixos-22.11",
+        "ref": "nixos-unstable",
         "type": "indirect"
       }
     },
@@ -415,8 +415,8 @@
     "root": {
       "inputs": {
         "emacs-overlay": "emacs-overlay",
-        "flakelite": "flakelite",
-        "flakelite-elisp": "flakelite-elisp",
+        "flakelight": "flakelight",
+        "flakelight-elisp": "flakelight-elisp",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "lanzaboote": "lanzaboote",

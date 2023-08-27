@@ -1,4 +1,4 @@
-{ lib }: lib.fix (self: {
+{ lib, ... }: lib.fix (self: {
   default = self.shell;
 } // lib.mapAttrs (n: v: { path = ./${n}; description = v; }) {
   shell = "Template Nix devShell.";
