@@ -19,14 +19,16 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    flakelite.url = "github:accelbread/flakelite";
-    flakelite-zig.url = "github:accelbread/flakelite-zig";
+    flakelight.url = "github:accelbread/flakelight";
+    flakelight-zig.url = "github:accelbread/flakelight-zig";
   };
-  outputs = { flakelite, ... }@inputs:
-    flakelite ./. {
-      inherit inputs;
-      name = "hello-world";
-      description = "Template Zig application.";
-      license = "agpl3Plus";
-    };
+  outputs = { flakelight, flakelight-zig, ... }@inputs: flakelight ./. {
+    imports = [ flakelight-zig.flakelightModules.default ];
+    inherit inputs;
+
+    name = "hello-world";
+    version = "0.0.1";
+    description = "Template Zig application.";
+    license = "agpl3Plus";
+  };
 }

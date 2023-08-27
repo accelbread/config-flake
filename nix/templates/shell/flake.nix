@@ -1,8 +1,8 @@
 {
-  inputs.flakelite.url = "github:accelbread/flakelite";
-  outputs = { self, nixpkgs, flakelite }@inputs:
-    flakelite ./. {
+  inputs.flakelight.url = "github:accelbread/flakelight";
+  outputs = { nixpkgs, flakelight, ... }@inputs:
+    flakelight ./. {
       inherit inputs;
-      devTools = pkgs: with pkgs; [ ];
+      devShell.packages = pkgs: with pkgs; [ ];
     };
 }

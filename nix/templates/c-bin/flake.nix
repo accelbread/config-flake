@@ -19,25 +19,28 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    flakelite.url = "github:accelbread/flakelite";
+    flakelight.url = "github:accelbread/flakelight";
   };
-  outputs = { flakelite, ... }@inputs:
-    flakelite ./. {
-      inherit inputs;
-      description = "Template C application.";
-      license = "agpl3Plus";
-      package = { stdenv, flakelite }:
-        stdenv.mkDerivation {
-          name = "hello-world";
-          src = ./.;
-          installPhase = ''
-            runHook preInstall
-            make DESTDIR=$out install
-            runHook postInstall
-          '';
-          inherit (flakelite) meta;
-        };
-      devTools = pkgs: with pkgs; [ clang-tools coreutils ];
-      formatters."*.c | *.h" = "clang-format -i";
-    };
+  outputs = { flakelight, ... }@inputs: flakelight ./. {
+    inherit inputs;
+
+    description = "Template C application.";
+    license = "agpl3Plus";
+
+    package = { stdenv, defaultMeta }:
+      stdenv.mkDerivation {
+        name = "hello-world";
+        src = ./.;
+        installPhase = ''
+          runHook preInstall
+          make DESTDIR=$out install
+          runHook postInstall
+        '';
+        meta = defaultMeta;
+      };
+
+    devShell.packages = pkgs: with pkgs; [ clang-tools coreutils ];
+
+    formatters."*.c | *.h" = "clang-format -i";
+  };
 }
