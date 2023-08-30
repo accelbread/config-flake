@@ -1143,7 +1143,8 @@
 (setq eglot-stay-out-of '(eldoc-documentation-strategy
                           flymake-diagnostic-functions)
       eglot-ignored-server-capabilities '(:inlayHintProvider)
-      eglot-autoshutdown t)
+      eglot-autoshutdown t
+      eglot-extend-to-xref t)
 
 (advice-add #'eglot-completion-at-point :around #'capf-disable-exclusive)
 
