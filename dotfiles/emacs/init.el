@@ -1123,8 +1123,7 @@
 
 ;;; Project
 
-(setq project-vc-extra-root-markers '("flake.nix")
-      project-file-history-behavior 'relativize)
+(setq project-file-history-behavior 'relativize)
 
 
 (defun project-nix-store (dir)
