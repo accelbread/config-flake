@@ -712,6 +712,7 @@
 
 (setq comint-terminfo-terminal "dumb-emacs-ansi"
       comint-prompt-read-only t
+      comint-pager "cat"
       shell-highlight-undef-enable t)
 
 (with-eval-after-load 'comint
@@ -879,8 +880,7 @@
   (nconc eshell-variable-aliases-list
          `(("/" ,(lambda () (concat (file-remote-p default-directory) "/"))
             nil t)
-           ("TERM" ,(lambda () "dumb-emacs-ansi") t t)
-           ("PAGER" ,(lambda () "cat") t t))))
+           ("TERM" ,(lambda () "dumb-emacs-ansi") t t))))
 
 (add-hook 'eshell-before-prompt-hook #'eshell-begin-on-new-line)
 
