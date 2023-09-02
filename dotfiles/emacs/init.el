@@ -1123,7 +1123,9 @@
 
 ;;; Project
 
-(setq project-vc-extra-root-markers '("flake.nix"))
+(setq project-vc-extra-root-markers '("flake.nix")
+      project-file-history-behavior 'relativize)
+
 
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
