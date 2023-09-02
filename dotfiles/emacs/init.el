@@ -1740,6 +1740,11 @@
    (1+ (array-current-line)) (current-column) (point)
    (buffer-size) (count-lines (point-min) (point-max))))
 
+(defun apply-ansi-colors-on-buffer ()
+  "Apply ansi color sequences in the current buffer."
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
 
 ;;; Local configuration
 
