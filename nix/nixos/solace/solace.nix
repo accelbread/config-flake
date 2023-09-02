@@ -32,10 +32,6 @@
       write = true;
       protocol = "ssh-ng";
     };
-    settings = {
-      allowed-users = [ "nix-ssh" ];
-      # Not needed with nix 2.16?
-      trusted-users = [ "nix-ssh" ];
-    };
+    settings.allowed-users = [ "nix-ssh" ];
   };
 }
