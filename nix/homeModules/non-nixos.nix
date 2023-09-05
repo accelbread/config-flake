@@ -4,7 +4,7 @@ let
   inherit (lib) mkOption types;
 
   nixGLWrapDrv = drv: pkgs.symlinkJoin {
-    name = (drv.name + "-nixGLWrapper");
+    name = drv.name + "-nixGLWrapper";
     paths = (map
       (bin: pkgs.writeShellScriptBin bin ''
         exec ${lib.getExe config.nixGL.package} ${drv}/bin/${bin} "$@"

@@ -33,6 +33,7 @@
         emacs-overlay.overlays.default
         (import ./nix/overlays/overrides.nix)
       ];
+      checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";
 }

@@ -52,7 +52,7 @@ let
               . ,eglot-server-programs)))
   '';
   baseEmacs = emacs-pgtk;
-  emacsWithPackages = (emacsPackagesFor baseEmacs).emacsWithPackages;
+  inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
 ++ singleton (epkgs.trivialBuild {

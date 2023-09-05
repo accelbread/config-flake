@@ -5,7 +5,7 @@
 }:
 stdenv.mkDerivation {
   name = "emacs-eat-terminfo";
-  src = (emacsPackagesFor emacs).eat.src;
+  inherit ((emacsPackagesFor emacs).eat) src;
   nativeBuildInputs = [ ncurses ];
   installPhase = ''
     runHook preInstall
