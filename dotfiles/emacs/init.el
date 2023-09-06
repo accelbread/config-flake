@@ -34,9 +34,9 @@
          corfu cape kind-icon vertico orderless marginalia consult vundo envrc
          magit magit-todos hl-todo magit-annex git-annex virtual-comment rmsbolt
          fish-completion eat coterm meow-term vterm meow-vterm yasnippet svg-lib
-         rainbow-mode reformatter devdocs markdown-mode clang-format cmake-mode
-         rust-mode cargo zig-mode nix-mode haskell-mode geiser-guile
-         scad-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
+         rainbow-mode adaptive-wrap reformatter devdocs markdown-mode cmake-mode
+         clang-format rust-mode cargo zig-mode nix-mode geiser-guile scad-mode
+         haskell-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
 
 (setq package-native-compile t)
 
@@ -239,6 +239,7 @@
 (context-menu-mode)
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook #'adaptive-wrap-prefix-mode)
 
 (hide-minor-mode 'abbrev-mode)
 (hide-minor-mode 'whitespace-mode)
