@@ -1145,8 +1145,9 @@
 (with-eval-after-load 'project
   (require 'vc-git) ; project-find-file fails if vc-git is not loaded
   (add-hook 'project-find-functions #'project-nix-store 95)
-  (project-forget-projects-under "/nix/store/")
-  (project-forget-zombie-projects))
+  (let ((inhibit-message t))
+    (project-forget-projects-under "/nix/store/")
+    (project-forget-zombie-projects)))
 
 
 ;;; Eglot
@@ -1227,11 +1228,12 @@
 
 (setq magit-diff-refine-hunk 'all
       magit-view-git-manual-method 'man
-      transient-history-file null-device
+      transient-save-history nil
       magit-save-repository-buffers 'dontask
       magit-delete-by-moving-to-trash nil
       magit-process-finish-apply-ansi-colors t
-      git-commit-summary-max-length 50)
+      git-commit-summary-max-length 50
+      magit-no-message '("Turning on "))
 
 (with-eval-after-load 'magit
   (remove-hook 'server-switch-hook #'magit-commit-diff)
