@@ -124,6 +124,14 @@
 
 (global-set-key (kbd "C-x k") 'kill-current-buffer)
 
+(defun autosave-git-buffer ()
+  "If current buffer is tracked by git, don't confirm when saving it."
+  (if-let* ((file (buffer-file-name))
+            ((vc-git-registered file)))
+      (setq-local buffer-save-without-query t)))
+
+(add-hook 'prog-mode-hook #'autosave-git-buffer)
+
 
 ;;; Disable use of dialog boxes
 
@@ -1125,7 +1133,6 @@
 ;;; Project
 
 (setq project-file-history-behavior 'relativize)
-
 
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
