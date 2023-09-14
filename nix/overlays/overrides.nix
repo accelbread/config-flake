@@ -13,12 +13,4 @@ final: prev: {
   tpm2-pkcs11 = prev.tpm2-pkcs11.overrideAttrs (old: {
     configureFlags = old.configureFlags or [ ] ++ [ "--enable-fapi=no" ];
   });
-  python3 = prev.python3.override {
-    packageOverrides = _: prev: {
-      # TODO: Remove when fixed in nixpkgs
-      tpm2-pytss = prev.tpm2-pytss.overridePythonAttrs {
-        hardeningDisable = [ "fortify" ];
-      };
-    };
-  };
 }

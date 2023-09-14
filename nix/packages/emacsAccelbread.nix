@@ -57,5 +57,6 @@ in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
 ++ singleton (epkgs.trivialBuild {
   pname = "emacs-default-init";
+  version = "0.0.1";
   src = default-init;
 }))
