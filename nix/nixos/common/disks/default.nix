@@ -41,14 +41,16 @@ in
 
     environment.systemPackages = [ pkgs.lkl ];
 
-    boot.initrd.luks.devices = listToAttrs (eachDevice
-      (n: d: {
+    boot = {
+      initrd.luks.devices = listToAttrs (eachDevice (n: d: {
         name = "${hostname}_disk${toString n}";
         value = {
           device = getPart 2 d;
           bypassWorkqueues = true;
         };
       }));
+      swraid.enable = false;
+    };
 
     swapDevices = eachDevice
       (n: _: { device = "/dev/${hostname}_vg${toString n}/swap"; });
