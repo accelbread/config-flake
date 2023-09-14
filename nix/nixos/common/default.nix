@@ -15,7 +15,7 @@ in
 
   nixpkgs.overlays = with inputs; [
     self.overlays.overrides
-    emacs-overlay.overlays.default
+    emacs-overlay.overlays.package
     nixgl.overlays.default
     self.overlays.default
   ];
