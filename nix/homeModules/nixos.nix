@@ -7,7 +7,7 @@ in
   imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];
 
   home = {
-    stateVersion = "22.05";
+    stateVersion = "23.11";
     sessionVariables = {
       BROWSER = "librewolf";
       MOZ_ENABLE_WAYLAND = "1";
@@ -59,11 +59,12 @@ in
           export PASSWORD_STORE_SIGNING_KEY="${cfg.PASSWORD_STORE_SIGNING_KEY}"
           if [[ ! -e "$PASSWORD_STORE_DIR/.git" ]]; then
             $DRY_RUN_CMD mkdir -p "$PASSWORD_STORE_DIR"
-            $DRY_RUN_CMD pass git init
-            $DRY_RUN_CMD pass git remote add aws ssh://codecommit/v1/repos/pass
+            $DRY_RUN_CMD ${pkgs.pass}/bin/pass git init
+            $DRY_RUN_CMD ${pkgs.pass}/bin/pass git remote add \
+              aws ssh://codecommit/v1/repos/pass
           fi
-          $DRY_RUN_CMD pass git config pass.signcommits true
-          $DRY_RUN_CMD pass git config user.signingkey \
+          $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config pass.signcommits true
+          $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config user.signingkey \
             "$PASSWORD_STORE_SIGNING_KEY"
         '';
       codecommitUsername =
