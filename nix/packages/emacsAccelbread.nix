@@ -1,6 +1,6 @@
 { lib
 , writeText
-, emacs29-pgtk
+, emacs-pgtk
 , emacsPackagesFor
 , git
 , vale
@@ -51,7 +51,7 @@ let
                ,(eglot-alternatives '("nil" "rnix-lsp" "${nil}/bin/nil")))
               . ,eglot-server-programs)))
   '';
-  baseEmacs = emacs29-pgtk;
+  baseEmacs = emacs-pgtk;
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 in
 emacsWithPackages (epkgs: attrVals configPackages epkgs
