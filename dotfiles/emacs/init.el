@@ -685,6 +685,7 @@
 (corfu-popupinfo-mode)
 
 (define-key corfu-map (kbd "RET") nil)
+(define-key corfu-map (kbd "S-SPC") #'corfu-insert-separator)
 (define-key corfu-map (kbd "M-p") #'corfu-popupinfo-scroll-down)
 (define-key corfu-map (kbd "M-n") #'corfu-popupinfo-scroll-up)
 
