@@ -153,6 +153,7 @@
 
 ;;; Prevent input method from consuming keys
 
+(setq pgtk-use-im-context-on-new-connection nil)
 (setq pgtk-use-im-context nil)
 
 
