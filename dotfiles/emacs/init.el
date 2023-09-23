@@ -76,10 +76,6 @@
   "Set the header-line face to use fixed-pitch in the current buffer."
   (face-remap-add-relative 'header-line '(:inherit (fixed-pitch))))
 
-(defun capf-disable-exclusive (capf)
-  "Call CAPF and set :exclusive off."
-  (cape-wrap-properties capf :exclusive 'no))
-
 (defvar after-frame-hook nil
   "Hook for execution after first frame in daemon mode.")
 
@@ -667,9 +663,10 @@
       completion-in-region-function #'consult-completion-in-region
       orderless-component-separator #'orderless-escapable-split-on-space
       completion-at-point-functions (list #'cape-file
-                                          (cape-super-capf #'cape-dabbrev
+                                          (cape-capf-super #'cape-dabbrev
                                                            #'cape-dict))
       cape-dabbrev-min-length 3
+      cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
       corfu-auto t
       corfu-auto-prefix 1
       corfu-popupinfo-delay '(0.5 . 0)
@@ -758,8 +755,8 @@
 
 (set-ls-colors)
 
-(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+(advice-add #'pcomplete-completions-at-point :around #'cape-wrap-silent)
+(advice-add #'pcomplete-completions-at-point :around #'cape-wrap-purify)
 
 (coterm-mode)
 
@@ -1160,7 +1157,7 @@
       eglot-autoshutdown t
       eglot-extend-to-xref t)
 
-(advice-add #'eglot-completion-at-point :around #'capf-disable-exclusive)
+(advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
 
 (with-eval-after-load 'yasnippet
   (hide-minor-mode 'yas-minor-mode)
