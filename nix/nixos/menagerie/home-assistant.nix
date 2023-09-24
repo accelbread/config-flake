@@ -13,7 +13,7 @@
             host = config.networking.hostName;
             port = config.services.home-assistant.config.http.server_port;
           in
-          "http://${host}.local:${toString port}";
+          "http://${host}.fluffy-bebop.ts.net:${toString port}";
       };
       http.server_host = [ "0.0.0.0" ];
       frontend = { };

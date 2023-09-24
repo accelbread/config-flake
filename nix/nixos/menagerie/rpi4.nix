@@ -22,4 +22,3 @@
 
   services.usbguard.rules = builtins.readFile ./usbguard-rules.conf;
 }
-
