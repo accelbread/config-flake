@@ -1518,7 +1518,9 @@
 
 ;;; Rust
 
-(setq rust-format-on-save nil)
+(setq rust-format-on-save nil
+      rust-prettify-symbols-alist '(("<=" . ?≤)  (">=" . ?≥) ("!=" . ?≠)
+                                    ("->" . ?→) ("=>" . ?⇒)))
 
 (with-eval-after-load 'eglot
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
@@ -1576,11 +1578,15 @@
    '(("#include \\(.*\\)" 1 'font-lock-constant-face t))
    'append))
 
-(add-hook 'c-mode-hook #'c-set-extern-offset-0)
+(defun c-prettify-configure ()
+  "Configure `pretty-symbols-alist' for `c-mode'."
+  (setq prettify-symbols-alist '(("<=" . ?≤) (">=" . ?≥) ("!=" . ?≠))))
 
 (add-hook 'c-mode-hook #'set-c-mode-font-overrides)
 (add-hook 'c-mode-hook #'setup-eglot)
 (add-hook 'c-mode-hook #'c-formatter-configure)
+(add-hook 'c-mode-hook #'c-prettify-configure)
+(add-hook 'c-mode-hook #'c-set-extern-offset-0)
 
 (add-hook 'c++-mode-hook #'set-c-mode-font-overrides)
 (add-hook 'c++-mode-hook #'setup-eglot)
