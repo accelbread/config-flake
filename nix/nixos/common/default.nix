@@ -30,16 +30,6 @@ in
       auto-optimise-store = true;
       builders-use-substitutes = true;
     };
-    distributedBuilds = true;
-    buildMachines = lib.optionals (hostname != "solace") [{
-      hostName = "solace.fluffy-bebop.ts.net";
-      system = "x86_64-linux";
-      supportedFeatures = [ "kvm" "big-parallel" ];
-      sshUser = "nix-ssh";
-      speedFactor = 2;
-      protocol = "ssh-ng";
-      maxJobs = 32;
-    }];
   };
 
   boot = {

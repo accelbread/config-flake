@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }: {
+{ config, pkgs, lib, inputs, hostname, ... }: {
   options.sysconfig.desktop = lib.mkEnableOption "desktop system configuration";
 
   config = lib.mkIf config.sysconfig.desktop {
@@ -6,7 +6,19 @@
     nixpkgs.config.allowUnfreePredicate = pkg:
       (lib.getName pkg) == "steam-original";
 
-    nix.settings.keep-outputs = true;
+    nix = {
+      settings.keep-outputs = true;
+      distributedBuilds = true;
+      buildMachines = lib.optionals (hostname != "solace") [{
+        hostName = "solace.fluffy-bebop.ts.net";
+        system = "x86_64-linux";
+        supportedFeatures = [ "kvm" "big-parallel" ];
+        sshUser = "nix-ssh";
+        speedFactor = 2;
+        protocol = "ssh-ng";
+        maxJobs = 32;
+      }];
+    };
 
     users.users.archit.extraGroups = [ "dialout" "wireshark" ];
 
