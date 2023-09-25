@@ -229,12 +229,8 @@ in
         "/var/lib/systemd/coredump"
         "/var/lib/systemd/timesync"
         "/var/lib/tailscale"
-        "/root/.tpm2_pkcs11"
       ];
-      files = [
-        "/etc/machine-id"
-        "/root/.ssh/nix-ssh-cert.pub"
-      ];
+      files = [ "/etc/machine-id" ];
     };
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = lib.singleton (pkgs.sbctl.override {

@@ -89,36 +89,43 @@
     };
 
     environment = {
-      persistence."/persist".users.archit = {
-        directories = [
-          "Documents"
-          "Downloads"
-          "Music"
-          "Pictures"
-          "Videos"
-          "Library"
-          "projects"
-          "playground"
-          ".ssh/config.d"
-          ".config/emacs"
-          ".config/gsconnect"
-          ".librewolf/profile"
-          ".local/share/tpm2_pkcs11"
-          ".local/share/gnupg"
-          ".local/share/pass"
-          ".local/share/Zeal"
-          ".local/share/flatpak"
-          ".local/share/veloren"
-          ".local/share/.shatteredpixel/shattered-pixel-dungeon"
-          ".local/share/0ad"
-          ".var/app/com.valvesoftware.Steam"
-        ];
-        files = [
-          ".face"
-          ".config/monitors.xml"
-          ".ssh/ssh-cert.pub"
-          ".ssh/nix-ssh-cert.pub"
-        ];
+      persistence."/persist".users = {
+        archit = {
+          directories = [
+            "Documents"
+            "Downloads"
+            "Music"
+            "Pictures"
+            "Videos"
+            "Library"
+            "projects"
+            "playground"
+            ".ssh/config.d"
+            ".config/emacs"
+            ".config/gsconnect"
+            ".librewolf/profile"
+            ".local/share/tpm2_pkcs11"
+            ".local/share/gnupg"
+            ".local/share/pass"
+            ".local/share/Zeal"
+            ".local/share/flatpak"
+            ".local/share/veloren"
+            ".local/share/.shatteredpixel/shattered-pixel-dungeon"
+            ".local/share/0ad"
+            ".var/app/com.valvesoftware.Steam"
+          ];
+          files = [
+            ".face"
+            ".config/monitors.xml"
+            ".ssh/ssh-cert.pub"
+            ".ssh/nix-ssh-cert.pub"
+          ];
+        };
+        root = {
+          home = "/root";
+          directories = [ ".tpm2_pkcs11" ];
+          files = [ ".ssh/nix-ssh-cert.pub" ];
+        };
       };
       wordlist = {
         enable = true;
