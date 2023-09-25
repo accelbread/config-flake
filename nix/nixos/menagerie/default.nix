@@ -14,6 +14,9 @@ mkSystem {
       };
       networking.hostId = "3c679a5b";
       system.stateVersion = "23.11";
+      nix.settings.trusted-public-keys = [
+        "archit@solace-1:FOPmsx3GMBR/xMob8BamA0lMYlvoztnWFynllYb2sNE="
+      ];
     }
   ];
 }
