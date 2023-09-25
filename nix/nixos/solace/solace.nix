@@ -9,6 +9,7 @@
     initrd.availableKernelModules = [ "nvme" ];
     kernelModules = [ "cpuid" "k10temp" "it87" ];
     kernelParams = [ "amdgpu.deep_color=1" ];
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   systemd.sleep.extraConfig = "AllowSuspend=no";
