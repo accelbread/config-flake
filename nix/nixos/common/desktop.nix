@@ -7,7 +7,11 @@
       (lib.getName pkg) == "steam-original";
 
     nix = {
-      settings.keep-outputs = true;
+      settings = {
+        keep-outputs = true;
+        extra-sandbox-paths = lib.optional config.programs.ccache.enable
+          config.programs.ccache.cacheDir;
+      };
       distributedBuilds = true;
       buildMachines = lib.optionals (hostname != "solace") [{
         hostName = "solace.fluffy-bebop.ts.net";
@@ -73,6 +77,7 @@
     };
 
     programs = {
+      ccache.enable = true;
       bash.enableLsColors = false;
       wireshark = {
         enable = true;
