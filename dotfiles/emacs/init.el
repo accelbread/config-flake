@@ -163,6 +163,12 @@
 (setq select-enable-clipboard nil)
 
 
+;;; Prevent accidental closing
+
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
+
+
 ;;; Save minibuffer history
 
 (when (daemonp)
