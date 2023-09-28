@@ -6,12 +6,12 @@
 }:
 stdenv.mkDerivation (self: {
   pname = "lkrg-in-tree";
-  version = "0.9.6";
+  version = "0.9.7";
   src = fetchFromGitHub {
     owner = "lkrg-org";
     repo = "lkrg";
     rev = "v${self.version}";
-    sha256 = "sha256-jKiSTab05+6ZZXQDKUVPKGti0E4eZaVuMZJlBKR3zGY=";
+    sha256 = "sha256-96ubxSc1JcvwYFC273gp9RHlu3+wFbKW3j1vThkNm5w=";
   };
   buildPhase = ''
     runHook preBuild
