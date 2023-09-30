@@ -49,7 +49,9 @@
       "mce=0"
       "vsyscall=none"
       "lkrg.umh_validate=0"
-    ];
+    ] ++
+    # LKRG bug (#269); remove when fixed
+    (lib.optional (pkgs.system == "aarch64-linux") "lkrg.kint_validate=1");
 
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
