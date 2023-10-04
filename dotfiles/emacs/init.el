@@ -1576,12 +1576,18 @@
   "Set the indentation for extern blocks to 0."
   (setf (alist-get 'inextern-lang c-offsets-alist) [0]))
 
-;; Hook is used to ensure highlighting is applied after rainbow delimiters.
+;; Hook is used to set keywords in current buffer instead of globally for mode
+;; to ensure highlighting is applied after rainbow delimiters.
 (defun set-c-mode-font-overrides ()
-  "Enable custom `c-mode' highlighting in the current buffer."
+  "Enable rainbow paren overrides for `c-mode'."
   (font-lock-add-keywords
    nil
-   '(("#include \\(.*\\)" 1 'font-lock-constant-face t))
+   '(("#include \\(<\\).*\\(>\\)"
+      (1 'font-lock-string-face t)
+      (2 'font-lock-string-face t))
+     ("\\(\\[\\[\\).*\\(\\]\\]\\)"
+      (1 'font-lock-keyword-face t)
+      (2 'font-lock-keyword-face t)))
    'append))
 
 (defun c-prettify-configure ()
@@ -1597,6 +1603,15 @@
 (add-hook 'c++-mode-hook #'set-c-mode-font-overrides)
 (add-hook 'c++-mode-hook #'setup-eglot)
 (add-hook 'c++-mode-hook #'c-formatter-configure)
+
+(font-lock-add-keywords
+ 'c-mode
+ '(("\\[\\[.*\\]\\]" 0 'font-lock-keyword-face append)))
+
+(font-lock-add-keywords
+ 'c++-mode
+ '(("\\[\\[.*\\]\\]" 0 'font-lock-keyword-face append)
+   ("\\(::\\)?\\([A-Za-z_][A-Za-z1-9_]+::\\)+" 0 'shadow prepend)))
 
 
 ;;; Python
