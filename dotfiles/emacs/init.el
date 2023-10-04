@@ -1590,9 +1590,23 @@
       (2 'font-lock-keyword-face t)))
    'append))
 
+(defun c-prettify-symbols-p (start end match)
+  "Custom `prettify-symbols-compose-predicate' for `c-mode' and `c++-mode'.
+Return non-nil if the symbol MATCH should be composed.
+The symbol starts at position START and ends at position END."
+  (cond
+   ((or (string= match "<<") (string= match ">>"))
+    (and (memq (char-syntax (or (char-before start) ?\s)) '(?\s ?>))
+         (or (memq (char-syntax (or (char-after end) ?\s)) '(?\s ?>))
+             (eq (char-after end) ?=))))
+   (t (prettify-symbols-default-compose-p start end match))))
+
 (defun c-prettify-configure ()
-  "Configure `pretty-symbols-alist' for `c-mode'."
-  (setq prettify-symbols-alist '(("<=" . ?≤) (">=" . ?≥) ("!=" . ?≠))))
+  "Configure `pretty-symbols-alist' for `c-mode' and `c++-mode'."
+  (setq-local prettify-symbols-alist '(("<=" . ?≤) (">=" . ?≥) ("!=" . ?≠)
+                                       ("<<" . ?«) (">>" . ?»)
+                                       ("std::" . ?◈) ("::std::" . ?◆))
+              prettify-symbols-compose-predicate #'c-prettify-symbols-p))
 
 (add-hook 'c-mode-hook #'set-c-mode-font-overrides)
 (add-hook 'c-mode-hook #'setup-eglot)
@@ -1603,6 +1617,7 @@
 (add-hook 'c++-mode-hook #'set-c-mode-font-overrides)
 (add-hook 'c++-mode-hook #'setup-eglot)
 (add-hook 'c++-mode-hook #'c-formatter-configure)
+(add-hook 'c++-mode-hook #'c-prettify-configure)
 
 (font-lock-add-keywords
  'c-mode
