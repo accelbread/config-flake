@@ -15,7 +15,7 @@
 , vale-write-good
 }:
 let
-  inherit (lib) pipe singleton attrVals;
+  inherit (lib) pipe attrVals;
   configPackages = pipe (../../dotfiles/emacs/init.el) (with builtins; [
     readFile
     (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*")
@@ -45,7 +45,7 @@ let
           fish-completion-command "${fish}/bin/fish")
     (with-eval-after-load 'eglot
       (setq eglot-server-programs
-            `(((c++-mode c-mode) .
+            `(((c-ts-mode c++-ts-mode) .
                ,(eglot-alternatives '("clangd" "${clang-tools}/bin/clangd")))
               (nix-mode .
                ,(eglot-alternatives '("nil" "rnix-lsp" "${nil}/bin/nil")))
@@ -54,9 +54,14 @@ let
   baseEmacs = emacs-pgtk;
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 in
-emacsWithPackages (epkgs: attrVals configPackages epkgs
-++ singleton (epkgs.trivialBuild {
-  pname = "emacs-default-init";
-  version = "0.0.1";
-  src = default-init;
-}))
+emacsWithPackages (epkgs: attrVals configPackages epkgs ++ [
+  (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
+    tree-sitter-c
+    tree-sitter-cpp
+  ]))
+  (epkgs.trivialBuild {
+    pname = "emacs-default-init";
+    version = "0.0.1";
+    src = default-init;
+  })
+])

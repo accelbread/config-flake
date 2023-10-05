@@ -1224,6 +1224,34 @@
     (remove-hook 'before-save-hook #'format-buffer t)))
 
 
+;;; Apply display property with tree-sitter
+
+(defun clear-font-lock-overlays (start end)
+  "Delete overlays with `font-lock-clear' property between START and END."
+  (dolist (overlay (overlays-in start end))
+    (when (overlay-get overlay 'font-lock-clear)
+      (delete-overlay overlay))))
+
+(defun enable-font-lock-clearing-overlays ()
+  "Add `clear-font-lock-overlays' to `jit-lock' functions."
+  (jit-lock-register #'clear-font-lock-overlays))
+
+(add-hook 'font-lock-mode-hook #'enable-font-lock-clearing-overlays)
+
+(defun defun-ts-disp (name disp)
+  "Defines a function for displaying tree-sitter query as DISP.
+NAME should be a symbol whose name is the function's name's suffix.
+Returns the tree-sitter anchor for using the generated function."
+  (let ((sym (concat "ts-disp-" (symbol-name name))))
+    (defalias (intern sym)
+      (lambda (node &rest _)
+        (let ((overlay (make-overlay (treesit-node-start node)
+                                     (treesit-node-end node))))
+          (overlay-put overlay 'display disp)
+          (overlay-put overlay 'font-lock-clear t))))
+    (make-symbol (concat "@" sym))))
+
+
 ;;; Transient
 
 (setq transient-default-level 7)
@@ -1553,6 +1581,8 @@
 
 ;;; C/C++
 
+(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
@@ -1563,64 +1593,57 @@
 
 (put 'clang-format 'completion-predicate #'ignore)
 
-(with-eval-after-load 'cc-mode
-  (setf (alist-get 'other c-default-style) "stroustrup"))
+(dolist (elem '((c-lteq . "≤")
+                (c-gteq . "≥")
+                (c-neq . "≠")
+                (c-lshf . "«")
+                (c-rshf . "»")
+                (c-lshfeq . "«=")
+                (c-rshfeq . "»=")
+                (cpp-scope . "⸬")))
+  (defun-ts-disp (car elem) (cdr elem)))
 
-(defun c-set-extern-offset-0 ()
-  "Set the indentation for extern blocks to 0."
-  (setf (alist-get 'inextern-lang c-offsets-alist) [0]))
+(defun c-ts-add-custom-rules ()
+  "Add additional highlighting rules for `c-mode' and `c++-ts-mode'."
+  (let ((mode (if (eq major-mode 'c++-ts-mode) 'cpp 'c)))
+    (setq-local
+     treesit-font-lock-settings
+     (append treesit-font-lock-settings
+             (treesit-font-lock-rules
+              :language mode :feature 'attribute :override t
+              '((attribute_declaration) @font-lock-keyword-face)
+              :language mode :feature 'prettify
+              `((binary_expression operator: "<=" @ts-disp-c-lteq)
+                (binary_expression operator: ">=" @ts-disp-c-gteq)
+                (binary_expression operator: "!=" @ts-disp-c-neq)
+                (binary_expression operator: "<<" @ts-disp-c-lshf)
+                (binary_expression operator: ">>" @ts-disp-c-rshf)
+                (assignment_expression operator: "<<=" @ts-disp-c-lshfeq)
+                (assignment_expression operator: ">>=" @ts-disp-c-rshfeq)
+                ,@(when (eq mode 'cpp)
+                    '((qualified_identifier "::" @ts-disp-cpp-scope)))))
+             (when (eq mode 'cpp)
+               (treesit-font-lock-rules
+                :language mode :feature 'scope :override t
+                '((qualified_identifier scope: (_) @shadow)
+                  (qualified_identifier "::" @shadow))))))))
 
 ;; Hook is used to set keywords in current buffer instead of globally for mode
 ;; to ensure highlighting is applied after rainbow delimiters.
-(defun set-c-mode-font-overrides ()
-  "Enable rainbow paren overrides for `c-mode'."
+(defun c-set-font-overrides ()
+  "Enable rainbow paren overrides for C/C++."
   (font-lock-add-keywords
    nil
-   '(("#include \\(<\\).*\\(>\\)"
-      (1 'font-lock-string-face t)
-      (2 'font-lock-string-face t))
-     ("\\(\\[\\[\\).*\\(\\]\\]\\)"
+   '(("\\(\\[\\[\\).*?\\(\\]\\]\\)"
       (1 'font-lock-keyword-face t)
       (2 'font-lock-keyword-face t)))
    'append))
 
-(defun c-prettify-symbols-p (start end match)
-  "Custom `prettify-symbols-compose-predicate' for `c-mode' and `c++-mode'.
-Return non-nil if the symbol MATCH should be composed.
-The symbol starts at position START and ends at position END."
-  (cond
-   ((or (string= match "<<") (string= match ">>"))
-    (and (memq (char-syntax (or (char-before start) ?\s)) '(?\s ?>))
-         (or (memq (char-syntax (or (char-after end) ?\s)) '(?\s ?>))
-             (eq (char-after end) ?=))))
-   (t (prettify-symbols-default-compose-p start end match))))
-
-(defun c-prettify-configure ()
-  "Configure `pretty-symbols-alist' for `c-mode' and `c++-mode'."
-  (setq-local prettify-symbols-alist '(("<=" . ?≤) (">=" . ?≥) ("!=" . ?≠)
-                                       ("<<" . ?«) (">>" . ?»)
-                                       ("std::" . ?◈) ("::std::" . ?◆))
-              prettify-symbols-compose-predicate #'c-prettify-symbols-p))
-
-(add-hook 'c-mode-hook #'set-c-mode-font-overrides)
-(add-hook 'c-mode-hook #'setup-eglot)
-(add-hook 'c-mode-hook #'c-formatter-configure)
-(add-hook 'c-mode-hook #'c-prettify-configure)
-(add-hook 'c-mode-hook #'c-set-extern-offset-0)
-
-(add-hook 'c++-mode-hook #'set-c-mode-font-overrides)
-(add-hook 'c++-mode-hook #'setup-eglot)
-(add-hook 'c++-mode-hook #'c-formatter-configure)
-(add-hook 'c++-mode-hook #'c-prettify-configure)
-
-(font-lock-add-keywords
- 'c-mode
- '(("\\[\\[.*\\]\\]" 0 'font-lock-keyword-face append)))
-
-(font-lock-add-keywords
- 'c++-mode
- '(("\\[\\[.*\\]\\]" 0 'font-lock-keyword-face append)
-   ("\\(::\\)?\\([A-Za-z_][A-Za-z1-9_]+::\\)+" 0 'shadow prepend)))
+(dolist (hook '(c-ts-mode-hook c++-ts-mode-hook))
+  (add-hook hook #'setup-eglot)
+  (add-hook hook #'c-formatter-configure)
+  (add-hook hook #'c-ts-add-custom-rules)
+  (add-hook hook #'c-set-font-overrides))
 
 
 ;;; Python
