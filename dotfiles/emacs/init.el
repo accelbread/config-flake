@@ -1179,6 +1179,23 @@
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
 
+;;; Tree-sitter
+
+(dolist (item '((c-mode . c-ts-mode)
+                (c++-mode . c++-ts-mode)
+                (cmake-mode . cmake-ts-mode)
+                (rust-mode . rust-ts-mode)
+                (python-mode . python-ts-mode)
+                (java-mode . java-ts-mode)
+                (js-json-mode . json-ts-mode)
+                (toml-mode . toml-ts-mode)
+                (yaml-mode . yaml-ts-mode)
+                (html-mode . html-ts-mode)
+                (css-mode . css-ts-mode)
+                (js-mode . js-ts-mode)))
+  (add-to-list 'major-mode-remap-alist item))
+
+
 ;;; Vale
 
 (setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
@@ -1564,8 +1581,6 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Rust
 
-(add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
-
 (with-eval-after-load 'eglot
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
                 eglot-workspace-configuration))
@@ -1609,9 +1624,6 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; C/C++
-
-(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
@@ -1667,7 +1679,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Python
 
-(add-hook 'python-mode-hook #'setup-eglot)
+(add-hook 'python-ts-mode-hook #'setup-eglot)
 
 (defun ipython ()
   "Run ipython in vterm."
