@@ -57,14 +57,14 @@
         trigger = [
           {
             platform = "device";
-            device_id = "66b7a727538a8d36f256074efedbda26";
+            device_id = "3275ed9b788f40e95b1c777755115d61";
             entity_id = "light.ceiling1";
             type = "turned_on";
             domain = "light";
           }
           {
             platform = "device";
-            device_id = "4e02b550bdff5facc7d7a878296b34ca";
+            device_id = "59464b4a8b71d130b79b0408740f245d";
             entity_id = "light.ceiling2";
             type = "turned_on";
             domain = "light";
