@@ -1553,19 +1553,13 @@
 
 ;;; C/C++
 
-(defvar-local clang-format-enabled nil
-  "Whether `clang-format' commands should be available in buffer.")
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
   (when (locate-dominating-file default-directory ".clang-format")
-    (setq clang-format-enabled t
-          format-region-function #'clang-format-region
+    (setq format-region-function #'clang-format-region
           format-buffer-function #'clang-format-buffer)
     (format-on-save-mode)))
-
-(dolist (sym '(clang-format-region clang-format-buffer))
-  (put sym 'completion-predicate (completion-pred clang-format-enabled)))
 
 (put 'clang-format 'completion-predicate #'ignore)
 
