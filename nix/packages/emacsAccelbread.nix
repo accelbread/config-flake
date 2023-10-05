@@ -58,6 +58,7 @@ emacsWithPackages (epkgs: attrVals configPackages epkgs ++ [
   (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
     tree-sitter-c
     tree-sitter-cpp
+    tree-sitter-rust
   ]))
   (epkgs.trivialBuild {
     pname = "emacs-default-init";

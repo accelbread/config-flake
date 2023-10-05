@@ -1251,6 +1251,18 @@ Returns the tree-sitter anchor for using the generated function."
           (overlay-put overlay 'font-lock-clear t))))
     (make-symbol (concat "@" sym))))
 
+(dolist (elem '((lteq . "≤")
+                (gteq . "≥")
+                (neq . "≠")
+                (lshift . "«")
+                (rshift . "»")
+                (lshifteq . "«=")
+                (rshifteq . "»=")
+                (arrow . "→")
+                (arrow2 . "⇒")
+                (scope . "⸬")))
+  (defun-ts-disp (car elem) (cdr elem)))
+
 
 ;;; Transient
 
@@ -1552,9 +1564,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Rust
 
-(setq rust-format-on-save nil
-      rust-prettify-symbols-alist '(("<=" . ?≤)  (">=" . ?≥) ("!=" . ?≠)
-                                    ("->" . ?→) ("=>" . ?⇒)))
+(add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
 
 (with-eval-after-load 'eglot
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
@@ -1566,9 +1576,28 @@ Returns the tree-sitter anchor for using the generated function."
         format-buffer-function #'rust-format-buffer)
   (format-on-save-mode))
 
-(add-hook 'rust-mode-hook #'setup-eglot)
-(add-hook 'rust-mode-hook #'rust-formatter-configure)
-(add-hook 'rust-mode-hook #'cargo-minor-mode)
+(defun rust-ts-add-custom-rules ()
+  "Add additional highlighting rules for `rust-ts-mode'."
+  (setq-local
+   treesit-font-lock-settings
+   (append treesit-font-lock-settings
+           (treesit-font-lock-rules
+            :language 'rust :feature 'prettify
+            `("<=" @ts-disp-lteq
+              ">=" @ts-disp-gteq
+              "!=" @ts-disp-neq
+              "<<" @ts-disp-lshift
+              ">>" @ts-disp-rshift
+              "<<=" @ts-disp-lshifteq
+              ">>=" @ts-disp-rshifteq
+              "->" @ts-disp-arrow
+              "=>" @ts-disp-arrow2
+              "::" @ts-disp-scope)))))
+
+(add-hook 'rust-ts-mode-hook #'setup-eglot)
+(add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
+(add-hook 'rust-ts-mode-hook #'rust-ts-add-custom-rules)
+(add-hook 'rust-ts-mode-hook #'cargo-minor-mode)
 
 (add-hook 'toml-mode-hook #'cargo-minor-mode)
 
@@ -1593,18 +1622,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 (put 'clang-format 'completion-predicate #'ignore)
 
-(dolist (elem '((c-lteq . "≤")
-                (c-gteq . "≥")
-                (c-neq . "≠")
-                (c-lshf . "«")
-                (c-rshf . "»")
-                (c-lshfeq . "«=")
-                (c-rshfeq . "»=")
-                (cpp-scope . "⸬")))
-  (defun-ts-disp (car elem) (cdr elem)))
-
 (defun c-ts-add-custom-rules ()
-  "Add additional highlighting rules for `c-mode' and `c++-ts-mode'."
+  "Add additional highlighting rules for `c-ts-mode' and `c++-ts-mode'."
   (let ((mode (if (eq major-mode 'c++-ts-mode) 'cpp 'c)))
     (setq-local
      treesit-font-lock-settings
@@ -1613,15 +1632,15 @@ Returns the tree-sitter anchor for using the generated function."
               :language mode :feature 'attribute :override t
               '((attribute_declaration) @font-lock-keyword-face)
               :language mode :feature 'prettify
-              `((binary_expression operator: "<=" @ts-disp-c-lteq)
-                (binary_expression operator: ">=" @ts-disp-c-gteq)
-                (binary_expression operator: "!=" @ts-disp-c-neq)
-                (binary_expression operator: "<<" @ts-disp-c-lshf)
-                (binary_expression operator: ">>" @ts-disp-c-rshf)
-                (assignment_expression operator: "<<=" @ts-disp-c-lshfeq)
-                (assignment_expression operator: ">>=" @ts-disp-c-rshfeq)
+              `("<=" @ts-disp-lteq
+                ">=" @ts-disp-gteq
+                "!=" @ts-disp-neq
+                "<<" @ts-disp-lshift
+                ">>" @ts-disp-rshift
+                "<<=" @ts-disp-lshifteq
+                ">>=" @ts-disp-rshifteq
                 ,@(when (eq mode 'cpp)
-                    '((qualified_identifier "::" @ts-disp-cpp-scope)))))
+                    '("::" @ts-disp-scope))))
              (when (eq mode 'cpp)
                (treesit-font-lock-rules
                 :language mode :feature 'scope :override t
