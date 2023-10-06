@@ -1136,6 +1136,8 @@
 
 ;;; Compilation
 
+(setq compilation-scroll-output 'first-error)
+
 (defun set-term-ansi-color ()
   "Set term env variable to enable color output."
   (setenv "TERM" "dumb-emacs-ansi"))
