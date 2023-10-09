@@ -1179,7 +1179,8 @@
 
 ;;; Project
 
-(setq project-file-history-behavior 'relativize)
+(setq project-file-history-behavior 'relativize
+      uniquify-dirname-transform #'project-uniquify-dirname-transform)
 
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
