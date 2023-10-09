@@ -451,21 +451,6 @@
 (global-so-long-mode)
 
 
-;;; Automatically deleted text properties
-
-(defun clear-font-lock-overlays (start end)
-  "Delete overlays with `font-lock-clear' property between START and END."
-  (dolist (overlay (overlays-in start end))
-    (when (overlay-get overlay 'font-lock-clear)
-      (delete-overlay overlay))))
-
-(defun enable-font-lock-clearing-overlays ()
-  "Add `clear-font-lock-overlays' to `jit-lock' functions."
-  (jit-lock-register #'clear-font-lock-overlays))
-
-(add-hook 'font-lock-mode-hook #'enable-font-lock-clearing-overlays)
-
-
 ;;; Meow
 
 (require 'meow)
@@ -1252,17 +1237,23 @@
                 (js-mode . js-ts-mode)))
   (add-to-list 'major-mode-remap-alist item))
 
+(defun enable-font-lock-clear-display ()
+  "Add display to font-lock's managed properties."
+  (setq-local font-lock-extra-managed-props
+              (cons 'display font-lock-extra-managed-props)))
+
+(add-hook 'prog-mode-hook #'enable-font-lock-clear-display)
+
 (defun defun-ts-disp (name disp)
-  "Defines a function for displaying tree-sitter query as DISP.
+  "Define a function for displaying tree-sitter query as DISP.
 NAME should be a symbol whose name is the function's name's suffix.
 Returns the tree-sitter anchor for using the generated function."
   (let ((sym (concat "ts-disp-" (symbol-name name))))
     (defalias (intern sym)
       (lambda (node &rest _)
-        (let ((overlay (make-overlay (treesit-node-start node)
-                                     (treesit-node-end node))))
-          (overlay-put overlay 'display disp)
-          (overlay-put overlay 'font-lock-clear t))))
+        (with-silent-modifications
+          (put-text-property (treesit-node-start node) (treesit-node-end node)
+                             'display disp))))
     (make-symbol (concat "@" sym))))
 
 (dolist (elem '((lteq . "≤")
