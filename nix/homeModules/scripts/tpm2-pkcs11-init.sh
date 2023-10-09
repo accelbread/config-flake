@@ -14,9 +14,3 @@ if ! tpm2_ptool listtokens --pid 1 | grep "label: ssh" >/dev/null; then
   tpm2_ptool addkey --label=ssh --userpin="$userpin" --algorithm=ecc256
   tpm2_ptool addkey --label=ssh --userpin="$userpin" --algorithm=rsa2048
 fi
-
-if ! tpm2_ptool listtokens --pid 1 | grep "label: nix-ssh" >/dev/null; then
-  sopin=$(head -c 15 /dev/urandom | base64)
-  tpm2_ptool addtoken --pid=1 --label=nix-ssh --userpin= --sopin="$sopin"
-  tpm2_ptool addkey --label=nix-ssh --userpin= --algorithm=ecc256
-fi

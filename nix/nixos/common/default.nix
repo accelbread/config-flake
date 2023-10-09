@@ -28,7 +28,6 @@ in
       experimental-features = "nix-command flakes";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
-      builders-use-substitutes = true;
     };
   };
 
@@ -176,7 +175,7 @@ in
       openFirewall = false;
       settings = {
         PermitRootLogin = "no";
-        AllowGroups = "users nix-ssh";
+        AllowGroups = "users";
         AuthenticationMethods = "publickey";
         PasswordAuthentication = false;
         ChallengeResponseAuthentication = false;
@@ -253,7 +252,6 @@ in
       extraConfig = ''
         PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
         CertificateFile ~/.ssh/ssh-cert.pub
-        CertificateFile ~/.ssh/nix-ssh-cert.pub
         StrictHostKeyChecking yes
         VerifyHostKeyDNS ask
         UpdateHostKeys ask
