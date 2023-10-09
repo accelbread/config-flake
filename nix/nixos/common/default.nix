@@ -241,6 +241,7 @@ in
   };
 
   programs = {
+    nano.enable = false;
     bash.interactiveShellInit = ''
       HISTCONTROL=ignoreboth
     '';
