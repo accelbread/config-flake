@@ -673,6 +673,18 @@
 
 (push #'meow-leave-insert-on-deselect window-state-change-functions)
 
+(advice-add #'meow-clipboard-yank :around
+            (lambda (orig-fun &rest args)
+              "Make meow use keyboard command for yank for clipboard as well."
+              (cl-letf* (((symbol-function #'real-yank) (symbol-function #'yank))
+                         ((symbol-function #'yank)
+                          (lambda ()
+                            (cl-letf (((symbol-function #'yank)
+                                       (symbol-function #'real-yank)))
+                              (meow--execute-kbd-macro meow--kbd-yank)))))
+                (apply orig-fun args)))
+            '((name . meow-use-C-y-for-clipboard-yank)))
+
 
 ;;; Completion
 
@@ -980,7 +992,7 @@
     '(("gitcl" "git clone --filter=blob:none")
       ("gitsub" "git submodule update --init --recursive --depth 1"))))
 
-(advice-add 'eat-eshell-mode :after
+(advice-add 'eat--eshell-local-mode :after
             (lambda (&rest _)
               "Remove eat-eshell's terminfo path override."
               (setq eshell-variable-aliases-list
@@ -991,19 +1003,41 @@
 (advice-add 'eat-eshell-emacs-mode :around
             (lambda (orig-fun &rest args)
               "Only run if eat terminal is active."
-              (when eat--terminal
+              (when eat-terminal
                 (apply orig-fun args)))
             '((name . eat-eshell-only-when-active)))
 
 (with-eval-after-load 'eat
-  (setq eat-eshell-char-mode-map
+  (setq eat-eshell-emacs-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map [remap eshell-toggle-direct-send]
+                      #'eat-eshell-char-mode)
+          (define-key map [remap undo] #'undefined)
+          (define-key map [remap insert-char] #'eat-input-char)
+          (define-key map [remap mouse-yank-primary] #'eat-mouse-yank-primary)
+          (define-key map [remap mouse-yank-secondary]
+                      #'eat-mouse-yank-secondary)
+          (define-key map [remap quoted-insert] #'eat-quoted-input)
+          (define-key map [remap yank] #'eat-yank)
+          (define-key map [remap yank-pop] #'eat-yank-from-kill-ring)
+          (define-key map [xterm-paste] #'eat-xterm-paste)
+          map)
+        eat-eshell-char-mode-map
         (let ((map (eat-term-make-keymap
                     #'eat-self-input
                     '(:ascii :arrow :navigation :function)
                     '([?\C-c]))))
           (define-key map [?\C-c ?\C-c] #'eat-self-input)
           (define-key map [?\C-c ?\e] #'eat-self-input)
-          map)))
+          (define-key map [remap mouse-yank-primary] #'eat-mouse-yank-primary)
+          (define-key map [remap mouse-yank-secondary]
+                      #'eat-mouse-yank-secondary)
+          (define-key map [xterm-paste] #'eat-xterm-paste)
+          map))
+  (setcdr (assoc 'eat--eshell-process-running-mode minor-mode-map-alist)
+          eat-eshell-emacs-mode-map)
+  (setcdr (assoc 'eat--eshell-char-mode minor-mode-map-alist)
+          eat-eshell-char-mode-map))
 
 (defun meow-eat-eshell-setup-hooks ()
   "Ensure non-char-mode keybindings outside of insert mode."
