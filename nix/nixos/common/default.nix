@@ -214,7 +214,7 @@ in
       description = "Archit Gupta";
       extraGroups = [ "wheel" "networkmanager" "tss" ];
       uid = 1000;
-      passwordFile = "/persist/vault/user_pass";
+      hashedPasswordFile = "/persist/vault/user_pass";
     };
   };
 
