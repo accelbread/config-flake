@@ -45,12 +45,11 @@ in
     };
     initrd = {
       preDeviceCommands = ''
-        message="\
-        Hello, this is ${hostname}.
-        Owner: Archit Gupta
-        Email: accelbread@gmail.com
-        "
-        printf "$message" | ${pkgs.cowsay}/bin/cowsay -n
+        echo "[1;36m"
+        echo Hello, this is ${hostname}.
+        echo Owner: Archit Gupta
+        echo Email: accelbread@gmail.com
+        echo "[0m"
       '';
       postDeviceCommands = lib.mkAfter ''
         # We need to attempt to resume before wiping root
