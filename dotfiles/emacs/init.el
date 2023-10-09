@@ -1012,6 +1012,12 @@
 
 (add-hook 'eat-eshell-mode-hook #'meow-eat-eshell-setup-hooks)
 
+(advice-add 'eat--eshell-set-input-process :around
+            (lambda (orig-fun &rest _)
+              "Fix eat bug."
+              (funcall orig-fun))
+            '((name . fix-eat-bug)))
+
 
 ;;; Direnv
 
