@@ -1627,6 +1627,15 @@ Returns the tree-sitter anchor for using the generated function."
    treesit-font-lock-settings
    (append treesit-font-lock-settings
            (treesit-font-lock-rules
+            :language 'rust :feature 'custom :override t
+            `((macro_invocation
+               macro: ((identifier) @builtin-macro
+                       (:match ,(rx-to-string
+                                 `(seq bol
+                                       (or ,@rust-ts-mode--builtin-macros)
+                                       eol))
+                               @builtin-macro))
+               "!" @font-lock-builtin-face))
             :language 'rust :feature 'prettify
             `("<=" @ts-disp-lteq
               ">=" @ts-disp-gteq
