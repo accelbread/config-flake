@@ -1260,7 +1260,7 @@ Returns the tree-sitter anchor for using the generated function."
                 (rshifteq . "»=")
                 (arrow . "→")
                 (arrow2 . "⇒")
-                (scope . "▸")))
+                (scope . "›")))
   (defun-ts-disp (car elem) (cdr elem)))
 
 
