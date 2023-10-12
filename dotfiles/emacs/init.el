@@ -1609,6 +1609,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Rust
 
+(setq rust-ts-mode-prettify-symbols-alist nil)
+
 (with-eval-after-load 'eglot
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
                 eglot-workspace-configuration))
