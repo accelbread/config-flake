@@ -1151,7 +1151,8 @@
 
 ;;; Compilation
 
-(setopt compilation-scroll-output 'first-error)
+(setopt compilation-scroll-output 'first-error
+        project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 (defun set-term-ansi-color ()
   "Set term env variable to enable color output."
