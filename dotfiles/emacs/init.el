@@ -16,12 +16,11 @@
 
 ;;; Networking
 
-(setq network-security-level 'high
-      gnutls-verify-error t
-      gnutls-min-prime-bits 3072
-      gnutls-algorithm-priority "PFS:-VERS-TLS1.2:-VERS-TLS1.1:-VERS-TLS1.0")
-
-(setq auth-sources '("~/.authinfo.gpg"))
+(setopt network-security-level 'high
+        gnutls-verify-error t
+        gnutls-min-prime-bits 3072
+        gnutls-algorithm-priority "PFS:-VERS-TLS1.2:-VERS-TLS1.1:-VERS-TLS1.0"
+        auth-sources '("~/.authinfo.gpg"))
 
 
 ;;; Configure packages
@@ -29,22 +28,19 @@
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
-(setq package-selected-packages
-      '( meow gcmh rainbow-delimiters jinx which-key rg editorconfig inheritenv
-         corfu cape kind-icon vertico orderless marginalia consult vundo envrc
-         magit magit-todos hl-todo magit-annex git-annex virtual-comment rmsbolt
-         fish-completion eat coterm meow-term vterm meow-vterm yasnippet svg-lib
-         rainbow-mode adaptive-wrap reformatter devdocs markdown-mode cmake-mode
-         clang-format rust-mode cargo zig-mode nix-mode geiser-guile scad-mode
-         haskell-mode toml-mode yaml-mode git-modes pdf-tools flymake-vale))
-
-(setq package-native-compile t)
+(setopt package-selected-packages
+        '( meow gcmh rainbow-delimiters jinx which-key vundo envrc editorconfig
+           corfu cape kind-icon vertico orderless marginalia consult yasnippet
+           magit magit-todos hl-todo magit-annex git-annex virtual-comment
+           fish-completion eat coterm meow-term vterm meow-vterm rg inheritenv
+           adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
+           markdown-mode cmake-mode clang-format rust-mode cargo zig-mode
+           nix-mode geiser-guile scad-mode haskell-mode toml-mode yaml-mode
+           git-modes pdf-tools flymake-vale)
+        package-native-compile t)
 
 
 ;;; Config utils
-
-(eval-when-compile
-  (require 'cl-lib))
 
 (defun y-or-n-p-always-y-wrapper (orig-fun &rest args)
   "Call ORIG-FUN with ARGS, automatically using `y' for `y-or-n-p' questions."
@@ -104,19 +100,19 @@
 
 ;;; Hide welcome messages
 
-(setq inhibit-startup-screen t
-      initial-scratch-message nil
-      server-client-instructions nil)
+(setopt inhibit-startup-screen t
+        initial-scratch-message nil
+        server-client-instructions nil)
 
 
 ;;; Reduce confirmations
 
-(setq use-short-answers t
-      confirm-kill-processes nil
-      kill-buffer-query-functions nil
-      auth-source-save-behavior nil
-      enable-local-variables :safe
-      disabled-command-function nil)
+(setopt use-short-answers t
+        confirm-kill-processes nil
+        kill-buffer-query-functions nil
+        auth-source-save-behavior nil
+        enable-local-variables :safe
+        disabled-command-function nil)
 
 (global-set-key (kbd "C-x k") 'kill-current-buffer)
 
@@ -126,22 +122,22 @@
             ((vc-git-registered file)))
       (setq-local buffer-save-without-query t)))
 
-(add-hook 'prog-mode-hook #'autosave-git-buffer)
+(add-hook 'after-change-major-mode-hook #'autosave-git-buffer)
 
 
 ;;; Disable use of dialog boxes
 
-(setq use-dialog-box nil
-      use-file-dialog nil)
+(setopt use-dialog-box nil
+        use-file-dialog nil)
 
 
 ;;; Prevent misc file creation
 
-(setq auto-save-file-name-transforms
-      `((".*" ,(file-name-concat user-emacs-directory "auto-save/") t))
-      make-backup-files nil
-      create-lockfiles nil
-      custom-file null-device)
+(setopt auto-save-file-name-transforms
+        `((".*" ,(file-name-concat user-emacs-directory "auto-save/") t))
+        make-backup-files nil
+        create-lockfiles nil
+        custom-file null-device)
 
 (unless (file-directory-p (file-name-concat user-emacs-directory "auto-save/"))
   (mkdir (file-name-concat user-emacs-directory "auto-save/")))
@@ -150,7 +146,6 @@
 ;;; Prevent input method from consuming keys
 
 (setq pgtk-use-im-context-on-new-connection nil)
-(setq pgtk-use-im-context nil)
 
 
 ;;; Prevent loop when printing recursive structures
@@ -177,32 +172,31 @@
 
 ;;; Undo
 
-(setq undo-limit (* 4 1024 1024)
-      undo-strong-limit (* 6 1024 1024)
-      kill-ring-max 512
-      kill-do-not-save-duplicates t)
+(setopt undo-limit (* 4 1024 1024)
+        undo-strong-limit (* 6 1024 1024)
+        kill-ring-max 512
+        kill-do-not-save-duplicates t)
 
 (with-eval-after-load 'vundo
-  (setq vundo-glyph-alist vundo-unicode-symbols))
+  (setopt vundo-glyph-alist vundo-unicode-symbols))
 
 
 ;;; Update files modified on disk
 
-(setq global-auto-revert-non-file-buffers t)
+(setopt global-auto-revert-non-file-buffers t)
 
 (global-auto-revert-mode)
 
 
 ;;; Scrolling
 
-(setq scroll-conservatively 101
-      scroll-margin 0
-      next-screen-context-lines 3)
-
-(when (>= emacs-major-version 29)
-  (setq pixel-scroll-precision-large-scroll-height 10.0
+(setopt scroll-conservatively 101
+        scroll-margin 0
+        next-screen-context-lines 3
+        pixel-scroll-precision-large-scroll-height 10.0
         pixel-scroll-precision-interpolate-page t)
-  (pixel-scroll-precision-mode))
+
+(pixel-scroll-precision-mode)
 
 
 ;;; Default to utf-8
@@ -212,33 +206,32 @@
 
 ;;; Formatting
 
-(setq-default fill-column 80
-              indent-tabs-mode nil
-              tab-always-indent nil
-              require-final-newline t)
-
-(setq sentence-end-double-space nil)
+(setopt fill-column 80
+        indent-tabs-mode nil
+        tab-always-indent nil
+        require-final-newline t
+        sentence-end-double-space nil)
 
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
 (hide-minor-mode 'auto-fill-function " ↩️")
 
-(setq editorconfig-mode-lighter "")
+(setopt editorconfig-mode-lighter "")
 
 (editorconfig-mode)
 
 
 ;;; Misc UI
 
-(setq whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
-      whitespace-global-modes '(prog-mode text-mode conf-mode)
-      global-display-fill-column-indicator-modes '(prog-mode text-mode)
-      resize-mini-windows t
-      suggest-key-bindings nil
-      truncate-partial-width-windows 83
-      mouse-drag-and-drop-region t
-      mouse-yank-at-point t
-      isearch-lazy-count t)
+(setopt whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
+        whitespace-global-modes '(prog-mode text-mode conf-mode)
+        global-display-fill-column-indicator-modes '(prog-mode text-mode)
+        resize-mini-windows t
+        suggest-key-bindings nil
+        truncate-partial-width-windows 83
+        mouse-drag-and-drop-region t
+        mouse-yank-at-point t
+        isearch-lazy-count t)
 
 (blink-cursor-mode -1)
 (window-divider-mode)
@@ -268,7 +261,7 @@
              (with-selected-window window (split-window-right)))
         (split-window-sensibly window))))
 
-(setq split-window-preferred-function #'my-split-window-sensibly)
+(setopt split-window-preferred-function #'my-split-window-sensibly)
 
 
 ;;; Emoji
@@ -304,7 +297,7 @@
 
 ;;; Mode line
 
-(setq mode-line-compact 'long)
+(setopt mode-line-compact 'long)
 
 (defmacro window-font-dim-override (face &rest body)
   "Execute BODY with FACE as default for height/width calculation."
@@ -319,55 +312,55 @@
                  (funcall orig-window-font-height nil ,face))))
      ,@body))
 
-(setq-default mode-line-format
-              `("%e "
-                (:eval (when (window-dedicated-p) "📌"))
-                (:eval (cond ((meow-normal-mode-p) "😺")
-                             ((meow-insert-mode-p) "😸")
-                             ((meow-beacon-mode-p) "😻")
-                             ((meow-keypad-mode-p) "😾")
-                             ((meow-motion-mode-p) "😿")
-                             (t "🙀")))
-                (:eval (pcase (list buffer-read-only (buffer-modified-p))
-                         ('(nil nil) "✨")
-                         ('(nil t) "🖋️")
-                         ('(t nil) "🔒")
-                         ('(t t) "🔏")))
-                (:eval (when (file-remote-p default-directory) "✈️"))
-                (server-buffer-clients "🚨")
-                (:eval (when (buffer-narrowed-p) "🔎"))
-                (:eval (propertize
-                        " %l " 'display
-                        (window-font-dim-override 'mode-line
-                          (svg-lib-progress-bar
-                           (/ (float (point)) (point-max))
-                           nil :width 3 :height 0.48 :stroke 1 :padding 2
-                           :radius 1 :margin 1))))
-                " " (:propertize "%12b" face mode-line-buffer-id)
-                (:propertize
-                 (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
-                          (let ((base (coding-system-base
-                                       buffer-file-coding-system))
-                                (eol (coding-system-eol-type
-                                      buffer-file-coding-system)))
-                            (if (or (eq base 'utf-8)
-                                    (eq base 'undecided))
-                                (pcase eol (1 "  dos") (2 "  mac"))
-                              `("  " ,(symbol-name
-                                       (if (eq eol 0) base
-                                         buffer-file-coding-system)))))))
-                 face italic)
-                (flymake-mode (:eval (when (length> (flymake-diagnostics) 0)
-                                       (list "  "
-                                             flymake-mode-line-error-counter
-                                             flymake-mode-line-warning-counter
-                                             flymake-mode-line-note-counter))))
-                "  " mode-name mode-line-process
-                (:eval (when (eq major-mode 'term-mode)
-                         (list (term-line-ending-mode-line)
-                               (when term-enable-local-echo " echo"))))
-                " " minor-mode-alist
-                "  " mode-line-misc-info))
+(setopt mode-line-format
+        `("%e "
+          (:eval (when (window-dedicated-p) "📌"))
+          (:eval (cond ((meow-normal-mode-p) "😺")
+                       ((meow-insert-mode-p) "😸")
+                       ((meow-beacon-mode-p) "😻")
+                       ((meow-keypad-mode-p) "😾")
+                       ((meow-motion-mode-p) "😿")
+                       (t "🙀")))
+          (:eval (pcase (list buffer-read-only (buffer-modified-p))
+                   ('(nil nil) "✨")
+                   ('(nil t) "🖋️")
+                   ('(t nil) "🔒")
+                   ('(t t) "🔏")))
+          (:eval (when (file-remote-p default-directory) "✈️"))
+          (server-buffer-clients "🚨")
+          (:eval (when (buffer-narrowed-p) "🔎"))
+          (:eval (propertize
+                  " %l " 'display
+                  (window-font-dim-override 'mode-line
+                    (svg-lib-progress-bar
+                     (/ (float (point)) (point-max))
+                     nil :width 3 :height 0.48 :stroke 1 :padding 2
+                     :radius 1 :margin 1))))
+          " " (:propertize "%12b" face mode-line-buffer-id)
+          (:propertize
+           (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
+                    (let ((base (coding-system-base
+                                 buffer-file-coding-system))
+                          (eol (coding-system-eol-type
+                                buffer-file-coding-system)))
+                      (if (or (eq base 'utf-8)
+                              (eq base 'undecided))
+                          (pcase eol (1 "  dos") (2 "  mac"))
+                        `("  " ,(symbol-name
+                                 (if (eq eol 0) base
+                                   buffer-file-coding-system)))))))
+           face italic)
+          (flymake-mode (:eval (when (length> (flymake-diagnostics) 0)
+                                 (list "  "
+                                       flymake-mode-line-error-counter
+                                       flymake-mode-line-warning-counter
+                                       flymake-mode-line-note-counter))))
+          "  " mode-name mode-line-process
+          (:eval (when (eq major-mode 'term-mode)
+                   (list (term-line-ending-mode-line)
+                         (when term-enable-local-echo " echo"))))
+          " " minor-mode-alist
+          "  " mode-line-misc-info))
 
 
 ;;; Flash active mode line for bell
@@ -393,7 +386,7 @@
     (face-remap-set-base 'mode-line-active '(:inherit (mode-line-flash)))
     (run-with-timer 0.05 nil #'mode-line-flash-end)))
 
-(setq-default ring-bell-function #'mode-line-flash)
+(setopt ring-bell-function #'mode-line-flash)
 
 
 ;;; Display page breaks as lines
@@ -419,8 +412,8 @@
 
 ;;; Inline annotations
 
-(setq virtual-comment-default-file
-      (file-name-concat user-emacs-directory "evc"))
+(setopt virtual-comment-default-file
+        (file-name-concat user-emacs-directory "evc"))
 
 (with-eval-after-load 'virtual-comment
   (hide-minor-mode 'virtual-comment-mode " 📝"))
@@ -436,17 +429,17 @@
 
 ;;; Performance
 
-(setq-default bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t
-      auto-window-vscroll nil
-      fast-but-imprecise-scrolling t
-      redisplay-skip-fontification-on-input t
-      auto-mode-case-fold nil
-      pgtk-wait-for-event-timeout 0.001
-      read-process-output-max (* 1024 1024)
-      process-adaptive-read-buffering nil
-      command-line-ns-option-alist nil
-      remote-file-name-inhibit-cache 60)
+(setopt bidi-paragraph-direction 'left-to-right
+        bidi-inhibit-bpa t
+        auto-window-vscroll nil
+        fast-but-imprecise-scrolling t
+        redisplay-skip-fontification-on-input t
+        auto-mode-case-fold nil
+        pgtk-wait-for-event-timeout 0.001
+        read-process-output-max (* 1024 1024)
+        process-adaptive-read-buffering nil
+        command-line-ns-option-alist nil
+        remote-file-name-inhibit-cache 60)
 
 (global-so-long-mode)
 
@@ -455,13 +448,13 @@
 
 (require 'meow)
 
-(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
-      meow-cursor-type-motion meow-cursor-type-insert
-      meow-expand-hint-counts '((word . 10)
-                                (line . 0)
-                                (block . 0)
-                                (find . 10)
-                                (till . 10)))
+(setopt meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
+        meow-cursor-type-motion meow-cursor-type-insert
+        meow-expand-hint-counts '((word . 10)
+                                  (line . 0)
+                                  (block . 0)
+                                  (find . 10)
+                                  (till . 10)))
 
 (dolist (m '(meow-normal-mode
              meow-insert-mode
@@ -621,22 +614,21 @@
  '("z" . meow-pop-selection)
  '("<escape>" . ignore))
 
-(setq meow-char-thing-table '((?\( . round) (?\) . round)
-                              (?\[ . square) (?\] . square)
-                              (?\{ . curly) (?\} . curly)
-                              (?x . line)
-                              (?f . defun)
-                              (?\" . string)
-                              (?e . symbol)
-                              (?w . window)
-                              (?b . buffer)
-                              (?p . paragraph)
-                              (?. . sentence)))
-
-(setq meow-thing-selection-directions '((inner . backward)
-                                        (bounds . forward)
-                                        (beginning . backward)
-                                        (end . forward)))
+(setopt meow-char-thing-table '((?\( . round) (?\) . round)
+                                (?\[ . square) (?\] . square)
+                                (?\{ . curly) (?\} . curly)
+                                (?x . line)
+                                (?f . defun)
+                                (?\" . string)
+                                (?e . symbol)
+                                (?w . window)
+                                (?b . buffer)
+                                (?p . paragraph)
+                                (?. . sentence))
+        meow-thing-selection-directions '((inner . backward)
+                                          (bounds . forward)
+                                          (beginning . backward)
+                                          (end . forward)))
 
 (pcase-dolist (`(,k ,v) '((minibufferp meow--update-cursor-insert)
                           (meow--cursor-null-p ignore)))
@@ -673,26 +665,28 @@
 
 ;;; Completion
 
+(require 'corfu)
 (require 'kind-icon)
 
-(setq read-extended-command-predicate #'command-completion-default-include-p
-      completion-styles '(orderless basic)
-      completion-category-defaults nil
-      completion-in-region-function #'consult-completion-in-region
-      orderless-component-separator #'orderless-escapable-split-on-space
-      completion-at-point-functions (list #'cape-file
-                                          (cape-capf-super #'cape-dabbrev
-                                                           #'cape-dict))
-      cape-dabbrev-min-length 3
-      cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
-      corfu-auto t
-      corfu-auto-prefix 1
-      corfu-popupinfo-delay '(0.5 . 0)
-      corfu-popupinfo-hide nil
-      corfu-margin-formatters '(kind-icon-margin-formatter)
-      kind-icon-default-face 'corfu-default
-      kind-icon-blend-background nil
-      kind-icon-default-style (plist-put kind-icon-default-style ':height 0.75))
+(setopt read-extended-command-predicate #'command-completion-default-include-p
+        completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-in-region-function #'consult-completion-in-region
+        orderless-component-separator #'orderless-escapable-split-on-space
+        completion-at-point-functions (list #'cape-file
+                                            (cape-capf-super #'cape-dabbrev
+                                                             #'cape-dict))
+        cape-dabbrev-min-length 3
+        cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
+        corfu-auto t
+        corfu-auto-prefix 1
+        corfu-popupinfo-delay '(0.5 . 0)
+        corfu-popupinfo-hide nil
+        corfu-margin-formatters '(kind-icon-margin-formatter)
+        kind-icon-default-face 'corfu-default
+        kind-icon-blend-background nil
+        kind-icon-default-style
+        (plist-put kind-icon-default-style ':height 0.75))
 
 (vertico-mode)
 (marginalia-mode)
@@ -713,7 +707,7 @@
 
 ;;; Spell checking
 
-(setq jinx-camel-modes t)
+(setopt jinx-camel-modes t)
 
 (defvar-keymap my-jinx-overlay-map
   :doc "Custom keymap for spell checker errors."
@@ -729,17 +723,17 @@
 ;;; Tramp
 
 (with-eval-after-load 'tramp
-  (setq tramp-default-method-alist `((,tramp-local-host-regexp nil "sudo"))
-        tramp-default-method "ssh")
+  (setopt tramp-default-method-alist `((,tramp-local-host-regexp nil "sudo"))
+          tramp-default-method "ssh")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 
 ;;; Shell
 
-(setq comint-terminfo-terminal "dumb-emacs-ansi"
-      comint-prompt-read-only t
-      comint-pager "cat"
-      shell-highlight-undef-enable t)
+(setopt comint-terminfo-terminal "dumb-emacs-ansi"
+        comint-prompt-read-only t
+        comint-pager "cat"
+        shell-highlight-undef-enable t)
 
 (with-eval-after-load 'comint
   (define-key comint-mode-map
@@ -861,26 +855,26 @@
 
 ;;; Eshell
 
-(setq eshell-modules-list '( eshell-basic eshell-cmpl eshell-dirs eshell-glob
-                             eshell-hist eshell-ls eshell-pred eshell-prompt
-                             eshell-term)
-      eshell-error-if-no-glob t
-      eshell-glob-include-dot-dot nil
-      eshell-glob-chars-list '(?\] ?\[ ?*)
-      eshell-ask-to-save-last-dir nil
-      eshell-buffer-maximum-lines 5000
-      eshell-history-size 2048
-      eshell-hist-ignoredups t
-      eshell-hist-move-to-end nil
-      eshell-save-history-on-exit nil
-      eshell-input-filter #'eshell-input-filter-initial-space
-      eshell-cd-on-directory nil
-      eshell-plain-echo-behavior t
-      eshell-glob-show-progress t
-      eshell-ls-archive-regexp "\\`\\'"
-      eshell-ls-backup-regexp "\\`\\'"
-      eshell-ls-clutter-regexp "\\`\\'"
-      eshell-ls-product-regexp "\\`\\'")
+(setopt eshell-modules-list '( eshell-basic eshell-cmpl eshell-dirs eshell-glob
+                               eshell-hist eshell-ls eshell-pred eshell-prompt
+                               eshell-term)
+        eshell-error-if-no-glob t
+        eshell-glob-include-dot-dot nil
+        eshell-glob-chars-list '(?\] ?\[ ?*)
+        eshell-ask-to-save-last-dir nil
+        eshell-buffer-maximum-lines 5000
+        eshell-history-size 2048
+        eshell-hist-ignoredups t
+        eshell-hist-move-to-end nil
+        eshell-save-history-on-exit nil
+        eshell-input-filter #'eshell-input-filter-initial-space
+        eshell-cd-on-directory nil
+        eshell-plain-echo-behavior t
+        eshell-glob-show-progress t
+        eshell-ls-archive-regexp "\\`\\'"
+        eshell-ls-backup-regexp "\\`\\'"
+        eshell-ls-clutter-regexp "\\`\\'"
+        eshell-ls-product-regexp "\\`\\'")
 
 (with-eval-after-load 'esh-cmd
   (dolist (v '(eshell-last-commmand-name
@@ -890,7 +884,7 @@
   (push #'always eshell-complex-commands))
 
 (with-eval-after-load 'em-term
-  (setq eshell-visual-commands nil))
+  (setopt eshell-visual-commands nil))
 
 (with-eval-after-load 'em-tramp
   (require 'tramp))
@@ -915,11 +909,11 @@
   (remove-hook 'eshell-exit-hook #'eshell-write-history t)
   (eat-eshell-mode)
   (fish-completion-mode)
-  (setq completion-at-point-functions '(cape-file
-                                        pcomplete-completions-at-point
-                                        cape-dabbrev)
-        mode-line-process
-        '(" " (:eval (abbreviate-file-name default-directory))))
+  (setq-local completion-at-point-functions '(cape-file
+                                              pcomplete-completions-at-point
+                                              cape-dabbrev)
+              mode-line-process
+              '(" " (:eval (abbreviate-file-name default-directory))))
   (abbrev-mode)
   (face-remap-set-base 'nobreak-space nil)
   (buffer-disable-undo))
@@ -933,8 +927,8 @@
              (number-to-string eshell-last-command-status) 'face 'error))
           (if (file-remote-p default-directory) "# " "$ ")))
 
-(setq eshell-prompt-function #'my-eshell-prompt
-      eshell-prompt-regexp "^[0-9]*[$#] ")
+(setopt eshell-prompt-function #'my-eshell-prompt
+        eshell-prompt-regexp "^[0-9]*[$#] ")
 
 (defun my-eshell-save-history (input)
   "Write INPUT to eshell history file."
@@ -1034,9 +1028,9 @@
 
 ;;; Direnv
 
-(setq envrc-none-lighter nil
-      envrc-on-lighter '(:propertize " envrc" face warning)
-      envrc-error-lighter '(:propertize " envrc" face error))
+(setopt envrc-none-lighter nil
+        envrc-on-lighter '(:propertize " envrc" face warning)
+        envrc-error-lighter '(:propertize " envrc" face error))
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
@@ -1131,12 +1125,18 @@
 
 ;;; Vterm
 
-(setq vterm-max-scrollback 5000
-      vterm-timer-delay 0.01
-      vterm-kill-buffer-on-exit nil
-      vterm-clear-scrollback-when-clearing t
-      vterm-exit-functions '(set-mode-line-process-killed)
-      vterm-keymap-exceptions '("C-c"))
+(defun set-mode-line-process-killed (buffer desc)
+  "Indicate process killed in buffer BUFFER with reason DESC."
+  (with-current-buffer buffer
+    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
+                                          face error))))
+
+(setopt vterm-max-scrollback 5000
+        vterm-timer-delay 0.01
+        vterm-kill-buffer-on-exit nil
+        vterm-clear-scrollback-when-clearing t
+        vterm-exit-functions '(set-mode-line-process-killed)
+        vterm-keymap-exceptions '("C-c"))
 
 (meow-vterm-enable)
 
@@ -1146,16 +1146,11 @@
               (setq mode-line-process `("  " ,title)))
             '((name . vterm-set-mode-line-process)))
 
-(defun set-mode-line-process-killed (buffer desc)
-  "Indicate process killed in buffer BUFFER with reason DESC."
-  (with-current-buffer buffer
-    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
-                                          face error))))
 
 
 ;;; Compilation
 
-(setq compilation-scroll-output 'first-error)
+(setopt compilation-scroll-output 'first-error)
 
 (defun set-term-ansi-color ()
   "Set term env variable to enable color output."
@@ -1165,16 +1160,15 @@
 
 (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
 
-(setq ansi-osc-for-compilation-buffer t)
+(setopt ansi-osc-for-compilation-buffer t)
 
-(when (>= emacs-major-version 29)
-  (add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter))
+(add-hook 'compilation-filter-hook #'ansi-osc-compilation-filter)
 
 
 ;;; Project
 
-(setq project-file-history-behavior 'relativize
-      uniquify-dirname-transform #'project-uniquify-dirname-transform)
+(setopt project-file-history-behavior 'relativize
+        uniquify-dirname-transform #'project-uniquify-dirname-transform)
 
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
@@ -1194,11 +1188,11 @@
 
 ;;; Eglot
 
-(setq eglot-stay-out-of '(eldoc-documentation-strategy
-                          flymake-diagnostic-functions)
-      eglot-ignored-server-capabilities '(:inlayHintProvider)
-      eglot-autoshutdown t
-      eglot-extend-to-xref t)
+(setopt eglot-stay-out-of '(eldoc-documentation-strategy
+                            flymake-diagnostic-functions)
+        eglot-ignored-server-capabilities '(:inlayHintProvider)
+        eglot-autoshutdown t
+        eglot-extend-to-xref t)
 
 (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
 
@@ -1206,7 +1200,7 @@
   (hide-minor-mode 'yas-minor-mode)
   (setq yas-minor-mode-map (make-sparse-keymap)))
 
-(setq yas-keymap-disable-hook (lambda () completion-in-region-mode))
+(setopt yas-keymap-disable-hook (list (lambda () completion-in-region-mode)))
 
 (defun setup-eglot ()
   "Enable eglot and its dependencies."
@@ -1311,19 +1305,20 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Transient
 
-(setq transient-default-level 7)
+(setopt transient-default-level 7)
 
 
 ;;; Magit
 
-(setq magit-diff-refine-hunk 'all
-      magit-view-git-manual-method 'man
-      transient-save-history nil
-      magit-save-repository-buffers 'dontask
-      magit-delete-by-moving-to-trash nil
-      magit-process-finish-apply-ansi-colors t
-      git-commit-summary-max-length 50
-      magit-no-message '("Turning on "))
+(setopt magit-diff-refine-hunk 'all
+        magit-view-git-manual-method 'man
+        transient-save-history nil
+        magit-save-repository-buffers 'dontask
+        magit-delete-by-moving-to-trash nil
+        magit-process-finish-apply-ansi-colors t
+        git-commit-summary-max-length 50
+        magit-no-message '("Turning on "))
+
 
 (with-eval-after-load 'magit
   (remove-hook 'server-switch-hook #'magit-commit-diff)
@@ -1352,8 +1347,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Ediff
 
-(setq ediff-window-setup-function #'ediff-setup-windows-plain
-      ediff-split-window-function #'split-window-horizontally)
+(setopt ediff-window-setup-function #'ediff-setup-windows-plain
+        ediff-split-window-function #'split-window-horizontally)
 
 (advice-add #'ediff-quit :around #'y-or-n-p-always-y-wrapper)
 
@@ -1366,13 +1361,13 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Which-key
 
-(setq which-key-idle-delay 0.5
-      which-key-show-early-on-C-h t
-      which-key-compute-remaps t
-      which-key-sort-order 'which-key-local-then-key-order
-      which-key-sort-uppercase-first nil
-      which-key-unicode-correction 0
-      which-key-side-window-max-height 0.5)
+(setopt which-key-idle-delay 0.5
+        which-key-show-early-on-C-h t
+        which-key-compute-remaps t
+        which-key-sort-order 'which-key-local-then-key-order
+        which-key-sort-uppercase-first nil
+        which-key-unicode-correction 0
+        which-key-side-window-max-height 0.5)
 
 (which-key-mode)
 
@@ -1381,17 +1376,16 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Dired
 
-(setq wdired-allow-to-change-permissions t)
+(setopt wdired-allow-to-change-permissions t)
 
 
 ;;; Proced
 
-(setq proced-auto-update-interval 3)
-
-(setq-default proced-auto-update-flag t
-              proced-tree-flag t
-              proced-format 'custom
-              proced-filter 'non-kernel)
+(setopt proced-auto-update-interval 3
+        proced-auto-update-flag t
+        proced-tree-flag t
+        proced-format 'custom
+        proced-filter 'non-kernel)
 
 (with-eval-after-load 'proced
   (add-to-list 'proced-format-alist
@@ -1406,15 +1400,15 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Eldoc
 
-(setq eldoc-documentation-strategy #'eldoc-documentation-compose
-      eldoc-echo-area-prefer-doc-buffer t
-      eldoc-minor-mode-string " 📜")
+(setopt eldoc-documentation-strategy #'eldoc-documentation-compose
+        eldoc-echo-area-prefer-doc-buffer t
+        eldoc-minor-mode-string " 📜")
 
 
 ;;; Flymake
 
-(setq flymake-mode-line-format nil
-      flymake-suppress-zero-counters t)
+(setopt flymake-mode-line-format nil
+        flymake-suppress-zero-counters t)
 
 (defun enable-flymake-after-locals ()
   "Hook function for `hack-local-variables-hook' to enable `flymake'."
@@ -1442,7 +1436,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Info
 
-(setq Info-additional-directory-list load-path)
+(setopt Info-additional-directory-list load-path)
 
 (add-hook 'Info-mode-hook #'variable-pitch-mode)
 
@@ -1461,7 +1455,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Man
 
-(setq Man-width-max nil)
+(setopt Man-width-max nil)
 
 (add-hook 'Man-mode-hook #'variable-pitch-mode)
 
@@ -1519,10 +1513,10 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Org
 
-(setq org-elipsis " ▼"
-      org-babel-load-languages '((emacs-lisp . t)
-                                 (C . t)
-                                 (shell . t)))
+(setopt org-ellipsis " ▼"
+        org-babel-load-languages '((emacs-lisp . t)
+                                   (C . t)
+                                   (shell . t)))
 
 (defun org-babel-apply-ansi-color ()
   "Hook function to apply ansi colors to `org-babel' result."
@@ -1539,12 +1533,11 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Markdown
 
-(setq markdown-asymmetric-header t
-      markdown-fontify-code-blocks-natively t
-      markdown-ordered-list-enumeration nil
-      markdown-unordered-list-item-prefix nil
-      markdown-disable-tooltip-prompt t
-      markdown-command '("pandoc" "--from=markdown" "--to=html5"))
+(setopt markdown-asymmetric-header t
+        markdown-fontify-code-blocks-natively t
+        markdown-ordered-list-enumeration nil
+        markdown-disable-tooltip-prompt t
+        markdown-command '("pandoc" "--from=markdown" "--to=html5"))
 
 (advice-add 'markdown-fontify-hrs :around
             (lambda (orig-fun &rest args)
@@ -1556,7 +1549,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (defun markdown-set-page-delimiter ()
   "Set `page-delimiter' to a markdown thematic break."
-  (setq page-delimiter markdown-regex-hr))
+  (setq-local page-delimiter markdown-regex-hr))
 
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
 (add-hook 'markdown-mode-hook #'flymake-mode)
@@ -1603,8 +1596,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Scheme
 
-(setq geiser-repl-per-project-p t
-      geiser-mode-start-repl-p t)
+(setopt geiser-repl-per-project-p t
+        geiser-mode-start-repl-p t)
 
 
 ;;; Rust
@@ -1730,7 +1723,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Zig
 
-(setq zig-format-on-save nil)
+(setopt zig-format-on-save nil)
 
 (defun zig-formatter-configure ()
   "Configure formatters for Zig files."
@@ -1746,9 +1739,9 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Haskell
 
-(setq haskell-process-suggest-remove-import-lines t
-      haskell-process-auto-import-loaded-modules t
-      haskell-process-log t)
+(setopt haskell-process-suggest-remove-import-lines t
+        haskell-process-auto-import-loaded-modules t
+        haskell-process-log t)
 
 (defun haskell-formatter-configure ()
   "Configure formatters for Haskell files."
@@ -1899,7 +1892,7 @@ Returns the tree-sitter anchor for using the generated function."
 (require 'server)
 
 (unless (daemonp)
-  (setq server-name (concat server-name (number-to-string (emacs-pid))))
+  (setopt server-name (concat server-name (number-to-string (emacs-pid))))
   (server-start))
 
 (setenv "EMACS_SOCKET_NAME" (expand-file-name server-name server-socket-dir))
@@ -1909,9 +1902,9 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Garbage collect when idle
 
-(setq gcmh-idle-delay 'auto
-      gcmh-auto-idle-delay-factor 10
-      gcmh-high-cons-threshold (* 32 1024 1024))
+(setopt gcmh-idle-delay 'auto
+        gcmh-auto-idle-delay-factor 10
+        gcmh-high-cons-threshold (* 32 1024 1024))
 
 (gcmh-mode)
 

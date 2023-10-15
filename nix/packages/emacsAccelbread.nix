@@ -18,7 +18,7 @@ let
   inherit (lib) pipe attrVals;
   configPackages = pipe (../../dotfiles/emacs/init.el) (with builtins; [
     readFile
-    (match ".*\\(setq package-selected-packages[[:space:]]+'\\(([^)]+).*")
+    (match ".*\\(setopt package-selected-packages[[:space:]]+'\\(([^)]+).*")
     head
     (split "([-a-z]+)")
     (filter isList)

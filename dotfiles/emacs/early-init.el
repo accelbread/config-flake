@@ -9,7 +9,7 @@
 
 ;;; Temporarily disable GC
 
-(setq gc-cons-threshold most-positive-fixnum)
+(setopt gc-cons-threshold most-positive-fixnum)
 
 
 ;;; Hide UI elements
@@ -26,9 +26,9 @@
 
 ;;; Resizing
 
-(setq frame-inhibit-implied-resize t
-      frame-resize-pixelwise t
-      window-resize-pixelwise t)
+(setopt frame-inhibit-implied-resize t
+        frame-resize-pixelwise t
+        window-resize-pixelwise t)
 
 
 ;;; Disable async native compilation
