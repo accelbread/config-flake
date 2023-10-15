@@ -674,8 +674,9 @@
         completion-in-region-function #'consult-completion-in-region
         orderless-component-separator #'orderless-escapable-split-on-space
         completion-at-point-functions (list #'cape-file
-                                            (cape-capf-super #'cape-dabbrev
-                                                             #'cape-dict))
+                                            (cape-capf-buster
+                                             (cape-capf-super #'cape-dabbrev
+                                                              #'cape-dict)))
         cape-dabbrev-min-length 3
         cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
         corfu-auto t
