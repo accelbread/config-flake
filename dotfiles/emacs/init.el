@@ -1221,6 +1221,7 @@
 
 (dolist (item '((c-mode . c-ts-mode)
                 (c++-mode . c++-ts-mode)
+                (c-or-c++-mode . c-or-c++-ts-mode)
                 (cmake-mode . cmake-ts-mode)
                 (rust-mode . rust-ts-mode)
                 (python-mode . python-ts-mode)
