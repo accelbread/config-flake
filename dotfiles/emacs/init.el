@@ -34,9 +34,8 @@
            magit magit-todos hl-todo magit-annex git-annex virtual-comment
            fish-completion eat coterm meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
-           markdown-mode cmake-mode clang-format rust-mode cargo zig-mode
-           nix-mode geiser-guile scad-mode haskell-mode toml-mode yaml-mode
-           git-modes pdf-tools flymake-vale)
+           markdown-mode clang-format cargo zig-mode nix-mode geiser-guile
+           scad-mode haskell-mode toml-mode git-modes pdf-tools flymake-vale)
         package-native-compile t)
 
 
@@ -1219,16 +1218,10 @@
 
 ;;; Tree-sitter
 
-(dolist (item '((c-mode . c-ts-mode)
-                (c++-mode . c++-ts-mode)
-                (c-or-c++-mode . c-or-c++-ts-mode)
-                (cmake-mode . cmake-ts-mode)
-                (rust-mode . rust-ts-mode)
-                (python-mode . python-ts-mode)
+(dolist (item '((python-mode . python-ts-mode)
                 (java-mode . java-ts-mode)
                 (js-json-mode . json-ts-mode)
                 (toml-mode . toml-ts-mode)
-                (yaml-mode . yaml-ts-mode)
                 (html-mode . html-ts-mode)
                 (css-mode . css-ts-mode)
                 (js-mode . js-ts-mode)))
@@ -1610,11 +1603,17 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Rust
 
+(require 'rust-ts-mode)
+
 (setq rust-ts-mode-prettify-symbols-alist nil)
 
 (with-eval-after-load 'eglot
   (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
                 eglot-workspace-configuration))
+
+(reformatter-define rust-format
+  :program "rustfmt"
+  :mode nil)
 
 (defun rust-formatter-configure ()
   "Configure formatters for Rust files."
@@ -1659,11 +1658,11 @@ Returns the tree-sitter anchor for using the generated function."
 (with-eval-after-load 'cargo
   (hide-minor-mode 'cargo-minor-mode))
 
-(dolist (sym '(rust-enable-format-on-save rust-disable-format-on-save))
-  (put sym 'completion-predicate #'ignore))
-
 
 ;;; C/C++
+
+(require 'c-ts-mode)
+(require 'cmake-ts-mode)
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
@@ -1760,6 +1759,11 @@ Returns the tree-sitter anchor for using the generated function."
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook #'setup-eglot)
 (add-hook 'haskell-mode-hook #'haskell-formatter-configure)
+
+
+;;; Yaml
+
+(require 'yaml-ts-mode)
 
 
 ;;; Sh
