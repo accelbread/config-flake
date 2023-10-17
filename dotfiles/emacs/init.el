@@ -1763,6 +1763,48 @@ Returns the tree-sitter anchor for using the generated function."
 (add-hook 'haskell-mode-hook #'haskell-formatter-configure)
 
 
+;;; Java
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(java-ts-mode "jdtls"
+                              :initializationOptions
+                              (:extendedClientCapabilities
+                               (:classFileContentsSupport t)))))
+
+(add-hook 'java-ts-mode-hook #'setup-eglot)
+
+(cl-defmethod eglot-execute-command
+  (_server (_cmd (eql java.apply.workspaceEdit)) arguments)
+  ;; checkdoc-params: (arguments)
+  "Eclipse JDT breaks spec and replies with edits as arguments."
+  (mapc #'eglot--apply-workspace-edit arguments))
+
+(defun jdt-file-name-handler (_ &rest args)
+  ;; checkdoc-params: (args)
+  "Support Eclipse jdtls `jdt://' uri scheme."
+  (let* ((uri (car args))
+         (cache-dir (expand-file-name ".eglot-java" (temporary-file-directory)))
+         (source-file
+          (expand-file-name
+           (file-name-concat
+            cache-dir
+            (save-match-data
+              (when (string-match "jdt://contents/\\(.*?\\)/\\(.*\\)\.class\\?"
+                                  uri)
+                (format "%s.java" (replace-regexp-in-string
+                                   "/" "." (match-string 2 uri) t t))))))))
+    (unless (file-readable-p source-file)
+      (let ((content (jsonrpc-request (eglot-current-server)
+                                      :java/classFileContents
+                                      (list :uri uri))))
+        (unless (file-directory-p cache-dir) (make-directory cache-dir t))
+        (with-temp-file source-file (insert content))))
+    source-file))
+
+(add-to-list 'file-name-handler-alist '("\\`jdt://" . jdt-file-name-handler))
+
+
 ;;; Yaml
 
 (require 'yaml-ts-mode)
