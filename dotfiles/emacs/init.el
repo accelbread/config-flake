@@ -1608,8 +1608,10 @@ Returns the tree-sitter anchor for using the generated function."
 (setq rust-ts-mode-prettify-symbols-alist nil)
 
 (with-eval-after-load 'eglot
-  (push-default '(rust-analyzer (checkOnSave (command . "clippy")))
-                eglot-workspace-configuration))
+  (add-to-list 'eglot-server-programs
+               '(rust-ts-mode "rust-analyzer"
+                              :initializationOptions
+                              (:check (:command "clippy")))))
 
 (reformatter-define rust-format
   :program "rustfmt"
