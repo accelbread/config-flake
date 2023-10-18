@@ -8,7 +8,7 @@ stdenv.mkDerivation {
     url = "https://fonts.google.com/download?family=Noto%20Emoji";
     extension = "zip";
     stripRoot = false;
-    hash = "sha256-NYWUlDy5D1hP0zAIPWLJJEZWwEXLFiAN2cRm0F52u/s=";
+    hash = "sha256-uP355Zg3+zDfbjRdqN3VHGBkXKjtJseicTX+4CcxWUc=";
   };
   installPhase = ''
     runHook preInstall
