@@ -30,7 +30,7 @@
       imports = [ flakelight-elisp.flakelightModules.default ];
       inherit inputs;
       withOverlays = [
-        emacs-overlay.overlays.default
+        emacs-overlay.overlays.package
         (import ./nix/overlays/overrides.nix)
       ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";

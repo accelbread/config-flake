@@ -34,7 +34,7 @@
            magit magit-todos hl-todo magit-annex git-annex virtual-comment
            fish-completion eat coterm meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
-           markdown-mode clang-format cargo zig-mode nix-mode geiser-guile
+           eglot markdown-mode clang-format cargo zig-mode nix-mode geiser-guile
            scad-mode haskell-mode toml-mode git-modes pdf-tools flymake-vale)
         package-native-compile t)
 
@@ -245,7 +245,10 @@
 (add-hook 'prog-mode-hook #'adaptive-wrap-prefix-mode)
 
 (hide-minor-mode 'abbrev-mode)
-(hide-minor-mode 'whitespace-mode)
+
+(if (>= emacs-major-version 30)
+    (hide-minor-mode 'whitespace-mode)
+  (hide-minor-mode 'global-whitespace-mode))
 
 (with-eval-after-load 'face-remap
   (hide-minor-mode 'buffer-face-mode))
@@ -900,7 +903,9 @@
   (nconc eshell-variable-aliases-list
          `(("/" ,(lambda () (concat (file-remote-p default-directory) "/"))
             nil t)
-           ("TERM" ,(lambda () "dumb-emacs-ansi") t t))))
+           ("TERM" ,(lambda () "dumb-emacs-ansi") t t)
+           ,@(when (< emacs-major-version 30)
+               `(("PAGER" ,(lambda () "cat") t t))))))
 
 (add-hook 'eshell-before-prompt-hook #'eshell-begin-on-new-line)
 
@@ -1222,7 +1227,6 @@
                 (java-mode . java-ts-mode)
                 (js-json-mode . json-ts-mode)
                 (toml-mode . toml-ts-mode)
-                (html-mode . html-ts-mode)
                 (css-mode . css-ts-mode)
                 (js-mode . js-ts-mode)))
   (add-to-list 'major-mode-remap-alist item))
@@ -1431,8 +1435,9 @@ Returns the tree-sitter anchor for using the generated function."
               (get-buffer-create "*Help*"))
             '((name . help-xref-dont-reuse-buffer)))
 
-(add-hook 'help-fns-describe-function-functions
-          #'shortdoc-help-fns-examples-function)
+(when (>= emacs-major-version 30)
+  (add-hook 'help-fns-describe-function-functions
+            #'shortdoc-help-fns-examples-function))
 
 
 ;;; Info
