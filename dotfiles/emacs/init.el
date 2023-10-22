@@ -330,6 +330,10 @@
                      ('(t nil) "🔒")
                      ('(t t) "🔏")))
             (:eval (when (file-remote-p default-directory) "✈️"))
+            (:eval (when envrc-mode
+                     (pcase envrc--status
+                       ('error "🚫")
+                       ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
             (server-buffer-clients "🚨")
             (:eval (when (buffer-narrowed-p) "🔎")))
            face color-emoji)
@@ -1036,8 +1040,8 @@
 ;;; Direnv
 
 (setopt envrc-none-lighter nil
-        envrc-on-lighter '(:propertize " envrc" face warning)
-        envrc-error-lighter '(:propertize " envrc" face error))
+        envrc-on-lighter ""
+        envrc-error-lighter "")
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
