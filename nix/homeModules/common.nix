@@ -5,6 +5,7 @@
     packages = with pkgs; [
       man-pages
       man-pages-posix
+      glibcInfo
       git
       git-absorb
       ripgrep
