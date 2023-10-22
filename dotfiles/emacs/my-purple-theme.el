@@ -51,6 +51,7 @@
  '(mode-line-buffer-id ((t (:weight bold))))
  '(mode-line-emphasis ((t (:foreground "#FF80DE"))))
  '(mode-line-highlight ((t (:inherit (highlight)))))
+ '(eglot-mode-line ((t (:inherit (fringe)))))
  '(window-divider ((t (:foreground "#1A1821"))))
  '(window-divider-first-pixel ((t (:inherit (window-divider)))))
  '(window-divider-last-pixel ((t (:inherit (window-divider)))))
