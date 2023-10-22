@@ -316,21 +316,23 @@
 
 (setopt mode-line-format
         `("%e "
-          (:eval (when (window-dedicated-p) "📌"))
-          (:eval (cond ((meow-normal-mode-p) "😺")
-                       ((meow-insert-mode-p) "😸")
-                       ((meow-beacon-mode-p) "😻")
-                       ((meow-keypad-mode-p) "😾")
-                       ((meow-motion-mode-p) "😿")
-                       (t "🙀")))
-          (:eval (pcase (list buffer-read-only (buffer-modified-p))
-                   ('(nil nil) "✨")
-                   ('(nil t) "🖋️")
-                   ('(t nil) "🔒")
-                   ('(t t) "🔏")))
-          (:eval (when (file-remote-p default-directory) "✈️"))
-          (server-buffer-clients "🚨")
-          (:eval (when (buffer-narrowed-p) "🔎"))
+          (:propertize
+           ((:eval (when (window-dedicated-p) "📌"))
+            (:eval (cond ((meow-normal-mode-p) "😺")
+                         ((meow-insert-mode-p) "😸")
+                         ((meow-beacon-mode-p) "😻")
+                         ((meow-keypad-mode-p) "😾")
+                         ((meow-motion-mode-p) "😿")
+                         (t "🙀")))
+            (:eval (pcase (list buffer-read-only (buffer-modified-p))
+                     ('(nil nil) "✨")
+                     ('(nil t) "🖋️")
+                     ('(t nil) "🔒")
+                     ('(t t) "🔏")))
+            (:eval (when (file-remote-p default-directory) "✈️"))
+            (server-buffer-clients "🚨")
+            (:eval (when (buffer-narrowed-p) "🔎")))
+           face color-emoji)
           (:eval (propertize
                   " %l " 'display
                   (window-font-dim-override 'mode-line
