@@ -7,38 +7,9 @@
 ;;; Code:
 
 
-;;; Temporarily disable GC
-
-(setopt gc-cons-threshold most-positive-fixnum)
-
-
-;;; Hide UI elements
-
-(push '(menu-bar-lines . 0)   default-frame-alist)
-(push '(tool-bar-lines . 0)   default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-
-
-;; Don't use X resources
-
-(advice-add #'x-apply-session-resources :override #'ignore)
-
-
-;;; Resizing
-
-(setopt frame-inhibit-implied-resize t
-        frame-resize-pixelwise t
-        window-resize-pixelwise t)
-
-
 ;;; Disable async native compilation
 
 (setq native-comp-jit-compilation nil)
-
-
-;;; Theme
-
-(load-theme 'my-purple t)
 
 
 (provide 'early-init)

@@ -7,6 +7,23 @@
 ;;; Code:
 
 
+;;; Temporarily disable GC
+
+(setopt gc-cons-threshold most-positive-fixnum)
+
+
+;;; Hide UI elements
+
+(setopt menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil)
+
+
+;;; Theme
+
+(load-theme 'my-purple t)
+
+
 ;;; Default fonts
 
 (set-face-attribute 'default nil :height 120 :family "DejaVu Sans Mono")
@@ -102,6 +119,11 @@
 (setopt inhibit-startup-screen t
         initial-scratch-message nil
         server-client-instructions nil)
+
+
+;; Don't use X resources
+
+(setq inhibit-x-resources t)
 
 
 ;;; Reduce confirmations
@@ -222,7 +244,10 @@
 
 ;;; Misc UI
 
-(setopt whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
+(setopt frame-inhibit-implied-resize t
+        frame-resize-pixelwise t
+        window-resize-pixelwise t
+        whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
         whitespace-global-modes '(prog-mode text-mode conf-mode)
         global-display-fill-column-indicator-modes '(prog-mode text-mode)
         resize-mini-windows t
