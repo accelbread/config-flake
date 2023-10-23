@@ -1704,6 +1704,7 @@ Returns the tree-sitter anchor for using the generated function."
                 (binary_expression ">>" @ts-disp-rshift)
                 (assignment_expression "<<=" @ts-disp-lshifteq)
                 (assignment_expression ">>=" @ts-disp-rshifteq)
+                (field_expression "->" @ts-disp-arrow)
                 ,@(when (eq mode 'cpp)
                     '((qualified_identifer "::" @ts-disp-scope)))))
              (when (eq mode 'cpp)
