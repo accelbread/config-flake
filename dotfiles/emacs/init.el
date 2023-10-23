@@ -1570,6 +1570,11 @@ Returns the tree-sitter anchor for using the generated function."
 (add-hook 'nix-repl-mode-hook #'comint-disable-echo)
 
 
+;;; GDB
+
+(setopt gdb-debuginfod-enable-setting nil)
+
+
 ;;; Scheme
 
 (setopt geiser-repl-per-project-p t
