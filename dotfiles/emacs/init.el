@@ -1263,7 +1263,6 @@
 
 (defun setup-eglot ()
   "Enable eglot and its dependencies."
-  (yas-minor-mode)
   (require 'eglot)
   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
