@@ -49,7 +49,7 @@
         '( meow gcmh rainbow-delimiters jinx which-key vundo envrc editorconfig
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo magit-annex git-annex virtual-comment
-           fish-completion eat coterm meow-term vterm meow-vterm rg inheritenv
+           fish-completion eat meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
            eglot markdown-mode clang-format cargo zig-mode nix-mode geiser-guile
            scad-mode haskell-mode toml-mode git-modes pdf-tools flymake-vale)
@@ -822,83 +822,6 @@
 (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-silent)
 (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-purify)
 
-(coterm-mode)
-
-(defvar-local meow-coterm-char-mode 'auto
-  "Which mode coterm should use in meow insert mode.")
-
-(defun meow-coterm-char-mode ()
-  "Enable coterm char mode."
-  (interactive)
-  (setq meow-coterm-char-mode t)
-  (when (meow-insert-mode-p)
-    (coterm-auto-char-mode -1)
-    (coterm-char-mode)
-    (coterm-scroll-snap-mode))
-  (force-mode-line-update))
-
-(defun meow-coterm-line-mode ()
-  "Enable coterm line mode."
-  (interactive)
-  (setq meow-coterm-char-mode nil)
-  (when (meow-insert-mode-p)
-    (coterm-auto-char-mode -1)
-    (coterm-char-mode -1)
-    (coterm-scroll-snap-mode -1))
-  (force-mode-line-update))
-
-(defun meow-coterm-auto-mode ()
-  "Enable coterm auto mode."
-  (interactive)
-  (setq meow-coterm-char-mode 'auto)
-  (when (meow-insert-mode-p)
-    (coterm-auto-char-mode))
-  (force-mode-line-update))
-
-(defun meow-coterm-insert-enter ()
-  "Switch keybinds to char mode if char mode set."
-  (pcase meow-coterm-char-mode
-    ('auto (coterm-auto-char-mode))
-    ('t (coterm-char-mode)
-        (coterm-scroll-snap-mode)))
-  (force-mode-line-update))
-
-(defun meow-coterm-insert-exit ()
-  "Turn off coterm char mode in meow normal mode."
-  (coterm-auto-char-mode -1)
-  (coterm-char-mode -1)
-  (coterm-scroll-snap-mode -1))
-
-(defun meow-coterm-setup-hooks ()
-  "Ensure non-char-mode keybindings outside of insert mode."
-  (add-hook 'meow-insert-enter-hook #'meow-coterm-insert-enter nil t)
-  (add-hook 'meow-insert-exit-hook #'meow-coterm-insert-exit nil t))
-
-(add-hook 'comint-mode-hook #'meow-coterm-setup-hooks)
-
-(advice-add #'coterm--init :around
-            (lambda (orig-fun &rest args)
-              "Advise `coterm--init' to use disable default auto mode."
-              (cl-letf (((symbol-function #'coterm-auto-char-mode) #'ignore))
-                (apply orig-fun args)))
-            '((name . meow-coterm)))
-
-(with-eval-after-load 'comint
-  (define-key comint-mode-map (kbd "C-c ESC") #'term-send-raw)
-  (define-key comint-mode-map (kbd "C-c C-j") #'meow-coterm-auto-mode)
-  (define-key comint-mode-map (kbd "C-c C-S-j") #'meow-coterm-line-mode)
-  (define-key comint-mode-map (kbd "C-c C-k") #'meow-coterm-char-mode))
-
-(define-key coterm-char-mode-map [remap term-line-mode] #'meow-coterm-auto-mode)
-(define-key coterm-char-mode-map [remap term-char-mode] #'meow-coterm-char-mode)
-
-(put 'coterm-auto-char-lighter-mode-format 'risky-local-variable t)
-(setq coterm-auto-char-lighter-mode-format
-      '(:eval (pcase meow-coterm-char-mode
-                ('auto (when coterm-char-mode " AChar"))
-                ('t " Char")
-                ('nil " Line"))))
-
 (defun comint-disable-echo ()
   "Set `comint-process-echoes' to t in current buffer."
   (interactive)
@@ -1371,7 +1294,6 @@ Returns the tree-sitter anchor for using the generated function."
         magit-process-finish-apply-ansi-colors t
         git-commit-summary-max-length 50
         magit-no-message '("Turning on "))
-
 
 (with-eval-after-load 'magit
   (remove-hook 'server-switch-hook #'magit-commit-diff)
