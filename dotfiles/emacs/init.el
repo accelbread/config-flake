@@ -1650,16 +1650,17 @@ Returns the tree-sitter anchor for using the generated function."
                                @builtin-macro))
                "!" @font-lock-builtin-face))
             :language 'rust :feature 'prettify
-            `("<=" @ts-disp-lteq
-              ">=" @ts-disp-gteq
-              "!=" @ts-disp-neq
-              "<<" @ts-disp-lshift
-              ">>" @ts-disp-rshift
-              "<<=" @ts-disp-lshifteq
-              ">>=" @ts-disp-rshifteq
-              "->" @ts-disp-arrow
-              "=>" @ts-disp-arrow2
-              "::" @ts-disp-scope)))))
+            '((binary_expression "<=" @ts-disp-lteq)
+              (binary_expression ">=" @ts-disp-gteq)
+              (binary_expression "!=" @ts-disp-neq)
+              (binary_expression "<<" @ts-disp-lshift)
+              (binary_expression ">>" @ts-disp-rshift)
+              (compound_assignment_expr "<<=" @ts-disp-lshifteq)
+              (compound_assignment_expr ">>=" @ts-disp-rshifteq)
+              (function_item "->" @ts-disp-arrow)
+              (match_arm "=>" @ts-disp-arrow2)
+              (scoped_identifier "::" @ts-disp-scope)
+              (scoped_use_list "::" @ts-disp-scope))))))
 
 (add-hook 'rust-ts-mode-hook #'setup-eglot)
 (add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
@@ -1696,15 +1697,15 @@ Returns the tree-sitter anchor for using the generated function."
               :language mode :feature 'attribute :override t
               '((attribute_declaration) @font-lock-keyword-face)
               :language mode :feature 'prettify
-              `("<=" @ts-disp-lteq
-                ">=" @ts-disp-gteq
-                "!=" @ts-disp-neq
-                "<<" @ts-disp-lshift
-                ">>" @ts-disp-rshift
-                "<<=" @ts-disp-lshifteq
-                ">>=" @ts-disp-rshifteq
+              `((binary_expression "<=" @ts-disp-lteq)
+                (binary_expression ">=" @ts-disp-gteq)
+                (binary_expression "!=" @ts-disp-neq)
+                (binary_expression "<<" @ts-disp-lshift)
+                (binary_expression ">>" @ts-disp-rshift)
+                (assignment_expression "<<=" @ts-disp-lshifteq)
+                (assignment_expression ">>=" @ts-disp-rshifteq)
                 ,@(when (eq mode 'cpp)
-                    '("::" @ts-disp-scope))))
+                    '((qualified_identifer "::" @ts-disp-scope)))))
              (when (eq mode 'cpp)
                (treesit-font-lock-rules
                 :language mode :feature 'scope :override t
