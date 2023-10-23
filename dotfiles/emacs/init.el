@@ -255,7 +255,8 @@
         truncate-partial-width-windows 83
         mouse-drag-and-drop-region t
         mouse-yank-at-point t
-        isearch-lazy-count t)
+        isearch-lazy-count t
+        custom-raised-buttons t)
 
 (blink-cursor-mode -1)
 (window-divider-mode)
