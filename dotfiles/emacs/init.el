@@ -362,14 +362,31 @@
             (server-buffer-clients "🚨")
             (:eval (when (buffer-narrowed-p) "🔎")))
            face color-emoji)
+          " "
           (:eval (propertize
-                  " %l " 'display
+                  " %l "
+                  'display
                   (window-font-dim-override 'mode-line
                     (svg-lib-progress-bar
                      (/ (float (point)) (point-max))
                      nil :width 3 :height 0.48 :stroke 1 :padding 2
-                     :radius 1 :margin 1))))
-          " " (:propertize "%12b" face mode-line-buffer-id)
+                     :radius 1))
+                  'keymap
+                  (let ((map (make-sparse-keymap)))
+                    (define-key
+                     map [mode-line down-mouse-1]
+                     (lambda (event)
+                       (interactive "e")
+                       (let ((pos (event-start event)))
+                         (set-window-point
+                          (posn-window pos)
+                          (round (/ (* (float (point-max))
+                                       (- (car (posn-object-x-y pos))
+                                          3))
+                                    (- (car (posn-object-width-height pos))
+                                       6)))))))
+                    map)))
+          "  " (:propertize "%12b" face mode-line-buffer-id)
           (:propertize
            (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
                     (let ((base (coding-system-base
