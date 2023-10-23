@@ -260,7 +260,7 @@
 
 (blink-cursor-mode -1)
 (window-divider-mode)
-(fringe-mode 9)
+(fringe-mode 10)
 (global-whitespace-mode)
 (global-display-fill-column-indicator-mode)
 (global-prettify-symbols-mode)
