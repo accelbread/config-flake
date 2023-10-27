@@ -113,6 +113,11 @@
               (listp inherit))
         (mapc #'load-face inherit))))
 
+(defun disable-nobreak-display ()
+  "Turn off special display of non-ASCII space/hyphen characters."
+  (interactive)
+  (setq-local nobreak-char-display nil))
+
 
 ;;; Hide welcome messages
 
@@ -827,6 +832,8 @@
   (interactive)
   (setq comint-process-echoes t))
 
+(add-hook 'comint-mode-hook #'disable-nobreak-display)
+
 
 ;;; Eshell
 
@@ -892,7 +899,7 @@
               mode-line-process
               '(" " (:eval (abbreviate-file-name default-directory))))
   (abbrev-mode)
-  (face-remap-set-base 'nobreak-space nil)
+  (disable-nobreak-display)
   (buffer-disable-undo))
 
 (add-hook 'eshell-mode-hook #'my-eshell-init)
@@ -1028,6 +1035,8 @@
 (with-eval-after-load 'term
   (set-keymap-parent term-raw-escape-map nil))
 
+(add-hook 'term-mode-hook #'disable-nobreak-display)
+
 (meow-term-enable)
 
 (defvar-local term-enable-local-echo nil
@@ -1123,6 +1132,7 @@
               (setq mode-line-process `("  " ,title)))
             '((name . vterm-set-mode-line-process)))
 
+(add-hook 'vterm-mode-hook #'disable-nobreak-display)
 
 
 ;;; Compilation
