@@ -1675,7 +1675,7 @@ Returns the tree-sitter anchor for using the generated function."
                 (assignment_expression ">>=" @ts-disp-rshifteq)
                 (field_expression "->" @ts-disp-arrow)
                 ,@(when (eq mode 'cpp)
-                    '((qualified_identifer "::" @ts-disp-scope)))))
+                    '((qualified_identifier "::" @ts-disp-scope)))))
              (when (eq mode 'cpp)
                (treesit-font-lock-rules
                 :language mode :feature 'scope :override t
