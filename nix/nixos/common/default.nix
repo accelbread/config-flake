@@ -202,7 +202,9 @@ in
       noto-fonts
       noto-fonts-extra
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-cjk-serif
+      noto-fonts-color-emoji
+      noto-fonts-monochrome-emoji
     ];
   };
 

@@ -5,7 +5,6 @@
       emacsAccelbread-terminfo
       emacs-eat-terminfo
       aspellDicts.en
-      noto-fonts-bw-emoji
     ];
     file.".config/emacs" = {
       source = ../../dotfiles/emacs;
