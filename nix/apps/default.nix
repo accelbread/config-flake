@@ -1,10 +1,9 @@
-{ writeShellScript, emacsAccelbread, ... }:
+{ src, writeShellScript, emacsAccelbread, ... }:
 let
-  self = ../..;
   nix = ''nix --extra-experimental-features "nix-command flakes"'';
   mkBuildScript = script: writeShellScript script ''
     set -eu
-    ref="${self}#nixosConfigurations.$1.config.system.build.${script}"
+    ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
     ${nix} build --no-link "$ref"
     script=$(${nix} eval --raw "$ref")
     sudo $script
@@ -16,7 +15,7 @@ rec {
     emacs_dir=$(mktemp -d)
     cleanup() { rm -rf "$emacs_dir"; }
     trap cleanup EXIT
-    cp -rT "${self + /dotfiles/emacs}" "$emacs_dir"
+    cp -rT "${src + /dotfiles/emacs}" "$emacs_dir"
     ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
   '';
 
@@ -25,7 +24,7 @@ rec {
   nixosUnmount = mkBuildScript "unmountScript";
   nixosInstall = writeShellScript "nixos-install" ''
     set -eu
-    sudo nixos-install --no-root-passwd --flake ${self}#$1
+    sudo nixos-install --no-root-passwd --flake ${src}#$1
   '';
   nixosFullInstall = writeShellScript "nixos-fullinstall" ''
     set -xeu
@@ -36,12 +35,12 @@ rec {
 
   remoteRebuild = writeShellScript "remote-nixos-rebuild" ''
     set -xeu
-    ref="${self}#nixosConfigurations.$1.config.system.build.toplevel"
+    ref="${src}#nixosConfigurations.$1.config.system.build.toplevel"
     ${nix} build --no-link "$ref"
     result=$(${nix} eval --raw "$ref")
     nix store sign -rk ~/.local/share/vault/nix-signing-key-priv.pem "$result"
     nix copy --to ssh-ng://menagerie "$result"
-    NIX_SSHOPTS="-tt" nixos-rebuild --flake ${self}#"$1" --use-remote-sudo \
+    NIX_SSHOPTS="-tt" nixos-rebuild --flake ${src}#"$1" --use-remote-sudo \
       --target-host archit@"$1" "''${@:2}"
   '';
 }
