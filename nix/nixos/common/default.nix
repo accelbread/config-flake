@@ -174,7 +174,7 @@ in
       openFirewall = false;
       settings = {
         PermitRootLogin = "no";
-        AllowGroups = "users";
+        AllowGroups = [ "users" ];
         AuthenticationMethods = "publickey";
         PasswordAuthentication = false;
         ChallengeResponseAuthentication = false;
