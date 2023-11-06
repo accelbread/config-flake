@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 {
   security = {
     apparmor.enable = true;
@@ -9,34 +9,45 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_hardened;
 
-    kernelPatches = [
-      {
-        name = "hardening";
-        patch = null;
-        extraStructuredConfig = with lib.kernel; {
-          BPF_JIT_ALWAYS_ON = lib.mkForce yes;
-          HW_RANDOM_TPM = yes;
-          INIT_STACK_ALL_ZERO = yes;
-          UBSAN = yes;
-          UBSAN_BOUNDS = yes;
-          UBSAN_SANITIZE_ALL = yes;
-          UBSAN_TRAP = yes;
-          USERFAULTFD = lib.mkForce no;
-          X86_IOPL_IOPERM = no;
-          ZERO_CALL_USED_REGS = yes;
-        };
-      }
-      {
-        name = "lkrg-in-tree";
-        patch = pkgs.lkrg-in-tree-patch;
-        extraStructuredConfig = with lib.kernel; {
-          SECURITY_LKRG = yes;
-          SECURITY_SELINUX = no;
-          SECURITY_SELINUX_DISABLE = lib.mkForce (option no);
-          OVERLAY_FS = yes;
-        };
-      }
-    ];
+    kernelPatches =
+      let
+        inherit (lib.kernel.whenHelpers
+          config.boot.kernelPackages.kernel.version) whenAtLeast;
+      in
+      [
+        {
+          name = "hardening";
+          patch = null;
+          extraStructuredConfig = with lib.kernel; {
+            RANDOM_KMALLOC_CACHES = whenAtLeast "6.6" yes;
+            LIST_HARDENED = whenAtLeast "6.6" yes;
+            INIT_ON_ALLOC_DEFAULT_ON = yes;
+            RESET_ATTACK_MITIGATION = yes;
+            IOMMU_DEFAULT_DMA_STRICT = yes;
+            LDISC_AUTOLOAD = no;
+            BPF_JIT_ALWAYS_ON = lib.mkForce yes;
+            HW_RANDOM_TPM = yes;
+            INIT_STACK_ALL_ZERO = yes;
+            UBSAN = yes;
+            UBSAN_BOUNDS = yes;
+            UBSAN_SANITIZE_ALL = yes;
+            UBSAN_TRAP = yes;
+            USERFAULTFD = lib.mkForce no;
+            X86_IOPL_IOPERM = no;
+            ZERO_CALL_USED_REGS = yes;
+          };
+        }
+        {
+          name = "lkrg-in-tree";
+          patch = pkgs.lkrg-in-tree-patch;
+          extraStructuredConfig = with lib.kernel; {
+            SECURITY_LKRG = yes;
+            SECURITY_SELINUX = no;
+            SECURITY_SELINUX_DISABLE = lib.mkForce (option no);
+            OVERLAY_FS = yes;
+          };
+        }
+      ];
 
     kernelParams = [
       "init_on_alloc=1"
