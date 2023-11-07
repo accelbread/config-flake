@@ -1310,6 +1310,9 @@ Returns the tree-sitter anchor for using the generated function."
   (remove-hook 'with-editor-filter-visit-hook #'magit-commit-diff)
   (magit-todos-mode))
 
+(with-eval-after-load 'magit-mode
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+
 (with-eval-after-load 'magit-commit
   (transient-replace-suffix 'magit-commit 'magit-commit-autofixup
     '("x" "Absorb changes" magit-commit-absorb)))
