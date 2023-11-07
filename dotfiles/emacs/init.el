@@ -1307,6 +1307,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (with-eval-after-load 'magit
   (remove-hook 'server-switch-hook #'magit-commit-diff)
+  (remove-hook 'with-editor-filter-visit-hook #'magit-commit-diff)
   (magit-todos-mode))
 
 (with-eval-after-load 'magit-commit
