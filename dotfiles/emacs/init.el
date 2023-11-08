@@ -327,6 +327,8 @@
         (and color-emoji-mode
              (face-remap-add-relative 'default 'color-emoji))))
 
+(add-hook 'minibuffer-setup-hook #'color-emoji-mode)
+
 
 ;;; Mode line
 
