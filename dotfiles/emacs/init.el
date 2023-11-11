@@ -1691,12 +1691,7 @@ Returns the tree-sitter anchor for using the generated function."
                 (assignment_expression ">>=" @ts-disp-rshifteq)
                 (field_expression "->" @ts-disp-arrow)
                 ,@(when (eq mode 'cpp)
-                    '((qualified_identifier "::" @ts-disp-scope)))))
-             (when (eq mode 'cpp)
-               (treesit-font-lock-rules
-                :language mode :feature 'scope :override t
-                '((qualified_identifier scope: (_) @shadow)
-                  (qualified_identifier "::" @shadow))))))))
+                    '((qualified_identifier "::" @ts-disp-scope)))))))))
 
 ;; Hook is used to set keywords in current buffer instead of globally for mode
 ;; to ensure highlighting is applied after rainbow delimiters.
