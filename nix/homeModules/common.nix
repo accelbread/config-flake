@@ -48,6 +48,7 @@
         user.useConfigOnly = true;
         advice.detachedHead = false;
         diff.algorithm = "histogram";
+        merge.conflictStyle = "diff3";
         init = {
           defaultBranch = "master";
           templateDir = "${../../dotfiles/git-template}";
