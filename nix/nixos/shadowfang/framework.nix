@@ -5,7 +5,6 @@
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
     kernelModules = [ "cpuid" "coretemp" ];
     blacklistedKernelModules = [ "cros-usbpd-charger" ];
-    kernelParams = [ "mem_sleep_default=deep" ];
   };
 
   hardware = {
