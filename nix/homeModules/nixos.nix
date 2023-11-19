@@ -20,7 +20,7 @@ in
     };
     packages = with pkgs; [
       gnome.gnome-session
-      gnomeExtensions.espresso
+      gnomeExtensions.caffeine
       gnomeExtensions.gsconnect
       git-annex
       hunspellDicts.en_US

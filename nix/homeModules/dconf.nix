@@ -79,7 +79,7 @@ in
     "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
-        espresso.extensionUuid
+        caffeine.extensionUuid
         gsconnect.extensionUuid
       ];
       favorite-apps = [
@@ -87,6 +87,9 @@ in
         "librewolf.desktop"
         "org.gnome.Nautilus.desktop"
       ];
+    };
+    "org/gnome/shell/extensions/caffeine" = {
+      show-timer = false;
     };
     "org/gnome/shell/world-clocks" = {
       locations = rawGvariant
