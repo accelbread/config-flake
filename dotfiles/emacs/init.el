@@ -51,8 +51,9 @@
            magit magit-todos hl-todo magit-annex git-annex virtual-comment
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
-           eglot markdown-mode clang-format cargo zig-mode nix-mode geiser-guile
-           scad-mode haskell-mode toml-mode git-modes pdf-tools flymake-vale)
+           eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
+           geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools
+           flymake-vale)
         package-native-compile t)
 
 
@@ -1661,6 +1662,7 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; C/C++
 
 (require 'c-ts-mode)
+(require 'cmake-mode)
 (require 'cmake-ts-mode)
 
 (defun c-formatter-configure ()
@@ -1709,6 +1711,12 @@ Returns the tree-sitter anchor for using the generated function."
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
   (add-hook hook #'c-set-font-overrides))
+
+(defun use-cmake-mode-syntax-propertize-function ()
+  "Use cmake-mode's `syntax-propertize-function'."
+  (setq-local syntax-propertize-function cmake--syntax-propertize-function))
+
+(add-hook 'cmake-ts-mode-hook #'use-cmake-mode-syntax-propertize-function)
 
 
 ;;; Python
