@@ -19,7 +19,6 @@
       zile
       podman
     ];
-    gui-packages = with pkgs; [ zeal ];
     file.".fdignore".source = ../../dotfiles/fdignore;
   };
 

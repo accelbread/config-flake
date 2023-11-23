@@ -28,15 +28,11 @@ in
     gui-packages = with pkgs; [
       gnome.dconf-editor
       librewolf
-      v4l-utils
       helvum
       jamesdsp
       gimp
       libreoffice
       cockatrice
-      shattered-pixel-dungeon
-      zeroad
-      airshipper
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
       ".config".source = self + /dotfiles/config;

@@ -101,11 +101,7 @@
             ".local/share/tpm2_pkcs11"
             ".local/share/gnupg"
             ".local/share/pass"
-            ".local/share/Zeal"
             ".local/share/flatpak"
-            ".local/share/veloren"
-            ".local/share/.shatteredpixel/shattered-pixel-dungeon"
-            ".local/share/0ad"
             ".var/app/com.valvesoftware.Steam"
           ];
           files = [
