@@ -54,13 +54,7 @@ in
       postResumeCommands = lib.mkBefore ''
         mkdir -p /mnt
         mount -t btrfs -o noatime,compress=zstd /dev/${hostname}_vg1/pool /mnt
-        ${
-          pkgs.writeShellApplication {
-            name = "btrfs-subvol-rm-r";
-            runtimeInputs = with pkgs; [ btrfs-progs gawk gnused ];
-            text = builtins.readFile (self + /scripts/btrfs-subvol-rm-r);
-          }
-        }/bin/btrfs-subvol-rm-r /mnt/root
+        ${lib.getExe pkgs.btrfs-subvol-rm-r} /mnt/root
         btrfs subvolume create /mnt/root
         umount /mnt
       '';
