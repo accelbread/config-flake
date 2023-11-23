@@ -900,7 +900,8 @@
                                               pcomplete-completions-at-point
                                               cape-dabbrev)
               mode-line-process
-              '(" " (:eval (abbreviate-file-name default-directory))))
+              '(" " (:eval (abbreviate-file-name default-directory)))
+              completion-ignored-extensions nil)
   (abbrev-mode)
   (disable-nobreak-display)
   (buffer-disable-undo))
