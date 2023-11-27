@@ -32,4 +32,6 @@
       $DRY_RUN_CMD cat ${defaultRoutes} \
         > "$HOME/.local/state/wireplumber/default-routes"
     '';
+  services.rnnoise.target =
+    "alsa_input.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00.mono-fallback";
 }

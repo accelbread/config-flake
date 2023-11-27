@@ -26,4 +26,5 @@
       $DRY_RUN_CMD cat ${defaultNodes} \
         > "$HOME/.local/state/wireplumber/default-nodes"
     '';
+  services.rnnoise.target = "alsa_input.pci-0000_00_1f.3.analog-stereo";
 }

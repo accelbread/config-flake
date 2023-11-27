@@ -3,6 +3,9 @@ let
   inherit (lib) mkOption mkEnableOption mkPackageOption types mkIf;
   cfg = config.services.rnnoise;
   label = "noise_suppressor_" + (if cfg.stereo then "stereo" else "mono");
+  targetStr =
+    if cfg.target != null then ''node.target = "${cfg.target}"''
+    else "";
 in
 {
   options.services.rnnoise = {
@@ -27,6 +30,11 @@ in
       type = types.bool;
       default = false;
       description = "Enable stereo output.";
+    };
+    target = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Device to read from.";
     };
   };
 
@@ -55,6 +63,7 @@ in
             node.name = "capture.rnnoise_source"
             node.description = "RNNoise capture"
             node.passive = true
+            ${targetStr}
             audio.rate = 48000
           }
           playback.props = {
