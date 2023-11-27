@@ -51,6 +51,9 @@ in
       remove-old-temp-files = true;
       remove-old-trash-files = true;
     };
+    "org/gnome/desktop/search-providers" = {
+      disabled = [ "org.gnome.Software.desktop" ];
+    };
     "org/gnome/desktop/screensaver" = background // {
       lock-delay = mkUint32 30;
     };
