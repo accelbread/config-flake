@@ -52,7 +52,7 @@ in
       remove-old-trash-files = true;
     };
     "org/gnome/desktop/search-providers" = {
-      disabled = [ "org.gnome.Software.desktop" ];
+      disabled = [ "org.gnome.Software.desktop" "org.gnome.Epiphany.desktop" ];
     };
     "org/gnome/desktop/screensaver" = background // {
       lock-delay = mkUint32 30;
