@@ -4,7 +4,7 @@ let
   inherit (inputs) self;
 in
 {
-  imports = [ ./common.nix ./dconf.nix ./gsconnect.nix ];
+  imports = [ ./common.nix ./dconf.nix ];
 
   home = {
     stateVersion = "23.11";
@@ -21,7 +21,6 @@ in
     packages = with pkgs; [
       gnome.gnome-session
       gnomeExtensions.caffeine
-      gnomeExtensions.gsconnect
       git-annex
       hunspellDicts.en_US
     ];

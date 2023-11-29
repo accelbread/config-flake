@@ -83,7 +83,6 @@ in
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
         caffeine.extensionUuid
-        gsconnect.extensionUuid
       ];
       favorite-apps = [
         "emacs.desktop"

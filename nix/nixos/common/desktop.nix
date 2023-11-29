@@ -95,7 +95,6 @@
             "playground"
             ".ssh/config.d"
             ".config/emacs"
-            ".config/gsconnect"
             ".librewolf/profile"
             ".local/share/vault"
             ".local/share/tpm2_pkcs11"
