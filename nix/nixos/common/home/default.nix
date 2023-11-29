@@ -4,7 +4,7 @@ let
   inherit (inputs) self;
 in
 {
-  imports = [ ./common.nix ./dconf.nix ];
+  imports = [ self.homeModules.common ./dconf.nix ];
 
   home = {
     stateVersion = "23.11";
@@ -85,7 +85,7 @@ in
             lib.getExe (pkgs.writeShellApplication {
               name = "tpm2-pkcs11-init";
               runtimeInputs = with pkgs; [ tpm2-pkcs11 gnugrep coreutils ];
-              text = builtins.readFile ./scripts/tpm2-pkcs11-init.sh;
+              text = builtins.readFile ./tpm2-pkcs11-init.sh;
             })
           }
         '';

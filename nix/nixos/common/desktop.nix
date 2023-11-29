@@ -77,7 +77,7 @@
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.archit = ../../homeModules/nixos.nix;
+      users.archit = ./home;
       extraSpecialArgs = { inherit inputs; };
     };
 

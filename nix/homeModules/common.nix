@@ -1,5 +1,9 @@
-{ pkgs, ... }: {
-  imports = [ ./emacs.nix ./gui-only-programs.nix ./rnnoise.nix ];
+{ pkgs, inputs, ... }: {
+  imports = with inputs.self.homeModules; [
+    emacs
+    gui-only-programs
+    rnnoise
+  ];
 
   home = {
     packages = with pkgs; [
