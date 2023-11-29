@@ -4,7 +4,7 @@ let
   inherit (inputs) self;
 in
 {
-  imports = [ self.homeModules.common ./dconf.nix ];
+  imports = with self.homeModules; [ common rnnoise ./dconf.nix ];
 
   home = {
     stateVersion = "23.11";
@@ -104,15 +104,14 @@ in
       };
     };
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
-    git = {
-      userName = "Archit Gupta";
-      userEmail = "archit@accelbread.com";
-    };
   };
 
-  services.gpg-agent = {
-    enable = true;
-    pinentryFlavor = "gnome3";
+  services = {
+    gpg-agent = {
+      enable = true;
+      pinentryFlavor = "gnome3";
+    };
+    rnnoise.enable = true;
   };
 
   xdg = {

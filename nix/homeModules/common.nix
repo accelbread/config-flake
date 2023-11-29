@@ -1,9 +1,5 @@
 { pkgs, inputs, ... }: {
-  imports = with inputs.self.homeModules; [
-    emacs
-    gui-only-programs
-    rnnoise
-  ];
+  imports = with inputs.self.homeModules; [ emacs gui-only-programs ];
 
   home = {
     packages = with pkgs; [
@@ -40,12 +36,16 @@
         fi
 
         HISTCONTROL=ignoreboth
+
+        unset HISTFILE
       '';
       profileExtra = ''
         export CMAKE_EXPORT_COMPILE_COMMANDS=ON
       '';
     };
     git = {
+      userName = "Archit Gupta";
+      userEmail = "archit@accelbread.com";
       extraConfig = {
         pull.ff = "only";
         user.useConfigOnly = true;
@@ -82,6 +82,4 @@
       };
     };
   };
-
-  services.rnnoise.enable = true;
 }
