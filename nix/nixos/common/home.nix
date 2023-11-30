@@ -4,7 +4,7 @@ let
   inherit (inputs) self;
 in
 {
-  imports = with self.homeModules; [ common rnnoise ./dconf.nix ];
+  imports = with self.homeModules; [ common gnome rnnoise ];
 
   home = {
     stateVersion = "23.11";
@@ -19,16 +19,11 @@ in
       TSS2_LOG = "fapi+NONE";
     };
     packages = with pkgs; [
-      gnome.gnome-session
-      gnomeExtensions.caffeine
       git-annex
       hunspellDicts.en_US
     ];
     gui-packages = with pkgs; [
-      gnome.dconf-editor
       librewolf
-      helvum
-      jamesdsp
       gimp
       libreoffice
       cockatrice
@@ -106,25 +101,8 @@ in
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
 
-  services = {
-    gpg-agent = {
-      enable = true;
-      pinentryFlavor = "gnome3";
-    };
-    rnnoise.enable = true;
-  };
+  services.rnnoise.enable = true;
 
-  xdg = {
-    mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "audio/mpeg" = "umpv.desktop";
-        "application/pdf" = "org.gnome.Evince.desktop";
-        "image/png" = "org.gnome.Loupe.desktop";
-        "image/jpeg" = "org.gnome.Loupe.desktop";
-      };
-    };
-    configFile."mimeapps.list".force = true;
-    desktopEntries.cups = { name = ""; exec = null; settings.Hidden = "true"; };
-  };
+  xdg.desktopEntries.cups =
+    { name = ""; exec = null; settings.Hidden = "true"; };
 }

@@ -77,7 +77,7 @@
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.archit = ./home;
+      users.archit = ./home.nix;
       extraSpecialArgs = { inherit inputs; };
     };
 
