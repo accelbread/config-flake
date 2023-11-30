@@ -2,16 +2,13 @@
 let
   inherit (builtins) readDir mapAttrs;
   inherit (inputs.nixpkgs.lib) pipe nixosSystem filterAttrs;
-  mkSystem = hostname: cfg: cfg // {
+
+  mkSystem = hostname: cfg: nixosSystem (cfg // {
     specialArgs = { inherit inputs hostname; };
-    modules = cfg.modules ++ [
-      inputs.impermanence.nixosModules.impermanence
-      inputs.home-manager.nixosModules.home-manager
-      ./common
-    ];
-  };
+    modules = cfg.modules ++ [ inputs.self.nixosModules.common ];
+  });
 in
 pipe (readDir ./.) [
-  (filterAttrs (k: v: (v == "directory") && (k != "common")))
-  (mapAttrs (k: _: nixosSystem (import (./. + "/${k}") inputs (mkSystem k))))
+  (filterAttrs (k: v: v == "directory"))
+  (mapAttrs (k: _: mkSystem k (import (./. + "/${k}"))))
 ]

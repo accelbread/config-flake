@@ -117,7 +117,7 @@ in
 
     system.build = {
       provisionScript = pkgs.substituteAll {
-        src = ./provision-disks;
+        src = ./disk-scripts/provision-disks;
         isExecutable = true;
         inherit hostname;
         inherit (cfg) devices size swap;
@@ -135,7 +135,7 @@ in
       };
 
       mountScript = pkgs.substituteAll {
-        src = ./mount-disks;
+        src = ./disk-scripts/mount-disks;
         isExecutable = true;
         inherit hostname;
         devicesPart = map getPartPrefix cfg.devices;
@@ -147,7 +147,7 @@ in
       };
 
       unmountScript = pkgs.substituteAll {
-        src = ./unmount-disks;
+        src = ./disk-scripts/unmount-disks;
         isExecutable = true;
         inherit hostname;
         devicesPart = map getPartPrefix cfg.devices;

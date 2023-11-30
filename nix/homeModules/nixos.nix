@@ -80,7 +80,7 @@ in
             lib.getExe (pkgs.writeShellApplication {
               name = "tpm2-pkcs11-init";
               runtimeInputs = with pkgs; [ tpm2-pkcs11 gnugrep coreutils ];
-              text = builtins.readFile ./tpm2-pkcs11-init.sh;
+              text = builtins.readFile ./scripts/tpm2-pkcs11-init;
             })
           }
         '';

@@ -15,5 +15,5 @@ let
 in
 pipe (readDir ./.) [
   (filterAttrs (k: v: v == "directory"))
-  (mapAttrs (k: _: mkHome k (import (./. + "/${k}") inputs)))
+  (mapAttrs (k: _: mkHome k (import (./. + "/${k}"))))
 ]

@@ -1,5 +1,8 @@
 { pkgs, inputs, ... }: {
-  imports = [ inputs.nixos-hardware.nixosModules.framework-13th-gen-intel ];
+  imports = [
+    inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
+    inputs.self.nixosModules.desktop
+  ];
 
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];

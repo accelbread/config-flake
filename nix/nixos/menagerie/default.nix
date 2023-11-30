@@ -1,8 +1,7 @@
-inputs: mkSystem:
-mkSystem {
+{
   system = "aarch64-linux";
   modules = [
-    ./rpi4.nix
+    ./configuration.nix
     ./home-assistant.nix
     {
       sysconfig = {

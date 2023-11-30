@@ -5,12 +5,12 @@ let
 in
 {
   imports = [
+    inputs.impermanence.nixosModules.impermanence
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.bind-fonts-icons
     self.nixosModules.tpm2-tss-fapi
     self.nixosModules.kernel
-    ./desktop.nix
-    ./disks
+    self.nixosModules.disks
   ];
 
   nixpkgs.overlays = with inputs; [
