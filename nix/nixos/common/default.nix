@@ -8,7 +8,7 @@ in
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.bind-fonts-icons
     self.nixosModules.tpm2-tss-fapi
-    ./kernel.nix
+    self.nixosModules.kernel
     ./desktop.nix
     ./disks
   ];
