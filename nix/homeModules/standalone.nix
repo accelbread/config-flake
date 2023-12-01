@@ -29,18 +29,13 @@ in
       noto-fonts-cjk-serif
       noto-fonts-emoji
     ];
-  };
-
-  programs = {
-    home-manager.enable = true;
-    bash = {
-      enable = true;
-      profileExtra = ''
-        export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
-        export TERMINFO_DIRS="$HOME/.nix-profile/share/terminfo:$TERMINFO_DIRS"
-        export ASPELL_CONF="dict-dir $HOME/.nix-profile/lib/aspell"
-        export EDITOR=zile
-      '';
+    sessionVariables = {
+      XDG_DATA_DIRS = "$HOME/.nix-profile/share:$XDG_DATA_DIRS";
+      TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:$TERMINFO_DIRS";
+      ASPELL_CONF = "dict-dir $HOME/.nix-profile/lib/aspell";
+      EDITOR = "zile";
     };
   };
+
+  programs.home-manager.enable = true;
 }

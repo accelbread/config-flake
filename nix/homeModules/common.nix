@@ -20,6 +20,7 @@
       podman
     ];
     file.".fdignore".source = ../../dotfiles/fdignore;
+    sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
   };
 
   fonts.fontconfig.enable = true;
@@ -29,20 +30,15 @@
 
   programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
     man.generateCaches = true;
-    bash = {
-      initExtra = ''
-        if [[ -z "$LS_COLORS" ]]; then
-            eval "$(${pkgs.coreutils}/bin/dircolors -b)"
-        fi
+    bash.initExtra = ''
+      if [[ -z "$LS_COLORS" ]]; then
+          eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+      fi
 
-        HISTCONTROL=ignoreboth
+      HISTCONTROL=ignoreboth
 
-        unset HISTFILE
-      '';
-      profileExtra = ''
-        export CMAKE_EXPORT_COMPILE_COMMANDS=ON
-      '';
-    };
+      unset HISTFILE
+    '';
     git = {
       userName = "Archit Gupta";
       userEmail = "archit@accelbread.com";
