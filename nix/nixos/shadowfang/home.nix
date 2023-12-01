@@ -1,4 +1,6 @@
-{ lib, ... }: {
+{ lib, pkgs, ... }: {
+  nixGL.package = pkgs.nixgl.nixGLIntel;
+
   dconf.settings = {
     "org/gnome/desktop/peripherals/touchpad" = {
       speed = 0.4;
@@ -12,6 +14,7 @@
       sleep-inactive-battery-type = "hibernate";
     };
   };
+
   home.activation.wireplumberDefaults =
     let
       defaultNodes = builtins.toFile "wireplumber-default-nodes" ''
@@ -26,5 +29,6 @@
       $DRY_RUN_CMD cat ${defaultNodes} \
         > "$HOME/.local/state/wireplumber/default-nodes"
     '';
+
   services.rnnoise.target = "alsa_input.pci-0000_00_1f.3.analog-stereo";
 }

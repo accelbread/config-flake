@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ inputs, ... }: {
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -25,6 +25,4 @@
   home-manager.sharedModules = [ ./home.nix ];
 
   hardware.cpu.amd.updateMicrocode = true;
-
-  environment.systemPackages = with pkgs; [ nixgl.nixGLMesa ];
 }
