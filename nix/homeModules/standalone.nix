@@ -29,6 +29,7 @@ in
       noto-fonts-cjk-serif
       noto-fonts-emoji
     ];
+    gui-package-prefix = "${lib.getExe config.nixGL.package} ";
     sessionVariables = {
       XDG_DATA_DIRS = "$HOME/.nix-profile/share:$XDG_DATA_DIRS";
       TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:$TERMINFO_DIRS";
