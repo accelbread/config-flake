@@ -1567,6 +1567,12 @@ Returns the tree-sitter anchor for using the generated function."
           format-buffer-function #'nix-fmt-format-buffer)
     (format-on-save-mode)))
 
+(with-eval-after-load 'eglot
+  (push-default '(nil (formatting (command . ["nixpkgs-fmt"]))
+                      (nix (maxMemoryMB . nil)
+                           (flake (autoArchive . t))))
+                eglot-workspace-configuration))
+
 (add-hook 'nix-mode-hook #'setup-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
 
