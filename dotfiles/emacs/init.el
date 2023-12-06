@@ -1596,7 +1596,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; GDB
 
-(setopt gdb-debuginfod-enable-setting nil)
+(setopt gdb-debuginfod-enable-setting nil
+        gud-chdir-before-run nil)
 
 
 ;;; Scheme
