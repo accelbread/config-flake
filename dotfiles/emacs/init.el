@@ -1653,7 +1653,9 @@ Returns the tree-sitter anchor for using the generated function."
               (function_item "->" @ts-disp-arrow)
               (match_arm "=>" @ts-disp-arrow2)
               (scoped_identifier "::" @ts-disp-scope)
-              (scoped_use_list "::" @ts-disp-scope))))))
+              (scoped_type_identifier "::" @ts-disp-scope)
+              (scoped_use_list "::" @ts-disp-scope)
+              (use_wildcard "::" @ts-disp-scope))))))
 
 (add-hook 'rust-ts-mode-hook #'setup-eglot)
 (add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
