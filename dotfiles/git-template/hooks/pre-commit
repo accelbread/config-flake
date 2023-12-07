@@ -4,6 +4,7 @@ set -euo pipefail
 
 if [ -f flake.nix ]; then
   TREE=$(mktemp -d)
+  trap 'rm -rf -- "$TREE"' EXIT
   cp -r .git "$TREE/"
   cd "$TREE"
   rm -f .git/index.lock || true
