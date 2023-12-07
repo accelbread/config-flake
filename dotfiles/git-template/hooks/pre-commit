@@ -4,6 +4,10 @@ set -euo pipefail
 
 if [ -f flake.nix ]; then
   TREE=$(mktemp -d)
-  git archive "$(git write-tree)" | tar -xC "$TREE"
+  cp -r .git "$TREE/"
+  cd "$TREE"
+  rm -f .git/index.lock || true
+  git restore .
+  rm -rf .git
   nix flake check "$TREE"
 fi
