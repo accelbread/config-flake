@@ -2,6 +2,7 @@
   system = "x86_64-linux";
   modules = [
     ./configuration.nix
+    ./mqtt-broker.nix
     {
       sysconfig.disks = {
         devices = [ "/dev/nvme0n1" "/dev/nvme1n1" ];
