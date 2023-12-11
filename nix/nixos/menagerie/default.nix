@@ -2,7 +2,6 @@
   system = "aarch64-linux";
   modules = [
     ./configuration.nix
-    ./home-assistant.nix
     {
       sysconfig = {
         disks = {
