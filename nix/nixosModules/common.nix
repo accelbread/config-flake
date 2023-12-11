@@ -76,6 +76,7 @@ in
       wifi.macAddress = "random";
       ethernet.macAddress = "stable";
     };
+    nftables.enable = true;
     firewall = {
       checkReversePath = "loose";
       allowedUDPPorts = [ config.services.tailscale.port ];
