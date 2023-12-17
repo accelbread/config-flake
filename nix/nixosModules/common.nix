@@ -138,7 +138,7 @@ in
     };
     avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns4 = true;
     };
     udev.packages = with pkgs; [ r8152-udev-rules ];
     tailscale.enable = true;

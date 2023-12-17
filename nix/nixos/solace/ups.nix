@@ -9,11 +9,38 @@ let
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
     ${sudo} -u archit ${notify-send} -c critical "$1"
   '';
+  passwordFile = "${pkgs.writeText "upspass" "upsmon_pass"}";
 in
 {
   power.ups = {
     enable = true;
     ups.desk = { driver = "usbhid-ups"; port = "auto"; };
+    users.monuser = {
+      upsmon = "master";
+      inherit passwordFile;
+    };
+    upsmon = {
+      monitor.desk = {
+        user = "monuser";
+        type = "master";
+        inherit passwordFile;
+      };
+      settings = {
+        RUN_AS_USER = lib.mkForce "nut";
+        SHUTDOWNCMD = "${sudo} ${poweroff}";
+        NOTIFYCMD = "${notifycmd}";
+        NOTIFYFLAG = [
+          [ "ONLINE" "SYSLOG+EXEC" ]
+          [ "ONBATT" "SYSLOG+EXEC" ]
+          [ "FSD" "SYSLOG+EXEC" ]
+          [ "COMMOK" "SYSLOG+EXEC" ]
+          [ "COMMBAD" "SYSLOG+EXEC" ]
+          [ "SHUTDOWN" "SYSLOG+EXEC" ]
+          [ "REPLBATT" "SYSLOG+EXEC" ]
+          [ "NOCOMM" "SYSLOG+EXEC" ]
+        ];
+      };
+    };
   };
 
   users = {
@@ -30,34 +57,13 @@ in
   services.udev.packages = [ pkgs.nut ];
 
   systemd.services = {
-    upsd.script = lib.mkForce "${pkgs.nut}/sbin/upsd -u nut";
-    upsmon.script = lib.mkForce "${pkgs.nut}/sbin/upsmon -u nut";
-    upsdrv.script = lib.mkForce "${pkgs.nut}/bin/upsdrvctl -u nut start";
+    upsd.serviceConfig.ExecStart =
+      lib.mkForce "${pkgs.nut}/sbin/upsd -u nut";
+    upsmon.serviceConfig.ExecStart =
+      lib.mkForce "${pkgs.nut}/sbin/upsmon -u nut";
+    upsdrv.serviceConfig.ExecStart =
+      lib.mkForce "${pkgs.nut}/bin/upsdrvctl -u nut start";
   };
-
-  environment.etc = builtins.mapAttrs
-    (_: v: v // { mode = "0640"; group = "nut"; })
-    {
-      "nut/upsd.conf".text = "";
-      "nut/upsd.users".text = ''
-        [monuser]
-        password = upsmon_pass
-        upsmon master
-      '';
-      "nut/upsmon.conf".text = ''
-        SHUTDOWNCMD "${sudo} ${poweroff}"
-        NOTIFYCMD ${notifycmd}
-        NOTIFYFLAG ONLINE SYSLOG+EXEC
-        NOTIFYFLAG ONBATT SYSLOG+EXEC
-        NOTIFYFLAG FSD SYSLOG+EXEC
-        NOTIFYFLAG COMMOK SYSLOG+EXEC
-        NOTIFYFLAG COMMBAD SYSLOG+EXEC
-        NOTIFYFLAG SHUTDOWN SYSLOG+EXEC
-        NOTIFYFLAG REPLBATT SYSLOG+EXEC
-        NOTIFYFLAG NOCOMM SYSLOG+EXEC
-        MONITOR desk 1 monuser upsmon_pass master
-      '';
-    };
 
   security.sudo.extraRules = [
     {
