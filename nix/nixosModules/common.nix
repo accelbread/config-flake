@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, hostname, ... }:
 let
   inherit (inputs) self;
-  inherit (builtins) mapAttrs;
+  inherit (builtins) mapAttrs substring hashString;
 in
 {
   imports = [
@@ -194,22 +194,18 @@ in
   };
 
   environment = {
-    persistence = {
-      "/persist/data" = {
-        hideMounts = true;
-        files = [ "/etc/machine-id" ];
-      };
-      "/persist/cache" = {
-        hideMounts = true;
-        directories = [
-          "/etc/NetworkManager/system-connections"
-          "/var/lib/bluetooth"
-          "/var/log"
-          "/var/lib/systemd/coredump"
-          "/var/lib/systemd/timesync"
-          "/var/lib/tailscale"
-        ];
-      };
+    etc.machine-id.text = substring 0 32
+      (hashString "sha256" "accelbread-${hostname}");
+    persistence."/persist/cache" = {
+      hideMounts = true;
+      directories = [
+        "/etc/NetworkManager/system-connections"
+        "/var/lib/bluetooth"
+        "/var/log"
+        "/var/lib/systemd/coredump"
+        "/var/lib/systemd/timesync"
+        "/var/lib/tailscale"
+      ];
     };
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = lib.singleton (pkgs.sbctl.override {
