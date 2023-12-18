@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 {
   security = {
-    apparmor.enable = true;
     forcePageTableIsolation = true;
     unprivilegedUsernsClone = true;
   };
