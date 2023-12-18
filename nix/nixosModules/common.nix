@@ -13,6 +13,8 @@ in
     self.nixosModules.disks
   ];
 
+  system.configurationRevision = self.rev or null;
+
   nixpkgs.overlays = with inputs; [
     self.overlays.overrides
     emacs-overlay.overlays.package
