@@ -81,36 +81,42 @@
   };
 
   environment = {
-    persistence."/persist".users = {
-      archit = {
-        directories = [
-          "Documents"
-          "Downloads"
-          "Music"
-          "Pictures"
-          "Videos"
-          "Library"
-          "projects"
-          "playground"
-          ".ssh/config.d"
-          ".config/emacs"
-          ".librewolf/profile"
-          ".local/share/vault"
-          ".local/share/tpm2_pkcs11"
-          ".local/share/gnupg"
-          ".local/share/pass"
-          ".local/share/flatpak"
-          ".var/app/com.valvesoftware.Steam"
-        ];
-        files = [
-          ".face"
-          ".config/monitors.xml"
-          ".ssh/ssh-cert.pub"
-        ];
+    persistence = {
+      "/persist/data".users = {
+        archit = {
+          directories = [
+            "Documents"
+            "Music"
+            "Pictures"
+            "Videos"
+            "Library"
+            "projects"
+            ".ssh/config.d"
+            ".config/emacs"
+            ".librewolf/profile"
+            ".local/share/vault"
+            ".local/share/tpm2_pkcs11"
+            ".local/share/gnupg"
+            ".local/share/pass"
+            ".var/app/com.valvesoftware.Steam"
+          ];
+          files = [
+            ".face"
+            ".ssh/ssh-cert.pub"
+          ];
+        };
+        root = {
+          home = "/root";
+          directories = [ ".tpm2_pkcs11" ];
+        };
       };
-      root = {
-        home = "/root";
-        directories = [ ".tpm2_pkcs11" ];
+      "/persist/cache".users.archit = {
+        directories = [
+          "Downloads"
+          "playground"
+          ".local/share/flatpak"
+        ];
+        files = [ ".config/monitors.xml" ];
       };
     };
     wordlist = {

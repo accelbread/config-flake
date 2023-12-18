@@ -194,17 +194,22 @@ in
   };
 
   environment = {
-    persistence."/persist" = {
-      hideMounts = true;
-      directories = [
-        "/etc/NetworkManager/system-connections"
-        "/var/lib/bluetooth"
-        "/var/log"
-        "/var/lib/systemd/coredump"
-        "/var/lib/systemd/timesync"
-        "/var/lib/tailscale"
-      ];
-      files = [ "/etc/machine-id" ];
+    persistence = {
+      "/persist/data" = {
+        hideMounts = true;
+        files = [ "/etc/machine-id" ];
+      };
+      "/persist/cache" = {
+        hideMounts = true;
+        directories = [
+          "/etc/NetworkManager/system-connections"
+          "/var/lib/bluetooth"
+          "/var/log"
+          "/var/lib/systemd/coredump"
+          "/var/lib/systemd/timesync"
+          "/var/lib/tailscale"
+        ];
+      };
     };
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = lib.singleton (pkgs.sbctl.override {
