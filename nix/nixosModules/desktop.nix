@@ -100,10 +100,7 @@
             ".local/share/pass"
             ".var/app/com.valvesoftware.Steam"
           ];
-          files = [
-            ".face"
-            ".ssh/ssh-cert.pub"
-          ];
+          files = [ ".ssh/ssh-cert.pub" ];
         };
         root = {
           home = "/root";

@@ -29,6 +29,7 @@ in
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
+      ".face".source = self + /misc/icon.png;
       ".config".source = self + /dotfiles/config;
       ".ssh".source = self + /dotfiles/ssh;
       ".librewolf".source = self + /dotfiles/librewolf;
