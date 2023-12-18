@@ -196,17 +196,14 @@ in
   environment = {
     etc.machine-id.text = substring 0 32
       (hashString "sha256" "accelbread-${hostname}");
-    persistence."/persist/cache" = {
-      hideMounts = true;
-      directories = [
-        "/etc/NetworkManager/system-connections"
-        "/var/lib/bluetooth"
-        "/var/log"
-        "/var/lib/systemd/coredump"
-        "/var/lib/systemd/timesync"
-        "/var/lib/tailscale"
-      ];
-    };
+    persistence."/persist/cache".directories = [
+      "/etc/NetworkManager/system-connections"
+      "/var/lib/bluetooth"
+      "/var/log"
+      "/var/lib/systemd/coredump"
+      "/var/lib/systemd/timesync"
+      "/var/lib/tailscale"
+    ];
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = lib.singleton (pkgs.sbctl.override {
       databasePath = "/persist/vault/secureboot";
