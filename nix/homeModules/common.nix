@@ -29,6 +29,7 @@ in
         parted
         zile
         podman
+        direnv
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
