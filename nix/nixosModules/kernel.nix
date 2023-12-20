@@ -1,4 +1,9 @@
 { config, pkgs, lib, ... }:
+let
+  checkKernelVersion = kpkgs: assert lib.versionAtLeast kpkgs.kernel.version
+    pkgs.linuxPackages_hardened.kernel.version;
+    kpkgs;
+in
 {
   security = {
     forcePageTableIsolation = true;
@@ -6,7 +11,7 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_hardened;
+    kernelPackages = checkKernelVersion pkgs.linuxPackages_6_6_hardened;
 
     kernelPatches =
       let
