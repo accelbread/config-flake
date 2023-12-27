@@ -25,17 +25,18 @@
     inherit inputs;
 
     description = "Template C application.";
-    license = "agpl3Plus";
+    license = "AGPL-3.0-or-later";
 
-    package = { stdenv, defaultMeta }:
+    package = { lib, stdenv, defaultMeta }:
       stdenv.mkDerivation {
         name = "hello-world";
-        src = ./.;
-        installPhase = ''
-          runHook preInstall
-          make DESTDIR=$out install
-          runHook postInstall
-        '';
+        src = lib.fileset.toSource {
+          root = ./.;
+          fileset = lib.fileset.fileFilter
+            (file: file.name == "GNUmakefile"
+              || lib.any file.hasExt [ "c" "h" ]) ./.;
+        };
+        installFlags = [ "DESTDIR=$(out)" ];
         meta = defaultMeta;
       };
 
