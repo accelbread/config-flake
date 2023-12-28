@@ -112,6 +112,7 @@
           "Downloads"
           "playground"
           ".local/share/flatpak"
+          ".ollama/models"
         ];
         files = [ ".config/monitors.xml" ];
       };
