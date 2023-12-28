@@ -15,7 +15,7 @@ rec {
     emacs_dir=$(mktemp -d)
     cleanup() { rm -rf "$emacs_dir"; }
     trap cleanup EXIT
-    cp -rT "${src + /dotfiles/emacs}" "$emacs_dir"
+    cp --no-preserve=all -rT "${src + /dotfiles/emacs}" "$emacs_dir"
     ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
   '';
 
