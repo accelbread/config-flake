@@ -6,6 +6,10 @@
     ./ups.nix
   ];
 
+  nixpkgs.config.rocmSupport = true;
+
+  environment.variables.HSA_OVERRIDE_GFX_VERSION = "10.3.0";
+
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
     kernelModules = [ "cpuid" "k10temp" "it87" ];

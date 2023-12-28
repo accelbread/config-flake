@@ -11,4 +11,7 @@ final: prev: {
     ];
   });
   tpm2-pkcs11 = prev.tpm2-pkcs11.override { fapiSupport = false; };
+  llama-cpp = prev.llama-cpp.override (old: {
+    openblasSupport = !old.config.rocmSupport;
+  });
 }
