@@ -10,7 +10,5 @@ final: prev: {
       "--with-statepath=/var/lib/nut"
     ];
   });
-  tpm2-pkcs11 = prev.tpm2-pkcs11.overrideAttrs (old: {
-    configureFlags = old.configureFlags or [ ] ++ [ "--enable-fapi=no" ];
-  });
+  tpm2-pkcs11 = prev.tpm2-pkcs11.override { fapiSupport = false; };
 }
