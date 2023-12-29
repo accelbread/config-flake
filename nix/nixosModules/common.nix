@@ -16,10 +16,10 @@ in
   system.configurationRevision = self.rev or null;
 
   nixpkgs.overlays = with inputs; [
-    self.overlays.overrides
     emacs-overlay.overlays.package
     nixgl.overlays.default
     self.overlays.default
+    self.overlays.overrides
   ];
 
   nix = {
