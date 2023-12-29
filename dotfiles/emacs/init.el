@@ -53,7 +53,7 @@
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
            eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools
-           flymake-vale)
+           flymake-vale ellama)
         package-native-compile t)
 
 
