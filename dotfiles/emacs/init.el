@@ -744,7 +744,8 @@
         corfu-popupinfo-hide nil
         corfu-margin-formatters '(kind-icon-margin-formatter)
         kind-icon-default-face 'corfu-default
-        kind-icon-blend-background nil
+        kind-icon-blend-background t
+        kind-icon-blend-frac 0.0
         kind-icon-default-style
         (plist-put kind-icon-default-style ':height 0.75))
 
