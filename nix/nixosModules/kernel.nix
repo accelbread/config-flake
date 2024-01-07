@@ -41,16 +41,6 @@ in
             ZERO_CALL_USED_REGS = yes;
           };
         }
-        {
-          name = "lkrg-in-tree";
-          patch = pkgs.lkrg-in-tree-patch;
-          extraStructuredConfig = with lib.kernel; {
-            SECURITY_LKRG = yes;
-            SECURITY_SELINUX = no;
-            SECURITY_SELINUX_DISABLE = lib.mkForce (option no);
-            OVERLAY_FS = yes;
-          };
-        }
       ];
 
     kernelParams = [
@@ -63,10 +53,7 @@ in
       "slab_nomerge"
       "mce=0"
       "vsyscall=none"
-      "lkrg.umh_validate=0"
-    ] ++
-    # LKRG bug (#269); remove when fixed
-    (lib.optional (pkgs.system == "aarch64-linux") "lkrg.kint_validate=1");
+    ];
 
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
