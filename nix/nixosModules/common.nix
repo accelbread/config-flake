@@ -98,7 +98,16 @@ in
       pkcs11.enable = true;
       tctiEnvironment.enable = true;
     };
-    pam.mount.fuseMountOptions = [ "noatime" "nosuid" "nodev" ];
+    pam = {
+      services = lib.genAttrs [ "login" "systemd-user" "sshd" ] (_: {
+        rules.session.umask = {
+          order = 0;
+          control = "optional";
+          modulePath = "pam_umask.so";
+        };
+      });
+      mount.fuseMountOptions = [ "noatime" "nosuid" "nodev" ];
+    };
     rtkit.enable = true;
   };
 
