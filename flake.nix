@@ -2,10 +2,13 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     flakelight = {
-      url = "github:accelbread/flakelight";
+      url = "github:nix-community/flakelight";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flakelight-elisp.url = "github:accelbread/flakelight-elisp";
+    flakelight-elisp = {
+      url = "github:accelbread/flakelight-elisp";
+      inputs.flakelight.follows = "flakelight";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager";
