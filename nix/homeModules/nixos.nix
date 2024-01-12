@@ -10,9 +10,6 @@ in
     stateVersion = "23.11";
     sessionVariables = {
       BROWSER = "librewolf";
-      MOZ_ENABLE_WAYLAND = "1";
-      MOZ_USE_XINPUT2 = "1";
-      MOZ_X11_EGL = "1";
       GDK_DPI_SCALE = "1.25";
       QT_SCALE_FACTOR = "1.25";
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
