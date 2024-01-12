@@ -29,6 +29,7 @@ in
         parted
         zile
         podman
+        ollama
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
