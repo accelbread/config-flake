@@ -6,7 +6,18 @@
     ./ups.nix
   ];
 
-  nixpkgs.config.rocmSupport = true;
+  nixpkgs = {
+    config.rocmSupport = true;
+    overlays = [
+      (final: prev: {
+        llama-cpp = prev.llama-cpp.override {
+          openclSupport = true;
+          rocmSupport = false;
+          blasSupport = false;
+        };
+      })
+    ];
+  };
 
   environment.variables.HSA_OVERRIDE_GFX_VERSION = "10.3.0";
 
