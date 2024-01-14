@@ -28,13 +28,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { flakelight, flakelight-elisp, emacs-overlay, ... }@inputs:
+  outputs = { self, flakelight, flakelight-elisp, emacs-overlay, ... }@inputs:
     flakelight ./. {
       imports = [ flakelight-elisp.flakelightModules.default ];
       inherit inputs;
       withOverlays = [
         emacs-overlay.overlays.package
-        (import ./nix/overlays/overrides.nix)
+        self.overlays.overrides
       ];
       devShell.packages = pkgs: with pkgs; [ esphome mqttui ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
