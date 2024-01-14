@@ -15,12 +15,7 @@ in
 
   system.configurationRevision = self.rev or null;
 
-  nixpkgs.overlays = with inputs; [
-    emacs-overlay.overlays.package
-    nixgl.overlays.default
-    self.overlays.default
-    self.overlays.overrides
-  ];
+  nixpkgs.overlays = [ inputs.nixgl.overlays.default ];
 
   nix = {
     registry = mapAttrs (_: v: { flake = v; }) inputs;
