@@ -11,7 +11,7 @@
       config.programs.ccache.cacheDir;
   };
 
-  users.users.archit.extraGroups = [ "dialout" "wireshark" ];
+  users.users.archit.extraGroups = [ "dialout" "wireshark" "video" "render" ];
 
   hardware = {
     opengl.enable = true;
