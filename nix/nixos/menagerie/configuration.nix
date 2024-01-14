@@ -1,5 +1,8 @@
 { config, pkgs, inputs, ... }: {
-  imports = [ inputs.nixos-hardware.nixosModules.raspberry-pi-4 ];
+  imports = [
+    inputs.nixos-hardware.nixosModules.raspberry-pi-4
+    inputs.self.nixosModules.common
+  ];
 
   boot.loader.generic-extlinux-compatible.enable = false;
 
