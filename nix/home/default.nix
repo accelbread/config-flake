@@ -1,11 +1,11 @@
-{ inputs, ... }:
+{ inputs, pkgsFor, ... }:
 let
   inherit (builtins) readDir mapAttrs head match;
   inherit (inputs.nixpkgs.lib) pipe filterAttrs;
 
   mkHome = name: cfg: inputs.home-manager.lib.homeManagerConfiguration {
     extraSpecialArgs = { inherit inputs; };
-    pkgs = inputs.nixpkgs.legacyPackages.${cfg.system};
+    pkgs = pkgsFor.${cfg.system};
     modules = cfg.modules or [ ] ++ [
       { home.username = head (match "([^@]*)(@.*)?" name); }
       { home = { inherit (cfg) stateVersion; }; }

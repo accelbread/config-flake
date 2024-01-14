@@ -5,12 +5,7 @@ in
 {
   imports = [ inputs.self.homeModules.common ];
 
-  nixpkgs.overlays = with inputs; [
-    self.overlays.overrides
-    emacs-overlay.overlays.package
-    nixgl.overlays.default
-    self.overlays.default
-  ];
+  nixpkgs.overlays = [ inputs.nixgl.overlays.default ];
 
   nix = {
     package = pkgs.nix;
