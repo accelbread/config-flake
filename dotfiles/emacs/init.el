@@ -1900,6 +1900,16 @@ Returns the tree-sitter anchor for using the generated function."
       (setq presentation-mode--exit-hook nil))))
 
 
+;;; Ollama
+
+(with-eval-after-load 'ellama
+  (setopt ellama-provider
+          (make-llm-ollama
+           :host (or (getenv "OLLAMA_HOST") "localhost")
+           :chat-model "default"
+           :embedding-model "default")))
+
+
 ;;; Commands
 
 (defun reload-buffer ()

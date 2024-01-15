@@ -5,6 +5,7 @@
     inputs.self.nixosModules.common
     inputs.self.nixosModules.desktop
     ./ups.nix
+    ./ollama.nix
   ];
 
   nixpkgs = {
