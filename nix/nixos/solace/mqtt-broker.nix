@@ -18,6 +18,7 @@
       requisite = [ "mosquitto.service" ];
       after = [ "mosquitto.service" ];
       serviceConfig.Type = "oneshot";
+      startAt = [ "*-*-* 8:00:00" "*-*-* 20:00:00" ];
       path = with pkgs; [ coreutils mqttui ];
       script = ''
         set -eu
@@ -31,15 +32,6 @@
           mqttui publish -r "home/bulb/$bulb/light/kauf_bulb/command" "$bulb_msg"
         done
       '';
-    };
-    timers."light-temp" = {
-      wantedBy = [ "mosquitto.service" ];
-      requisite = [ "mosquitto.service" ];
-      after = [ "mosquitto.service" ];
-      timerConfig = {
-        OnCalendar = [ "*-*-* 8:00:00" "*-*-* 20:00:00" ];
-        Persistent = true;
-      };
     };
   };
 }
