@@ -28,15 +28,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, flakelight, flakelight-elisp, emacs-overlay, ... }@inputs:
+  outputs = { flakelight, ... }@inputs:
     flakelight ./. {
-      imports = [ flakelight-elisp.flakelightModules.default ];
+      imports = [ inputs.flakelight-elisp.flakelightModules.default ];
       inherit inputs;
       withOverlays = [
-        emacs-overlay.overlays.package
-        self.overlays.overrides
+        inputs.nixgl.overlays.default
+        inputs.emacs-overlay.overlays.package
+        inputs.self.overlays.overrides
       ];
-      devShell.packages = pkgs: with pkgs; [ esphome mqttui ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";

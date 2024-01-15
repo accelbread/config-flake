@@ -5,8 +5,6 @@ in
 {
   imports = [ inputs.self.homeModules.common ];
 
-  nixpkgs.overlays = [ inputs.nixgl.overlays.default ];
-
   nix = {
     package = pkgs.nix;
     registry = mapAttrs (_: v: { flake = v; }) inputs;

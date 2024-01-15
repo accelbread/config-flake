@@ -15,8 +15,6 @@ in
 
   system.configurationRevision = self.rev or null;
 
-  nixpkgs.overlays = [ inputs.nixgl.overlays.default ];
-
   nix = {
     registry = mapAttrs (_: v: { flake = v; }) inputs;
     nixPath =
