@@ -30,6 +30,7 @@ in
         zile
         podman
         ollama
+        gocryptfs
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
