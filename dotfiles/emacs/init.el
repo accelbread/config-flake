@@ -1948,6 +1948,19 @@ Returns the tree-sitter anchor for using the generated function."
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
+
+(defun sort-words (reverse beg end)
+  "Sort words in region lexicographical.
+
+Interactively, REVERSE is the prefix argument, and BEG and END are the region.
+Called from a program, there are three arguments:
+REVERSE (non-nil means reverse order), BEG and END (region to sort).
+
+The variable ‘sort-fold-case’ determines whether alphabetic case affects
+the sort order."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+
 
 ;;; Local configuration
 
