@@ -10,6 +10,7 @@ let
   '';
 in
 rec {
+  default = emacs;
   emacs = writeShellScript "emacsWithConfig" ''
     set -eu
     emacs_dir=$(mktemp -d)
