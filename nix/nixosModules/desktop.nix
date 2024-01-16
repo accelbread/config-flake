@@ -82,14 +82,9 @@
 
   environment = {
     persistence = {
-      "/persist/data".users = {
+      "/persist/state".users = {
         archit = {
           directories = [
-            "Documents"
-            "Music"
-            "Pictures"
-            "Videos"
-            "Library"
             "projects"
             ".ssh/config.d"
             ".config/emacs"
@@ -107,6 +102,13 @@
           directories = [ ".tpm2_pkcs11" ];
         };
       };
+      "/persist/data".users.archit.directories = [
+        "Documents"
+        "Music"
+        "Pictures"
+        "Videos"
+        "Library"
+      ];
       "/persist/cache".users.archit.directories = [
         "Downloads"
         "playground"

@@ -101,7 +101,10 @@ in
         settings = {
           timestamp_format = "long";
           volume."/persist" = {
-            subvolume = "data";
+            subvolume = {
+              state = { };
+              data = { };
+            };
             snapshot_dir = ".snapshots";
             snapshot_preserve_min = "4h";
             snapshot_preserve = "48h 14d 4w";

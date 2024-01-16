@@ -46,6 +46,7 @@ mount -t btrfs -o "${options}" "${btrfs_devices[0]}" /mnt
 (cd /mnt
  btrfs subvolume create nix
  btrfs subvolume create persist
+ btrfs subvolume create persist/state
  btrfs subvolume create persist/data
  btrfs subvolume create persist/.snapshots
  btrfs subvolume create root
