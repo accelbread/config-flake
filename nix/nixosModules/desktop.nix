@@ -107,14 +107,11 @@
           directories = [ ".tpm2_pkcs11" ];
         };
       };
-      "/persist/cache".users.archit = {
-        directories = [
-          "Downloads"
-          "playground"
-          ".local/share/flatpak"
-        ];
-        files = [ ".config/monitors.xml" ];
-      };
+      "/persist/cache".users.archit.directories = [
+        "Downloads"
+        "playground"
+        ".local/share/flatpak"
+      ];
     };
     wordlist = {
       enable = true;
