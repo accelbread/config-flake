@@ -300,35 +300,33 @@
 
 ;;; Emoji
 
-(after-frame
- (set-fontset-font t 'emoji "Noto Emoji")
- (set-fontset-font t 'emoji "Noto Color Emoji" nil 'append))
+(after-frame (set-fontset-font t 'emoji "Noto Color Emoji"))
 
 (create-fontset-from-fontset-spec
- (font-xlfd-name (font-spec :registry "fontset-coloremoji")))
+ (font-xlfd-name (font-spec :registry "fontset-monochromeemoji")))
 
-(set-fontset-font "fontset-coloremoji" 'emoji "Noto Color Emoji")
+(set-fontset-font "fontset-monochromeemoji" 'emoji "Noto Emoji")
 
-(defface color-emoji nil
-  "Face which uses the coloremoji fontset."
+(defface monochrome-emoji nil
+  "Face which uses the monochromeemoji fontset."
   :group 'custom)
 
 (after-frame
- (set-face-attribute 'color-emoji nil :fontset "fontset-coloremoji"))
+ (set-face-attribute 'monochrome-emoji nil :fontset "fontset-monochromeemoji"))
 
-(defvar-local color-emoji-remapping nil
-  "Holds cookie for color emoji face remapping entry.")
+(defvar-local monochrome-emoji-remapping nil
+  "Holds cookie for monochrome emoji face remapping entry.")
 
-(define-minor-mode color-emoji-mode
-  "Minor mode for color emoji."
+(define-minor-mode monochrome-emoji-mode
+  "Minor mode for monochrome emoji."
   :lighter ""
-  (when color-emoji-remapping
-    (face-remap-remove-relative color-emoji-remapping))
-  (setq color-emoji-remapping
-        (and color-emoji-mode
-             (face-remap-add-relative 'default 'color-emoji))))
+  (when monochrome-emoji-remapping
+    (face-remap-remove-relative monochrome-emoji-remapping))
+  (setq monochrome-emoji-remapping
+        (and monochrome-emoji-mode
+             (face-remap-add-relative 'default 'monochrome-emoji))))
 
-(add-hook 'minibuffer-setup-hook #'color-emoji-mode)
+(add-hook 'prog-mode-hook #'monochrome-emoji-mode)
 
 
 ;;; Mode line
@@ -350,76 +348,76 @@
 
 (setopt mode-line-format
         `("%e "
-          (:propertize
-           ((:eval (when (window-dedicated-p) "📌"))
-            (:eval (cond ((meow-normal-mode-p) "😺")
-                         ((meow-insert-mode-p) "😸")
-                         ((meow-beacon-mode-p) "😻")
-                         ((meow-keypad-mode-p) "😾")
-                         ((meow-motion-mode-p) "😿")
-                         (t "🙀")))
-            (:eval (pcase (list buffer-read-only (buffer-modified-p))
-                     ('(nil nil) "✨")
-                     ('(nil t) "🖋️")
-                     ('(t nil) "🔒")
-                     ('(t t) "🔏")))
-            (:eval (when (file-remote-p default-directory) "✈️"))
-            (:eval (when envrc-mode
-                     (pcase envrc--status
-                       ('error "🚫")
-                       ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
-            (server-buffer-clients "🚨")
-            (:eval (when (buffer-narrowed-p) "🔎")))
-           face color-emoji)
+          (:eval (when (window-dedicated-p) "📌"))
+          (:eval (cond ((meow-normal-mode-p) "😺")
+                       ((meow-insert-mode-p) "😸")
+                       ((meow-beacon-mode-p) "😻")
+                       ((meow-keypad-mode-p) "😾")
+                       ((meow-motion-mode-p) "😿")
+                       (t "🙀")))
+          (:eval (pcase (list buffer-read-only (buffer-modified-p))
+                   ('(nil nil) "✨")
+                   ('(nil t) "🖋️")
+                   ('(t nil) "🔒")
+                   ('(t t) "🔏")))
+          (:eval (when (file-remote-p default-directory) "✈️"))
+          (:eval (when envrc-mode
+                   (pcase envrc--status
+                     ('error "🚫")
+                     ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
+          (server-buffer-clients "🚨")
+          (:eval (when (buffer-narrowed-p) "🔎"))
           " "
-          (:eval (propertize
-                  " %l "
-                  'display
-                  (window-font-dim-override 'mode-line
-                    (svg-lib-progress-bar
-                     (/ (float (point)) (point-max))
-                     nil :width 3 :height 0.48 :stroke 1 :padding 2
-                     :radius 1))
-                  'keymap
-                  (let ((map (make-sparse-keymap)))
-                    (define-key
-                     map [mode-line down-mouse-1]
-                     (lambda (event)
-                       (interactive "e")
-                       (let ((pos (event-start event)))
-                         (set-window-point
-                          (posn-window pos)
-                          (round (/ (* (float (point-max))
-                                       (- (car (posn-object-x-y pos))
-                                          3))
-                                    (- (car (posn-object-width-height pos))
-                                       6)))))))
-                    map)))
-          "  " (:propertize "%12b" face mode-line-buffer-id)
           (:propertize
-           (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
-                    (let ((base (coding-system-base
-                                 buffer-file-coding-system))
-                          (eol (coding-system-eol-type
-                                buffer-file-coding-system)))
-                      (if (or (eq base 'utf-8)
-                              (eq base 'undecided))
-                          (pcase eol (1 "  dos") (2 "  mac"))
-                        `("  " ,(symbol-name
-                                 (if (eq eol 0) base
-                                   buffer-file-coding-system)))))))
-           face italic)
-          (flymake-mode (:eval (when (length> (flymake-diagnostics) 0)
-                                 (list "  "
-                                       flymake-mode-line-error-counter
-                                       flymake-mode-line-warning-counter
-                                       flymake-mode-line-note-counter))))
-          "  " mode-name mode-line-process
-          (:eval (when (eq major-mode 'term-mode)
-                   (list (term-line-ending-mode-line)
-                         (when term-enable-local-echo " echo"))))
-          " " minor-mode-alist
-          "  " mode-line-misc-info))
+           ((:eval (propertize
+                    " %l "
+                    'display
+                    (window-font-dim-override 'mode-line
+                      (svg-lib-progress-bar
+                       (/ (float (point)) (point-max))
+                       nil :width 3 :height 0.48 :stroke 1 :padding 2
+                       :radius 1))
+                    'keymap
+                    (let ((map (make-sparse-keymap)))
+                      (define-key
+                       map [mode-line down-mouse-1]
+                       (lambda (event)
+                         (interactive "e")
+                         (let ((pos (event-start event)))
+                           (set-window-point
+                            (posn-window pos)
+                            (round (/ (* (float (point-max))
+                                         (- (car (posn-object-x-y pos))
+                                            3))
+                                      (- (car (posn-object-width-height pos))
+                                         6)))))))
+                      map)))
+            "  " (:propertize "%12b" face mode-line-buffer-id)
+            (:propertize
+             (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
+                      (let ((base (coding-system-base
+                                   buffer-file-coding-system))
+                            (eol (coding-system-eol-type
+                                  buffer-file-coding-system)))
+                        (if (or (eq base 'utf-8)
+                                (eq base 'undecided))
+                            (pcase eol (1 "  dos") (2 "  mac"))
+                          `("  " ,(symbol-name
+                                   (if (eq eol 0) base
+                                     buffer-file-coding-system)))))))
+             face italic)
+            (flymake-mode (:eval (when (length> (flymake-diagnostics) 0)
+                                   (list "  "
+                                         flymake-mode-line-error-counter
+                                         flymake-mode-line-warning-counter
+                                         flymake-mode-line-note-counter))))
+            "  " mode-name mode-line-process
+            (:eval (when (eq major-mode 'term-mode)
+                     (list (term-line-ending-mode-line)
+                           (when term-enable-local-echo " echo"))))
+            " " minor-mode-alist
+            "  " mode-line-misc-info)
+           face monochrome-emoji)))
 
 
 ;;; Flash active mode line for bell
