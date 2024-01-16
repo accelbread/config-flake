@@ -20,7 +20,7 @@ Copy `tpm2-cert.pub` to host's `~/.ssh`.
 
 ## Sign host key
 
-Copy `/persist/vault/ssh_host_ed25519_key.pub` to signing machine.
+Copy `/persist/state/sshd/ssh_host_ed25519_key.pub` to signing machine.
 
 ```sh
 ssh-keygen \
@@ -29,4 +29,4 @@ ssh-keygen \
   -I <hostname> -h /<path-to-key>/ssh_host_ed25519_key.pub
 ```
 
-Copy `ssh_host_ed25519_key-cert.pub` to host's `/persist/vault/`.
+Copy `ssh_host_ed25519_key-cert.pub` to host's `/persist/state/sshd/`.

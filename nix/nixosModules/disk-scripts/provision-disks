@@ -50,9 +50,9 @@ mount -t btrfs -o "${options}" "${btrfs_devices[0]}" /mnt
  btrfs subvolume create persist/data
  btrfs subvolume create persist/.snapshots
  btrfs subvolume create root
- mkdir persist/vault
- chmod 700 persist/vault
- mkpasswd --method=SHA-512 > persist/vault/user_pass
+ mkdir persist/state/system
+ chmod 700 persist/state/system
+ mkpasswd --method=SHA-512 > persist/state/system/user_pass
 )
 umount /mnt
 

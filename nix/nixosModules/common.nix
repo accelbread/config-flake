@@ -29,7 +29,7 @@ in
   boot = {
     lanzaboote = {
       enable = pkgs.system == "x86_64-linux";
-      pkiBundle = "/persist/vault/secureboot";
+      pkiBundle = "/persist/state/secureboot";
     };
     loader = {
       systemd-boot = {
@@ -161,11 +161,11 @@ in
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
         TrustedUserCAKeys = "${self + /misc/ssh_ca_user_key.pub}";
-        HostCertificate = "/persist/vault/ssh_host_ed25519_key-cert.pub";
+        HostCertificate = "/persist/state/sshd/ssh_host_ed25519_key-cert.pub";
         ClientAliveInterval = 15;
       };
       hostKeys = [{
-        path = "/persist/vault/ssh_host_ed25519_key";
+        path = "/persist/state/sshd/ssh_host_ed25519_key";
         type = "ed25519";
       }];
     };
@@ -191,7 +191,7 @@ in
       description = "Archit Gupta";
       extraGroups = [ "wheel" "networkmanager" "tss" ];
       uid = 1000;
-      hashedPasswordFile = "/persist/vault/user_pass";
+      hashedPasswordFile = "/persist/state/system/user_pass";
     };
   };
 
@@ -208,7 +208,7 @@ in
     ];
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = lib.singleton (pkgs.sbctl.override {
-      databasePath = "/persist/vault/secureboot";
+      databasePath = "/persist/state/secureboot";
     });
     gnome.excludePackages = [ pkgs.gnome-tour ];
     variables.EDITOR = "zile";
