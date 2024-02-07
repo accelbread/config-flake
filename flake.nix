@@ -38,6 +38,7 @@
         inputs.self.overlays.overrides
       ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
+      legacyPackages = pkgs: pkgs;
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";
 }
