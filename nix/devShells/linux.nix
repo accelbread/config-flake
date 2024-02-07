@@ -1,9 +1,3 @@
-{ mkShell
-, stdenv
-, ncurses
-, flex
-, bison
-}:
-mkShell {
+pkgs: with pkgs; {
   packages = [ stdenv ncurses flex bison ];
 }
