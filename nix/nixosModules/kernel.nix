@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 let
   checkKernelVersion = kpkgs: assert lib.versionAtLeast kpkgs.kernel.version
     pkgs.linuxPackages_hardened.kernel.version;
@@ -13,35 +13,28 @@ in
   boot = {
     kernelPackages = checkKernelVersion pkgs.linuxPackages_6_6_hardened;
 
-    kernelPatches =
-      let
-        inherit (lib.kernel.whenHelpers
-          config.boot.kernelPackages.kernel.version) whenAtLeast;
-      in
-      [
-        {
-          name = "hardening";
-          patch = null;
-          extraStructuredConfig = with lib.kernel; {
-            RANDOM_KMALLOC_CACHES = whenAtLeast "6.6" yes;
-            LIST_HARDENED = whenAtLeast "6.6" yes;
-            INIT_ON_ALLOC_DEFAULT_ON = yes;
-            RESET_ATTACK_MITIGATION = yes;
-            IOMMU_DEFAULT_DMA_STRICT = yes;
-            LDISC_AUTOLOAD = no;
-            BPF_JIT_ALWAYS_ON = lib.mkForce yes;
-            HW_RANDOM_TPM = yes;
-            INIT_STACK_ALL_ZERO = yes;
-            UBSAN = yes;
-            UBSAN_BOUNDS = yes;
-            UBSAN_SANITIZE_ALL = yes;
-            UBSAN_TRAP = yes;
-            USERFAULTFD = lib.mkForce no;
-            X86_IOPL_IOPERM = no;
-            ZERO_CALL_USED_REGS = yes;
-          };
-        }
-      ];
+    kernelPatches = [{
+      name = "hardening";
+      patch = null;
+      extraStructuredConfig = with lib.kernel; {
+        RANDOM_KMALLOC_CACHES = yes;
+        LIST_HARDENED = yes;
+        INIT_ON_ALLOC_DEFAULT_ON = yes;
+        RESET_ATTACK_MITIGATION = yes;
+        IOMMU_DEFAULT_DMA_STRICT = yes;
+        LDISC_AUTOLOAD = no;
+        BPF_JIT_ALWAYS_ON = lib.mkForce yes;
+        HW_RANDOM_TPM = yes;
+        INIT_STACK_ALL_ZERO = yes;
+        UBSAN = yes;
+        UBSAN_BOUNDS = yes;
+        UBSAN_SANITIZE_ALL = yes;
+        UBSAN_TRAP = yes;
+        USERFAULTFD = lib.mkForce no;
+        X86_IOPL_IOPERM = no;
+        ZERO_CALL_USED_REGS = yes;
+      };
+    }];
 
     kernelParams = [
       "init_on_alloc=1"

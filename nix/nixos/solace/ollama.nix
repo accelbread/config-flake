@@ -1,7 +1,8 @@
 {
-  services.ollama.enable = true;
-
-  systemd.services.ollama.environment.OLLAMA_HOST = "0.0.0.0";
+  services.ollama = {
+    enable = true;
+    listenAddress = "0.0.0.0";
+  };
 
   environment.persistence."/persist/cache".directories = [
     "/var/lib/private/ollama/models"
