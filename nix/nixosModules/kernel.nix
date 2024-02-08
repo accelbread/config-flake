@@ -55,6 +55,7 @@ in
       "fs.protected_regular" = 2;
       "kernel.dmesg_restrict" = true;
       "kernel.ftrace_enabled" = false;
+      "kernel.io_uring_disabled" = 2;
       "kernel.kexec_load_disabled" = true;
       "kernel.kptr_restrict" = 2;
       "kernel.perf_event_paranoid" = 3;
