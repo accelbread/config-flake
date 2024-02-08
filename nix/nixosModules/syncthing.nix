@@ -20,6 +20,7 @@ in
         relaysEnabled = false;
         localAnnounceEnabled = false;
         globalAnnounceEnabled = false;
+        crashReportingEnabled = false;
         natEnabled = false;
       };
       folders = genAttrs dirs (k: {
