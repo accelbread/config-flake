@@ -6,6 +6,7 @@ let
   cfg = config.services.syncthing;
   dirs = [ "Documents" "Music" "Pictures" "Videos" "Library" ];
   deviceIds = {
+    solace = "GFGS44Z-7J5HL34-WHN7T66-W5FDFQR-6QCTTFP-4DKACXB-ANSRE2I-BTC6RAW";
     shadowfang = "SQVQEQJ-WYREPRO-Q5IOX3S-V2BG2LE-J5XSEKB-G6GYXDH-RPYGWV2-FETQEAF";
   };
 in
