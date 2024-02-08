@@ -63,6 +63,8 @@ in
       "kernel.unprivileged_bpf_disabled" = 1;
       "kernel.yama.ptrace_scope" = 1;
       "net.core.bpf_jit_harden" = 2;
+      "net.core.rmem_max" = 2500000;
+      "net.core.wmem_max" = 2500000;
       "net.ipv4.conf.all.accept_redirects" = false;
       "net.ipv4.conf.all.rp_filter" = 2;
       "net.ipv4.conf.all.secure_redirects" = false;
