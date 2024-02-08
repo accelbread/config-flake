@@ -5,7 +5,9 @@ let
 
   cfg = config.services.syncthing;
   dirs = [ "Documents" "Music" "Pictures" "Videos" "Library" ];
-  deviceIds = { };
+  deviceIds = {
+    shadowfang = "SQVQEQJ-WYREPRO-Q5IOX3S-V2BG2LE-J5XSEKB-G6GYXDH-RPYGWV2-FETQEAF";
+  };
 in
 {
   services.syncthing = {
