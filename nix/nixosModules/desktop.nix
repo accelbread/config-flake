@@ -1,5 +1,8 @@
 { config, pkgs, lib, inputs, ... }: {
-  imports = [ inputs.home-manager.nixosModules.home-manager ];
+  imports = [
+    inputs.home-manager.nixosModules.home-manager
+    inputs.self.nixosModules.syncthing
+  ];
 
   # Allow steam package for steam-hardware udev rules
   nixpkgs.config.allowUnfreePredicate = pkg:
