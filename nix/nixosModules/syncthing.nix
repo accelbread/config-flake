@@ -39,6 +39,7 @@ in
       install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
     '';
     RestrictNetworkInterfaces = "lo tailscale0";
+    UMask = config.security.loginDefs.settings.UMASK;
   };
 
   networking.firewall.interfaces."tailscale0" = {
