@@ -38,7 +38,8 @@ in
     ExecStartPre = "+" + pkgs.writers.writeBash "syncthing-make-data-dir" ''
       install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
     '';
-    RestrictNetworkInterfaces = "lo tailscale0";
+    IPAddressAllow = "localhost 100.64.0.0/10";
+    IPAddressDeny = "any";
     UMask = config.security.loginDefs.settings.UMASK;
   };
 
