@@ -13,7 +13,7 @@ in
 {
   services.syncthing = {
     enable = true;
-    databaseDir = "/persist/state/syncthing";
+    databaseDir = "/persist/cache/syncthing";
     settings = {
       options = {
         urAccepted = -1;
