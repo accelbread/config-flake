@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 let
-  inherit (builtins) attrNames;
+  inherit (builtins) attrNames concatStringsSep;
   inherit (lib) foldl genAttrs mapAttrs mergeAttrs;
 
   cfg = config.services.syncthing;
@@ -47,32 +47,36 @@ in
     allowedUDPPorts = [ 22000 ];
   };
 
-  fileSystems = foldl mergeAttrs { } (map
-    (dir: {
-      "${cfg.dataDir}/${dir}" = {
-        device = "/home/archit/${dir}";
-        fsType = "fuse.bindfs";
-        options = [
-          "noatime"
-          "nosuid"
-          "nodev"
-          "noexec"
-          "default_permissions"
-          "map=archit/syncthing:@users/@syncthing"
-        ];
-      };
-    })
-    dirs);
-
-  environment = {
-    systemPackages = [ pkgs.bindfs ];
-    persistence."/persist/state".users.syncthing = {
-      home = cfg.dataDir;
-      files = [
-        ".config/syncthing/key.pem"
-        ".config/syncthing/cert.pem"
+  fileSystems =
+    let
+      inherit (config.users) users groups;
+      idmap = concatStringsSep " " [
+        "u:${toString users.archit.uid}:${toString users.syncthing.uid}:1"
+        "g:${toString groups.users.gid}:${toString groups.syncthing.gid}:1"
+        "b:0:0:1"
       ];
-    };
-  };
+    in
+    foldl mergeAttrs { } (map
+      (dir: {
+        "${cfg.dataDir}/${dir}" = {
+          device = "/persist/data/home/archit/${dir}";
+          options = [
+            "bind"
+            "X-mount.idmap=${idmap}"
+            "noatime"
+            "nosuid"
+            "nodev"
+            "noexec"
+          ];
+        };
+      })
+      dirs);
 
+  environment.persistence."/persist/state".users.syncthing = {
+    home = cfg.dataDir;
+    files = [
+      ".config/syncthing/key.pem"
+      ".config/syncthing/cert.pem"
+    ];
+  };
 }
