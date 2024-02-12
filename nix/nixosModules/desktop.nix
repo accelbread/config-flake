@@ -59,6 +59,7 @@
         SUBSYSTEMS=="usb", SUBSYSTEM=="block", TAG+="uaccess"
       '';
     });
+    gnome.gnome-remote-desktop.enable = false;
   };
 
   programs = {
