@@ -11,6 +11,7 @@ in
     self.nixosModules.tpm2-tss-fapi
     self.nixosModules.kernel
     self.nixosModules.disks
+    self.nixosModules.tailscale
   ];
 
   system.configurationRevision = self.rev or null;
