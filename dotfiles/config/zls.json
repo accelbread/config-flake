@@ -1,5 +1,5 @@
 {
-  "warn_style": true,
-  "use_comptime_interpreter": true,
-  "include_at_in_builtins": true
+  "enable_build_on_save": true,
+  "enable_autofix": true,
+  "warn_style": true
 }
