@@ -17,14 +17,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 {
-  inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
-    flakelight.url = "github:accelbread/flakelight";
-  };
-  outputs = { flakelight, ... }@inputs: flakelight ./. {
-    inherit inputs;
-
-    description = "Template C application.";
+  description = "Template C application.";
+  inputs.flakelight.url = "github:accelbread/flakelight";
+  outputs = { flakelight, ... }: flakelight ./. {
+    pname = "hello-world";
     license = "AGPL-3.0-or-later";
 
     package = { lib, stdenv, defaultMeta }:
@@ -42,6 +38,9 @@
 
     devShell.packages = pkgs: with pkgs; [ clang-tools coreutils ];
 
-    formatters."*.c | *.h" = "clang-format -i";
+    formatters = {
+      "*.c" = "clang-format -i";
+      "*.h" = "clang-format -i";
+    };
   };
 }
