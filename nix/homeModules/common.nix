@@ -59,8 +59,12 @@ in
           pull.ff = "only";
           user.useConfigOnly = true;
           advice.detachedHead = false;
-          diff.algorithm = "histogram";
+          diff = {
+            algorithm = "histogram";
+            submodule = "log";
+          };
           merge.conflictStyle = "diff3";
+          status.submoduleSummary = true;
           init = {
             defaultBranch = "master";
             templateDir = "${../../dotfiles/git-template}";
