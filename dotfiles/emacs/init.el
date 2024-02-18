@@ -48,12 +48,11 @@
 (setopt package-selected-packages
         '( meow gcmh rainbow-delimiters jinx which-key vundo envrc editorconfig
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
-           magit magit-todos hl-todo magit-annex git-annex virtual-comment
+           magit magit-todos hl-todo virtual-comment flymake-vale ellama
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
            eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
-           geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools
-           flymake-vale ellama)
+           geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
         package-native-compile t)
 
 
@@ -1344,12 +1343,6 @@ Returns the tree-sitter anchor for using the generated function."
         ediff-split-window-function #'split-window-horizontally)
 
 (advice-add #'ediff-quit :around #'y-or-n-p-always-y-wrapper)
-
-
-;;; Git-annex
-
-(with-eval-after-load 'dired
-  (require 'git-annex))
 
 
 ;;; Which-key
