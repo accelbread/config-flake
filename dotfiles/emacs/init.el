@@ -1299,7 +1299,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Magit
 
-(setopt magit-diff-refine-hunk 'all
+(setopt git-commit-redundant-bindings nil
+        magit-diff-refine-hunk 'all
         magit-view-git-manual-method 'man
         transient-save-history nil
         magit-save-repository-buffers 'dontask
