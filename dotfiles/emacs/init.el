@@ -1359,7 +1359,9 @@ Returns the tree-sitter anchor for using the generated function."
         which-key-sort-order 'which-key-local-then-key-order
         which-key-sort-uppercase-first nil
         which-key-unicode-correction 0
-        which-key-side-window-max-height 0.5)
+        which-key-side-window-max-height 0.5
+        which-key-allow-imprecise-window-fit nil
+        which-key-show-transient-maps t)
 
 (which-key-mode)
 
