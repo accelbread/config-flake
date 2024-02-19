@@ -79,6 +79,8 @@
     extraSpecialArgs = { inherit inputs; };
   };
 
+  xdg.portal.xdgOpenUsePortal = true;
+
   environment = {
     persistence = {
       "/persist/state".users = {
