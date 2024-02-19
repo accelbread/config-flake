@@ -82,6 +82,7 @@
   xdg.portal.xdgOpenUsePortal = true;
 
   environment = {
+    systemPackages = [ pkgs.gnome.gnome-themes-extra ];
     persistence = {
       "/persist/state".users = {
         archit = {
