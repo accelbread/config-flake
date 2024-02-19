@@ -121,6 +121,13 @@ in
         IPAddressAllow = "localhost 100.64.0.0/10";
         IPAddressDeny = "any";
       };
+      # Remove when nixpkgs package is updated
+      colord.serviceConfig = {
+        ConfigurationDirectory = "colord";
+        StateDirectory = "colord";
+        CacheDirectory = "colord";
+        RestrictAddressFamilies = "";
+      };
     };
   };
 
