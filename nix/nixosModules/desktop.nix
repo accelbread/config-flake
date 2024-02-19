@@ -71,6 +71,8 @@
     };
   };
 
+  security.polkit.extraConfig = builtins.readFile ./misc/polkit-udisks2.js;
+
   programs = {
     ccache.enable = true;
     bash.enableLsColors = false;
