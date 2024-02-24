@@ -12,7 +12,7 @@
     ];
   };
 
-  gnome.extensions = with pkgs.gnomeExtensions; [ caffeine ];
+  gnome.extensions = with pkgs.gnomeExtensions; [ caffeine app-menu-is-back ];
 
   services.gpg-agent = {
     enable = true;
