@@ -22,7 +22,7 @@ in
       hunspellDicts.en_US
     ];
     gui-packages = with pkgs; [
-      librewolf
+      (librewolf.override { nativeMessagingHosts = [ passff-host ]; })
       gimp
       libreoffice
       cockatrice
