@@ -93,7 +93,10 @@
   xdg.portal.xdgOpenUsePortal = true;
 
   environment = {
-    systemPackages = [ pkgs.gnome.gnome-themes-extra ];
+    systemPackages = [
+      pkgs.gnome.gnome-themes-extra
+      pkgs.gnome-pass-search-provider
+    ];
     persistence = {
       "/persist/state".users = {
         archit = {
