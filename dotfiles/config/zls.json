@@ -1,5 +1,4 @@
 {
   "enable_build_on_save": true,
-  "enable_autofix": true,
-  "warn_style": true
+  "enable_autofix": true
 }
