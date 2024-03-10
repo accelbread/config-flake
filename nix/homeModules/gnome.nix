@@ -17,6 +17,8 @@
   services.gpg-agent = {
     enable = true;
     pinentryFlavor = "gnome3";
+    defaultCacheTtl = 300;
+    maxCacheTtl = 1800;
     extraConfig = ''
       no-allow-external-cache
     '';
