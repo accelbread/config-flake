@@ -17,6 +17,9 @@
   services.gpg-agent = {
     enable = true;
     pinentryFlavor = "gnome3";
+    extraConfig = ''
+      no-allow-external-cache
+    '';
   };
 
   xdg = {
