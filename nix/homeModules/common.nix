@@ -31,6 +31,7 @@ in
         podman
         ollama
         gocryptfs
+        bind.dnsutils
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
