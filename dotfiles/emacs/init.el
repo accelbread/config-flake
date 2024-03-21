@@ -1186,7 +1186,6 @@
 
 (push '(eglot (styles orderless)) completion-category-overrides)
 
-(advice-add #'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
 (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
 
 (with-eval-after-load 'yasnippet
