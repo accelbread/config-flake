@@ -826,7 +826,6 @@
 (set-ls-colors)
 
 (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-silent)
-(advice-add #'pcomplete-completions-at-point :around #'cape-wrap-purify)
 
 (defun comint-disable-echo ()
   "Set `comint-process-echoes' to t in current buffer."
