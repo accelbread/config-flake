@@ -1,17 +1,11 @@
-{ pkgs, lib, ... }:
-let
-  checkKernelVersion = kpkgs: assert lib.versionAtLeast kpkgs.kernel.version
-    pkgs.linuxPackages_hardened.kernel.version;
-    kpkgs;
-in
-{
+{ pkgs, lib, ... }: {
   security = {
     forcePageTableIsolation = true;
     unprivilegedUsernsClone = true;
   };
 
   boot = {
-    kernelPackages = checkKernelVersion pkgs.linuxPackages_6_6_hardened;
+    kernelPackages = pkgs.linuxPackages_hardened;
 
     kernelPatches = [{
       name = "hardening";
