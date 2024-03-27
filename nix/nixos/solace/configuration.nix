@@ -12,10 +12,8 @@
     config.rocmSupport = true;
     overlays = [
       (final: prev: {
-        llama-cpp = prev.llama-cpp.override {
-          openclSupport = true;
-          rocmSupport = false;
-          blasSupport = false;
+        ollama = prev.ollama.override {
+          acceleration = "rocm";
         };
       })
     ];

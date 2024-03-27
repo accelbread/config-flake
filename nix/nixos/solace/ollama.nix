@@ -13,6 +13,7 @@
       HOME = "%S/ollama";
       OLLAMA_MODELS = "%S/ollama/models";
       OLLAMA_HOST = "0.0.0.0";
+      HSA_OVERRIDE_GFX_VERSION = "10.3.0";
     };
     serviceConfig = {
       ExecStart = "${lib.getExe pkgs.ollama} serve";

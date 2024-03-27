@@ -2,6 +2,5 @@ FROM mistral:7b-instruct-v0.2-q6_K
 TEMPLATE """[INST] {{ .System }} {{ .Prompt }} [/INST]"""
 PARAMETER stop "[INST]"
 PARAMETER stop "[/INST]"
-PARAMETER num_gpu 33
 PARAMETER num_ctx 8192
 PARAMETER num_predict -1
