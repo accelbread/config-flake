@@ -7,7 +7,6 @@ in
   imports = [
     inputs.impermanence.nixosModules.impermanence
     inputs.lanzaboote.nixosModules.lanzaboote
-    self.nixosModules.bind-fonts-icons
     self.nixosModules.tpm2-tss-fapi
     self.nixosModules.kernel
     self.nixosModules.disks
@@ -196,6 +195,7 @@ in
       noto-fonts-cjk-serif
       noto-fonts-color-emoji
     ];
+    fontDir.decompressFonts = true;
   };
 
   users = {
