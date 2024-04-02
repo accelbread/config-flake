@@ -1,6 +1,7 @@
 substitutions:
   light_restore_mode: ALWAYS_ON
 packages:
+  # TODO: Use commit SHA when new esphome version has support
   Kauf.RGBWW: github://accelbread/kauf-rgbww-bulbs/kauf-bulb.yaml
 esphome:
   name: ${name}
