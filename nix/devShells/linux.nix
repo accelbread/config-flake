@@ -1,3 +1,3 @@
 pkgs: with pkgs; {
-  packages = [ stdenv ncurses flex bison ];
+  packages = [ stdenv ncurses flex bison perl ];
 }
