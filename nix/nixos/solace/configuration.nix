@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -20,6 +20,9 @@
   };
 
   environment.variables.HSA_OVERRIDE_GFX_VERSION = "10.3.0";
+
+  networking.networkmanager.ethernet.macAddress =
+    lib.mkForce "5E:34:87:DE:A3:7A";
 
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
