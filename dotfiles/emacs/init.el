@@ -1173,7 +1173,10 @@
   (add-hook 'project-find-functions #'project-nix-store 95)
   (let ((inhibit-message t))
     (project-forget-projects-under "/nix/store/")
-    (project-forget-zombie-projects)))
+    (project-forget-zombie-projects))
+
+  (keymap-set project-prefix-map "R" #'rg-project)
+  (add-to-list 'project-switch-commands '(rg-project "Ripgrep") t))
 
 
 ;;; Eglot
