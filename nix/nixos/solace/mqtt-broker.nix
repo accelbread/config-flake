@@ -18,12 +18,12 @@
       requisite = [ "mosquitto.service" ];
       after = [ "mosquitto.service" ];
       serviceConfig.Type = "oneshot";
-      startAt = [ "*-*-* 8:00:00" "*-*-* 20:00:00" ];
+      startAt = [ "hourly" ];
       path = with pkgs; [ coreutils mqttui ];
       script = ''
         set -eu
         curr_time=$(date +%H:%M)
-        if [[ "$curr_time" > "08:00" ]] && [[ "$curr_time" < "20:00" ]]; then
+        if [[ "$curr_time" > "07:59" ]] && [[ "$curr_time" < "19:59" ]]; then
           bulb_msg='{"color_temp":150,"brightness":256}'
         else
           bulb_msg='{"color_temp":300,"brightness":220}'
