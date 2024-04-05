@@ -1183,7 +1183,8 @@
 
 (setopt eglot-stay-out-of '(eldoc-documentation-strategy
                             flymake-diagnostic-functions)
-        eglot-ignored-server-capabilities '(:inlayHintProvider)
+        eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider
+                                            :inlayHintProvider)
         eglot-autoshutdown t
         eglot-extend-to-xref t)
 
