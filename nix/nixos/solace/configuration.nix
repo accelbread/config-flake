@@ -19,8 +19,6 @@
     ];
   };
 
-  environment.variables.HSA_OVERRIDE_GFX_VERSION = "10.3.0";
-
   networking.networkmanager.ethernet.macAddress =
     lib.mkForce "5E:34:87:DE:A3:7A";
 
