@@ -29,7 +29,12 @@
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
-  systemd.sleep.extraConfig = "AllowSuspend=no";
+  systemd = {
+    sleep.extraConfig = "AllowSuspend=no";
+    tmpfiles.rules = [
+      "L+ /run/gdm/.config/monitors.xml - gdm gdm - ${./monitors.xml}"
+    ];
+  };
 
   services = {
     logind.extraConfig = "IdleAction=lock";

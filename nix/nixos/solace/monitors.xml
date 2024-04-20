@@ -1,31 +1,12 @@
 <monitors version="2">
   <configuration>
     <logicalmonitor>
-      <x>3840</x>
-      <y>0</y>
-      <scale>1</scale>
-      <primary>yes</primary>
-      <monitor>
-        <monitorspec>
-          <connector>DP-1</connector>
-          <vendor>GSM</vendor>
-          <product>LG HDR 4K</product>
-          <serial>0x0005060a</serial>
-        </monitorspec>
-        <mode>
-          <width>3840</width>
-          <height>2160</height>
-          <rate>59.996623992919922</rate>
-        </mode>
-      </monitor>
-    </logicalmonitor>
-    <logicalmonitor>
       <x>7680</x>
       <y>0</y>
       <scale>1</scale>
       <monitor>
         <monitorspec>
-          <connector>DP-3</connector>
+          <connector>DP-4</connector>
           <vendor>GSM</vendor>
           <product>LG HDR 4K</product>
           <serial>0x0002527d</serial>
@@ -33,7 +14,26 @@
         <mode>
           <width>3840</width>
           <height>2160</height>
-          <rate>59.996623992919922</rate>
+          <rate>59.997</rate>
+        </mode>
+      </monitor>
+    </logicalmonitor>
+    <logicalmonitor>
+      <x>3840</x>
+      <y>0</y>
+      <scale>1</scale>
+      <primary>yes</primary>
+      <monitor>
+        <monitorspec>
+          <connector>DP-3</connector>
+          <vendor>GSM</vendor>
+          <product>LG HDR 4K</product>
+          <serial>0x0005060a</serial>
+        </monitorspec>
+        <mode>
+          <width>3840</width>
+          <height>2160</height>
+          <rate>59.997</rate>
         </mode>
       </monitor>
     </logicalmonitor>
@@ -51,7 +51,7 @@
         <mode>
           <width>3840</width>
           <height>2160</height>
-          <rate>59.996623992919922</rate>
+          <rate>59.997</rate>
         </mode>
       </monitor>
     </logicalmonitor>
