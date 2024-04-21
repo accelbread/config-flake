@@ -19,9 +19,8 @@
     let
       defaultNodes = builtins.toFile "wireplumber-default-nodes" ''
         [default-nodes]
-        default.configured.audio.source=rnnoise_source
-        default.configured.audio.source.0=rnnoise_source
-        default.configured.audio.source.1=alsa_input.pci-0000_00_1f.3.analog-stereo
+        default.configured.audio.source=alsa_input.pci-0000_00_1f.3.analog-stereo
+        default.configured.audio.source.0=alsa_input.pci-0000_00_1f.3.analog-stereo
       '';
     in
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -29,6 +28,4 @@
       $DRY_RUN_CMD cat ${defaultNodes} \
         > "$HOME/.local/state/wireplumber/default-nodes"
     '';
-
-  services.rnnoise.target = "alsa_input.pci-0000_00_1f.3.analog-stereo";
 }

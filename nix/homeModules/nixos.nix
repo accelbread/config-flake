@@ -4,7 +4,7 @@ let
   inherit (inputs) self;
 in
 {
-  imports = with self.homeModules; [ common gnome rnnoise ];
+  imports = with self.homeModules; [ common gnome ];
 
   home = {
     stateVersion = "23.11";
@@ -106,8 +106,6 @@ in
     };
     mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
-
-  services.rnnoise.enable = true;
 
   xdg.desktopEntries.cups =
     { name = ""; exec = null; settings.Hidden = "true"; };
