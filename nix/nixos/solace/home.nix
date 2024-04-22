@@ -25,10 +25,8 @@
         '';
         defaultRoutes = builtins.toFile "wireplumber-default-routes" ''
           [default-routes]
-          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:input:analog-input-mic:channelMap=MONO;
-          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:input:analog-input-mic:channelVolumes=0.01;
-          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:input:analog-input-mic:latencyOffsetNsec=0
-          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:profile:output:analog-stereo+input:mono-fallback=analog-input-mic;
+          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:input:analog-input-mic={"channelMap":["MONO"], "latencyOffsetNsec":0, "mute":true, "channelVolumes":[0.005]}
+          alsa_card.usb-Elgato_Systems_Elgato_Wave_XLR_DS16M2A00891-00:profile:output:analog-stereo+input:mono-fallback=["analog-input-mic"]
         '';
       in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
