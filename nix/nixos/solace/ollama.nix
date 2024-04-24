@@ -13,6 +13,7 @@
       HOME = "%S/ollama";
       OLLAMA_MODELS = "%S/ollama/models";
       OLLAMA_HOST = "0.0.0.0";
+      OLLAMA_KEEP_ALIVE = "-1";
     };
     serviceConfig = {
       ExecStart = "${lib.getExe pkgs.ollama} serve";
