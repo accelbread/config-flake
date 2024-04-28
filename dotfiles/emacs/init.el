@@ -1903,7 +1903,8 @@ Returns the tree-sitter anchor for using the generated function."
            :chat-model "default"
            :embedding-model "default")
           ellama-session-auto-save nil
-          ellama-long-lines-length 80))
+          ellama-long-lines-length 80
+          ellama-assistant-nick "Mya"))
 
 
 ;;; Commands
