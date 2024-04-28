@@ -18,7 +18,6 @@ in
       DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
     };
     packages = with pkgs; [
-      git-annex
       hunspellDicts.en_US
     ];
     gui-packages = with pkgs; [
