@@ -1,3 +1,8 @@
 FROM dolphin-mixtral:8x7b-v2.7-q5_K_M
 PARAMETER num_ctx 32768
 PARAMETER num_predict -1
+PARAMETER temperature 1.1
+PARAMETER top_p 1
+PARAMETER top_k 0
+PARAMETER repeat_last_n 0
+PARAMETER repeat_penalty 1
