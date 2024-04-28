@@ -1175,6 +1175,8 @@
     (project-forget-projects-under "/nix/store/")
     (project-forget-zombie-projects))
 
+  (keymap-set project-prefix-map "m" #'magit-project-status)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   (keymap-set project-prefix-map "R" #'rg-project)
   (add-to-list 'project-switch-commands '(rg-project "Ripgrep") t))
 
@@ -1333,9 +1335,6 @@ Returns the tree-sitter anchor for using the generated function."
   (setq fill-column 72))
 
 (add-hook 'git-commit-mode-hook #'configure-git-commit-mode)
-
-(with-eval-after-load 'project
-  (require 'magit-extras))
 
 
 ;;; Ediff
