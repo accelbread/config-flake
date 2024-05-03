@@ -1323,6 +1323,12 @@ Returns the tree-sitter anchor for using the generated function."
   (transient-replace-suffix 'magit-commit 'magit-commit-autofixup
     '("x" "Absorb changes" magit-commit-absorb)))
 
+(defun configure-magit-mode ()
+  "Set buffer-local configurations for `magit-mode'."
+  (setq truncate-lines nil))
+
+(add-hook 'magit-mode-hook #'configure-magit-mode)
+
 (defun meow-magit-movement-configure ()
   "Set j/k in motion mode for `magit'."
   (setq meow-motion-next-function #'magit-section-forward
