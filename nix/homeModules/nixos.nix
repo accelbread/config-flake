@@ -93,6 +93,18 @@ in
     };
   };
 
+  systemd.user.services.set-album-arts = {
+    Unit.Description = "Set album arts";
+    Install.WantedBy = [ "graphical-session.target" ];
+    Service.ExecStart = "${
+      lib.getExe (pkgs.writeShellApplication {
+        name = "set-album-arts";
+        runtimeInputs = [ pkgs.glib ];
+        text = builtins.readFile ./scripts/set-album-arts;
+      })
+    }";
+  };
+
   programs = mapAttrs (_: v: v // { enable = true; }) {
     gpg.homedir = "${config.xdg.dataHome}/gnupg";
     password-store = {

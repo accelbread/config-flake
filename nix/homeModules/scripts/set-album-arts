@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd ~/Music/
+
+for dir in *; do
+  for ext in png jpg; do
+    if [ -e "$dir/cover.$ext" ]; then
+      gio set -t string "$dir" metadata::custom-icon "cover.$ext"
+      break
+    fi
+  done
+done
