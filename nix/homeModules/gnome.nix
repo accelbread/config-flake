@@ -28,10 +28,11 @@
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "audio/mpeg" = "umpv.desktop";
         "application/pdf" = "org.gnome.Evince.desktop";
         "image/png" = "org.gnome.Loupe.desktop";
         "image/jpeg" = "org.gnome.Loupe.desktop";
+        "audio/mpeg" = "io.bassi.Amberol.desktop";
+        "audio/flac" = "io.bassi.Amberol.desktop";
       };
     };
     configFile."mimeapps.list".force = true;
@@ -56,6 +57,9 @@
     with lib.hm.gvariant; {
       "ca/desrt/dconf-editor" = {
         show-warning = false;
+      };
+      "io/bassi/Amberol" = {
+        background-play = false;
       };
       "org/gnome/clocks" = {
         world-clocks = rawGvariant

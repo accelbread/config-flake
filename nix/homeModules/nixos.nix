@@ -30,6 +30,7 @@ in
       })
       gimp
       libreoffice
+      amberol
       cockatrice
     ];
     file = mapAttrs (_: v: v // { recursive = true; }) {
