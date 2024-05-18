@@ -60,6 +60,7 @@
       };
       "io/bassi/Amberol" = {
         background-play = false;
+        replay-gain = "album";
       };
       "org/gnome/clocks" = {
         world-clocks = rawGvariant
