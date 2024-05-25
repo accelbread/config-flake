@@ -115,6 +115,9 @@
       "org/gnome/nautilus/preferences" = {
         show-delete-permanently = true;
       };
+      "org/gnome/nautilus/list-view" = {
+        use-tree-view = true;
+      };
       "org/gnome/settings-daemon/plugins/color" = {
         night-light-enabled = true;
         night-light-temperature = mkUint32 4226;
@@ -142,6 +145,9 @@
       };
       "org/gtk/settings/file-chooser" = {
         clock-format = "12h";
+      };
+      "org/gtk/gtk4/settings/file-chooser" = {
+        sort-directories-first = false;
       };
     };
 }
