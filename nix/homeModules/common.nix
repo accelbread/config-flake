@@ -19,6 +19,7 @@ in
         glibcInfo
         git
         git-absorb
+        git-lfs
         ripgrep
         fd
         tree
