@@ -9,4 +9,7 @@ Host gitlab.com gitlab gl
 Host codecommit
   HostName git-codecommit.us-west-2.amazonaws.com
 
+Host hf.co
+  User git
+
 Include config.d/*
