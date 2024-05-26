@@ -15,6 +15,7 @@
         OLLAMA_MODELS = "%S/ollama/models";
         OLLAMA_HOST = "0.0.0.0";
         OLLAMA_KEEP_ALIVE = "-1";
+        ROCR_VISIBLE_DEVICES = "1,0";
       };
       serviceConfig = {
         ExecStart = "${lib.getExe pkgs.ollama} serve";
@@ -25,7 +26,9 @@
         CapabilityBoundingSet = "";
         DeviceAllow = [
           "/dev/dri/card0 rw"
+          "/dev/dri/card1 rw"
           "/dev/dri/renderD128 rw"
+          "/dev/dri/renderD129 rw"
           "/dev/kfd rw"
         ];
         DevicePolicy = "closed";
