@@ -13,13 +13,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "llama-cpp";
-  version = "3003";
+  version = "3046";
 
   src = fetchFromGitHub {
     owner = "ggerganov";
     repo = "llama.cpp";
     rev = "refs/tags/b${finalAttrs.version}";
-    hash = "sha256-5RGwUA9Xom5J88M/l4BU+SvgLMflJME6/OwLPszTeU0=";
+    hash = "sha256-jD5x2hXJZr249Gj2fKBAcXUWOGYbVXCdf/r9AG109xA=";
     leaveDotGit = true;
     postFetch = ''
       git -C "$out" rev-parse --short HEAD > $out/COMMIT
