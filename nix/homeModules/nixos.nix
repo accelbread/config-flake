@@ -14,7 +14,6 @@ in
       QT_SCALE_FACTOR = "1.25";
       TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
       TSS2_LOG = "fapi+NONE";
-      OLLAMA_HOST = "solace";
       DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
     };
     packages = with pkgs; [

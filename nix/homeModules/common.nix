@@ -30,7 +30,6 @@ in
         parted
         zile
         podman
-        ollama
         gocryptfs
         bind.dnsutils
       ];

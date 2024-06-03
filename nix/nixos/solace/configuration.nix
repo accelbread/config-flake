@@ -5,19 +5,10 @@
     inputs.self.nixosModules.common
     inputs.self.nixosModules.desktop
     ./ups.nix
-    ./ollama.nix
+    ./llama-cpp-server.nix
   ];
 
-  nixpkgs = {
-    config.rocmSupport = true;
-    overlays = [
-      (final: prev: {
-        ollama = prev.ollama.override {
-          acceleration = "rocm";
-        };
-      })
-    ];
-  };
+  nixpkgs.config.rocmSupport = true;
 
   networking.networkmanager.ethernet.macAddress =
     lib.mkForce "5E:34:87:DE:A3:7A";

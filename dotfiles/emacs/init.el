@@ -48,7 +48,7 @@
 (setopt package-selected-packages
         '( meow gcmh rainbow-delimiters jinx which-key vundo envrc editorconfig
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
-           magit magit-todos hl-todo virtual-comment flymake-vale ellama
+           magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
            adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
            eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
@@ -1898,19 +1898,6 @@ Returns the tree-sitter anchor for using the generated function."
       (text-scale-set 0)
       (run-hooks 'presentation-mode--exit-hook)
       (setq presentation-mode--exit-hook nil))))
-
-
-;;; Ollama
-
-(with-eval-after-load 'ellama
-  (setopt ellama-provider
-          (make-llm-ollama
-           :host (or (getenv "OLLAMA_HOST") "localhost")
-           :chat-model "default"
-           :embedding-model "default")
-          ellama-session-auto-save nil
-          ellama-long-lines-length 80
-          ellama-assistant-nick "Mya"))
 
 
 ;;; Commands
