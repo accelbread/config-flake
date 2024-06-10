@@ -250,6 +250,7 @@
       },
       "original": {
         "owner": "nix-community",
+        "ref": "v0.4.0",
         "repo": "lanzaboote",
         "type": "github"
       }
