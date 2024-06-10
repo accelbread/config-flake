@@ -221,9 +221,12 @@ in
       "/var/lib/tailscale"
     ];
     defaultPackages = with pkgs; [ zile git ];
-    systemPackages = lib.singleton (pkgs.sbctl.override {
-      databasePath = "/persist/state/secureboot";
-    });
+    systemPackages = with pkgs; [
+      lkl
+      (sbctl.override {
+        databasePath = "/persist/state/secureboot";
+      })
+    ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     variables.EDITOR = "zile";
     sessionVariables.TPM2_PKCS11_LOG_LEVEL = "0";
