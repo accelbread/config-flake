@@ -1,3 +1,5 @@
+Include config.d/*
+
 Host github.com github gh
   HostName github.com
   User git
@@ -11,5 +13,3 @@ Host codecommit
 
 Host hf.co
   User git
-
-Include config.d/*
