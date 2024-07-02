@@ -12,7 +12,7 @@
 
   hardware = {
     cpu.intel.updateMicrocode = true;
-    opengl.extraPackages = with pkgs; [ intel-compute-runtime ];
+    graphics.extraPackages = with pkgs; [ intel-compute-runtime ];
   };
 
   powerManagement.powertop.enable = true;

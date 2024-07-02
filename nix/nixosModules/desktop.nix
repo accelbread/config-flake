@@ -17,7 +17,7 @@
   users.users.archit.extraGroups = [ "dialout" "wireshark" "video" "render" ];
 
   hardware = {
-    opengl.enable = true;
+    graphics.enable = true;
     sensor.iio.enable = true;
     steam-hardware.enable = true;
   };
