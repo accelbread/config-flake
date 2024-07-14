@@ -32,13 +32,15 @@ in
       amberol
       cockatrice
     ];
-    file = mapAttrs (_: v: v // { recursive = true; }) {
+    file = mapAttrs (_: v: { recursive = true; } // v) {
       ".face".source = self + /misc/icon.png;
       ".config".source = self + /dotfiles/config;
       ".ssh".source = self + /dotfiles/ssh;
       ".librewolf".source = self + /dotfiles/librewolf;
-      ".librewolf/profile/chrome/firefox-vertical-tabs.css".source =
-        pkgs.firefox-vertical-tabs + /userChrome.css;
+      ".librewolf/profile/chrome/firefox-gnome-theme" = {
+        source = pkgs.firefox-gnome-theme;
+        recursive = false;
+      };
       ".local/share/flatpak/overrides" = {
         source = self + /dotfiles/flatpak_overrides;
         force = true;

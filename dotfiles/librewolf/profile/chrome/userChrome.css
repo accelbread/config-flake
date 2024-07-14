@@ -1,1 +1,28 @@
-@import url(firefox-vertical-tabs.css);
+@import "firefox-gnome-theme/userChrome.css";
+
+[titlepreface*="[vt]"] #TabsToolbar,
+[titlepreface*="[vt]"] #sidebar-header,
+[titlepreface*="[vt]"] #sidebar-splitter {
+  display: none;
+}
+
+[titlepreface*="[vt]"] #sidebar-box {
+  position: relative;
+  min-width: 33px !important;
+  width: 33px !important;
+  max-width: 33px !important;
+  z-index: 1;
+}
+
+[titlepreface*="[vt]"] #sidebar-header,
+[titlepreface*="[vt]"] #sidebar {
+  transition: min-width 115ms linear 90ms !important;
+  min-width: 33px !important;
+  will-change: min-width;
+}
+
+[titlepreface*="[vt]"] #sidebar-box:hover > #sidebar-header,
+[titlepreface*="[vt]"] #sidebar-box:hover > #sidebar {
+  min-width: 250px !important;
+  transition-delay: 0ms !important;
+}
