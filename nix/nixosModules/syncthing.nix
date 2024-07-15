@@ -22,14 +22,13 @@ in
         globalAnnounceEnabled = false;
         crashReportingEnabled = false;
         natEnabled = false;
-        connectionPriorityQuicWan = 25;
       };
       folders = genAttrs dirs (k: {
         path = "~/${k}";
         devices = attrNames deviceIds;
       });
       devices = mapAttrs
-        (k: v: { id = v; addresses = [ "quic://${k}.fluffy-bebop.ts.net" ]; })
+        (k: v: { id = v; addresses = [ "tcp://${k}.fluffy-bebop.ts.net" ]; })
         deviceIds;
     };
   };
