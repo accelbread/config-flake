@@ -9,6 +9,5 @@ if [ -f flake.nix ]; then
   cd "$TREE"
   rm -f .git/index.lock || true
   git restore .
-  rm -rf .git
   nix flake check "$TREE"
 fi
