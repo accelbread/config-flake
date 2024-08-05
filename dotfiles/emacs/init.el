@@ -954,7 +954,7 @@
 (with-eval-after-load 'abbrev
   (define-abbrev-table 'eshell-mode-abbrev-table
     '(("gitcl" "git clone --filter=blob:none")
-      ("gitsub" "git submodule update --init --recursive --depth 1"))))
+      ("gitsub" "git submodule update --init --recursive --filter=blob:none"))))
 
 (advice-add 'eat--eshell-local-mode :after
             (lambda (&rest _)
