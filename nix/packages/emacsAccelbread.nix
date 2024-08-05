@@ -8,7 +8,7 @@
 , direnv
 , fish
 , clang-tools
-, nil
+, nixd
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -73,8 +73,8 @@ let
       (setq eglot-server-programs
             `(((c-ts-mode c++-ts-mode) .
                ,(eglot-alternatives '("clangd" "${clang-tools}/bin/clangd")))
-              (nix-mode .
-               ,(eglot-alternatives '("nil" "rnix-lsp" "${nil}/bin/nil")))
+              (nix-mode . ,(eglot-alternatives
+                            '("nixd" "nil" "rnix-lsp" "${nixd}/bin/nixd")))
               . ,eglot-server-programs)))
   '';
 
