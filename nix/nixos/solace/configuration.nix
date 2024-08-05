@@ -5,7 +5,6 @@
     inputs.self.nixosModules.common
     inputs.self.nixosModules.desktop
     ./ups.nix
-    ./llama-cpp-server.nix
   ];
 
   nixpkgs.config.rocmSupport = true;
