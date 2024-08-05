@@ -6,7 +6,7 @@
       gnome.gnome-session
     ];
     gui-packages = with pkgs; [
-      gnome.dconf-editor
+      dconf-editor
       helvum
       jamesdsp
     ];
