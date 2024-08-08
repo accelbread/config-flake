@@ -69,7 +69,7 @@ in
       enable = true;
       dns = "none";
       wifi.macAddress = "random";
-      ethernet.macAddress = "stable";
+      ethernet.macAddress = "random";
     };
     nftables.enable = true;
     firewall = {
