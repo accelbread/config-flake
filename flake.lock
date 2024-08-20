@@ -225,6 +225,7 @@
       "original": {
         "owner": "nix-community",
         "repo": "impermanence",
+        "rev": "23c1f06316b67cb5dabdfe2973da3785cfe9c34a",
         "type": "github"
       }
     },
