@@ -50,7 +50,7 @@
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs
+           adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs dape
            eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
         package-native-compile t)
