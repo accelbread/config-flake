@@ -218,7 +218,7 @@ in
       "/var/log"
       "/var/lib/systemd/coredump"
       "/var/lib/systemd/timesync"
-      "/var/lib/tailscale"
+      "/var/lib/private/tailscale"
     ];
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = with pkgs; [

@@ -1,19 +1,16 @@
-{
-  users = {
-    groups.tailscaled = { };
-    users.tailscaled = {
-      group = "tailscaled";
-      isSystemUser = true;
-    };
-  };
-
+{ pkgs, ... }: {
   boot.kernelModules = [ "tun" ];
 
   systemd.services.tailscaled = {
     environment.TS_DEBUG_FIREWALL_MODE = "nftables";
     serviceConfig = {
+      ExecStart = [
+        ""
+        "${pkgs.tailscale}/bin/tailscaled --statedir /var/lib/private/tailscale"
+      ];
       User = "tailscaled";
       Group = "tailscaled";
+      DynamicUser = true;
       AmbientCapabilities = [ "CAP_NET_RAW" "CAP_NET_ADMIN" ];
       CapabilityBoundingSet = [ "CAP_NET_RAW" "CAP_NET_ADMIN" ];
       DeviceAllow = "/dev/net/tun rw";
