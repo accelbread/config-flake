@@ -196,6 +196,7 @@ in
       noto-fonts-color-emoji
     ];
     fontDir.decompressFonts = true;
+    fontconfig.useEmbeddedBitmaps = true;
   };
 
   users = {
