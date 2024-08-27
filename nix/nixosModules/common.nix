@@ -212,14 +212,21 @@ in
   environment = {
     etc.machine-id.text = substring 0 32
       (hashString "sha256" "accelbread-${hostname}");
-    persistence."/persist/cache".directories = [
-      "/etc/NetworkManager/system-connections"
-      "/var/lib/bluetooth"
-      "/var/log"
-      "/var/lib/systemd/coredump"
-      "/var/lib/systemd/timesync"
-      "/var/lib/private/tailscale"
-    ];
+    persistence = {
+      "/persist/state".enableWarnings = false;
+      "/persist/data".enableWarnings = false;
+      "/persist/cache" = {
+        enableWarnings = false;
+        directories = [
+          "/etc/NetworkManager/system-connections"
+          "/var/lib/bluetooth"
+          "/var/log"
+          "/var/lib/systemd/coredump"
+          "/var/lib/systemd/timesync"
+          "/var/lib/private/tailscale"
+        ];
+      };
+    };
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = with pkgs; [
       lkl
