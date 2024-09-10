@@ -70,6 +70,7 @@ in
             defaultBranch = "master";
             templateDir = "${../../dotfiles/git-template}";
           };
+          remote.pushDefault = "origin";
           checkout.workers = 0;
           "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
         };
