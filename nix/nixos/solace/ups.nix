@@ -16,13 +16,13 @@ in
     enable = true;
     ups.desk = { driver = "usbhid-ups"; port = "auto"; };
     users.monuser = {
-      upsmon = "master";
+      upsmon = "primary";
       inherit passwordFile;
     };
     upsmon = {
       monitor.desk = {
         user = "monuser";
-        type = "master";
+        type = "primary";
         inherit passwordFile;
       };
       settings = {

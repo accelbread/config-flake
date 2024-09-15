@@ -3,7 +3,7 @@
 
   home = {
     packages = with pkgs; [
-      gnome.gnome-session
+      gnome-session
     ];
     gui-packages = with pkgs; [
       dconf-editor
