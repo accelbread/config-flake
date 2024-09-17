@@ -92,11 +92,6 @@ in
           };
         };
       };
-      beesd.filesystems.root = {
-        spec = "/";
-        verbosity = "err";
-        extraOptions = [ "--loadavg-target" "4.0" ];
-      };
     };
 
     system.build = {
