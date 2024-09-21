@@ -31,6 +31,7 @@ in
         zile
         podman
         gocryptfs
+        awscli2
         bind.dnsutils
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
