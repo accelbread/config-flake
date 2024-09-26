@@ -35,7 +35,7 @@
       inherit inputs;
       withOverlays = [
         inputs.nixgl.overlays.default
-        inputs.emacs-overlay.overlays.package
+        inputs.emacs-overlay.overlays.default
         inputs.self.overlays.overrides
       ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";

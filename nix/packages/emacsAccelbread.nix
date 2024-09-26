@@ -1,6 +1,6 @@
 { lib
 , writeText
-, emacs29-pgtk
+, emacs-unstable-pgtk
 , emacsPackagesFor
 , git
 , vale
@@ -27,7 +27,7 @@
 let
   inherit (lib) pipe attrVals;
 
-  configPackages = pipe (../../dotfiles/emacs/init.el) (with builtins; [
+  configPackages = pipe ../../dotfiles/emacs/init.el (with builtins; [
     readFile
     (match ".*\\(setopt package-selected-packages[[:space:]]+'\\(([^)]+).*")
     head
@@ -78,7 +78,7 @@ let
               . ,eglot-server-programs)))
   '';
 
-  baseEmacs = emacs29-pgtk;
+  baseEmacs = emacs-unstable-pgtk;
 
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 

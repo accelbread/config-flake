@@ -46,11 +46,11 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
 (setopt package-selected-packages
-        '( meow gcmh rainbow-delimiters jinx which-key vundo envrc editorconfig
+        '( meow gcmh rainbow-delimiters jinx vundo envrc
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           adaptive-wrap rainbow-mode rmsbolt svg-lib reformatter devdocs dape
+           rainbow-mode rmsbolt svg-lib reformatter devdocs dape
            eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
         package-native-compile t)
@@ -242,8 +242,6 @@
 
 (hide-minor-mode 'auto-fill-function " ↩️")
 
-(setopt editorconfig-mode-lighter "")
-
 (editorconfig-mode)
 
 
@@ -273,7 +271,7 @@
 (context-menu-mode)
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'prog-mode-hook #'adaptive-wrap-prefix-mode)
+(add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
 
 (hide-minor-mode 'abbrev-mode)
 
@@ -1409,7 +1407,8 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; Flymake
 
 (setopt flymake-mode-line-format nil
-        flymake-suppress-zero-counters t)
+        flymake-suppress-zero-counters t
+        flymake-show-diagnostics-at-end-of-line 'short)
 
 (defun enable-flymake-after-locals ()
   "Hook function for `hack-local-variables-hook' to enable `flymake'."
@@ -1457,7 +1456,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Man
 
-(setopt Man-width-max nil)
+(setopt Man-width-max nil
+        Man-support-remote-systems t)
 
 (add-hook 'Man-mode-hook #'variable-pitch-mode)
 
@@ -1605,7 +1605,9 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; GDB
 
 (setopt gdb-debuginfod-enable-setting nil
-        gud-chdir-before-run nil)
+        gud-chdir-before-run nil
+        gud-highlight-current-line t
+        gdb-display-io-buffer nil)
 
 
 ;;; Scheme
