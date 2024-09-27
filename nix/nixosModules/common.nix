@@ -153,10 +153,7 @@ in
       enable = true;
       IPCAllowedGroups = [ "wheel" ];
     };
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-    };
+    avahi.enable = false;
     udev.packages = with pkgs; [ r8152-udev-rules ];
     tailscale.enable = true;
     openssh = {
@@ -182,6 +179,7 @@ in
         type = "ed25519";
       }];
     };
+    printing.enable = false;
   };
 
   fonts = {
