@@ -30,10 +30,6 @@
     thermald.enable = true;
     xserver.videoDrivers = [ "modesetting" ];
     fprintd.enable = false;
-    printing = {
-      enable = true;
-      webInterface = false;
-    };
   };
 }
 
