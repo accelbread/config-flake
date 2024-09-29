@@ -856,6 +856,9 @@
         eshell-ls-clutter-regexp "\\`\\'"
         eshell-ls-product-regexp "\\`\\'")
 
+(with-eval-after-load 'eshell
+  (eat-eshell-mode))
+
 (with-eval-after-load 'esh-cmd
   (dolist (v '(eshell-last-commmand-name
                eshell-last-command-status
@@ -889,7 +892,6 @@
 (defun my-eshell-init ()
   "Function to run in new eshell buffers."
   (remove-hook 'eshell-exit-hook #'eshell-write-history t)
-  (eat-eshell-mode)
   (fish-completion-mode)
   (setq-local completion-at-point-functions '(cape-file
                                               pcomplete-completions-at-point
