@@ -18,6 +18,7 @@ in
     };
     packages = with pkgs; [
       hunspellDicts.en_US
+      rsgain
     ];
     gui-packages = with pkgs; [
       (librewolf.override {
