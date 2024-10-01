@@ -7,6 +7,7 @@ in
   imports = [
     inputs.impermanence.nixosModules.impermanence
     inputs.lanzaboote.nixosModules.lanzaboote
+    self.nixosModules.lix
     self.nixosModules.tpm2-tss-fapi
     self.nixosModules.kernel
     self.nixosModules.disks
