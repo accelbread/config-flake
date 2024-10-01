@@ -1683,9 +1683,10 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; C/C++
 
-(require 'c-ts-mode)
-(require 'cmake-mode)
-(require 'cmake-ts-mode)
+(dolist (item '((c-mode . c-ts-mode)
+                (c++-mode . c++-ts-mode)
+                (cmake-mode . cmake-ts-mode)))
+  (add-to-list 'major-mode-remap-alist item))
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
