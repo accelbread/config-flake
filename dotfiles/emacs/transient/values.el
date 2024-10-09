@@ -1,1 +1,1 @@
-((magit-rebase "--autosquash" "--autostash"))
+((magit-rebase "--autosquash" "--autostash" "--update-refs"))
