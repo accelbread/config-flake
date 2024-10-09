@@ -1736,6 +1736,9 @@ Returns the tree-sitter anchor for using the generated function."
   (add-hook hook #'c-ts-add-custom-rules)
   (add-hook hook #'c-set-font-overrides))
 
+(with-eval-after-load 'cmake-ts-mode
+  (require 'cmake-mode))
+
 (defun use-cmake-mode-syntax-propertize-function ()
   "Use cmake-mode's `syntax-propertize-function'."
   (setq-local syntax-propertize-function cmake--syntax-propertize-function))
