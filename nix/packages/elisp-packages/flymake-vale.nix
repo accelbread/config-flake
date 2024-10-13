@@ -8,7 +8,7 @@ elpaBuild rec {
   src = (fetchFromGitHub {
     owner = "tpeacock19";
     repo = pname;
-    rev = "914f30177dec0310d1ecab1fb798f2b70a018f24";
-    sha256 = "sha256-csg8FvHFgP30laXOQr+TPDUBqbvgcLPJ+QDThF34Jbo=";
+    rev = "28d4a675ed8a186b4f3d2c3613e2eeb0d97f090c";
+    sha256 = "sha256-s+FI4rznhtyRg3swdxS/ZZXWdkAToNIG3p6xIfW2yCw=";
   }) + "/${pname}.el";
 }

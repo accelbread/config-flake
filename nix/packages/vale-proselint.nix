@@ -7,8 +7,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "errata-ai";
     repo = "proselint";
-    rev = "acedc7cb5400c65201ff06382ff0ce064bc338cb";
-    sha256 = "sha256-faeWr1bRhnKsycJY89WqnRv8qIowUmz3EQvDyjtl63w=";
+    rev = "f27b5e776bdeeb96adfc53eacfde425bb05e8c7e";
+    sha256 = "sha256-ryKJDX1JrvDWVKLC5qQGctweDf74yuwEXxl/IqumM4s=";
   };
   installPhase = ''
     runHook preInstall
