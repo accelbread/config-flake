@@ -13,6 +13,7 @@
   hardware = {
     cpu.intel.updateMicrocode = true;
     graphics.extraPackages = with pkgs; [ intel-compute-runtime ];
+    bluetooth.powerOnBoot = false;
   };
 
   powerManagement.powertop.enable = true;
