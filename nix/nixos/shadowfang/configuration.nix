@@ -23,11 +23,6 @@
   services = {
     logind.extraConfig = "IdleAction=hibernate";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
-    tlp = {
-      enable = true;
-      settings = { PCIE_ASPM_ON_BAT = "powersupersave"; };
-    };
-    power-profiles-daemon.enable = false;
     thermald.enable = true;
     xserver.videoDrivers = [ "modesetting" ];
     fprintd.enable = false;
