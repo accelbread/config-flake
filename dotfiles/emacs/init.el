@@ -1214,7 +1214,9 @@
                 (js-json-mode . json-ts-mode)
                 (toml-mode . toml-ts-mode)
                 (css-mode . css-ts-mode)
-                (js-mode . js-ts-mode)))
+                (js-mode . js-ts-mode)
+                (json-mode . json-ts-mode)
+                (jsonc-mode . json-ts-mode)))
   (add-to-list 'major-mode-remap-alist item))
 
 (defun enable-font-lock-clear-display ()
