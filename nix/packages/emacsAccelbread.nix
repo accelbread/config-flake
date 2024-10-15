@@ -96,6 +96,14 @@ let
       tree-sitter-html
       tree-sitter-css
       tree-sitter-javascript
+      tree-sitter-typescript
+      tree-sitter-tsx
+      tree-sitter-dockerfile
+      tree-sitter-go
+      tree-sitter-gomod
+      tree-sitter-lua
+      tree-sitter-php
+      tree-sitter-ruby
     ]))
     (epkgs.trivialBuild {
       pname = "emacs-default-init";

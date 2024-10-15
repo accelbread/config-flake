@@ -1210,14 +1210,32 @@
 ;;; Tree-sitter
 
 (dolist (item '((python-mode . python-ts-mode)
-                (java-mode . java-ts-mode)
-                (js-json-mode . json-ts-mode)
-                (toml-mode . toml-ts-mode)
-                (css-mode . css-ts-mode)
                 (js-mode . js-ts-mode)
+                (js-json-mode . json-ts-mode)
                 (json-mode . json-ts-mode)
-                (jsonc-mode . json-ts-mode)))
+                (jsonc-mode . json-ts-mode)
+                (html-mode . html-ts-mode)
+                (css-mode . css-ts-mode)
+                (toml-mode . toml-ts-mode)
+                (java-mode . java-ts-mode)
+                (ruby-mode . ruby-ts-mode)))
   (add-to-list 'major-mode-remap-alist item))
+
+(add-to-list 'auto-mode-alist
+             `(,(rx (or (: ?/ (? ?.) (or (: (any "Cc") "ontainer")
+                                         (: (any "Dd") "ocker"))
+                           "file" (? ?. (* (not ?/))))
+                        (: ?. (or (: (any "Cc") "ontainer")
+                                  (: (any "Dd") "ocker"))
+                           "file"))
+                    eos)
+               . dockerfile-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".tsx" eos) . tsx-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".jsx" eos) . js-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".lua" eos) . lua-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".go" eos) . go-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx "go.mod" eos) . go-mod-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".php" eos) . php-ts-mode))
 
 (defun enable-font-lock-clear-display ()
   "Add display to font-lock's managed properties."
