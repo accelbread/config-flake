@@ -23,6 +23,7 @@ in
         ripgrep
         fd
         tree
+        file
         moreutils
         jq
         gnutar
