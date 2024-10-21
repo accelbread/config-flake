@@ -19,6 +19,7 @@ in
     packages = with pkgs; [
       hunspellDicts.en_US
       rsgain
+      metaflac
     ];
     gui-packages = with pkgs; [
       (librewolf.override {
