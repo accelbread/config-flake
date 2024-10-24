@@ -1,5 +1,5 @@
 // hello-world -- Template Zig application
-// Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
+// Copyright (C) 2024 Archit Gupta <archit@accelbread.com>
 //
 // This program is free software: you can redistribute it and/or modify it under
 // the terms of the GNU Affero General Public License as published by the Free
@@ -17,21 +17,35 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 const std = @import("std");
+const builtin = @import("builtin");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{
-        .default_target = .{ .cpu_model = .baseline },
+        .default_target = .{
+            .cpu_model = if (builtin.cpu.arch == .x86_64)
+                .{ .explicit = &std.Target.x86.cpu.x86_64_v3 }
+            else
+                .baseline,
+        },
     });
     const optimize = b.standardOptimizeOption(.{
         .preferred_optimize_mode = .ReleaseSafe,
     });
 
-    const exe = b.addExecutable(.{
-        .name = "bread-box",
-        .root_source_file = .{ .path = "src/main.zig" },
+    const exe_opts = .{
+        .name = "hello-world",
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
-    });
+        .strip = optimize != .Debug,
+    };
+
+    const exe = b.addExecutable(exe_opts);
+
+    exe.pie = true;
+    exe.want_lto = optimize != .Debug;
+    exe.compress_debug_sections = .zlib;
+
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);
@@ -43,11 +57,15 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_cmd.step);
 
     const unit_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
     const run_unit_tests = b.addRunArtifact(unit_tests);
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_unit_tests.step);
+
+    const exe_check = b.addExecutable(exe_opts);
+    const check_step = b.step("check", "Check if app compiles");
+    check_step.dependOn(&exe_check.step);
 }

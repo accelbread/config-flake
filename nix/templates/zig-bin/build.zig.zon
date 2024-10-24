@@ -16,13 +16,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-const std = @import("std");
-
-pub fn main() !void {
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    try stdout.print("Hello world!\n", .{});
-    try bw.flush();
+.{
+    .name = "hello-world",
+    .version = "0.0.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "LICENSE",
+        "README.md",
+    },
 }

@@ -1,5 +1,5 @@
 # hello-world -- Template Zig application
-# Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
+# Copyright (C) 2024 Archit Gupta <archit@accelbread.com>
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Affero General Public License as published by the Free
@@ -11,8 +11,8 @@
 # FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
 # details.
 #
-# You should have received a copy of the GNU Affero General Public License along
-# with this program. If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -21,9 +21,7 @@
   inputs.flakelight-zig.url = "github:accelbread/flakelight-zig";
   outputs = { flakelight-zig, ... }:
     flakelight-zig ./. {
-      pname = "hello-world";
-      version = "0.0.1";
       license = "AGPL-3.0-or-later";
-      zigFlags = [ "-Drelease" ];
+      zigFlags = [ "--release" ];
     };
 }
