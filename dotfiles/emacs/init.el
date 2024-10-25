@@ -1210,6 +1210,7 @@
 ;;; Tree-sitter
 
 (dolist (item '((zig-mode . zig-ts-mode)
+                (rust-mode . rust-ts-mode)
                 (python-mode . python-ts-mode)
                 (js-mode . js-ts-mode)
                 (js-json-mode . json-ts-mode)
@@ -1232,6 +1233,7 @@
                     eos)
                . dockerfile-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".zig" eos) . zig-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".rs" eos) . rust-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".tsx" eos) . tsx-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".jsx" eos) . js-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".lua" eos) . lua-ts-mode))
@@ -1641,8 +1643,6 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Rust
-
-(require 'rust-ts-mode)
 
 (setq rust-ts-mode-prettify-symbols-alist nil)
 
