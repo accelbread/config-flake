@@ -6,7 +6,7 @@
 
   # Allow steam package for steam-hardware udev rules
   nixpkgs.config.allowUnfreePredicate = pkg:
-    (lib.getName pkg) == "steam-original";
+    (lib.getName pkg) == "steam-unwrapped";
 
   nix.settings = {
     keep-outputs = true;
