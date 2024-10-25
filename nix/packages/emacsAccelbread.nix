@@ -84,6 +84,7 @@ let
 
   emacsWPkgs = emacsWithPackages (epkgs: attrVals configPackages epkgs ++ [
     (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
+      tree-sitter-zig
       tree-sitter-c
       tree-sitter-cpp
       tree-sitter-cmake

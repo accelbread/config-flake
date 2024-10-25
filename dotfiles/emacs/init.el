@@ -50,8 +50,8 @@
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           rainbow-mode rmsbolt svg-lib reformatter devdocs dape
-           eglot markdown-mode clang-format cmake-mode cargo zig-mode nix-mode
+           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot
+           markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
         package-native-compile t)
 
@@ -1209,7 +1209,8 @@
 
 ;;; Tree-sitter
 
-(dolist (item '((python-mode . python-ts-mode)
+(dolist (item '((zig-mode . zig-ts-mode)
+                (python-mode . python-ts-mode)
                 (js-mode . js-ts-mode)
                 (js-json-mode . json-ts-mode)
                 (json-mode . json-ts-mode)
@@ -1230,6 +1231,7 @@
                            "file"))
                     eos)
                . dockerfile-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".zig" eos) . zig-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".tsx" eos) . tsx-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".jsx" eos) . js-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".lua" eos) . lua-ts-mode))
@@ -1780,7 +1782,10 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Zig
 
-(setopt zig-format-on-save nil)
+(reformatter-define zig-format
+  :program "zig"
+  :args '("fmt" "--stdin")
+  :mode nil)
 
 (defun zig-formatter-configure ()
   "Configure formatters for Zig files."
@@ -1788,10 +1793,8 @@ Returns the tree-sitter anchor for using the generated function."
         format-buffer-function #'zig-format-buffer)
   (format-on-save-mode))
 
-(add-hook 'zig-mode-hook #'setup-eglot)
-(add-hook 'zig-mode-hook #'zig-formatter-configure)
-
-(put 'zig-toggle-format-on-save 'completion-predicate #'ignore)
+(add-hook 'zig-ts-mode-hook #'setup-eglot)
+(add-hook 'zig-ts-mode-hook #'zig-formatter-configure)
 
 
 ;;; Haskell
