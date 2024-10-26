@@ -22,4 +22,19 @@ final: prev: {
       wrapProgram $out/bin/mount --add-flags "-o noatime"
     '';
   };
+  amberol = assert builtins.compareVersions prev.gtk4.version "4.16.0" == -1;
+    prev.amberol.override (builtins.mapAttrs (k: _: (final.appendOverlays [
+      (final: prev: {
+        gtk4 = prev.gtk4.overrideAttrs (finalAttrs: prevAttrs: {
+          version = "4.16.3";
+          src = final.fetchurl {
+            url = with finalAttrs;
+              "mirror://gnome/sources/gtk/${
+            final.lib.versions.majorMinor version}/gtk-${version}.tar.xz";
+            hash = "sha256-LsU+B9GMnwA7OeSmqDgFTZJZ4Ei2xMBdgMDQWqch2UQ=";
+          };
+          nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ final.docutils ];
+        });
+      })
+    ]).${k}));
 }
