@@ -6,6 +6,9 @@ Host github.com
 Host gitlab.com
   User git
 
+Host ssh.gitlab.gnome.org
+  User git
+
 Host codecommit
   HostName git-codecommit.us-west-2.amazonaws.com
 
