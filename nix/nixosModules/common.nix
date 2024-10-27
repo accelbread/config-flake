@@ -213,10 +213,17 @@ in
     etc.machine-id.text = substring 0 32
       (hashString "sha256" "accelbread-${hostname}");
     persistence = {
-      "/persist/state".enableWarnings = false;
-      "/persist/data".enableWarnings = false;
+      "/persist/state" = {
+        enableWarnings = false;
+        hideMounts = true;
+      };
+      "/persist/data" = {
+        enableWarnings = false;
+        hideMounts = true;
+      };
       "/persist/cache" = {
         enableWarnings = false;
+        hideMounts = true;
         directories = [
           "/etc/NetworkManager/system-connections"
           "/var/lib/bluetooth"
