@@ -131,6 +131,7 @@
           "emacs.desktop"
           "librewolf.desktop"
           "org.gnome.Nautilus.desktop"
+          "io.bassi.Amberol.desktop"
         ];
       };
       "org/gnome/shell/extensions/caffeine" = {
