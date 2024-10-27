@@ -9,6 +9,7 @@
 , fish
 , clang-tools
 , nixd
+, rust-analyzer
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -68,14 +69,10 @@ let
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
           envrc-direnv-executable "${direnv}/bin/direnv"
           scad-command "${openscad}/bin/openscad"
-          fish-completion-command "${fish}/bin/fish")
-    (with-eval-after-load 'eglot
-      (setq eglot-server-programs
-            `(((c-ts-mode c++-ts-mode) .
-               ,(eglot-alternatives '("clangd" "${clang-tools}/bin/clangd")))
-              (nix-mode . ,(eglot-alternatives
-                            '("nixd" "nil" "rnix-lsp" "${nixd}/bin/nixd")))
-              . ,eglot-server-programs)))
+          fish-completion-command "${fish}/bin/fish"
+          clangd-program "${clang-tools}/bin/clangd"
+          nixd-program "${nixd}/bin/nixd"
+          rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer")
   '';
 
   baseEmacs = emacs-unstable-pgtk;

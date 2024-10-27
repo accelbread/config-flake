@@ -1206,6 +1206,30 @@
   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
+(with-eval-after-load 'eglot
+  (setq eglot-server-programs
+        `(((c-ts-mode c++-ts-mode)
+           . ,(eglot-alternatives
+               `("clangd"
+                 ,@(and (boundp 'clangd-program)
+                        (list clangd-program)))))
+          (nix-mode
+           . ,(eglot-alternatives
+               `("nixd"
+                 ,@(and (boundp 'nixd-program)
+                        (list nixd-program)))))
+          (zig-ts-mode
+           . ("zls"))
+          (rust-ts-mode
+           . ,(eglot-alternatives
+               `("rust-analyzer"
+                 ,@(and (boundp 'rust-analyzer-program)
+                        (list rust-analyzer-program)))))
+          (java-ts-mode
+           . ("jdtls"
+              :initializationOptions
+              (:extendedClientCapabilities (:classFileContentsSupport t)))))))
+
 
 ;;; Tree-sitter
 
@@ -1601,12 +1625,6 @@ Returns the tree-sitter anchor for using the generated function."
           format-buffer-function #'nix-fmt-format-buffer)
     (format-on-save-mode)))
 
-(with-eval-after-load 'eglot
-  (push-default '(nil (formatting (command . ["nixpkgs-fmt"]))
-                      (nix (maxMemoryMB . nil)
-                           (flake (autoArchive . t))))
-                eglot-workspace-configuration))
-
 (add-hook 'nix-mode-hook #'setup-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
 
@@ -1647,10 +1665,9 @@ Returns the tree-sitter anchor for using the generated function."
 (setq rust-ts-mode-prettify-symbols-alist nil)
 
 (with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(rust-ts-mode "rust-analyzer"
-                              :initializationOptions
-                              (:check (:command "clippy")))))
+  (push-default '(:rust-analyzer
+                  (:check (:command "check")))
+                eglot-workspace-configuration))
 
 (reformatter-define rust-format
   :program "rustfmt"
@@ -1815,13 +1832,6 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Java
-
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(java-ts-mode "jdtls"
-                              :initializationOptions
-                              (:extendedClientCapabilities
-                               (:classFileContentsSupport t)))))
 
 (add-hook 'java-ts-mode-hook #'setup-eglot)
 
