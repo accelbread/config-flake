@@ -1457,8 +1457,7 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; Flymake
 
 (setopt flymake-mode-line-format nil
-        flymake-suppress-zero-counters t
-        flymake-show-diagnostics-at-end-of-line 'short)
+        flymake-suppress-zero-counters t)
 
 (defun enable-flymake-after-locals ()
   "Hook function for `hack-local-variables-hook' to enable `flymake'."
