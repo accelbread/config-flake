@@ -1256,7 +1256,7 @@
                            "file"))
                     eos)
                . dockerfile-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".zig" eos) . zig-ts-mode))
+(add-to-list 'auto-mode-alist `(,(rx (or ".zig" ".zon") eos) . zig-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".rs" eos) . rust-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".tsx" eos) . tsx-ts-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".jsx" eos) . js-ts-mode))
