@@ -58,8 +58,8 @@
       '';
     });
     gnome = {
-      tracker.enable = false;
-      tracker-miners.enable = false;
+      tinysparql.enable = false;
+      localsearch.enable = false;
       at-spi2-core.enable = true;
       gnome-browser-connector.enable = false;
       gnome-initial-setup.enable = false;
