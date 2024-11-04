@@ -1879,8 +1879,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (pdf-loader-install)
 
-(with-eval-after-load 'pdf-view
-  (hide-minor-mode 'pdf-view-midnight-minor-mode))
+(add-hook 'pdf-view-mode-hook #'pdf-view-themed-minor-mode)
 
 
 ;;; Present
