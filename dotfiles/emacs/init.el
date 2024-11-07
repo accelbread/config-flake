@@ -1397,6 +1397,8 @@ Returns the tree-sitter anchor for using the generated function."
                   (ansi-color-apply-on-region (point-min) (point-max)))))
             '((name . magit-process-apply-ansi-color)))
 
+(magit-wip-mode)
+
 
 ;;; Ediff
 
