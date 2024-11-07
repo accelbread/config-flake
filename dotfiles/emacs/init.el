@@ -1359,8 +1359,6 @@ Returns the tree-sitter anchor for using the generated function."
         magit-no-message '("Turning on "))
 
 (with-eval-after-load 'magit
-  (remove-hook 'server-switch-hook #'magit-commit-diff)
-  (remove-hook 'with-editor-filter-visit-hook #'magit-commit-diff)
   (magit-todos-mode))
 
 (with-eval-after-load 'magit-mode
@@ -1368,7 +1366,9 @@ Returns the tree-sitter anchor for using the generated function."
 
 (with-eval-after-load 'magit-commit
   (transient-replace-suffix 'magit-commit 'magit-commit-autofixup
-    '("x" "Absorb changes" magit-commit-absorb)))
+    '("x" "Absorb changes" magit-commit-absorb))
+  (remove-hook 'server-switch-hook #'magit-commit-diff)
+  (remove-hook 'with-editor-filter-visit-hook #'magit-commit-diff))
 
 (defun configure-magit-mode ()
   "Set buffer-local configurations for `magit-mode'."
