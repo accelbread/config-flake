@@ -1,9 +1,12 @@
 { elpaBuild
 , fetchFromGitHub
+, compat
 }:
 elpaBuild rec {
   pname = "flymake-vale";
   version = "0.0.1";
+
+  packageRequires = [ compat ];
 
   src = (fetchFromGitHub {
     owner = "tpeacock19";

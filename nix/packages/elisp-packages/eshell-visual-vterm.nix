@@ -1,12 +1,13 @@
 { elpaBuild
 , fetchFromGitHub
 , vterm
+, inheritenv
 }:
 elpaBuild rec {
   pname = "eshell-visual-vterm";
   version = "1.0.0";
 
-  packageRequires = [ vterm ];
+  packageRequires = [ vterm inheritenv ];
 
   src = (fetchFromGitHub {
     owner = "accelbread";
