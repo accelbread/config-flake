@@ -77,6 +77,7 @@ in
           "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
         };
         attributes = [ "*.el diff=lisp" ];
+        ignores = [ ".envrc" ];
       };
       less.keys = ''
         #env
