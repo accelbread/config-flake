@@ -28,7 +28,7 @@
         else
           bulb_msg='{"color_temp":300,"brightness":220}'
         fi
-        for bulb in kauf-bulb-df30ae kauf-bulb-df31f3; do
+        for bulb in kauf-bulb-302a8e kauf-bulb-302d18; do
           mqttui publish -r "home/bulb/$bulb/light/kauf_bulb/command" "$bulb_msg"
         done
       '';

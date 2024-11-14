@@ -1,3 +1,3 @@
 substitutions:
-  name: kauf-bulb-df31f3
+  name: kauf-bulb-302a8e
 <<: !include common/kauf-bulb.yaml
