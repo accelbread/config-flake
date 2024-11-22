@@ -76,6 +76,7 @@
         color-scheme = "prefer-dark";
         gtk-theme = "Adwaita-dark";
         locate-pointer = true;
+        accent-color = "purple";
       };
       "org/gnome/desktop/media-handling" = {
         automount = false;
