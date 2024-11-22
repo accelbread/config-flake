@@ -107,7 +107,6 @@
         resize-with-right-button = true;
       };
       "org/gnome/mutter" = {
-        current-workspace-only = false;
         dynamic-workspaces = true;
         edge-tiling = true;
         workspaces-only-on-primary = true;
