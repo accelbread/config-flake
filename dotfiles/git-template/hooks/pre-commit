@@ -1,5 +1,4 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i bash --pure -p coreutils nix git gnutar
+#!/usr/bin/env bash
 set -euo pipefail
 
 if [ -f flake.nix ]; then
