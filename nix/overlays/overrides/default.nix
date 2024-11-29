@@ -22,4 +22,9 @@ final: prev: {
       wrapProgram $out/bin/mount --add-flags "-o noatime"
     '';
   };
+  amberol = prev.amberol.overrideAttrs (old: {
+    patches = old.patches or [ ] ++ [
+      ./patches/amberol/disable_cover_caching.patch
+    ];
+  });
 }

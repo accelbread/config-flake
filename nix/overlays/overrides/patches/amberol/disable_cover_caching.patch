@@ -1,0 +1,13 @@
+diff --git a/src/audio/cover_cache.rs b/src/audio/cover_cache.rs
+index f819107..bd3de2f 100644
+--- a/src/audio/cover_cache.rs
++++ b/src/audio/cover_cache.rs
+@@ -211,8 +211,6 @@impl CoverCache {
+                         cache: cache_path,
+                     };
+ 
+-                    self.add_entry(&uuid, res.clone());
+-
+                     Some((res, uuid))
+                 } else {
+                     None
