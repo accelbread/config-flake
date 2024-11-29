@@ -1,0 +1,48 @@
+diff --git a/src/audio/queue.rs b/src/audio/queue.rs
+index 7265595..7c2ce6d 100644
+--- a/src/audio/queue.rs
++++ b/src/audio/queue.rs
+@@ -276,6 +276,7 @@ impl Queue {
+             if shuffled {
+                 let current_pos = self.imp().current_pos.get().unwrap_or(0);
+                 self.imp().model.reshuffle(current_pos);
++                self.set_current_song(None);
+             } else {
+                 let current_pos = self.current_song_index().unwrap_or(0);
+                 let current_song = self.song_at(current_pos);
+diff --git a/src/audio/shuffle.rs b/src/audio/shuffle.rs
+index 85ac94d..4ecd15d 100644
+--- a/src/audio/shuffle.rs
++++ b/src/audio/shuffle.rs
+@@ -141,29 +141,8 @@ impl ShuffleListModel {
+             let n_songs = model.n_items();
+             let mut rng = thread_rng();
+ 
+-            let positions: Vec<u32> = if anchor == 0 {
+-                let mut before: Vec<u32> = vec![0];
+-                let mut after: Vec<u32> = (1..n_songs).collect();
+-                after.shuffle(&mut rng);
+-
+-                before.extend(after);
+-                before
+-            } else if anchor == n_songs - 1 {
+-                let mut before: Vec<u32> = (0..n_songs - 1).collect();
+-                let after: Vec<u32> = vec![n_songs - 1];
+-                before.shuffle(&mut rng);
+-
+-                before.extend(after);
+-                before
+-            } else {
+-                let mut before: Vec<u32> = (0..anchor).collect();
+-                let mut after: Vec<u32> = (anchor + 1..n_songs).collect();
+-                after.shuffle(&mut rng);
+-
+-                before.push(anchor);
+-                before.extend(after);
+-                before
+-            };
++            let mut positions: Vec<u32> = (0..n_songs).collect();
++            positions.shuffle(&mut rng);
+ 
+             self.imp().shuffle.replace(Some(positions));
+             self.items_changed(0, model.n_items(), model.n_items());

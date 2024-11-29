@@ -25,6 +25,7 @@ final: prev: {
   amberol = prev.amberol.overrideAttrs (old: {
     patches = old.patches or [ ] ++ [
       ./patches/amberol/disable_cover_caching.patch
+      ./patches/amberol/shuffle_all.patch
     ];
   });
 }
