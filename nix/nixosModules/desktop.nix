@@ -99,38 +99,47 @@
       ];
     systemPackages = [ pkgs.gnome-themes-extra ];
     persistence = {
-      "/persist/state".users = {
-        archit = {
-          directories = [
-            "projects"
-            ".ssh/config.d"
-            ".config/emacs"
-            ".librewolf/profile"
-            ".local/share/vault"
-            ".local/share/tpm2_pkcs11"
-            ".local/share/gnupg"
-            ".local/share/pass"
-            ".var/app/com.valvesoftware.Steam"
-          ];
-          files = [ ".ssh/ssh-cert.pub" ];
-        };
-        root = {
-          home = "/root";
-          directories = [ ".tpm2_pkcs11" ];
+      "/persist/state" = {
+        hideMounts = true;
+        users = {
+          archit = {
+            directories = [
+              "projects"
+              ".ssh/config.d"
+              ".config/emacs"
+              ".librewolf/profile"
+              ".local/share/vault"
+              ".local/share/tpm2_pkcs11"
+              ".local/share/gnupg"
+              ".local/share/pass"
+              ".var/app/com.valvesoftware.Steam"
+            ];
+            files = [ ".ssh/ssh-cert.pub" ];
+          };
+          root = {
+            home = "/root";
+            directories = [ ".tpm2_pkcs11" ];
+          };
         };
       };
-      "/persist/data".users.archit.directories = [
-        "Documents"
-        "Music"
-        "Pictures"
-        "Videos"
-        "Library"
-      ];
-      "/persist/cache".users.archit.directories = [
-        "Downloads"
-        "playground"
-        ".local/share/flatpak"
-      ];
+      "/persist/data" = {
+        hideMounts = true;
+        users.archit.directories = [
+          "Documents"
+          "Music"
+          "Pictures"
+          "Videos"
+          "Library"
+        ];
+      };
+      "/persist/cache" = {
+        hideMounts = true;
+        users.archit.directories = [
+          "Downloads"
+          "playground"
+          ".local/share/flatpak"
+        ];
+      };
     };
     wordlist = {
       enable = true;
