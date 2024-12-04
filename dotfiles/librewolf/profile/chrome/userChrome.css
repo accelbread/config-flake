@@ -11,7 +11,7 @@
   min-width: 33px !important;
   width: 33px !important;
   max-width: 33px !important;
-  z-index: 1;
+  z-index: 3;
 }
 
 [titlepreface*="[vt]"] #sidebar-header,
