@@ -117,6 +117,8 @@ in
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
     services = {
       systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
+      NetworkManager-wait-online.serviceConfig.ExecStart =
+        [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
       sshd.serviceConfig = {
         IPAddressAllow = "localhost 100.64.0.0/10";
         IPAddressDeny = "any";
