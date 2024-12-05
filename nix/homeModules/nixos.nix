@@ -33,6 +33,8 @@ in
       libreoffice
       amberol
       cockatrice
+      firefox
+      ungoogled-chromium
     ];
     file = mapAttrs (_: v: { recursive = true; } // v) {
       ".face".source = self + /misc/icon.png;

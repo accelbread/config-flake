@@ -152,9 +152,4 @@
       ln -s "/home/archit/projects/config-flake/flake.nix" $out
     '';
   };
-
-  system.extraDependencies = with pkgs; [
-    firefox
-    ungoogled-chromium
-  ];
 }
