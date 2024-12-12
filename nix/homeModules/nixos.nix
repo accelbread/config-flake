@@ -32,6 +32,7 @@ in
       gimp
       libreoffice
       amberol
+      fragments
       cockatrice
       firefox
       ungoogled-chromium
