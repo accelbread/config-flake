@@ -28,6 +28,9 @@
     mimeApps = {
       enable = true;
       defaultApplications = {
+        "text/html" = "librewolf.desktop";
+        "x-scheme-handler/http" = "librewolf.desktop";
+        "x-scheme-handler/https" = "librewolf.desktop";
         "application/pdf" = "org.gnome.Evince.desktop";
         "image/png" = "org.gnome.Loupe.desktop";
         "image/jpeg" = "org.gnome.Loupe.desktop";
