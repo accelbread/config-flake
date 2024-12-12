@@ -27,6 +27,9 @@
   xdg = {
     mimeApps = {
       enable = true;
+      associations.removed = {
+        "x-scheme-handler/mailto" = [ "chromium.desktop" ];
+      };
       defaultApplications = {
         "text/html" = "librewolf.desktop";
         "x-scheme-handler/http" = "librewolf.desktop";
