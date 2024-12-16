@@ -183,6 +183,7 @@ in
       }];
     };
     printing.enable = false;
+    bpftune.enable = true;
   };
 
   fonts = {

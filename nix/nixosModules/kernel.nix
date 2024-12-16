@@ -27,6 +27,9 @@
         USERFAULTFD = lib.mkForce no;
         X86_IOPL_IOPERM = no;
         ZERO_CALL_USED_REGS = yes;
+        # Breaks DWARF info (used for BTF)
+        RANDSTRUCT = lib.mkForce unset;
+        RANDSTRUCT_PERFORMANCE = lib.mkForce unset;
       };
     }];
 
