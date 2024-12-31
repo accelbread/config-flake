@@ -60,7 +60,6 @@ in
   hardware = {
     firmware = [ pkgs.linux-firmware ];
     rasdaemon.enable = true;
-    pulseaudio.enable = false;
     i2c.enable = true;
   };
 
@@ -135,6 +134,7 @@ in
 
   services = {
     fwupd.enable = true;
+    pulseaudio.enable = false;
     dnscrypt-proxy2 = {
       enable = true;
       settings = {
