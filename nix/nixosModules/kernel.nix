@@ -5,7 +5,7 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_hardened;
+    kernelPackages = pkgs.linuxPackages_6_12_hardened;
 
     kernelPatches = [{
       name = "hardening";
@@ -22,7 +22,6 @@
         INIT_STACK_ALL_ZERO = yes;
         UBSAN = yes;
         UBSAN_BOUNDS = yes;
-        UBSAN_SANITIZE_ALL = yes;
         UBSAN_TRAP = yes;
         USERFAULTFD = lib.mkForce no;
         X86_IOPL_IOPERM = no;
