@@ -21,7 +21,7 @@ in
     nixPath =
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     settings = {
-      experimental-features = "nix-command flakes";
+      experimental-features = "nix-command flakes ca-derivations";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
     };
