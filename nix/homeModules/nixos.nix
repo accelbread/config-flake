@@ -65,6 +65,7 @@ in
             $DRY_RUN_CMD ${pkgs.pass}/bin/pass git remote add \
               aws ssh://codecommit/v1/repos/pass
           fi
+          $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config remote.pushDefault aws
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config pass.signcommits true
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config user.signingkey \
             "$PASSWORD_STORE_SIGNING_KEY"
