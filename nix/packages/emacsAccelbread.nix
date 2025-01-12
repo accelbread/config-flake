@@ -1,6 +1,6 @@
 { lib
 , writeText
-, emacs-unstable-pgtk
+, emacs30-pgtk
 , emacsPackagesFor
 , git
 , vale
@@ -75,7 +75,7 @@ let
           rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer")
   '';
 
-  baseEmacs = emacs-unstable-pgtk;
+  baseEmacs = emacs30-pgtk;
 
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 

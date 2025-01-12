@@ -35,7 +35,7 @@
       inherit inputs;
       withOverlays = [
         inputs.nixgl.overlays.default
-        inputs.emacs-overlay.overlays.default
+        inputs.emacs-overlay.overlays.package
         inputs.self.overlays.overrides
         inputs.self.overlays.lix
       ];
