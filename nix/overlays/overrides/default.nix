@@ -28,10 +28,4 @@ final: prev: {
       ./patches/amberol/shuffle_all.patch
     ];
   });
-  zile = prev.zile.overrideAttrs (old: {
-    env = old.env // {
-      NIX_CFLAGS_COMPILE = assert old.env.NIX_CFLAGS_COMPILE == "";
-        "-Wno-incompatible-pointer-types";
-    };
-  });
 }
