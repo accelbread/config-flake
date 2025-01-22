@@ -8,7 +8,6 @@ in
     inputs.impermanence.nixosModules.impermanence
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.lix
-    self.nixosModules.tpm2-tss-fapi
     self.nixosModules.kernel
     self.nixosModules.disks
     self.nixosModules.tailscale
@@ -86,11 +85,6 @@ in
 
   security = {
     sudo.extraConfig = "Defaults lecture = never";
-    tpm2 = {
-      enable = true;
-      pkcs11.enable = true;
-      tctiEnvironment.enable = true;
-    };
     pam = {
       services = lib.genAttrs [ "login" "systemd-user" "sshd" ] (_: {
         rules.session.umask = {
@@ -215,7 +209,7 @@ in
     users.archit = {
       isNormalUser = true;
       description = "Archit Gupta";
-      extraGroups = [ "wheel" "networkmanager" "tss" ];
+      extraGroups = [ "wheel" "networkmanager" ];
       uid = 1000;
       hashedPasswordFile = "/persist/state/system/user_pass";
     };
@@ -248,7 +242,6 @@ in
     ];
     gnome.excludePackages = [ pkgs.gnome-tour ];
     variables.EDITOR = "zile";
-    sessionVariables.TPM2_PKCS11_LOG_LEVEL = "0";
   };
 
   programs = {
@@ -262,8 +255,6 @@ in
         certAuthority = true;
       };
       extraConfig = ''
-        PKCS11Provider /run/current-system/sw/lib/libtpm2_pkcs11.so
-        CertificateFile ~/.ssh/ssh-cert.pub
         StrictHostKeyChecking yes
         VerifyHostKeyDNS ask
         UpdateHostKeys ask

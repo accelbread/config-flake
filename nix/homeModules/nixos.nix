@@ -12,14 +12,14 @@ in
       BROWSER = "librewolf";
       GDK_DPI_SCALE = "1.25";
       QT_SCALE_FACTOR = "1.25";
-      TPM2_PKCS11_STORE = "$HOME/.local/share/tpm2_pkcs11";
-      TSS2_LOG = "fapi+NONE";
       DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
     };
     packages = with pkgs; [
       hunspellDicts.en_US
       rsgain
       flac
+      yubikey-manager
+      yubico-piv-tool
     ];
     gui-packages = with pkgs; [
       (librewolf.override {
@@ -82,20 +82,6 @@ in
             $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
             $DRY_RUN_CMD cat ${default} > "$HOME/.ssh/config.d/codecommit"
           fi
-        '';
-      tpm2-pkcs11 =
-        let
-          dir = config.home.sessionVariables.TPM2_PKCS11_STORE;
-        in
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          export TPM2_PKCS11_STORE="${dir}"
-          $DRY_RUN_CMD ${
-            lib.getExe (pkgs.writeShellApplication {
-              name = "tpm2-pkcs11-init";
-              runtimeInputs = with pkgs; [ tpm2-pkcs11 gnugrep coreutils ];
-              text = builtins.readFile ./scripts/tpm2-pkcs11-init;
-            })
-          }
         '';
     };
   };

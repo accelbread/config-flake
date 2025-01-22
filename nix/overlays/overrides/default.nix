@@ -1,4 +1,7 @@
 final: prev: {
+  gnome-keyring = prev.gnome-keyring.overrideAttrs (old: {
+    configureFlags = final.lib.remove "--enable-ssh-agent" old.configureFlags;
+  });
   nut = prev.nut.overrideAttrs (old: {
     postPatch = ">conf/Makefile.am";
     configureFlags = old.configureFlags ++ [
@@ -10,7 +13,6 @@ final: prev: {
       "--with-statepath=/var/lib/nut"
     ];
   });
-  tpm2-pkcs11 = prev.tpm2-pkcs11.override { fapiSupport = false; };
   bees = prev.bees.overrideAttrs {
     utillinux = final.runCommand final.util-linux.name
       {

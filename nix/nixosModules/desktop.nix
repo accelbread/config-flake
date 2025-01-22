@@ -67,6 +67,7 @@
       gnome-user-share.enable = false;
       rygel.enable = false;
     };
+    pcscd.enable = true;
   };
 
   security.polkit.extraConfig = builtins.readFile ./misc/polkit-udisks2.js;
@@ -101,25 +102,21 @@
     persistence = {
       "/persist/state" = {
         hideMounts = true;
-        users = {
-          archit = {
-            directories = [
-              "projects"
-              ".ssh/config.d"
-              ".config/emacs"
-              ".librewolf/profile"
-              ".local/share/vault"
-              ".local/share/tpm2_pkcs11"
-              ".local/share/gnupg"
-              ".local/share/pass"
-              ".var/app/com.valvesoftware.Steam"
-            ];
-            files = [ ".ssh/ssh-cert.pub" ];
-          };
-          root = {
-            home = "/root";
-            directories = [ ".tpm2_pkcs11" ];
-          };
+        users.archit = {
+          directories = [
+            "projects"
+            ".ssh/config.d"
+            ".config/emacs"
+            ".librewolf/profile"
+            ".local/share/vault"
+            ".local/share/gnupg"
+            ".local/share/pass"
+            ".var/app/com.valvesoftware.Steam"
+          ];
+          files = [
+            ".ssh/id_ed25519_sk"
+            ".ssh/id_ed25519_sk-cert.pub"
+          ];
         };
       };
       "/persist/data" = {

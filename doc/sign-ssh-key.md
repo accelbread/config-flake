@@ -1,32 +1,35 @@
+## Create user key
+
+With host YubiKey plugged in:
+
+```sh
+ssh-keygen -t ed25519-sk -C 'archit@<hostname>'
+```
+
 ## Sign user key
 
-On host:
+With SSH CA YubiKey plugged in:
 
 ```sh
-ssh-keygen -D /run/current-system/sw/lib/libtpm2_pkcs11.so \
-  | grep ecdsa > tpm2.pub
-```
-
-Copy to signing machine.
-
-```sh
+nix build nixpkgs#yubico-piv-tool
 ssh-keygen \
   -s /<path-to-flake>/misc/ssh_ca_user_key.pub \
-  -D /run/current-system/sw/lib/libtpm2_pkcs11.so \
-  -I 'archit@<hostname>' -n archit /<path-to-key>/tpm2.pub
+  -D /etc/profiles/per-user/archit/lib/libykcs11.so \
+  -I 'archit@<hostname>' -n archit ~/.ssh/id_ed25519_sk.pub
 ```
 
-Copy `tpm2-cert.pub` to host's `~/.ssh`.
+After entering pin, tap the Yubikey.
 
 ## Sign host key
 
-Copy `/persist/state/sshd/ssh_host_ed25519_key.pub` to signing machine.
+With SSH CA YubiKey plugged in:
 
 ```sh
+nix build nixpkgs#yubico-piv-tool
 ssh-keygen \
   -s /<path-to-flake>/misc/ssh_ca_host_key.pub \
-  -D /run/current-system/sw/lib/libtpm2_pkcs11.so \
-  -I <hostname> -h /<path-to-key>/ssh_host_ed25519_key.pub
+  -D /etc/profiles/per-user/archit/lib/libykcs11.so \
+  -I <hostname> -h /persist/state/sshd/ssh_host_ed25519_key.pub
 ```
 
-Copy `ssh_host_ed25519_key-cert.pub` to host's `/persist/state/sshd/`.
+After entering pin, tap the Yubikey.
