@@ -10,6 +10,30 @@ ykman config usb -d otp -d oath -d piv -d openpgp -d hsmauth
 ykman fido access change-pin
 ```
 
+## Main YubiKey PIV setup
+
+Set non-default PIV pin/key. Default pin is 123456
+
+```sh
+ykman piv access change-pin
+ykman piv access change-puk
+ykman piv access change-management-key -p -t -a AES256 -g
+```
+
+Create PIV keys.
+
+```sh
+ykman piv keys generate \
+  -a ECCP384 --pin-policy always --touch-policy always 82 key.pub
+ykman piv certificates generate \
+  -a sha512 -d 365 -s "ssh key" 82 key.pub
+ykman piv keys generate \
+  -a RSA2048 --pin-policy always --touch-policy always 83 key.pub
+ykman piv certificates generate \
+  -a sha512 -d 365 -s "ssh key" 83 key.pub
+ssh-keygen -D /etc/profiles/per-user/archit/lib/libykcs11.so
+```
+
 ## Set up SSH CA YubiKey
 
 Plug in the YubiKey and ensure its the only plugged in key.
@@ -27,10 +51,13 @@ connection).
 Set non-default pin/key. Default pin is 123456 and puk is 12345678
 
 ```sh
-ykman piv access change-management-key -t -a AES256 -g
 ykman piv access change-pin
 ykman piv access change-puk
+ykman piv access change-management-key -t -a AES256 -g
 ```
+
+Note above does not have `-p`. We can toss the management key when we are done
+and just reset the PIV module if we ever need to change the PIV setup.
 
 Generate the CA keys/certs.
 

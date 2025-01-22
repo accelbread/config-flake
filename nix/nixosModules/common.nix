@@ -255,6 +255,7 @@ in
         certAuthority = true;
       };
       extraConfig = ''
+        PKCS11Provider ${pkgs.yubico-piv-tool}/lib/libykcs11.so
         StrictHostKeyChecking yes
         VerifyHostKeyDNS ask
         UpdateHostKeys ask
