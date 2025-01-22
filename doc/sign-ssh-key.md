@@ -3,7 +3,7 @@
 With host YubiKey plugged in:
 
 ```sh
-ssh-keygen -t ed25519-sk -C 'archit@<hostname>'
+ssh-keygen -t ed25519-sk -O verify-required -C 'archit@<hostname>'
 ```
 
 ## Sign user key
@@ -11,7 +11,6 @@ ssh-keygen -t ed25519-sk -C 'archit@<hostname>'
 With SSH CA YubiKey plugged in:
 
 ```sh
-nix build nixpkgs#yubico-piv-tool
 ssh-keygen \
   -s /<path-to-flake>/misc/ssh_ca_user_key.pub \
   -D /etc/profiles/per-user/archit/lib/libykcs11.so \
@@ -25,7 +24,6 @@ After entering pin, tap the Yubikey.
 With SSH CA YubiKey plugged in:
 
 ```sh
-nix build nixpkgs#yubico-piv-tool
 ssh-keygen \
   -s /<path-to-flake>/misc/ssh_ca_host_key.pub \
   -D /etc/profiles/per-user/archit/lib/libykcs11.so \
