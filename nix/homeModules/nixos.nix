@@ -31,6 +31,7 @@ in
       })
       gimp
       libreoffice
+      showtime
       amberol
       fragments
       cockatrice
@@ -109,7 +110,6 @@ in
         PASSWORD_STORE_SIGNING_KEY = "C4F4D63E4C22651B053D0848DE26C77562110E92";
       };
     };
-    mpv.scripts = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
   };
 
   xdg.desktopEntries.cups =
