@@ -60,6 +60,7 @@ in
         userEmail = "archit@accelbread.com";
         extraConfig = {
           pull.ff = "only";
+          clone.filterSubmodules = true;
           user.useConfigOnly = true;
           advice.detachedHead = false;
           diff = {
