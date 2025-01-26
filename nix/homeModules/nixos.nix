@@ -34,6 +34,9 @@ in
       showtime
       amberol
       fragments
+      gnome-decoder
+      eyedropper
+      errands
       cockatrice
       firefox
       ungoogled-chromium
