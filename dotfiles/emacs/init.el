@@ -1501,8 +1501,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (font-lock-add-keywords
  'Info-mode
- '(("^[ -]*" 0 'fixed-pitch append)
-   ("^        .*" 0 'fixed-pitch append)))
+ '(("^[ -]*" 0 'fixed-pitch append)))
 
 
 ;;; Man
