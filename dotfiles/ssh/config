@@ -1,6 +1,6 @@
 Include config.d/*
 
-Host codeberg.com
+Host codeberg.org
   User git
 
 Host github.com
