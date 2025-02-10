@@ -1293,7 +1293,11 @@ Returns the tree-sitter anchor for using the generated function."
                 (rshifteq . "»=")
                 (arrow . "→")
                 (arrow2 . "⇒")
-                (scope . "›")))
+                (scope . "›")
+                (ldquote . "“")
+                (rdquote . "”")
+                (lquote . "‘")
+                (rquote . "’")))
   (defun-ts-disp (car elem) (cdr elem)))
 
 
@@ -1707,7 +1711,9 @@ Returns the tree-sitter anchor for using the generated function."
               (scoped_identifier "::" @ts-disp-scope)
               (scoped_type_identifier "::" @ts-disp-scope)
               (scoped_use_list "::" @ts-disp-scope)
-              (use_wildcard "::" @ts-disp-scope))))))
+              (use_wildcard "::" @ts-disp-scope)
+              (string_literal ("\"" @ts-disp-ldquote) (_)
+                              ("\"" @ts-disp-rdquote)))))))
 
 (add-hook 'rust-ts-mode-hook #'setup-eglot)
 (add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
@@ -1754,6 +1760,8 @@ Returns the tree-sitter anchor for using the generated function."
                 (assignment_expression "<<=" @ts-disp-lshifteq)
                 (assignment_expression ">>=" @ts-disp-rshifteq)
                 (field_expression "->" @ts-disp-arrow)
+                (string_literal ("\"" @ts-disp-ldquote) (_)
+                                ("\"" @ts-disp-rdquote))
                 ,@(when (eq mode 'cpp)
                     '((operator_name "->" @ts-disp-arrow)
                       (qualified_identifier "::" @ts-disp-scope)))))))))
