@@ -1816,8 +1816,17 @@ Returns the tree-sitter anchor for using the generated function."
         format-buffer-function #'zig-format-buffer)
   (format-on-save-mode))
 
+(defun zig-zls-autofix ()
+  "Apply zls autofixes for unused variables."
+  (eglot-code-actions nil nil "source.fixAll" t))
+
+(defun zig-zls-autofix-on-save ()
+  "Enable zls autofixes automatically when saving."
+  (add-hook 'before-save-hook #'zig-zls-autofix))
+
 (add-hook 'zig-ts-mode-hook #'setup-eglot)
 (add-hook 'zig-ts-mode-hook #'zig-formatter-configure)
+(add-hook 'zig-ts-mode-hook #'zig-zls-autofix-on-save)
 
 
 ;;; Haskell
