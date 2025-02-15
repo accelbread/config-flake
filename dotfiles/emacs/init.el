@@ -574,14 +574,12 @@
 (defvar-local meow-motion-prev-function #'meow-prev
   "Function to use for prev in motion mode.")
 
-(meow-motion-overwrite-define-key
+(meow-motion-define-key
  `("j" . ,(command-var 'meow-motion-next-function))
  `("k" . ,(command-var 'meow-motion-prev-function))
  '("<escape>" . ignore))
 
 (meow-leader-define-key
- '("j" . "H-j")
- '("k" . "H-k")
  '("1" . meow-digit-argument)
  '("2" . meow-digit-argument)
  '("3" . meow-digit-argument)
