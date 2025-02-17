@@ -70,7 +70,15 @@
     pcscd.enable = true;
   };
 
-  security.polkit.extraConfig = builtins.readFile ./misc/polkit-udisks2.js;
+  security = {
+    polkit.extraConfig = builtins.readFile ./misc/polkit-udisks2.js;
+    wrappers.poop = {
+      owner = "root";
+      group = "root";
+      source = "${pkgs.poop}/bin/poop";
+      capabilities = "cap_perfmon+p";
+    };
+  };
 
   programs = {
     ccache.enable = true;
