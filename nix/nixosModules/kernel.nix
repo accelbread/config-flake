@@ -5,7 +5,7 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_12_hardened;
+    kernelPackages = pkgs.linuxPackages_hardened;
 
     kernelPatches = [{
       name = "hardening";
