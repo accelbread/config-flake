@@ -1976,11 +1976,6 @@ Returns the tree-sitter anchor for using the generated function."
     (goto-char prev-point)
     (set-window-start nil prev-window-start)))
 
-(defun pin-buffer ()
-  "Toggle whether current window is dedicated to its buffer."
-  (interactive)
-  (set-window-dedicated-p (selected-window) (not (window-dedicated-p))))
-
 (defun buffer-stats ()
   "Message info about buffer/point/region size/position/etc."
   (interactive)
