@@ -66,6 +66,7 @@ in
           diff = {
             algorithm = "histogram";
             submodule = "log";
+            colorMoved = "zebra";
           };
           merge.conflictStyle = "diff3";
           status.submoduleSummary = true;
@@ -75,6 +76,9 @@ in
           };
           remote.pushDefault = "origin";
           checkout.workers = 0;
+          commit.verbose = true;
+          branch.sort = "-committerdate";
+          tag.sort = "version:refname";
           "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
         };
         attributes = [ "*.el diff=lisp" ];
