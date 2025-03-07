@@ -1,4 +1,4 @@
-{ src, writeShellScript, emacsAccelbread, ... }:
+{ src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
 let
   nix = ''nix --extra-experimental-features "nix-command flakes"'';
   mkBuildScript = script: writeShellScript script ''
@@ -32,5 +32,11 @@ rec {
     ${nixosProvision} $1
     ${nixosMount} $1
     ${nixosInstall} $1
+  '';
+
+  firefoxNetworkDns = writeShellScript "firefoxNetworkDns" ''
+    exec ${bubblewrap}/bin/bwrap --bind / / --dev-bind /dev /dev \
+      --bind /run/NetworkManager/resolv.conf /etc/resolv.conf \
+      -- ${firefox}/bin/firefox
   '';
 }
