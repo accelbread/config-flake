@@ -33,15 +33,4 @@ rec {
     ${nixosMount} $1
     ${nixosInstall} $1
   '';
-
-  remoteRebuild = writeShellScript "remote-nixos-rebuild" ''
-    set -xeu
-    ref="${src}#nixosConfigurations.$1.config.system.build.toplevel"
-    ${nix} build --no-link "$ref"
-    result=$(${nix} eval --raw "$ref")
-    nix store sign -rk ~/.local/share/vault/nix-signing-key-priv.pem "$result"
-    nix copy --to ssh-ng://menagerie "$result"
-    NIX_SSHOPTS="-tt" nixos-rebuild --flake ${src}#"$1" --use-remote-sudo \
-      --target-host archit@"$1" "''${@:2}"
-  '';
 }
