@@ -34,6 +34,7 @@ in
         gocryptfs
         awscli2
         bind.dnsutils
+        bubblewrap
       ];
       file.".fdignore".source = ../../dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
