@@ -37,7 +37,6 @@ in
       gnome-decoder
       eyedropper
       errands
-      cockatrice
       firefox
       ungoogled-chromium
     ];
