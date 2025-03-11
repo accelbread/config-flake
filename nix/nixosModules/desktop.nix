@@ -70,6 +70,14 @@
     pcscd.enable = true;
   };
 
+  systemd = {
+    packages = [ pkgs.usbguard-notifier ];
+    user.services.usbguard-notifier = {
+      wantedBy = [ "graphical-session.target" ];
+      partOf = [ "graphical-session.target" ];
+    };
+  };
+
   security = {
     polkit.extraConfig = builtins.readFile ./misc/polkit-udisks2.js;
     wrappers.poop = {
