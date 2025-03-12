@@ -60,7 +60,6 @@
     gnome = {
       tinysparql.enable = false;
       localsearch.enable = false;
-      at-spi2-core.enable = true;
       gnome-browser-connector.enable = false;
       gnome-initial-setup.enable = false;
       gnome-remote-desktop.enable = false;
