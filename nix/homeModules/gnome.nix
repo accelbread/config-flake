@@ -8,7 +8,6 @@
     gui-packages = with pkgs; [
       dconf-editor
       helvum
-      jamesdsp
     ];
   };
 
