@@ -22,13 +22,7 @@ in
       yubico-piv-tool
     ];
     gui-packages = with pkgs; [
-      (librewolf.override {
-        nativeMessagingHosts = [
-          (passff-host.override {
-            pass = config.programs.password-store.package;
-          })
-        ];
-      })
+      librewolf
       gimp
       libreoffice
       showtime
@@ -45,6 +39,10 @@ in
       ".config".source = self + /dotfiles/config;
       ".ssh".source = self + /dotfiles/ssh;
       ".librewolf".source = self + /dotfiles/librewolf;
+      ".librewolf/native-messaging-hosts/passff.json".source =
+        "${pkgs.passff-host.override {
+          pass = config.programs.password-store.package;
+        }}/lib/librewolf/native-messaging-hosts/passff.json";
       ".librewolf/profile/chrome/firefox-gnome-theme" = {
         source = pkgs.firefox-gnome-theme;
         recursive = false;
