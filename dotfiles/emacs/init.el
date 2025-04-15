@@ -1226,7 +1226,8 @@
           (java-ts-mode
            . ("jdtls"
               :initializationOptions
-              (:extendedClientCapabilities (:classFileContentsSupport t)))))))
+              (:extendedClientCapabilities (:classFileContentsSupport t))))
+          (python-ts-mode "pylsp"))))
 
 
 ;;; Tree-sitter
