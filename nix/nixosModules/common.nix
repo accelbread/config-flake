@@ -117,6 +117,7 @@ in
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
+    tpm2.enable = false;
     services = {
       systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
       NetworkManager-wait-online.serviceConfig.ExecStart =
