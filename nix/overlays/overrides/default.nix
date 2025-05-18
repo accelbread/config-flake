@@ -1,6 +1,6 @@
 final: prev: {
   gnome-keyring = prev.gnome-keyring.overrideAttrs (old: {
-    configureFlags = final.lib.remove "--enable-ssh-agent" old.configureFlags;
+    mesonFlags = final.lib.remove "-Dssh-agent=true" old.mesonFlags;
   });
   nut = prev.nut.overrideAttrs (old: {
     postPatch = ">conf/Makefile.am";
