@@ -116,6 +116,7 @@
         dynamic-workspaces = true;
         edge-tiling = true;
         workspaces-only-on-primary = true;
+        attach-modal-dialogs = false;
       };
       "org/gnome/nautilus/preferences" = {
         show-delete-permanently = true;
