@@ -72,6 +72,17 @@
           "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
       };
       "org/gnome/desktop/background" = background;
+      "org/gnome/desktop/break-reminders" = {
+        selected-breaks = [ "eyesight" "movement" ];
+      };
+      "org/gnome/desktop/break-reminders/eyesight" = {
+        play-sound = true;
+      };
+      "org/gnome/desktop/break-reminders/movement" = {
+        duration-seconds = mkUint32 180;
+        interval-seconds = mkUint32 1800;
+        play-sound = true;
+      };
       "org/gnome/desktop/input-sources" = {
         xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
       };
