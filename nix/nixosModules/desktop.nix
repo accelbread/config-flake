@@ -34,9 +34,9 @@
     xserver = {
       enable = true;
       excludePackages = [ pkgs.xterm ];
-      desktopManager.gnome.enable = true;
-      displayManager.gdm.enable = true;
     };
+    desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = true;
     clight.settings = {
       backlight = {
         no_smooth_transition = true;
