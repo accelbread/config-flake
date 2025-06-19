@@ -21,7 +21,7 @@
 
 ;;; Theme
 
-(load-theme 'my-purple t)
+(load-theme 'adwaita t)
 
 
 ;;; Default fonts
@@ -110,7 +110,7 @@
   (unless (facep face)
     (eval `(defface ,face nil nil))
     (if-let* ((inherit (face-attribute face :inherit))
-              (listp inherit))
+              (_ (listp inherit)))
         (mapc #'load-face inherit))))
 
 (defun disable-nobreak-display ()
