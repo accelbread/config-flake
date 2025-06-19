@@ -7,18 +7,3 @@
 button[title="Customize sidebar"] {
   display: none;
 }
-
-#tabbrowser-tabs {
-  &[orient="vertical"] {
-    #vertical-pinned-tabs-container {
-      gap:  var(--gnome-toolbar-padding) !important;
-    }
-  }
-}
-
-.tabbrowser-tab {
-  #tabbrowser-tabs[orient="vertical"][expanded] &[pinned] {
-    padding-block-start: 5px !important;
-    padding-block-end: 4px !important;
-  }
-}
