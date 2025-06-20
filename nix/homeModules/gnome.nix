@@ -93,6 +93,7 @@
         gtk-theme = "Adwaita-dark";
         locate-pointer = true;
         accent-color = "purple";
+        icon-theme = "Adwaita-Purple";
       };
       "org/gnome/desktop/media-handling" = {
         automount = false;

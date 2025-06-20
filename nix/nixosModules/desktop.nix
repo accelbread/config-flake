@@ -117,7 +117,11 @@
         pkgs.gst_all_1.gst-plugins-good
         pkgs.gst_all_1.gst-libav
       ];
-    systemPackages = [ pkgs.gnome-themes-extra ];
+    systemPackages = [
+      pkgs.gnome-accent-directories
+      pkgs.morewaita-icon-theme
+      pkgs.gnome-themes-extra
+    ];
     persistence = {
       "/persist/state" = {
         hideMounts = true;
