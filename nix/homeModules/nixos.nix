@@ -31,6 +31,7 @@ in
       gnome-decoder
       eyedropper
       errands
+      d-spy
       firefox
       ungoogled-chromium
     ];
