@@ -776,10 +776,16 @@
 
 ;;; Tramp
 
+(setopt remote-file-name-inhibit-locks t
+        tramp-use-scp-direct-remote-copying t)
+
 (with-eval-after-load 'tramp
   (setopt tramp-default-method-alist `((,tramp-local-host-regexp nil "sudo"))
           tramp-default-method "ssh")
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (with-eval-after-load 'compile
+    (remove-hook 'compilation-mode-hook
+                 #'tramp-compile-disable-ssh-controlmaster-options)))
 
 
 ;;; Shell
