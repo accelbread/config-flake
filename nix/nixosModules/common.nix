@@ -194,6 +194,7 @@ in
     enableDefaultPackages = false;
     packages = with pkgs; [
       liberation_ttf
+      gyre-fonts
       noto-fonts
       noto-fonts-extra
       noto-fonts-cjk-sans
