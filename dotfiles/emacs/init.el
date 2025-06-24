@@ -1143,7 +1143,8 @@
 ;;; Compilation
 
 (setopt compilation-scroll-output 'first-error
-        project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+        project-compilation-buffer-name-function #'project-prefixed-buffer-name
+        compilation-search-path '(nil "build/"))
 
 (defun set-term-ansi-color ()
   "Set term env variable to enable color output."
