@@ -15,7 +15,7 @@
 , vale-proselint
 , vale-write-good
 , makeFontsConf
-, dejavu_fonts
+, adwaita-fonts
 , noto-fonts
 , noto-fonts-extra
 , noto-fonts-cjk-sans
@@ -52,7 +52,7 @@ let
 
   fontConfig = makeFontsConf {
     fontDirectories = [
-      dejavu_fonts
+      adwaita-fonts
       noto-fonts
       noto-fonts-extra
       noto-fonts-cjk-sans
