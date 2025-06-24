@@ -846,7 +846,7 @@
         eshell-glob-include-dot-dot nil
         eshell-glob-chars-list '(?\] ?\[ ?*)
         eshell-ask-to-save-last-dir nil
-        eshell-buffer-maximum-lines 5000
+        eshell-buffer-maximum-lines 10000
         eshell-history-size 2048
         eshell-hist-ignoredups t
         eshell-hist-move-to-end nil
