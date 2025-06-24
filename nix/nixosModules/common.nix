@@ -193,7 +193,6 @@ in
   fonts = {
     enableDefaultPackages = false;
     packages = with pkgs; [
-      dejavu_fonts
       liberation_ttf
       noto-fonts
       noto-fonts-extra
@@ -202,7 +201,14 @@ in
       noto-fonts-color-emoji
     ];
     fontDir.decompressFonts = true;
-    fontconfig.useEmbeddedBitmaps = true;
+    fontconfig = {
+      defaultFonts = {
+        sansSerif = [ "Adwaita Sans" ];
+        serif = [ "Noto Serif" ];
+        monospace = [ "Adwaita Mono" ];
+      };
+      useEmbeddedBitmaps = true;
+    };
   };
 
   users = {
