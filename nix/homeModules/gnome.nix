@@ -44,22 +44,26 @@
   };
 
   dconf.settings =
-    let
-      rawGvariant = str: {
-        _type = "gvariant";
-        type = "";
-        value = null;
-        __toString = _: str;
-      };
-
+    with lib.hm.gvariant; let
       background = {
         color-shading-type = "solid";
         picture-uri = "none";
         picture-uri-dark = "none";
         primary-color = "#7767B2";
       };
+
+      utc = mkVariant (mkTuple [
+        (mkUint32 2)
+        (mkVariant (mkTuple [
+          "Coordinated Universal Time (UTC)"
+          "@UTC"
+          false
+          (mkEmptyArray "(dd)")
+          (mkEmptyArray "(dd)")
+        ]))
+      ]);
     in
-    with lib.hm.gvariant; {
+    {
       "ca/desrt/dconf-editor" = {
         show-warning = false;
       };
@@ -68,8 +72,7 @@
         replay-gain = "track";
       };
       "org/gnome/clocks" = {
-        world-clocks = rawGvariant
-          "[{'location': <(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>}]";
+        world-clocks = [ [ (mkDictionaryEntry [ "location" utc ]) ] ];
       };
       "org/gnome/desktop/background" = background;
       "org/gnome/desktop/break-reminders" = {
@@ -127,8 +130,7 @@
         show-timer = false;
       };
       "org/gnome/shell/world-clocks" = {
-        locations = rawGvariant
-          "[<(uint32 2, <('Coordinated Universal Time (UTC)', '@UTC', false, @a(dd) [], @a(dd) [])>)>]";
+        locations = [ utc ];
       };
       "org/gnome/system/location" = {
         enabled = true;
