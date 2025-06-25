@@ -979,6 +979,13 @@
                 (apply orig-fun args)))
             '((name . eat-eshell-only-when-active)))
 
+(advice-add 'eat-eshell-emacs-mode :around
+            (lambda (orig-fun &rest args)
+              "Prevent setting buffer-read-only."
+              (let ((buffer-read-only buffer-read-only))
+                (apply orig-fun args)))
+            '((name . eat-eshell-prevent-read-only)))
+
 (with-eval-after-load 'eat
   (setq eat-eshell-emacs-mode-map
         (let ((map (make-sparse-keymap)))
