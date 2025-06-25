@@ -271,7 +271,8 @@
 (global-hl-todo-mode)
 (context-menu-mode)
 
-(set-face-attribute 'fill-column-indicator nil :stipple '(11 1 "\x8\x0"))
+(set-face-attribute 'fill-column-indicator nil :stipple
+                    `(,(string-pixel-width " ") 1 "\x8\x0"))
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
