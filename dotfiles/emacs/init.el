@@ -253,7 +253,6 @@
         whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
         whitespace-global-modes '(prog-mode text-mode conf-mode)
         global-display-fill-column-indicator-modes '(prog-mode text-mode)
-        display-fill-column-indicator-character ?\s
         resize-mini-windows t
         suggest-key-bindings nil
         truncate-partial-width-windows 83
@@ -270,9 +269,6 @@
 (global-prettify-symbols-mode)
 (global-hl-todo-mode)
 (context-menu-mode)
-
-(set-face-attribute 'fill-column-indicator nil :stipple
-                    `(,(string-pixel-width " ") 1 "\x8\x0"))
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
