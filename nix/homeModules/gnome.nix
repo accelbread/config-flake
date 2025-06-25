@@ -86,25 +86,6 @@
       "org/gnome/desktop/input-sources" = {
         xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
       };
-      "org/gnome/desktop/interface" = {
-        clock-format = "12h";
-        clock-show-weekday = true;
-        color-scheme = "prefer-dark";
-        gtk-theme = "Adwaita-dark";
-        locate-pointer = true;
-        accent-color = "purple";
-        icon-theme = "Adwaita-Purple";
-      };
-      "org/gnome/desktop/media-handling" = {
-        automount = false;
-        autorun-never = true;
-      };
-      "org/gnome/desktop/peripherals/mouse" = {
-        accel-profile = "flat";
-      };
-      "org/gnome/desktop/peripherals/touchpad" = {
-        natural-scroll = true;
-      };
       "org/gnome/desktop/privacy" = {
         old-files-age = mkUint32 30;
         recent-files-max-age = -1;
@@ -117,9 +98,6 @@
       };
       "org/gnome/desktop/screensaver" = background // {
         lock-delay = mkUint32 30;
-      };
-      "org/gnome/desktop/session" = {
-        idle-delay = mkUint32 180;
       };
       "org/gnome/desktop/wm/preferences" = {
         resize-with-right-button = true;
@@ -135,13 +113,6 @@
       };
       "org/gnome/nautilus/list-view" = {
         use-tree-view = true;
-      };
-      "org/gnome/settings-daemon/plugins/color" = {
-        night-light-enabled = true;
-        night-light-temperature = mkUint32 4226;
-        night-light-schedule-automatic = false;
-        night-light-schedule-from = 20.0;
-        night-light-schedule-to = 8.0;
       };
       "org/gnome/shell" = {
         disable-user-extensions = false;

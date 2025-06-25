@@ -2,6 +2,7 @@
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.syncthing
+    inputs.self.nixosModules.dconf
   ];
 
   # Allow steam package for steam-hardware udev rules
@@ -177,5 +178,37 @@
     etc."nixos/flake.nix".source = pkgs.runCommandLocal "flake-symlink" { } ''
       ln -s "/home/archit/projects/config-flake/flake.nix" $out
     '';
+  };
+
+  sysconfig.dconf = with lib.gvariant; {
+    "org/gnome/desktop/interface" = {
+      clock-format = "12h";
+      clock-show-weekday = true;
+      color-scheme = "prefer-dark";
+      gtk-theme = "Adwaita-dark";
+      locate-pointer = true;
+      accent-color = "purple";
+      icon-theme = "Adwaita-Purple";
+    };
+    "org/gnome/desktop/media-handling" = {
+      automount = false;
+      autorun-never = true;
+    };
+    "org/gnome/desktop/peripherals/mouse" = {
+      accel-profile = "flat";
+    };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      natural-scroll = true;
+    };
+    "org/gnome/desktop/session" = {
+      idle-delay = mkUint32 180;
+    };
+    "org/gnome/settings-daemon/plugins/color" = {
+      night-light-enabled = true;
+      night-light-temperature = mkUint32 4226;
+      night-light-schedule-automatic = false;
+      night-light-schedule-from = 20.0;
+      night-light-schedule-to = 8.0;
+    };
   };
 }
