@@ -125,7 +125,7 @@
     systemPackages = [
       pkgs.gnome-accent-directories
       pkgs.morewaita-icon-theme
-      pkgs.gnome-themes-extra
+      pkgs.adw-gtk3
       pkgs.qadwaitadecorations
       pkgs.qadwaitadecorations-qt6
     ];
@@ -185,7 +185,7 @@
       clock-format = "12h";
       clock-show-weekday = true;
       color-scheme = "prefer-dark";
-      gtk-theme = "Adwaita-dark";
+      gtk-theme = "adw-gtk3-dark";
       locate-pointer = true;
       accent-color = "purple";
       icon-theme = "Adwaita-Purple";

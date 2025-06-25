@@ -113,6 +113,12 @@ in
     };
   };
 
-  xdg.desktopEntries.cups =
-    { name = ""; exec = null; settings.Hidden = "true"; };
+  xdg = {
+    configFile = {
+      "gtk-3.0/gtk.css".text = "@define-color accent_bg_color #9141ac;";
+      "gtk-4.0/gtk.css".text = ":root { --accent-bg-color: var(--accent-purple); }";
+    };
+    desktopEntries.cups =
+      { name = ""; exec = null; settings.Hidden = "true"; };
+  };
 }
