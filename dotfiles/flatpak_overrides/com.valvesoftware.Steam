@@ -1,9 +1,6 @@
 [Context]
 filesystems=!xdg-music;!xdg-pictures
 
-[Environment]
-STEAM_FORCE_DESKTOPUI_SCALING=1.5
-
 [System Bus Policy]
 org.freedesktop.UPower=none
 org.freedesktop.UDisks2=none
