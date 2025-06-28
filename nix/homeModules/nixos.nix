@@ -23,7 +23,7 @@ in
       librewolf
       gimp
       libreoffice
-      showtime
+      celluloid
       amberol
       fragments
       gnome-decoder
