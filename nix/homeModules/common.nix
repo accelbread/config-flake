@@ -99,7 +99,6 @@ in
           colored-stats = true;
           completion-ignore-case = true;
           completion-prefix-display-length = 4;
-          mark-symlinked-directories = true;
           show-all-if-ambiguous = true;
           show-all-if-unmodified = true;
           visible-stats = true;
