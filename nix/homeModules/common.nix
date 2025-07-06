@@ -98,6 +98,7 @@ in
           bell-style = "audible";
           colored-stats = true;
           completion-ignore-case = true;
+          completion-map-case = true;
           completion-prefix-display-length = 4;
           show-all-if-ambiguous = true;
           show-all-if-unmodified = true;
