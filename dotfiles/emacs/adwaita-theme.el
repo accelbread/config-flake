@@ -119,7 +119,6 @@
    `(font-lock-type-face ((t (:foreground ,purple-1))))
    `(font-lock-variable-name-face ((t (:foreground ,brown-1))))
    '(font-lock-warning-face ((t (:inherit (warning)))))
-   '(button ((t (:inherit (link)))))
    `(link ((t (:weight bold :underline (:color foreground-color :style line)
                        :foreground ,accent-color))))
    `(link-visited ((t (:foreground ,accent-color))))
@@ -157,24 +156,12 @@
    '(whitespace-trailing ((t (:inherit (secondary-selection)))))
    '(whitespace-missing-newline-at-eof ((t (:inherit (isearch-fail)))))
    '(page-break-lines ((t (:inherit (shadow)))))
-   '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
-   `(jinx-misspelled ((t (:underline (:style wave :color ,error-bg-color)))))
-   '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
-   '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
-   '(evil-ex-substitute-matches ((t (:strike-through t :inherit (error)))))
-   '(evil-ex-substitute-replacement ((t (:inherit (success)))))
-   '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
+   `(flyspell-incorrect ((t (:underline (:style wave :color ,error-bg-color)))))
+   `(flyspell-duplicate ((t (:underline (:style wave :color ,warning-bg-color)))))
    `(Man-overstrike ((t (:foreground ,accent-bg-color :inherit (bold fixed-pitch)))))
    `(Man-underline ((t (:foreground ,accent-color :inherit (italic fixed-pitch)))))
    '(woman-bold ((t (:inherit (Man-overstrike)))))
    '(woman-italic ((t (:inherit (Man-underline)))))
-   '(rainbow-delimiters-depth-1-face ((t (:foreground "#BF7FFF"))))
-   '(rainbow-delimiters-depth-2-face ((t (:foreground "#7FBFFF"))))
-   '(rainbow-delimiters-depth-3-face ((t (:foreground "#7FFFBF"))))
-   '(rainbow-delimiters-depth-4-face ((t (:foreground "#BFFF7F"))))
-   '(rainbow-delimiters-depth-5-face ((t (:foreground "#FFBF7F"))))
-   '(rainbow-delimiters-depth-6-face ((t (:foreground "#FF7FBF"))))
-   `(rainbow-delimiters-base-error-face ((t (:foreground ,error-bg-color))))
    '(dired-broken-symlink ((t (:inherit (error)))))
    `(dired-directory ((t (:foreground ,blue-2))))
    '(dired-flagged ((t (:strike-through t :inherit (error)))))
@@ -209,12 +196,6 @@
    '(eshell-ls-readonly ((t (:inherit (font-lock-constant-face)))))
    '(eshell-ls-unreadable ((t (:inherit (shadow)))))
    '(eshell-ls-missing ((t (:inherit (dired-broken-symlink)))))
-   '(eshell-syntax-highlighting-shell-command-face ((t (:inherit (eshell-ls-executable)))))
-   '(eshell-syntax-highlighting-alias-face ((t (:inherit (font-lock-constant-face)))))
-   '(eshell-syntax-highlighting-file-arg-face ((t (:inherit (eshell-ls-directory)))))
-   '(eshell-syntax-highlighting-directory-face ((t (:inherit (eshell-ls-directory)))))
-   '(git-annex-dired-annexed-available ((t (:inherit (dired-symlink)))))
-   '(git-annex-dired-annexed-unavailable ((t (:inherit (dired-broken-symlink)))))
    '(org-block ((t (:inherit (fixed-pitch)))))
    '(org-code ((t (:inherit (fixed-pitch)))))
    ;; Colors from Gnome Console
@@ -233,17 +214,7 @@
    '(ansi-color-bright-blue ((t (:foreground "#51a1ff" :background "#51a1ff"))))
    '(ansi-color-bright-magenta ((t (:foreground "#c061cb" :background "#c061cb"))))
    '(ansi-color-bright-cyan ((t (:foreground "#4fd2fd" :background "#4fd2fd"))))
-   '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4")))))
-
-  (custom-theme-set-variables
-   'adwaita
-   '(rainbow-delimiters-max-face-count 6)
-   '(orderless-match-faces [rainbow-delimiters-depth-1-face
-                            rainbow-delimiters-depth-2-face
-                            rainbow-delimiters-depth-3-face
-                            rainbow-delimiters-depth-4-face
-                            rainbow-delimiters-depth-5-face
-                            rainbow-delimiters-depth-6-face])))
+   '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4"))))))
 
 (provide-theme 'adwaita)
 

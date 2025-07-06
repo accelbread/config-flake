@@ -23,6 +23,37 @@
 
 (load-theme 'adwaita t)
 
+(custom-set-faces
+ '(button ((t (:inherit (link)))))
+ '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
+ '(jinx-misspelled ((t (:inherit (flyspell-incorrect)))))
+ '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
+ '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
+ '(evil-ex-substitute-matches ((t (:strike-through t :inherit (error)))))
+ '(evil-ex-substitute-replacement ((t (:inherit (success)))))
+ '(evil-ex-info ((t (:inherit (minibuffer-prompt)))))
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#BF7FFF"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#7FBFFF"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#7FFFBF"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#BFFF7F"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#FFBF7F"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#FF7FBF"))))
+ '(rainbow-delimiters-base-error-face ((t (:inherit (error)))))
+ '(git-annex-dired-annexed-available ((t (:inherit (dired-symlink)))))
+ '(git-annex-dired-annexed-unavailable ((t (:inherit (dired-broken-symlink)))))
+ '(eshell-syntax-highlighting-shell-command-face ((t (:inherit (eshell-ls-executable)))))
+ '(eshell-syntax-highlighting-alias-face ((t (:inherit (font-lock-constant-face)))))
+ '(eshell-syntax-highlighting-file-arg-face ((t (:inherit (eshell-ls-directory)))))
+ '(eshell-syntax-highlighting-directory-face ((t (:inherit (eshell-ls-directory))))))
+
+(setopt rainbow-delimiters-max-face-count 6)
+(setq orderless-match-faces [rainbow-delimiters-depth-1-face
+                             rainbow-delimiters-depth-2-face
+                             rainbow-delimiters-depth-3-face
+                             rainbow-delimiters-depth-4-face
+                             rainbow-delimiters-depth-5-face
+                             rainbow-delimiters-depth-6-face])
+
 
 ;;; Default fonts
 
