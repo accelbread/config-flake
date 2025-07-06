@@ -40,6 +40,9 @@
       sleep-inactive-battery-timeout = mkInt32 900;
       sleep-inactive-battery-type = "hibernate";
     };
+    "org/gnome/desktop/wm/preferences" = {
+      audible-bell = false;
+    };
   };
 }
 

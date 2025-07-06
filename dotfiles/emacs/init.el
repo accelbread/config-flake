@@ -417,32 +417,6 @@
            face monochrome-emoji)))
 
 
-;;; Flash active mode line for bell
-
-(defface mode-line-flash nil
-  "Face used for flashing mode line."
-  :group 'custom)
-
-(defvar mode-line-flash-state nil
-  "If non-nil, contains buffer with active mode line flash.")
-
-(defun mode-line-flash-end ()
-  "End the mode line flash."
-  (when mode-line-flash-state
-    (with-current-buffer mode-line-flash-state
-      (face-remap-reset-base 'mode-line-active)
-      (setq mode-line-flash-state nil))))
-
-(defun mode-line-flash ()
-  "Flash the mode line."
-  (unless mode-line-flash-state
-    (setq mode-line-flash-state (current-buffer))
-    (face-remap-set-base 'mode-line-active '(:inherit (mode-line-flash)))
-    (run-with-timer 0.05 nil #'mode-line-flash-end)))
-
-(setopt ring-bell-function #'mode-line-flash)
-
-
 ;;; Display page breaks as lines
 
 (defun display-page-breaks-as-lines ()

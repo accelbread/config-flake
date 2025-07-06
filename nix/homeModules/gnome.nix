@@ -71,6 +71,9 @@
         background-play = false;
         replay-gain = "track";
       };
+      "org/gnome/Console" = {
+        visual-bell = false;
+      };
       "org/gnome/clocks" = {
         world-clocks = [ [ (mkDictionaryEntry [ "location" utc ]) ] ];
       };
@@ -93,6 +96,8 @@
       };
       "org/gnome/desktop/wm/preferences" = {
         resize-with-right-button = true;
+        visual-bell = true;
+        visual-bell-type = "frame-flash";
       };
       "org/gnome/mutter" = {
         dynamic-workspaces = true;

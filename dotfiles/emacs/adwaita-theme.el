@@ -130,9 +130,6 @@
                          :background ,headerbar-bg-color
                          :foreground ,headerbar-fg-color
                          :inherit (variable-pitch)))))
-   `(mode-line-flash ((t (:background ,headerbar-fg-color
-                                      :foreground ,headerbar-bg-color
-                                      :inherit (mode-line)))))
    '(mode-line-inactive ((t (:box (:line-width (8 . 4) :color "#28282C"
                                                :style nil)
                                   :background "#28282C"

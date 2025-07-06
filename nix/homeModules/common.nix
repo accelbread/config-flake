@@ -95,7 +95,7 @@ in
           "\\C-n" = "history-search-forward";
         };
         variables = {
-          bell-style = "visible";
+          bell-style = "audible";
           colored-stats = true;
           completion-ignore-case = true;
           completion-prefix-display-length = 4;

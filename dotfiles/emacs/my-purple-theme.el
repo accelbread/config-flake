@@ -46,7 +46,6 @@
  '(fringe ((t (:foreground "#A08BEF"))))
  '(header-line ((t (:inherit (mode-line)))))
  '(mode-line ((t (:box (:line-width (8 . 4) :color "#1A1821" :style nil) :background "#1A1821" :foreground "#D7CDFF" :inherit (variable-pitch)))))
- '(mode-line-flash ((t (:background "#D7CDFF" :foreground "#1A1821" :inherit (mode-line)))))
  '(mode-line-inactive ((t (:inherit (shadow mode-line)))))
  '(mode-line-buffer-id ((t (:weight bold))))
  '(mode-line-emphasis ((t (:foreground "#FF80DE"))))
