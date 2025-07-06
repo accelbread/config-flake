@@ -44,13 +44,6 @@
                              rainbow-delimiters-depth-6-face])
 
 
-;;; Default fonts
-
-(set-face-attribute 'default nil :height 110 :family "Adwaita Mono")
-(set-face-attribute 'fixed-pitch nil :family "Adwaita Mono")
-(set-face-attribute 'variable-pitch nil :family "Adwaita Sans")
-
-
 ;;; Networking
 
 (setopt network-security-level 'high

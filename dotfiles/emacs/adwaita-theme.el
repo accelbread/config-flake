@@ -89,7 +89,10 @@
        (dark-5 "#000000"))
   (custom-theme-set-faces
    'adwaita
-   `(default ((t (:background ,view-bg-color :foreground ,view-fg-color))))
+   `(default ((t (:background ,view-bg-color :foreground ,view-fg-color
+                              :family "Adwaita Mono"))))
+   '(fixed-pitch ((t (:family "Adwaita Mono"))))
+   '(variable-pitch ((t (:family "Adwaita Sans"))))
    '(variable-pitch-text ((t (:inherit (variable-pitch)))))
    `(cursor ((t (:background ,view-fg-color))))
    `(homoglyph ((t (:foreground ,warning-bg-color :inherit (bold)))))
