@@ -126,6 +126,7 @@ in
         IPAddressAllow = "localhost 100.64.0.0/10";
         IPAddressDeny = "any";
       };
+      colord.path = [ pkgs.argyllcms ];
     };
   };
 
