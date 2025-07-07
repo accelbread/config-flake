@@ -30,4 +30,16 @@ final: prev: {
       ./patches/amberol/shuffle_all.patch
     ];
   });
+  colord = prev.colord.overrideAttrs (old: assert old.version == "1.4.6"; rec {
+    version = "1.4.8";
+    src = final.fetchFromGitHub {
+      owner = "hughsie";
+      repo = "colord";
+      tag = version;
+      hash = "sha256-tYA8AP1/LVO/oC/aXZ29O5JgQ9eAk6R9Jvnghw2xak8=";
+    };
+    mesonFlags = old.mesonFlags ++ [
+      "-Dsystemd_root_prefix=${placeholder "out"}"
+    ];
+  });
 }
