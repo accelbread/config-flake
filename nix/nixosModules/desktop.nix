@@ -132,6 +132,9 @@
     persistence = {
       "/persist/state" = {
         hideMounts = true;
+        files = [
+          "/var/lib/colord/mapping.db"
+        ];
         users.archit = {
           directories = [
             "projects"
@@ -141,6 +144,7 @@
             ".local/share/vault"
             ".local/share/gnupg"
             ".local/share/pass"
+            ".local/share/icc"
             ".var/app/com.valvesoftware.Steam"
           ];
           files = [
