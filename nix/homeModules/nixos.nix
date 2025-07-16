@@ -21,7 +21,7 @@ in
     ];
     gui-packages = with pkgs; [
       librewolf
-      gimp
+      gimp3
       libreoffice
       celluloid
       amberol
