@@ -1,9 +1,5 @@
 @import "firefox-gnome-theme/userChrome.css";
 
-#nav-bar-overflow-button {
-  display: none;
-}
-
 button[title="Customize sidebar"] {
   display: none;
 }
