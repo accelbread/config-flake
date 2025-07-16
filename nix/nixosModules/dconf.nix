@@ -4,7 +4,7 @@ let
 in
 {
   options.sysconfig.dconf = mkOption {
-    type = types.lazyAttrsOf (types.attrs);
+    type = types.lazyAttrsOf types.attrs;
     default = { };
     description = "Global dconf configuration.";
   };
