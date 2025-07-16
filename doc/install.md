@@ -14,10 +14,10 @@ Format to LBA format #:
 
 ## Configure system
 
-Add nixos config for system.
-Get networking.hostId from `head -c4 /dev/urandom | od -A none -t x4`.
-Set `services.usbguard.implictPolicyTarget = "keep"`.
-On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
+- Add nixos config for system.
+- Get networking.hostId from `head -c4 /dev/urandom | od -A none -t x4`.
+- Set `services.usbguard.implictPolicyTarget = "keep"`.
+- On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
 ```sh
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
