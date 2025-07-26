@@ -17,6 +17,12 @@ in
         man-pages
         man-pages-posix
         glibcInfo
+        bash.info
+        gnumake.info
+        gcc_latest.info
+        coreutils.info
+        binutils.info
+        guile.info
         git
         git-absorb
         git-lfs
@@ -47,6 +53,7 @@ in
 
     programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
       man.generateCaches = true;
+      info.enable = true;
       bash.initExtra = ''
         if [[ -z "$LS_COLORS" ]]; then
             eval "$(${pkgs.coreutils}/bin/dircolors -b)"
