@@ -11,7 +11,11 @@
     ];
   };
 
-  gnome.extensions = with pkgs.gnomeExtensions; [ caffeine app-menu-is-back ];
+  gnome.extensions = with pkgs.gnomeExtensions; [
+    caffeine
+    app-menu-is-back
+    hide-universal-access
+  ];
 
   services.gpg-agent = {
     enable = true;
