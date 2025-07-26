@@ -1777,11 +1777,27 @@ Returns the tree-sitter anchor for using the generated function."
       (2 'font-lock-keyword-face t)))
    'append))
 
+(defvar use-flymake-cc-projects '())
+
+(defun project-flymake-cc ()
+  "Use `flymake-cc' for linting C files in the current project."
+  (interactive)
+  (add-to-list 'use-flymake-cc-projects (project-root (project-current t))))
+
+(defun c-enable-project-flymake-cc ()
+  "Use `flymake-cc' if enabled for project."
+  (if-let* ((proj (project-current))
+            (proj-path (project-root proj))
+            ((member proj-path use-flymake-cc-projects)))
+      (progn (remove-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
+             (add-hook 'flymake-diagnostic-functions #'flymake-cc nil t))))
+
 (dolist (hook '(c-ts-mode-hook c++-ts-mode-hook))
   (add-hook hook #'setup-eglot)
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
-  (add-hook hook #'c-set-font-overrides))
+  (add-hook hook #'c-set-font-overrides)
+  (add-hook hook #'c-enable-project-flymake-cc 50))
 
 (with-eval-after-load 'cmake-ts-mode
   (require 'cmake-mode))
