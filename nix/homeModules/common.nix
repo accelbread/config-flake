@@ -33,6 +33,7 @@ in
         moreutils
         jq
         gnutar
+        gdb
         strace
         parted
         zile
