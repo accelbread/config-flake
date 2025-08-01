@@ -92,6 +92,7 @@
    `(default ((t (:background ,view-bg-color :foreground ,view-fg-color
                               :family "Adwaita Mono"))))
    '(fixed-pitch ((t (:family "Adwaita Mono"))))
+   '(fixed-pitch-serif ((t (:inherit (fixed-pitch)))))
    '(variable-pitch ((t (:family "Adwaita Sans"))))
    '(variable-pitch-text ((t (:inherit (variable-pitch)))))
    `(cursor ((t (:background ,view-fg-color))))
