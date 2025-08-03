@@ -50,6 +50,15 @@ in
         source = self + /dotfiles/flatpak_overrides;
         force = true;
       };
+      ".config/celluloid/scripts" = {
+        source =
+          "${pkgs.buildEnv {
+            name = "mpv-scripts";
+            pathsToLink = [ "/share/mpv/scripts" ];
+            paths = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
+          }}/share/mpv/scripts";
+        recursive = false;
+      };
     };
     activation = {
       passGitConfig =

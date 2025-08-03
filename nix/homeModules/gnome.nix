@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, ... }: {
+{ inputs, lib, pkgs, config, ... }: {
   imports = [ inputs.self.homeModules.gnome-extensions ];
 
   home = {
@@ -74,6 +74,12 @@
       "io/bassi/Amberol" = {
         background-play = false;
         replay-gain = "track";
+      };
+      "io/github/celluloid-player/celluloid" = {
+        mpv-config-enable = true;
+        mpv-config-file = "file://${config.xdg.configHome}/mpv/mpv.conf";
+        mpris-enable = false;
+        draggable-video-area-enable = true;
       };
       "org/gnome/Console" = {
         visual-bell = false;
