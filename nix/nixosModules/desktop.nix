@@ -23,6 +23,18 @@
     steam-hardware.enable = true;
   };
 
+  boot = {
+    kernelParams = [ "quiet" "plymouth.use-simpledrm" ];
+    plymouth = {
+      enable = true;
+      font =
+        "${pkgs.adwaita-fonts}/share/fonts/Adwaita/AdwaitaSans-Regular.ttf";
+      extraConfig = ''
+        DeviceScale=2
+      '';
+    };
+  };
+
   services = {
     pipewire = {
       enable = true;
