@@ -2,6 +2,8 @@
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
+
+  machine-id = substring 0 32 (hashString "sha256" "accelbread-${hostname}");
 in
 {
   imports = [
@@ -38,21 +40,35 @@ in
       };
       efi.canTouchEfiVariables = true;
     };
-    initrd = {
-      preDeviceCommands = ''
-        echo "[1;36m"
-        echo Hello, this is ${hostname}.
-        echo Owner: Archit Gupta
-        echo Email: accelbread@gmail.com
-        echo "[0m"
-      '';
-      postResumeCommands = lib.mkBefore ''
-        mkdir -p /mnt
-        mount -t btrfs -o noatime,compress=zstd /dev/${hostname}_vg1/pool /mnt
-        ${lib.getExe pkgs.btrfs-subvol-rm-r} /mnt/root
-        btrfs subvolume create /mnt/root
-        umount /mnt
-      '';
+    initrd.systemd = {
+      enable = true;
+      contents."/etc/machine-id".text = machine-id;
+      storePaths = with pkgs;
+        [
+          coreutils
+          util-linux
+          btrfs-progs
+          btrfs-subvol-rm-r
+          bash
+          gawk
+          gnused
+        ];
+      services.wipe-root-subvolume = {
+        wantedBy = [ "initrd.target" ];
+        requires = [ "local-fs-pre.target" "initrd-root-device.target" ];
+        after = [ "local-fs-pre.target" "initrd-root-device.target" ];
+        before = [ "sysroot.mount" "create-needed-for-boot-dirs.service" ];
+        unitConfig.DefaultDependencies = false;
+        serviceConfig.Type = "oneshot";
+        script = with pkgs; ''
+          ${coreutils}/bin/mkdir -p /mnt
+          ${util-linux}/bin/mount -t btrfs -o noatime,compress=zstd \
+            /dev/${hostname}_vg1/pool /mnt
+          ${lib.getExe btrfs-subvol-rm-r} /mnt/root
+          ${btrfs-progs}/bin/btrfs subvolume create /mnt/root
+          ${util-linux}/bin/umount /mnt
+        '';
+      };
     };
   };
 
@@ -218,8 +234,7 @@ in
   };
 
   environment = {
-    etc.machine-id.text = substring 0 32
-      (hashString "sha256" "accelbread-${hostname}");
+    etc.machine-id.text = machine-id;
     persistence = {
       "/persist/state".enableWarnings = false;
       "/persist/data".enableWarnings = false;
