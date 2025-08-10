@@ -62,6 +62,11 @@ in
           fsType = "vfat";
           options = [ "noexec" "umask=0077" ];
         };
+        "/var/pool_root" = {
+          device = "/dev/${hostname}_vg1/pool";
+          fsType = "btrfs";
+          options = [ "noauto" "compress=zstd" "user_subvol_rm_allowed" ];
+        };
       } // mapAttrs (_: mkBtrfs) {
         "/".device = "root";
         "/nix".device = "nix";
