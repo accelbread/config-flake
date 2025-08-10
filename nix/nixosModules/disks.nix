@@ -60,7 +60,7 @@ in
         "/boot" = {
           device = getPart 1 (head cfg.devices);
           fsType = "vfat";
-          options = [ "noexec" ];
+          options = [ "noexec" "umask=0077" ];
         };
       } // mapAttrs (_: mkBtrfs) {
         "/".device = "root";
