@@ -34,6 +34,7 @@ in
       pkiBundle = "/persist/state/secureboot";
     };
     loader = {
+      timeout = 0;
       systemd-boot = {
         enable = !config.boot.lanzaboote.enable;
         editor = false;
