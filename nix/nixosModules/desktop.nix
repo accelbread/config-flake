@@ -88,6 +88,23 @@
       wantedBy = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
     };
+    tmpfiles.settings.preservation = {
+
+      "/var/lib/colord".d =
+        { user = "colord"; group = "colord"; mode = "0755"; };
+    } // (lib.flip lib.genAttrs
+      (k: { d = { user = "archit"; group = "users"; mode = "0755"; }; }) [
+      "/home/archit"
+      "/home/archit/.config"
+      "/home/archit/.local"
+      "/home/archit/.local/share"
+      "/home/archit/.var"
+      "/home/archit/.var/app"
+    ]) // (lib.flip lib.genAttrs
+      (k: { d = { user = "archit"; group = "users"; mode = "0700"; }; }) [
+      "/home/archit/.ssh"
+      "/home/archit/.librewolf"
+    ]);
   };
 
   security = {
@@ -141,49 +158,6 @@
       pkgs.qadwaitadecorations
       pkgs.qadwaitadecorations-qt6
     ];
-    persistence = {
-      "/persist/state" = {
-        hideMounts = true;
-        files = [
-          "/var/lib/colord/mapping.db"
-        ];
-        users.archit = {
-          directories = [
-            "projects"
-            ".ssh/config.d"
-            ".config/emacs"
-            ".librewolf/profile"
-            ".local/share/vault"
-            ".local/share/gnupg"
-            ".local/share/pass"
-            ".local/share/icc"
-            ".var/app/com.valvesoftware.Steam"
-          ];
-          files = [
-            ".ssh/id_ed25519_sk"
-            ".ssh/id_ed25519_sk-cert.pub"
-          ];
-        };
-      };
-      "/persist/data" = {
-        hideMounts = true;
-        users.archit.directories = [
-          "Documents"
-          "Music"
-          "Pictures"
-          "Videos"
-          "Library"
-        ];
-      };
-      "/persist/cache" = {
-        hideMounts = true;
-        users.archit.directories = [
-          "Downloads"
-          "playground"
-          ".local/share/flatpak"
-        ];
-      };
-    };
     wordlist = {
       enable = true;
       lists.WORDLIST = [
@@ -232,5 +206,48 @@
       night-light-schedule-from = 20.0;
       night-light-schedule-to = 8.0;
     };
+  };
+
+  preservation.preserveAt = {
+    state = {
+      files = [
+        {
+          file = "/var/lib/colord/mapping.db";
+          user = "colord";
+          group = "colord";
+        }
+      ];
+      users.archit = {
+        directories = map (d: { directory = d; mode = "0700"; }) [
+          "projects"
+          ".ssh/config.d"
+          ".config/emacs"
+          ".librewolf/profile"
+          ".local/share/vault"
+          ".local/share/gnupg"
+          ".local/share/pass"
+          ".local/share/icc"
+          ".var/app/com.valvesoftware.Steam"
+        ];
+        files = map (f: { file = f; mode = "0600"; }) [
+          ".ssh/id_ed25519_sk"
+          ".ssh/id_ed25519_sk-cert.pub"
+        ];
+      };
+    };
+    data.users.archit.directories =
+      map (d: { directory = d; mode = "0700"; }) [
+        "Documents"
+        "Music"
+        "Pictures"
+        "Videos"
+        "Library"
+      ];
+    cache.users.archit.directories =
+      map (d: { directory = d; mode = "0700"; }) [
+        "Downloads"
+        "playground"
+        ".local/share/flatpak"
+      ];
   };
 }

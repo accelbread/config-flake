@@ -102,11 +102,17 @@ in
       })
       dirs);
 
-  environment.persistence."/persist/state".users.syncthing = {
+  preservation.preserveAt.state.users.syncthing = {
     home = cfg.dataDir;
-    files = [
+    files = map (f: { file = f; mode = "0600"; }) [
       ".config/syncthing/key.pem"
       ".config/syncthing/cert.pem"
     ];
   };
+
+  systemd.tmpfiles.settings.preservation = lib.flip lib.genAttrs
+    (_: { d = { user = "syncthing"; group = "syncthing"; mode = "0700"; }; }) [
+    "${cfg.dataDir}/.config"
+    "${cfg.dataDir}/.config/syncthing"
+  ];
 }

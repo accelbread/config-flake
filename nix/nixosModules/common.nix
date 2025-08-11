@@ -7,7 +7,7 @@ let
 in
 {
   imports = [
-    inputs.impermanence.nixosModules.impermanence
+    inputs.preservation.nixosModules.preservation
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.lix
     self.nixosModules.kernel
@@ -135,6 +135,7 @@ in
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
+    suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
     tpm2.enable = false;
     services = {
       systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
@@ -146,6 +147,20 @@ in
       };
       colord.path = [ pkgs.argyllcms ];
     };
+    tmpfiles.settings.preservation =
+      (lib.flip lib.genAttrs
+        (k: { d = { user = "root"; group = "root"; mode = "0700"; }; }) [
+        "/var/lib/private"
+        "/etc/NetworkManager"
+      ]) //
+      (lib.flip lib.genAttrs
+        (k: { d = { user = "root"; group = "root"; mode = "0755"; }; }) [
+        "/etc"
+        "/var"
+        "/var/lib"
+        "/var/lib/systemd"
+      ])
+    ;
   };
 
   services = {
@@ -237,21 +252,6 @@ in
 
   environment = {
     etc.machine-id.text = machine-id;
-    persistence = {
-      "/persist/state".enableWarnings = false;
-      "/persist/data".enableWarnings = false;
-      "/persist/cache" = {
-        enableWarnings = false;
-        directories = [
-          "/etc/NetworkManager/system-connections"
-          "/var/lib/bluetooth"
-          "/var/log"
-          "/var/lib/systemd/coredump"
-          "/var/lib/systemd/timesync"
-          "/var/lib/private/tailscale"
-        ];
-      };
-    };
     defaultPackages = with pkgs; [ zile git ];
     systemPackages = with pkgs; [
       lkl
@@ -286,5 +286,34 @@ in
     enable = true;
     platformTheme = "gnome";
     style = "adwaita-dark";
+  };
+
+  preservation = {
+    enable = true;
+    preserveAt = mapAttrs
+      (k: v: v // {
+        persistentStoragePath = "/persist/${k}";
+        commonMountOptions = [ "x-gvfs-hide" "x-gdu.hide" ];
+      })
+      {
+        state = { };
+        data = { };
+        cache = {
+          directories = (map (d: { directory = d; mode = "0700"; }) [
+            "/etc/NetworkManager/system-connections"
+            "/var/lib/bluetooth"
+            "/var/lib/private/tailscale"
+          ]) ++ [
+            "/var/log"
+            "/var/lib/systemd/coredump"
+            "/var/lib/systemd/timesync"
+          ];
+          files = [{
+            file = "/var/lib/systemd/random-seed";
+            how = "symlink";
+            inInitrd = true;
+          }];
+        };
+      };
   };
 }
