@@ -71,6 +71,7 @@
       '';
     });
     gnome = {
+      gcr-ssh-agent.enable = false;
       tinysparql.enable = false;
       localsearch.enable = false;
       gnome-browser-connector.enable = false;
