@@ -141,15 +141,11 @@ in
     tmpfiles.settings.preservation =
       (lib.flip lib.genAttrs
         (k: { d = { user = "root"; group = "root"; mode = "0700"; }; }) [
-        "/var/lib/private"
         "/etc/NetworkManager"
       ]) //
       (lib.flip lib.genAttrs
         (k: { d = { user = "root"; group = "root"; mode = "0755"; }; }) [
         "/etc"
-        "/var"
-        "/var/lib"
-        "/var/lib/systemd"
       ])
     ;
   };
