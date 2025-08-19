@@ -220,7 +220,7 @@
         }
       ];
       users.archit = {
-        directories = map (d: { directory = d; mode = "0700"; }) [
+        directories = (map (d: { directory = d; mode = "0700"; }) [
           "projects"
           ".ssh/config.d"
           ".config/emacs"
@@ -228,9 +228,10 @@
           ".local/share/vault"
           ".local/share/gnupg"
           ".local/share/pass"
-          ".local/share/icc"
           ".var/app/com.valvesoftware.Steam"
-        ];
+        ]) ++ (map (d: { directory = d; mode = "0755"; }) [
+          ".local/share/icc"
+        ]);
         files = map (f: { file = f; mode = "0600"; }) [
           ".ssh/id_ed25519_sk"
           ".ssh/id_ed25519_sk-cert.pub"
