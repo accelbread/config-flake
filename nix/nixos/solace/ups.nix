@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 let
   sudo = "/run/wrappers/bin/sudo";
   poweroff = "/run/current-system/sw/bin/poweroff";
@@ -9,38 +9,80 @@ let
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
     ${sudo} -u archit ${notify-send} -c critical "$1"
   '';
-  passwordFile = "${pkgs.writeText "upspass" "upsmon_pass"}";
 in
 {
-  power.ups = {
-    enable = true;
-    ups.desk = { driver = "usbhid-ups"; port = "auto"; };
-    users.monuser = {
-      upsmon = "primary";
-      inherit passwordFile;
+  systemd.services = {
+    upsdrv = {
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.nut}/bin/upsdrvctl -u nut start";
+      };
+    };
+    upsd = {
+      after = [ "network.target" "upsdrv.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "forking";
+        ExecStart = "${pkgs.nut}/sbin/upsd -u nut";
+      };
     };
     upsmon = {
-      monitor.desk = {
-        user = "monuser";
-        type = "primary";
-        inherit passwordFile;
-      };
-      settings = {
-        RUN_AS_USER = lib.mkForce "nut";
-        SHUTDOWNCMD = "${sudo} ${poweroff}";
-        NOTIFYCMD = "${notifycmd}";
-        NOTIFYFLAG = [
-          [ "ONLINE" "SYSLOG+EXEC" ]
-          [ "ONBATT" "SYSLOG+EXEC" ]
-          [ "FSD" "SYSLOG+EXEC" ]
-          [ "COMMOK" "SYSLOG+EXEC" ]
-          [ "COMMBAD" "SYSLOG+EXEC" ]
-          [ "SHUTDOWN" "SYSLOG+EXEC" ]
-          [ "REPLBATT" "SYSLOG+EXEC" ]
-          [ "NOCOMM" "SYSLOG+EXEC" ]
-        ];
+      after = [ "network.target" "upsd.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "forking";
+        ExecStart = "${pkgs.nut}/sbin/upsmon -u nut";
       };
     };
+    ups-killpower = {
+      wantedBy = [ "shutdown.target" ];
+      after = [ "shutdown.target" ];
+      before = [ "final.target" ];
+      unitConfig = {
+        ConditionPathExists = "/run/killpower";
+        DefaultDependencies = "no";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.nut}/bin/upsdrvctl shutdown";
+      };
+    };
+  };
+
+  environment.etc = {
+    "nut/nut.conf".source = pkgs.writeText "nut.conf" ''
+      MODE = standalone
+    '';
+    "nut/ups.conf".source = pkgs.writeText "ups.conf" ''
+      [desk]
+      driver = usbhid-ups
+      port = auto
+    '';
+    "nut/upsd.conf".source = pkgs.writeText "upsd.conf" ''
+    '';
+    "nut/upsd.users".source = pkgs.writeText "upsd.users" ''
+      [monuser]
+      password = "upsmon_pass"
+      upsmon primary
+    '';
+    "nut/upsmon.conf".source = pkgs.writeText "upsmon.conf" ''
+      RUN_AS_USER nut
+      POWERDOWNFLAG /run/killpower
+      MONITOR desk 1 monuser "upsmon_pass" primary
+      SHUTDOWNCMD "${sudo} ${poweroff}"
+      NOTIFYCMD ${notifycmd}
+      NOTIFYFLAG ONLINE SYSLOG+EXEC
+      NOTIFYFLAG ONBATT SYSLOG+EXEC
+      NOTIFYFLAG FSD SYSLOG+EXEC
+      NOTIFYFLAG COMMOK SYSLOG+EXEC
+      NOTIFYFLAG COMMBAD SYSLOG+EXEC
+      NOTIFYFLAG SHUTDOWN SYSLOG+EXEC
+      NOTIFYFLAG REPLBATT SYSLOG+EXEC
+      NOTIFYFLAG NOCOMM SYSLOG+EXEC
+    '';
   };
 
   users = {
@@ -55,15 +97,6 @@ in
   };
 
   services.udev.packages = [ pkgs.nut ];
-
-  systemd.services = {
-    upsd.serviceConfig.ExecStart =
-      lib.mkForce "${pkgs.nut}/sbin/upsd -u nut";
-    upsmon.serviceConfig.ExecStart =
-      lib.mkForce "${pkgs.nut}/sbin/upsmon -u nut";
-    upsdrv.serviceConfig.ExecStart =
-      lib.mkForce "${pkgs.nut}/bin/upsdrvctl -u nut start";
-  };
 
   security.sudo.extraRules = [
     {
