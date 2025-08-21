@@ -8,5 +8,5 @@ if [ -f flake.nix ]; then
   cd "$TREE"
   rm -f .git/index.lock || true
   git restore .
-  nix flake check "$TREE"
+  nix flake check --offline "$TREE"
 fi
