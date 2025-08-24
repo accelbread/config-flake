@@ -33,6 +33,7 @@
         DeviceScale=2
       '';
     };
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   services = {

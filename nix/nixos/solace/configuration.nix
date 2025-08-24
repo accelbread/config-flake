@@ -17,7 +17,6 @@
     kernelModules = [ "cpuid" "k10temp" "it87" ];
     kernelParams = [ "amdgpu.seamless=1" "amdgpu.deep_color=1" ];
     plymouth.theme = "details";
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   systemd = {
