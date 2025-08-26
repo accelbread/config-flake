@@ -93,7 +93,7 @@ in
         attributes = [ "*.el diff=lisp" ];
         ignores = [ ".envrc" ];
       };
-      less.keys = ''
+      less.config = ''
         #env
         LESS = -i -R
       '';

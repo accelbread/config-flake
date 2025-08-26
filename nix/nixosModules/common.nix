@@ -22,7 +22,7 @@ in
     nixPath =
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     settings = {
-      experimental-features = "nix-command flakes ca-derivations";
+      experimental-features = "nix-command flakes";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
     };
@@ -121,16 +121,7 @@ in
     storage.settings.storage.driver = "btrfs";
   };
 
-  documentation.man = {
-    generateCaches = true;
-    man-db.manualPages =
-      let
-        makeContentAddressed = drv: pkgs.runCommandLocal drv.name
-          { __contentAddressed = true; }
-          "cp -r ${drv} $out";
-      in
-      makeContentAddressed options.documentation.man.man-db.manualPages.default;
-  };
+  documentation.man.generateCaches = true;
 
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
@@ -179,9 +170,9 @@ in
         '';
       };
     };
-    logind = {
-      lidSwitch = "hibernate";
-      killUserProcesses = true;
+    logind.settings.Login = {
+      HandleLidSwitch = "hibernate";
+      KillUserProcesses = true;
     };
     usbguard = {
       enable = true;

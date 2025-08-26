@@ -27,7 +27,7 @@
   };
 
   services = {
-    logind.extraConfig = "IdleAction=lock";
+    logind.settings.Login.IdleAction = "lock";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     clight.enable = true;
     ratbagd.enable = true;

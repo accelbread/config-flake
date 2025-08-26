@@ -22,7 +22,7 @@
   home-manager.sharedModules = [ ./home.nix ];
 
   services = {
-    logind.extraConfig = "IdleAction=hibernate";
+    logind.settings.Login.IdleAction = "hibernate";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     thermald.enable = true;
     xserver.videoDrivers = [ "modesetting" ];

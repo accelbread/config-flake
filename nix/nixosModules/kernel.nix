@@ -10,7 +10,7 @@
     kernelPatches = [{
       name = "hardening";
       patch = null;
-      extraStructuredConfig = with lib.kernel; {
+      structuredExtraConfig = with lib.kernel; {
         RANDOM_KMALLOC_CACHES = yes;
         LIST_HARDENED = yes;
         INIT_ON_ALLOC_DEFAULT_ON = yes;
