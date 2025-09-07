@@ -3,11 +3,16 @@ set -euo pipefail
 
 cd ~/Music/
 
+mkdir -p ~/.cache/dir-icons/Music
+
 for dir in *; do
-  for ext in png jpg; do
+  (for ext in png jpg; do
     if [ -e "$dir/cover.$ext" ]; then
-      gio set -t string "$dir" metadata::custom-icon "cover.$ext"
-      break
+      ffmpeg -i "$dir/cover.$ext" -loglevel error -y -vf scale=256:256 \
+        -update 1 -frames:v 1 -q:v 7 ~/.cache/dir-icons/Music/"$dir".jpg
+      gio set -t string "$dir" metadata::custom-icon \
+        "file://$HOME/.cache/dir-icons/Music/${dir//#/%23}.jpg"
+      exit 0
     fi
-  done
+  done)&
 done

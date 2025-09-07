@@ -101,7 +101,7 @@ in
     Service.ExecStart = "${
       lib.getExe (pkgs.writeShellApplication {
         name = "set-album-arts";
-        runtimeInputs = [ pkgs.glib ];
+        runtimeInputs = [ pkgs.glib pkgs.ffmpeg-headless ];
         text = builtins.readFile ./scripts/set-album-arts;
       })
     }";
