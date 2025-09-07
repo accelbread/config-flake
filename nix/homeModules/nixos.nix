@@ -92,6 +92,16 @@ in
             $DRY_RUN_CMD cat ${default} > "$HOME/.ssh/config.d/codecommit"
           fi
         '';
+      gimpConfig =
+        let
+          gimprc = pkgs.writeText "gimprc" ''
+            (theme "System")
+          '';
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          $DRY_RUN_CMD mkdir -p "$HOME/.config/GIMP/3.0/"
+          $DRY_RUN_CMD install -m600 ${gimprc} "$HOME/.config/GIMP/3.0/gimprc"
+        '';
     };
   };
 
