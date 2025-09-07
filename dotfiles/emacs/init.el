@@ -845,7 +845,8 @@
         eshell-ls-archive-regexp "\\`\\'"
         eshell-ls-backup-regexp "\\`\\'"
         eshell-ls-clutter-regexp "\\`\\'"
-        eshell-ls-product-regexp "\\`\\'")
+        eshell-ls-product-regexp "\\`\\'"
+        eat-term-scrollback-size nil)
 
 (with-eval-after-load 'eshell
   (eat-eshell-mode))
