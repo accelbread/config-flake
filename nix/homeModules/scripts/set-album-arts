@@ -16,3 +16,4 @@ for dir in *; do
     fi
   done)&
 done
+wait
