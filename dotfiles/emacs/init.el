@@ -1764,8 +1764,7 @@ Returns the tree-sitter anchor for using the generated function."
                 (string_literal ("\"" @ts-disp-ldquote) (_)
                                 ("\"" @ts-disp-rdquote))
                 ,@(when (eq mode 'cpp)
-                    '((operator_name "->" @ts-disp-arrow)
-                      (qualified_identifier "::" @ts-disp-scope)))))))))
+                    '((operator_name "->" @ts-disp-arrow)))))))))
 
 ;; Hook is used to set keywords in current buffer instead of globally for mode
 ;; to ensure highlighting is applied after rainbow delimiters.
