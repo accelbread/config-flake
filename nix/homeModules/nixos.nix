@@ -32,6 +32,7 @@ in
       d-spy
       firefox
       ungoogled-chromium
+      rnote
     ];
     file = mapAttrs (_: v: { recursive = true; } // v) {
       ".face".source = self + /misc/icon.png;
