@@ -91,19 +91,11 @@
       partOf = [ "graphical-session.target" ];
     };
     tmpfiles.settings.preservation = {
-
       "/var/lib/colord".d =
         { user = "colord"; group = "colord"; mode = "0755"; };
-    } // (lib.flip lib.genAttrs
-      (k: { d = { user = "archit"; group = "users"; mode = "0755"; }; }) [
-      "/home/archit"
-      "/home/archit/.config"
-      "/home/archit/.local"
-      "/home/archit/.local/share"
-      "/home/archit/.var"
-      "/home/archit/.var/app"
-    ]) // (lib.flip lib.genAttrs
-      (k: { d = { user = "archit"; group = "users"; mode = "0700"; }; }) [
+      "/home/archit".d =
+        { user = "archit"; group = "users"; mode = "0755"; };
+    } // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
       "/home/archit/.ssh"
       "/home/archit/.librewolf"
     ]);

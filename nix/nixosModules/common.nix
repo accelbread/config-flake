@@ -153,7 +153,7 @@ in
   services = {
     fwupd.enable = true;
     pulseaudio.enable = false;
-    dnscrypt-proxy2 = {
+    dnscrypt-proxy = {
       enable = true;
       settings = {
         ipv6_servers = true;

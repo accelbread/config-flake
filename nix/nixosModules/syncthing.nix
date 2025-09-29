@@ -111,7 +111,7 @@ in
   };
 
   systemd.tmpfiles.settings.preservation = lib.flip lib.genAttrs
-    (_: { d = { user = "syncthing"; group = "syncthing"; mode = "0700"; }; }) [
+    (_: { d.mode = lib.mkForce "0700"; }) [
     "${cfg.dataDir}/.config"
     "${cfg.dataDir}/.config/syncthing"
   ];
