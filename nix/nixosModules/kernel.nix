@@ -63,6 +63,9 @@ in
         USERFAULTFD = lib.mkForce no;
         X86_IOPL_IOPERM = no;
         ZERO_CALL_USED_REGS = yes;
+        KEXEC = no;
+        KEXEC_SIG = yes;
+        KEXEC_SIG_FORCE = yes;
       };
     }];
 
