@@ -19,6 +19,7 @@
       "amdgpu.seamless=1"
       "amdgpu.ras_enable=1"
       "amdgpu.deep_color=1"
+      "amdgpu.gpu_recovery=1"
     ];
     plymouth.theme = "details";
   };
