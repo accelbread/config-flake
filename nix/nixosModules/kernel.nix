@@ -44,41 +44,30 @@ in
       isHardened = true;
     });
 
-    kernelPatches = [
-      {
-        name = "hardening";
-        patch = null;
-        structuredExtraConfig = with lib.kernel; {
-          RANDOM_KMALLOC_CACHES = yes;
-          LIST_HARDENED = yes;
-          INIT_ON_ALLOC_DEFAULT_ON = yes;
-          RESET_ATTACK_MITIGATION = yes;
-          IOMMU_DEFAULT_DMA_STRICT = yes;
-          LDISC_AUTOLOAD = no;
-          BPF_JIT_ALWAYS_ON = lib.mkForce yes;
-          HW_RANDOM_TPM = yes;
-          INIT_STACK_ALL_ZERO = yes;
-          UBSAN = yes;
-          UBSAN_BOUNDS = yes;
-          UBSAN_TRAP = yes;
-          USERFAULTFD = lib.mkForce no;
-          X86_IOPL_IOPERM = no;
-          ZERO_CALL_USED_REGS = yes;
-          KEXEC = no;
-          KEXEC_SIG = yes;
-          KEXEC_SIG_FORCE = yes;
-        };
-      }
-      {
-        name = "lkrg-in-tree";
-        patch = pkgs.lkrg-in-tree-patch;
-        structuredExtraConfig = with lib.kernel; {
-          SECURITY_LKRG = yes;
-          SECURITY_SELINUX = no;
-          OVERLAY_FS = yes;
-        };
-      }
-    ];
+    kernelPatches = [{
+      name = "hardening";
+      patch = null;
+      structuredExtraConfig = with lib.kernel; {
+        RANDOM_KMALLOC_CACHES = yes;
+        LIST_HARDENED = yes;
+        INIT_ON_ALLOC_DEFAULT_ON = yes;
+        RESET_ATTACK_MITIGATION = yes;
+        IOMMU_DEFAULT_DMA_STRICT = yes;
+        LDISC_AUTOLOAD = no;
+        BPF_JIT_ALWAYS_ON = lib.mkForce yes;
+        HW_RANDOM_TPM = yes;
+        INIT_STACK_ALL_ZERO = yes;
+        UBSAN = yes;
+        UBSAN_BOUNDS = yes;
+        UBSAN_TRAP = yes;
+        USERFAULTFD = lib.mkForce no;
+        X86_IOPL_IOPERM = no;
+        ZERO_CALL_USED_REGS = yes;
+        KEXEC = no;
+        KEXEC_SIG = yes;
+        KEXEC_SIG_FORCE = yes;
+      };
+    }];
 
     kernelParams = [
       "init_on_alloc=1"
@@ -90,8 +79,6 @@ in
       "slab_nomerge"
       "mce=0"
       "vsyscall=none"
-      "lkrg.umh_validate=0"
-      "lkrg.kint_enforce=1"
     ];
 
     kernel.sysctl = {
