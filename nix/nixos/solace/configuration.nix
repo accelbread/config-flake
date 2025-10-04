@@ -15,7 +15,11 @@
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
     kernelModules = [ "cpuid" "k10temp" "it87" ];
-    kernelParams = [ "amdgpu.seamless=1" "amdgpu.deep_color=1" ];
+    kernelParams = [
+      "amdgpu.seamless=1"
+      "amdgpu.ras_enable=1"
+      "amdgpu.deep_color=1"
+    ];
     plymouth.theme = "details";
   };
 
