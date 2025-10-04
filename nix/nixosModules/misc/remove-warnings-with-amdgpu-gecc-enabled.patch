@@ -1,0 +1,27 @@
+From cf0ad3a513f6179cd72478cbe0abacbb62affb3b Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sat, 4 Oct 2025 14:15:19 -0700
+Subject: [PATCH] Remove warnings with amdgpu GECC enabled
+
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+index 1578e4e2bf84..3ac8f1283c6f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -1920,9 +1920,7 @@ int psp_ras_initialize(struct psp_context *psp)
+ 
+ 		if (boot_cfg == 1 && !adev->ras_default_ecc_enabled &&
+ 		    amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC)) {
+-			dev_warn(adev->dev, "GECC is currently enabled, which may affect performance\n");
+-			dev_warn(adev->dev,
+-				"To disable GECC, please reboot the system and load the amdgpu driver with the parameter amdgpu_ras_enable=0\n");
++			dev_info(adev->dev, "GECC is enabled\n");
+ 		} else {
+ 			if ((adev->ras_default_ecc_enabled || amdgpu_ras_enable == 1) &&
+ 				amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC)) {
+-- 
+2.51.0
+
