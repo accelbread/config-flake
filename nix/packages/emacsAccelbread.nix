@@ -7,7 +7,7 @@
 , shellcheck
 , direnv
 , fish
-, clang-tools
+, llvmPackages_latest
 , nixd
 , rust-analyzer
 , openscad
@@ -70,7 +70,7 @@ let
           envrc-direnv-executable "${direnv}/bin/direnv"
           scad-command "${openscad}/bin/openscad"
           fish-completion-command "${fish}/bin/fish"
-          clangd-program "${clang-tools}/bin/clangd"
+          clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
           nixd-program "${nixd}/bin/nixd"
           rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer")
   '';
