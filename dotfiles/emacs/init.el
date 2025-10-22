@@ -1294,7 +1294,6 @@ Returns the tree-sitter anchor for using the generated function."
                 (rshifteq . "»=")
                 (arrow . "→")
                 (arrow2 . "⇒")
-                (scope . "›")
                 (ldquote . "“")
                 (rdquote . "”")
                 (lquote . "‘")
@@ -1704,10 +1703,6 @@ Returns the tree-sitter anchor for using the generated function."
               (compound_assignment_expr ">>=" @ts-disp-rshifteq)
               (function_item "->" @ts-disp-arrow)
               (match_arm "=>" @ts-disp-arrow2)
-              (scoped_identifier "::" @ts-disp-scope)
-              (scoped_type_identifier "::" @ts-disp-scope)
-              (scoped_use_list "::" @ts-disp-scope)
-              (use_wildcard "::" @ts-disp-scope)
               (string_literal ("\"" @ts-disp-ldquote) (_)
                               ("\"" @ts-disp-rdquote)))))))
 
