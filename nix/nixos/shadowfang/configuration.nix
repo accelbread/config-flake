@@ -5,6 +5,8 @@
     inputs.self.nixosModules.desktop
   ];
 
+  nixpkgs.hostPlatform.system = "x86_64-linux";
+
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
     kernelModules = [ "cpuid" "coretemp" ];

@@ -7,7 +7,10 @@
     ./ups.nix
   ];
 
-  nixpkgs.config.rocmSupport = true;
+  nixpkgs = {
+    hostPlatform.system = "x86_64-linux";
+    config.rocmSupport = true;
+  };
 
   networking.networkmanager.ethernet.macAddress =
     lib.mkForce "5E:34:87:DE:A3:7A";
