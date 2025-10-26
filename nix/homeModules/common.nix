@@ -65,9 +65,11 @@ in
         unset HISTFILE
       '';
       git = {
-        userName = "Archit Gupta";
-        userEmail = "archit@accelbread.com";
-        extraConfig = {
+        settings = {
+          user = {
+            name = "Archit Gupta";
+            email = "archit@accelbread.com";
+          };
           pull.ff = "only";
           clone.filterSubmodules = true;
           user.useConfigOnly = true;
