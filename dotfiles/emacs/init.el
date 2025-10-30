@@ -164,6 +164,11 @@
 (add-hook 'after-change-major-mode-hook #'autosave-git-buffer)
 
 
+;;; Trust personal projects
+
+(setopt trusted-content '("~/projects/"))
+
+
 ;;; Disable use of dialog boxes
 
 (setopt use-dialog-box nil
