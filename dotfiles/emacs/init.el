@@ -1682,6 +1682,11 @@ Returns the tree-sitter anchor for using the generated function."
 
 (setq rust-ts-mode-prettify-symbols-alist nil)
 
+(with-eval-after-load 'eglot
+  (push-default '(:rust-analyzer
+                  (:diagnostics (:enable nil)))
+                eglot-workspace-configuration))
+
 (reformatter-define rust-format
   :program "rustfmt"
   :mode nil)
