@@ -131,6 +131,10 @@
   (interactive)
   (setq-local nobreak-char-display nil))
 
+(defun local-var-safe-in-trusted (_)
+  "Return non-nil when current buffer is trusted."
+  (trusted-content-p))
+
 
 ;;; Hide welcome messages
 
@@ -1481,6 +1485,11 @@ Returns the tree-sitter anchor for using the generated function."
             #'enable-flymake-after-locals
             nil t))
 
+;; TODO: Run flymake-cc in sandbox so just that value can be made safe
+(with-eval-after-load 'flymake
+  (put 'flymake-diagnostic-functions
+       'safe-local-variable #'local-var-safe-in-trusted))
+
 
 ;;; Help
 
@@ -1772,27 +1781,22 @@ Returns the tree-sitter anchor for using the generated function."
       (2 'font-lock-keyword-face t)))
    'append))
 
-(defvar use-flymake-cc-projects '())
+(defun c-flymake-containing-makefile-check-syntax ()
+  "`flymake' command for checking with `make check-syntax'."
+  (let ((project (project-current)))
+    `("make" ,@(if project `("-C" ,(project-root project)))
+      "check-syntax"
+      ,(format "CHK_SOURCES=-x %s -c -"
+               (cond ((derived-mode-p '(c++-ts-mode c++-mode)) "c++")
+                     (t "c"))))))
 
-(defun project-flymake-cc ()
-  "Use `flymake-cc' for linting C files in the current project."
-  (interactive)
-  (add-to-list 'use-flymake-cc-projects (project-root (project-current t))))
-
-(defun c-enable-project-flymake-cc ()
-  "Use `flymake-cc' if enabled for project."
-  (if-let* ((proj (project-current))
-            (proj-path (project-root proj))
-            ((member proj-path use-flymake-cc-projects)))
-      (progn (remove-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
-             (add-hook 'flymake-diagnostic-functions #'flymake-cc nil t))))
+(setopt flymake-cc-command #'c-flymake-containing-makefile-check-syntax)
 
 (dolist (hook '(c-ts-mode-hook c++-ts-mode-hook))
   (add-hook hook #'setup-eglot)
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
-  (add-hook hook #'c-set-font-overrides)
-  (add-hook hook #'c-enable-project-flymake-cc 50))
+  (add-hook hook #'c-set-font-overrides))
 
 (with-eval-after-load 'cmake-ts-mode
   (require 'cmake-mode))
