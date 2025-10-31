@@ -28,13 +28,16 @@ in
 
   config = lib.mkIf (cfg.devices != [ ]) {
     boot = {
-      initrd.luks.devices = listToAttrs (eachDevice (n: d: {
-        name = "${hostname}_disk${toString n}";
-        value = {
-          device = getPart 2 d;
-          bypassWorkqueues = true;
-        };
-      }));
+      initrd = {
+        luks.devices = listToAttrs (eachDevice (n: d: {
+          name = "${hostname}_disk${toString n}";
+          value = {
+            device = getPart 2 d;
+            bypassWorkqueues = true;
+          };
+        }));
+        systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
+      };
       swraid.enable = false;
     };
 
