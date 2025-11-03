@@ -4,8 +4,13 @@
   display: none;
 }
 
-button[title="Customize sidebar"] {
-  display: none;
+div.buttons-wrapper:has(button-group.tools-and-extensions),
+#sidebar-tools-and-extensions-splitter {
+  display: none !important;
+}
+
+#sidebar-main {
+  min-width: 57px;
 }
 
 :root[customtitlebar] {
