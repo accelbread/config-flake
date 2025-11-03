@@ -92,7 +92,31 @@ in
           tag.sort = "version:refname";
           "diff \"lisp\"".xfuncname = "^(\\(def\\S+\\s+\\S+)";
         };
-        attributes = [ "*.el diff=lisp" ];
+        attributes = [
+          "*.el diff=lisp"
+          "*.sh diff=bash"
+          "*.md diff=markdown"
+          "*.tex diff=tex"
+          "*.ini diff=ini"
+          "*.c diff=cpp"
+          "*.h diff=cpp"
+          "*.cpp diff=cpp"
+          "*.cxx diff=cpp"
+          "*.cc diff=cpp"
+          "*.c++ diff=cpp"
+          "*.hpp diff=cpp"
+          "*.hxx diff=cpp"
+          "*.hh diff=cpp"
+          "*.h++ diff=cpp"
+          "*.rs diff=rust"
+          "*.py diff=python"
+          "*.scm diff=scheme"
+          "*.css diff=css"
+          "*.html diff=html"
+          "*.java diff=java"
+          "*.kt diff=kotlin"
+          "*.go diff=golang"
+        ];
         ignores = [ ".envrc" ];
       };
       less.config = ''
