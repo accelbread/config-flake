@@ -4,13 +4,20 @@
   display: none;
 }
 
+/* Hide bottom section of vertical tab bar */
 div.buttons-wrapper:has(button-group.tools-and-extensions),
 #sidebar-tools-and-extensions-splitter {
   display: none !important;
 }
 
+/* Prevent sidebar from disappearing when collapsed to just icons. */
 #sidebar-main {
-  min-width: 57px;
+  min-width: 55px;
+}
+
+/* Make sidebar easier to resize */
+.sidebar-splitter {
+  min-width: 4px !important;
 }
 
 :root[customtitlebar] {
