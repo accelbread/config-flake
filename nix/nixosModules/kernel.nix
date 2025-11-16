@@ -1,7 +1,7 @@
 { pkgs, lib, inputs, ... }:
 let
-  version = "6.16.12";
-  base-kernel = pkgs.linux_6_16;
+  version = "6.17.8";
+  base-kernel = pkgs.linux_6_17;
   major-version = lib.versions.major version;
 
   hardened-version = "${version}-hardened1";
@@ -9,12 +9,12 @@ let
   hardened-patch = pkgs.fetchurl {
     name = "${hardened-patch-name}.patch";
     url = "https://github.com/anthraxx/linux-hardened/releases/download/v${hardened-version}/${hardened-patch-name}.patch";
-    hash = "sha256-VHBjthSNWehGP3Bp6DBKHd6/WKOtSfRgMDzb1QL8yKY=";
+    hash = "sha256-BlBcx/xRntbCrgUte4jV43HaJYBoUU0+A9VaPdI8fdg=";
   };
 
   kernel-src = pkgs.fetchurl {
     url = "mirror://kernel/linux/kernel/v${major-version}.x/linux-${version}.tar.xz";
-    hash = "sha256-fKTevFypEuu4p2lEpcEYr9XQnjHvQ8SUrbFCc9opom4=";
+    hash = "sha256-Wo3mSnX8pwbAHGwKd891p0YYQ52xleJfHwJor2svsdo=";
   };
 in
 {
@@ -30,7 +30,7 @@ in
         { inherit (pkgs) stdenv lib; inherit version; };
       argsOverride = {
         version =
-          lib.warnIf (lib.versionAtLeast pkgs.linux_latest.version version)
+          lib.warnIf (lib.versionOlder version pkgs.linux_latest.version)
             "Kernel out of date (${version} < ${pkgs.linux_latest.version})."
             version;
         pname = "linux-hardened";
@@ -67,6 +67,7 @@ in
           KEXEC = no;
           KEXEC_SIG = yes;
           KEXEC_SIG_FORCE = yes;
+          KSTACK_ERASE = yes;
         };
       }
       {
