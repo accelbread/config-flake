@@ -121,6 +121,9 @@
       "org/gnome/nautilus/list-view" = {
         use-tree-view = true;
       };
+      "org/gnome/settings-daemon/plugins/housekeeping" = {
+        donation-reminder-enabled = false;
+      };
       "org/gnome/shell" = {
         disable-user-extensions = false;
         favorite-apps = [
