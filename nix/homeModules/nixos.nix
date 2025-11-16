@@ -57,7 +57,11 @@ in
           "${pkgs.buildEnv {
             name = "mpv-scripts";
             pathsToLink = [ "/share/mpv/scripts" ];
-            paths = with pkgs.mpvScripts; [ autoload mpris sponsorblock ];
+            paths = with pkgs.mpvScripts; [
+              autoload
+              mpris
+              sponsorblock-minimal
+            ];
           }}/share/mpv/scripts";
         recursive = false;
       };
