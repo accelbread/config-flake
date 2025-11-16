@@ -15,7 +15,16 @@
   hardware = {
     cpu.intel.updateMicrocode = true;
     graphics.extraPackages = with pkgs; [ intel-compute-runtime ];
-    bluetooth.powerOnBoot = false;
+    bluetooth = {
+      powerOnBoot = false;
+      settings = {
+        General = {
+          PairableTimeout = 30;
+          DiscoverableTimeout = 30;
+        };
+        Policy.Privacy = "network/on";
+      };
+    };
     framework.enableKmod = false;
   };
 

@@ -81,11 +81,16 @@ in
       "init_on_free=1"
       "iommu.passthrough=0"
       "iommu.strict=1"
+      "iommu=force"
+      "intel_iommu=on"
+      "amd_iommu=force_isolation"
       "randomize_kstack_offset=on"
       "page_alloc.shuffle=1"
       "slab_nomerge"
       "mce=0"
       "vsyscall=none"
+      "random.trust_bootloader=off"
+      "random.trust_cpu=off"
     ];
 
     kernel.sysctl = {
@@ -114,6 +119,7 @@ in
       "net.ipv4.conf.default.secure_redirects" = false;
       "net.ipv4.conf.default.send_redirects" = false;
       "net.ipv6.conf.all.accept_redirects" = false;
+      "net.ipv6.conf.all.use_tempaddr" = 2;
       "net.ipv6.conf.default.accept_redirects" = false;
     };
   };

@@ -39,6 +39,11 @@ in
         systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
       };
       swraid.enable = false;
+      specialFileSystems = {
+        "/dev".options = [ "noexec" ];
+        "/dev/shm".options = [ "noexec" ];
+        "/run".options = [ "noexec" ];
+      };
     };
 
     swapDevices = eachDevice
