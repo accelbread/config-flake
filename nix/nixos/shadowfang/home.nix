@@ -1,5 +1,5 @@
 { lib, pkgs, ... }: {
-  nixGL.package = pkgs.nixgl.nixGLIntel;
+  nixgl.package = pkgs.nixgl.nixGLIntel;
 
   home.activation.wireplumberDefaults =
     let

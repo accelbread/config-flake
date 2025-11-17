@@ -5,7 +5,7 @@ in
 {
   imports = with inputs.self.homeModules; [ emacs gui-only-programs ];
 
-  options.nixGL.package = mkOption {
+  options.nixgl.package = mkOption {
     type = types.package;
     default = pkgs.nixgl.nixGLMesa;
   };
@@ -13,7 +13,7 @@ in
   config = {
     home = {
       packages = with pkgs; [
-        (nixgl.nixGLCommon config.nixGL.package)
+        (nixgl.nixGLCommon config.nixgl.package)
         man-pages
         man-pages-posix
         glibcInfo
