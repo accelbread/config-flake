@@ -4,7 +4,7 @@
     <logicalmonitor>
       <x>0</x>
       <y>0</y>
-      <scale>1.5</scale>
+      <scale>1.3333333730697632</scale>
       <monitor>
         <monitorspec>
           <connector>DP-2</connector>
@@ -20,9 +20,9 @@
       </monitor>
     </logicalmonitor>
     <logicalmonitor>
-      <x>2560</x>
+      <x>2880</x>
       <y>0</y>
-      <scale>1.5</scale>
+      <scale>1.3333333730697632</scale>
       <primary>yes</primary>
       <monitor>
         <monitorspec>
@@ -39,9 +39,9 @@
       </monitor>
     </logicalmonitor>
     <logicalmonitor>
-      <x>5120</x>
+      <x>5760</x>
       <y>0</y>
-      <scale>1.5</scale>
+      <scale>1.3333333730697632</scale>
       <monitor>
         <monitorspec>
           <connector>DP-4</connector>
