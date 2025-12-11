@@ -1,6 +1,6 @@
 { pkgs, lib, inputs, ... }:
 let
-  version = "6.17.9";
+  version = "6.17.11";
   base-kernel = pkgs.linux_6_17;
   major-version = lib.versions.major version;
 
@@ -9,12 +9,12 @@ let
   hardened-patch = pkgs.fetchurl {
     name = "${hardened-patch-name}.patch";
     url = "https://github.com/anthraxx/linux-hardened/releases/download/v${hardened-version}/${hardened-patch-name}.patch";
-    hash = "sha256-+7BnNiLV69eQ9h1yg9aI+t+aqsB1LSqinOlxKDfl3/g=";
+    hash = "sha256-w3rNBLqKfIextLMtrcvNomc0YUgE93DolvSP8dAkz6s=";
   };
 
   kernel-src = pkgs.fetchurl {
     url = "mirror://kernel/linux/kernel/v${major-version}.x/linux-${version}.tar.xz";
-    hash = "sha256-bQiAO5U8UJ30jUTTKB7TklJDIdi7NT6yHAVVeQyPjgY=";
+    hash = "sha256-k0sYrwEl8RSQe61ILXxal9WAOJcLnc5hYjGOkgyvJX4=";
   };
 in
 {
