@@ -30,6 +30,8 @@
 
   powerManagement.powertop.enable = true;
 
+  sysconfig.monitors = ./monitors.xml;
+
   home-manager.sharedModules = [ ./home.nix ];
 
   services = {

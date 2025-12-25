@@ -27,12 +27,9 @@
     plymouth.theme = "details";
   };
 
-  systemd = {
-    sleep.extraConfig = "AllowSuspend=no";
-    tmpfiles.rules = [
-      "L+ /run/gdm/.config/monitors.xml - gdm gdm - ${./monitors.xml}"
-    ];
-  };
+  systemd.sleep.extraConfig = "AllowSuspend=no";
+
+  sysconfig.monitors = ./monitors.xml;
 
   services = {
     logind.settings.Login.IdleAction = "lock";
