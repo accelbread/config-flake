@@ -63,7 +63,7 @@
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot
+           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
            markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
         package-native-compile t)
@@ -1239,6 +1239,10 @@
               :initializationOptions
               (:extendedClientCapabilities (:classFileContentsSupport t))))
           (python-ts-mode "pylsp"))))
+
+(with-eval-after-load 'eglot
+  (require 'eglot-x)
+  (eglot-x-setup))
 
 
 ;;; Tree-sitter
