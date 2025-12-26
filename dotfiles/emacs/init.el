@@ -1212,7 +1212,7 @@
 (defun setup-eglot ()
   "Enable eglot and its dependencies."
   (require 'eglot)
-  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
+  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
 (with-eval-after-load 'eglot
@@ -1729,10 +1729,15 @@ Returns the tree-sitter anchor for using the generated function."
               (string_literal ("\"" @ts-disp-ldquote) (_)
                               ("\"" @ts-disp-rdquote)))))))
 
+(defun rust-ts-disable-flymake ()
+  "Disable `rust-ts-flymake'."
+  (remove-hook 'flymake-diagnostic-functions #'rust-ts-flymake t))
+
 (add-hook 'rust-ts-mode-hook #'setup-eglot)
 (add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
 (add-hook 'rust-ts-mode-hook #'rust-ts-add-custom-rules)
 (add-hook 'rust-ts-mode-hook #'cargo-minor-mode)
+(add-hook 'rust-ts-mode-hook #'rust-ts-disable-flymake)
 
 (add-hook 'toml-mode-hook #'cargo-minor-mode)
 
