@@ -1728,9 +1728,7 @@ Returns the tree-sitter anchor for using the generated function."
               (compound_assignment_expr "<<=" @ts-disp-lshifteq)
               (compound_assignment_expr ">>=" @ts-disp-rshifteq)
               (function_item "->" @ts-disp-arrow)
-              (match_arm "=>" @ts-disp-arrow2)
-              (string_literal ("\"" @ts-disp-ldquote) (_)
-                              ("\"" @ts-disp-rdquote)))))))
+              (match_arm "=>" @ts-disp-arrow2))))))
 
 (defun rust-ts-disable-flymake ()
   "Disable `rust-ts-flymake'."
