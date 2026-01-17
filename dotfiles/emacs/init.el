@@ -304,6 +304,9 @@
 (with-eval-after-load 'face-remap
   (hide-minor-mode 'buffer-face-mode))
 
+(with-eval-after-load 'hideshow
+  (hide-minor-mode 'hs-minor-mode))
+
 
 ;;; Window layout
 
@@ -1740,6 +1743,7 @@ Returns the tree-sitter anchor for using the generated function."
 (add-hook 'rust-ts-mode-hook #'rust-ts-add-custom-rules)
 (add-hook 'rust-ts-mode-hook #'cargo-minor-mode)
 (add-hook 'rust-ts-mode-hook #'rust-ts-disable-flymake)
+(add-hook 'rust-ts-mode-hook #'hs-minor-mode)
 
 (add-hook 'toml-mode-hook #'cargo-minor-mode)
 
