@@ -18,9 +18,9 @@ in
       flac
       yubikey-manager
       yubico-piv-tool
+      librewolf
     ];
     gui-packages = with pkgs; [
-      librewolf
       gimp3
       libreoffice
       celluloid
