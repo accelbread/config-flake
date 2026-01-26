@@ -19,6 +19,7 @@ in
       yubikey-manager
       yubico-piv-tool
       librewolf
+      android-tools
     ];
     gui-packages = with pkgs; [
       gimp3

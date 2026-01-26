@@ -119,7 +119,6 @@
       enable = true;
       package = pkgs.wireshark;
     };
-    adb.enable = true;
     yubikey-touch-detector = {
       enable = true;
       unixSocket = false;
