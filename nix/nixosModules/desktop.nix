@@ -151,6 +151,8 @@
       pkgs.adw-gtk3
       pkgs.qadwaitadecorations
       pkgs.qadwaitadecorations-qt6
+      pkgs.gst-thumbnailers
+      pkgs.gnome-epub-thumbnailer
     ];
     wordlist = {
       enable = true;
