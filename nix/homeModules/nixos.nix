@@ -35,6 +35,7 @@ in
       ungoogled-chromium
       rnote
       inkscape
+      foliate
     ];
     file = mapAttrs (_: v: { recursive = true; } // v) {
       ".face".source = self + /misc/icon.png;
