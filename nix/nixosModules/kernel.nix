@@ -1,21 +1,6 @@
 { pkgs, lib, inputs, ... }:
 let
-  version = "6.17.13";
-  base-kernel = pkgs.linux_6_17;
-  major-version = lib.versions.major version;
-
-  hardened-version = "${version}-hardened1";
-  hardened-patch-name = "linux-hardened-v${hardened-version}";
-  hardened-patch = pkgs.fetchurl {
-    name = "${hardened-patch-name}.patch";
-    url = "https://github.com/anthraxx/linux-hardened/releases/download/v${hardened-version}/${hardened-patch-name}.patch";
-    hash = "sha256-TGZxaIwPn8F4L13iaOGF3hmszHBsvQJWxd9Ix03zfrM=";
-  };
-
-  kernel-src = pkgs.fetchurl {
-    url = "mirror://kernel/linux/kernel/v${major-version}.x/linux-${version}.tar.xz";
-    hash = "sha256-EWgC3DrRZGFjzG/+m926JKgGm1aRNewFI815kGTy7bk=";
-  };
+  base-kernel = pkgs.linux_latest;
 in
 {
   security = {
@@ -24,27 +9,15 @@ in
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor (base-kernel.override {
-      structuredExtraConfig = import
-        (inputs.nixpkgs + /pkgs/os-specific/linux/kernel/hardened/config.nix)
-        { inherit (pkgs) stdenv lib; inherit version; };
-      argsOverride = {
-        version =
-          lib.warnIf (lib.versionOlder version pkgs.linux_latest.version)
-            "Kernel out of date (${version} < ${pkgs.linux_latest.version})."
-            version;
-        pname = "linux-hardened";
-        modDirVersion = hardened-version;
-        src = kernel-src;
-        extraMeta.broken = base-kernel.meta.broken;
-      };
-      kernelPatches = base-kernel.kernelPatches ++ [
-        { name = hardened-patch-name; patch = hardened-patch; }
-      ];
-      isHardened = true;
-    });
-
+    kernelPackages = pkgs.linuxPackagesFor base-kernel;
     kernelPatches = [
+      {
+        name = "nixpkgs hardened config";
+        patch = null;
+        structuredExtraConfig = import
+          (inputs.nixpkgs + /pkgs/os-specific/linux/kernel/hardened/config.nix)
+          { inherit (pkgs) stdenv lib; inherit (base-kernel) version; };
+      }
       {
         name = "hardening";
         patch = null;
