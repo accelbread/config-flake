@@ -8,7 +8,9 @@ in
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor base-kernel;
+    kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
+      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
+    }));
     kernelPatches = [
       {
         name = "nixpkgs hardened config";
@@ -76,6 +78,9 @@ in
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
           LEGACY_TIOCSTI = no;
           MSEAL_SYSTEM_MAPPINGS = yes;
+          MODULE_SIG = no;
+          MODULE_SIG_FORCE = yes;
+          MODULE_HASHES = yes;
         } // lib.optionalAttrs (pkgs.system == "aarch64-linux") {
           ARM64_SW_TTBR0_PAN = yes;
         };

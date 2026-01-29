@@ -1,0 +1,100 @@
+From 2b718a2860f713b5b554085005ecc4be13fe8d47 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:56 +0100
+Subject: [PATCH 12/16] module: Move signature splitting up
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The signature splitting will also be used by CONFIG_MODULE_HASHES.
+
+Move it up the callchain, so the result can be reused.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/internal.h |  2 +-
+ kernel/module/main.c     | 13 ++++++++++++-
+ kernel/module/signing.c  | 21 +++++++--------------
+ 3 files changed, 20 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index e053c29a5d0..e2d49122c2a 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -337,7 +337,7 @@ int module_enforce_rwx_sections(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
+ void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 			       const char *secstrings);
+ 
+-int module_sig_check(struct load_info *info, int flags);
++int module_sig_check(struct load_info *info, const u8 *sig, size_t sig_len);
+ 
+ #ifdef CONFIG_DEBUG_KMEMLEAK
+ void kmemleak_load_module(const struct module *mod, const struct load_info *info);
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index cee9bc52736..0e1fcd46e4a 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3346,10 +3346,21 @@ static int early_mod_check(struct load_info *info, int flags)
+ 
+ static int module_integrity_check(struct load_info *info, int flags)
+ {
++	bool mangled_module = flags & (MODULE_INIT_IGNORE_MODVERSIONS |
++				       MODULE_INIT_IGNORE_VERMAGIC);
++	size_t sig_len;
++	const u8 *sig;
+ 	int err = 0;
+ 
++	if (IS_ENABLED(CONFIG_MODULE_SIG_POLICY)) {
++		err = mod_split_sig(info->hdr, &info->len, mangled_module,
++				    &sig_len, &sig, "module");
++		if (err)
++			return err;
++	}
++
+ 	if (IS_ENABLED(CONFIG_MODULE_SIG))
+-		err = module_sig_check(info, flags);
++		err = module_sig_check(info, sig, sig_len);
+ 
+ 	if (err)
+ 		return err;
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 8a5f6638911..86164761cac 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -15,26 +15,19 @@
+ #include <uapi/linux/module.h>
+ #include "internal.h"
+ 
+-int module_sig_check(struct load_info *info, int flags)
++int module_sig_check(struct load_info *info, const u8 *sig, size_t sig_len)
+ {
+ 	int err;
+ 	const char *reason;
+ 	const void *mod = info->hdr;
+-	size_t sig_len;
+-	const u8 *sig;
+-	bool mangled_module = flags & (MODULE_INIT_IGNORE_MODVERSIONS |
+-				       MODULE_INIT_IGNORE_VERMAGIC);
+ 
+-	err = mod_split_sig(info->hdr, &info->len, mangled_module, &sig_len, &sig, "module");
++	err = verify_pkcs7_signature(mod, info->len, sig, sig_len,
++				     VERIFY_USE_SECONDARY_KEYRING,
++				     VERIFYING_MODULE_SIGNATURE,
++				     NULL, NULL);
+ 	if (!err) {
+-		err = verify_pkcs7_signature(mod, info->len, sig, sig_len,
+-					     VERIFY_USE_SECONDARY_KEYRING,
+-					     VERIFYING_MODULE_SIGNATURE,
+-					     NULL, NULL);
+-		if (!err) {
+-			info->sig_ok = true;
+-			return 0;
+-		}
++		info->sig_ok = true;
++		return 0;
+ 	}
+ 
+ 	/*
+-- 
+2.52.0
+

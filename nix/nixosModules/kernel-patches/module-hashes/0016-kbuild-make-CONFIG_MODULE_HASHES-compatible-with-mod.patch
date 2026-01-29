@@ -1,0 +1,220 @@
+From e180fcbeeb3d12be8db5bf435b0d03bb20e8b9f7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:29:01 +0100
+Subject: [PATCH 16/16] kbuild: make CONFIG_MODULE_HASHES compatible with
+ module stripping
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+CONFIG_MODULE_HASHES needs to process the modules at build time in the
+exact form they will be loaded at runtime. If the modules are stripped
+afterwards they will not be loadable anymore.
+
+Also evaluate INSTALL_MOD_STRIP at build time and build the hashes based
+on modules stripped this way.
+
+If users specify inconsistent values of INSTALL_MOD_STRIP between build
+and installation time, an error is reported.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ .gitignore                |  1 +
+ kernel/module/Kconfig     |  5 +++++
+ scripts/Makefile.lib      | 32 ++++++++++++++++++++++++++++++++
+ scripts/Makefile.modfinal | 11 ++++++++---
+ scripts/Makefile.modinst  | 39 ++++++---------------------------------
+ scripts/Makefile.vmlinux  |  1 +
+ 6 files changed, 53 insertions(+), 36 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 1f7119086df..07b51eae243 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -29,6 +29,7 @@
+ *.gz
+ *.i
+ *.ko
++*.ko.stripped
+ *.lex.c
+ *.ll
+ *.lst
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index 765d23cdbe3..4fb665504f8 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -425,6 +425,11 @@ config MODULE_HASHES
+ 
+ 	  Also see the warning in MODULE_SIG about stripping modules.
+ 
++# To validate the consistency of INSTALL_MOD_STRIP for MODULE_HASHES
++config MODULE_INSTALL_STRIP
++	string
++	default "$(INSTALL_MOD_STRIP)"
++
+ config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+ 	bool "Allow loading of modules with missing namespace imports"
+ 	help
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 1d581ba5df6..2e3e2f74da4 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -474,6 +474,38 @@ define sed-offsets
+ 	s:->::; p;}'
+ endef
+ 
++#
++# Module Installation
++#
++quiet_cmd_install_mod = INSTALL $@
++      cmd_install_mod = cp $< $@
++
++# Module Strip
++# ---------------------------------------------------------------------------
++#
++# INSTALL_MOD_STRIP, if defined, will cause modules to be stripped after they
++# are installed. If INSTALL_MOD_STRIP is '1', then the default option
++# --strip-debug will be used. Otherwise, INSTALL_MOD_STRIP value will be used
++# as the options to the strip command.
++ifeq ($(INSTALL_MOD_STRIP),1)
++mod-strip-option := --strip-debug
++else
++mod-strip-option := $(INSTALL_MOD_STRIP)
++endif
++
++# Strip
++ifdef INSTALL_MOD_STRIP
++
++quiet_cmd_strip_mod = STRIP   $@
++      cmd_strip_mod = $(STRIP) $(mod-strip-option) $@
++
++else
++
++quiet_cmd_strip_mod =
++      cmd_strip_mod = :
++
++endif
++
+ # Use filechk to avoid rebuilds when a header changes, but the resulting file
+ # does not
+ define filechk_offsets
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index e05f971ee22..b2f643e2611 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -58,10 +58,14 @@ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
+ endif
+ 
+-quiet_cmd_merkle = MERKLE  $@
+-      cmd_merkle = $(objtree)/scripts/modules-merkle-tree $@ .ko
++%.ko.stripped: %.ko $(wildcard include/config/MODULE_INSTALL_STRIP)
++	$(call cmd,install_mod)
++	$(call cmd,strip_mod)
+ 
+-.tmp_module_hashes.c: $(modules:%.o=%.ko) $(objtree)/scripts/modules-merkle-tree FORCE
++quiet_cmd_merkle = MERKLE  $@
++      cmd_merkle = $(objtree)/scripts/modules-merkle-tree $@ $(if $(CONFIG_MODULE_INSTALL_STRIP),.ko.stripped,.ko)
++
++.tmp_module_hashes.c: $(if $(CONFIG_MODULE_INSTALL_STRIP),$(modules:%.o=%.ko.stripped),$(modules:%.o=%.ko)) $(objtree)/scripts/modules-merkle-tree $(wildcard include/config/MODULE_INSTALL_STRIP) FORCE
+ 	$(call cmd,merkle)
+ 
+ ifdef CONFIG_MODULE_HASHES
+@@ -70,6 +74,7 @@ endif
+ 
+ targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) .module-common.o
+ targets += $(modules:%.o=%.merkle) .tmp_module_hashes.c
++targets += $(modules:%.o=%.ko.stripped)
+ 
+ # Add FORCE to the prerequisites of a target to force it to be always rebuilt.
+ # ---------------------------------------------------------------------------
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index ba4343b4049..45606f994ad 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -8,6 +8,7 @@ __modinst:
+ 
+ include $(objtree)/include/config/auto.conf
+ include $(srctree)/scripts/Kbuild.include
++include $(srctree)/scripts/Makefile.lib
+ 
+ install-y :=
+ 
+@@ -36,7 +37,7 @@ install-y += $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo)
+ install-$(CONFIG_BUILTIN_MODULE_RANGES) += $(MODLIB)/modules.builtin.ranges
+ 
+ $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.builtin.ranges): $(MODLIB)/%: % FORCE
+-	$(call cmd,install)
++	$(call cmd,install_mod)
+ 
+ endif
+ 
+@@ -65,40 +66,12 @@ install-$(CONFIG_MODULES) += $(modules)
+ __modinst: $(install-y)
+ 	@:
+ 
+-#
+-# Installation
+-#
+-quiet_cmd_install = INSTALL $@
+-      cmd_install = cp $< $@
+-
+-# Strip
+-#
+-# INSTALL_MOD_STRIP, if defined, will cause modules to be stripped after they
+-# are installed. If INSTALL_MOD_STRIP is '1', then the default option
+-# --strip-debug will be used. Otherwise, INSTALL_MOD_STRIP value will be used
+-# as the options to the strip command.
+-ifdef INSTALL_MOD_STRIP
+-
+ ifdef CONFIG_MODULE_HASHES
+ ifeq ($(KBUILD_EXTMOD),)
+-$(error CONFIG_MODULE_HASHES and INSTALL_MOD_STRIP are mutually exclusive)
++ifneq ($(INSTALL_MOD_STRIP),$(CONFIG_MODULE_INSTALL_STRIP))
++$(error Inconsistent values for INSTALL_MOD_STRIP between build and installation)
+ endif
+ endif
+-
+-ifeq ($(INSTALL_MOD_STRIP),1)
+-strip-option := --strip-debug
+-else
+-strip-option := $(INSTALL_MOD_STRIP)
+-endif
+-
+-quiet_cmd_strip = STRIP   $@
+-      cmd_strip = $(STRIP) $(strip-option) $@
+-
+-else
+-
+-quiet_cmd_strip =
+-      cmd_strip = :
+-
+ endif
+ 
+ #
+@@ -133,8 +106,8 @@ endif
+ $(foreach dir, $(sort $(dir $(install-y))), $(shell mkdir -p $(dir)))
+ 
+ $(dst)/%.ko: %.ko FORCE
+-	$(call cmd,install)
+-	$(call cmd,strip)
++	$(call cmd,install_mod)
++	$(call cmd,strip_mod)
+ 	$(call cmd,sign)
+ 
+ ifdef CONFIG_MODULES
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index f4e38b953b0..4ce849f6253 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -81,6 +81,7 @@ endif
+ ifdef CONFIG_MODULE_HASHES
+ vmlinux.unstripped: $(objtree)/scripts/modules-merkle-tree
+ vmlinux.unstripped: modules.order
++vmlinux.unstripped: $(wildcard include/config/MODULE_INSTALL_STRIP)
+ endif
+ 
+ # vmlinux
+-- 
+2.52.0
+

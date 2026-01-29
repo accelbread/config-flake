@@ -1,0 +1,86 @@
+From 573c9671cbbc39f316ff9c06a2968d772ae999b2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:54 +0100
+Subject: [PATCH 10/16] module: Move integrity checks into dedicated function
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+With the addition of hash-based integrity checking, the configuration
+matrix is easier to represent in a dedicated function and with explicit
+usage of IS_ENABLED().
+
+Drop the now unnecessary stub for module_sig_check().
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/internal.h |  7 -------
+ kernel/module/main.c     | 18 ++++++++++++++----
+ 2 files changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 037fbb3b716..e053c29a5d0 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -337,14 +337,7 @@ int module_enforce_rwx_sections(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
+ void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 			       const char *secstrings);
+ 
+-#ifdef CONFIG_MODULE_SIG
+ int module_sig_check(struct load_info *info, int flags);
+-#else /* !CONFIG_MODULE_SIG */
+-static inline int module_sig_check(struct load_info *info, int flags)
+-{
+-	return 0;
+-}
+-#endif /* !CONFIG_MODULE_SIG */
+ 
+ #ifdef CONFIG_DEBUG_KMEMLEAK
+ void kmemleak_load_module(const struct module *mod, const struct load_info *info);
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 953ce8a7668..89f115f79fd 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3344,6 +3344,16 @@ static int early_mod_check(struct load_info *info, int flags)
+ 	return err;
+ }
+ 
++static int module_integrity_check(struct load_info *info, int flags)
++{
++	int err = 0;
++
++	if (IS_ENABLED(CONFIG_MODULE_SIG))
++		err = module_sig_check(info, flags);
++
++	return err;
++}
++
+ /*
+  * Allocate and load the module: note that size of section 0 is always
+  * zero, and we rely on this for optional sections.
+@@ -3357,18 +3367,18 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	char *after_dashes;
+ 
+ 	/*
+-	 * Do the signature check (if any) first. All that
+-	 * the signature check needs is info->len, it does
++	 * Do the integrity checks (if any) first. All that
++	 * they need is info->len, it does
+ 	 * not need any of the section info. That can be
+ 	 * set up later. This will minimize the chances
+ 	 * of a corrupt module causing problems before
+-	 * we even get to the signature check.
++	 * we even get to the integrity check.
+ 	 *
+ 	 * The check will also adjust info->len by stripping
+ 	 * off the sig length at the end of the module, making
+ 	 * checks against info->len more correct.
+ 	 */
+-	err = module_sig_check(info, flags);
++	err = module_integrity_check(info, flags);
+ 	if (err)
+ 		goto free_copy;
+ 
+-- 
+2.52.0
+

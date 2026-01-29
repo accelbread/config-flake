@@ -1,0 +1,44 @@
+From 5ed3d4c587b19bafeae77a30a9b013eab5f5849a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:48 +0100
+Subject: [PATCH 04/16] module: Make mod_verify_sig() static
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+It is not used outside of signing.c.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/internal.h | 1 -
+ kernel/module/signing.c  | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 618202578b4..e68fbcd60c3 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -119,7 +119,6 @@ struct module_use {
+ 	struct module *source, *target;
+ };
+ 
+-int mod_verify_sig(const void *mod, struct load_info *info);
+ int try_to_force_load(struct module *mod, const char *reason);
+ bool find_symbol(struct find_symbol_arg *fsa);
+ struct module *find_module_all(const char *name, size_t len, bool even_unformed);
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index a2ff4242e62..fe3f51ac619 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -40,7 +40,7 @@ void set_module_sig_enforced(void)
+ /*
+  * Verify the signature on a module.
+  */
+-int mod_verify_sig(const void *mod, struct load_info *info)
++static int mod_verify_sig(const void *mod, struct load_info *info)
+ {
+ 	struct module_signature ms;
+ 	size_t sig_len, modlen = info->len;
+-- 
+2.52.0
+

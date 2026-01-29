@@ -1,0 +1,144 @@
+From 07307d6bc131053ebcb87cf4a0d51156eef54dc3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:57 +0100
+Subject: [PATCH 13/16] module: Report signature type to users
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The upcoming CONFIG_MODULE_HASHES will introduce a signature type.
+This needs to be handled by callers differently than PKCS7 signatures.
+
+Report the signature type to the caller and let them verify it.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ include/linux/module_signature.h    |  2 +-
+ kernel/module/main.c                |  9 +++++++--
+ kernel/module_signature.c           | 14 ++++----------
+ security/integrity/ima/ima_modsig.c |  8 +++++++-
+ 4 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/include/linux/module_signature.h b/include/linux/module_signature.h
+index 186a55effa3..a45ce3b2440 100644
+--- a/include/linux/module_signature.h
++++ b/include/linux/module_signature.h
+@@ -41,6 +41,6 @@ struct module_signature {
+ };
+ 
+ int mod_split_sig(const void *buf, size_t *buf_len, bool mangled,
+-		  size_t *sig_len, const u8 **sig, const char *name);
++		  enum pkey_id_type *sig_type, size_t *sig_len, const u8 **sig, const char *name);
+ 
+ #endif /* _LINUX_MODULE_SIGNATURE_H */
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 0e1fcd46e4a..64444c6e937 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3348,19 +3348,24 @@ static int module_integrity_check(struct load_info *info, int flags)
+ {
+ 	bool mangled_module = flags & (MODULE_INIT_IGNORE_MODVERSIONS |
+ 				       MODULE_INIT_IGNORE_VERMAGIC);
++	enum pkey_id_type sig_type;
+ 	size_t sig_len;
+ 	const u8 *sig;
+ 	int err = 0;
+ 
+ 	if (IS_ENABLED(CONFIG_MODULE_SIG_POLICY)) {
+ 		err = mod_split_sig(info->hdr, &info->len, mangled_module,
+-				    &sig_len, &sig, "module");
++				    &sig_type, &sig_len, &sig, "module");
+ 		if (err)
+ 			return err;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_MODULE_SIG))
++	if (IS_ENABLED(CONFIG_MODULE_SIG) && sig_type == PKEY_ID_PKCS7) {
+ 		err = module_sig_check(info, sig, sig_len);
++	} else {
++		pr_err("module: not signed with expected PKCS#7 message\n");
++		err = -ENOPKG;
++	}
+ 
+ 	if (err)
+ 		return err;
+diff --git a/kernel/module_signature.c b/kernel/module_signature.c
+index b2384a73524..8e0ac9906c9 100644
+--- a/kernel/module_signature.c
++++ b/kernel/module_signature.c
+@@ -19,18 +19,11 @@
+  * @file_len:	Size of the file to which @ms is appended.
+  * @name:	What is being checked. Used for error messages.
+  */
+-static int mod_check_sig(const struct module_signature *ms, size_t file_len,
+-			 const char *name)
++static int mod_check_sig(const struct module_signature *ms, size_t file_len, const char *name)
+ {
+ 	if (be32_to_cpu(ms->sig_len) >= file_len - sizeof(*ms))
+ 		return -EBADMSG;
+ 
+-	if (ms->id_type != PKEY_ID_PKCS7) {
+-		pr_err("%s: not signed with expected PKCS#7 message\n",
+-		       name);
+-		return -ENOPKG;
+-	}
+-
+ 	if (ms->algo != 0 ||
+ 	    ms->hash != 0 ||
+ 	    ms->signer_len != 0 ||
+@@ -38,7 +31,7 @@ static int mod_check_sig(const struct module_signature *ms, size_t file_len,
+ 	    ms->__pad[0] != 0 ||
+ 	    ms->__pad[1] != 0 ||
+ 	    ms->__pad[2] != 0) {
+-		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
++		pr_err("%s: signature info has unexpected non-zero params\n",
+ 		       name);
+ 		return -EBADMSG;
+ 	}
+@@ -47,7 +40,7 @@ static int mod_check_sig(const struct module_signature *ms, size_t file_len,
+ }
+ 
+ int mod_split_sig(const void *buf, size_t *buf_len, bool mangled,
+-		  size_t *sig_len, const u8 **sig, const char *name)
++		  enum pkey_id_type *sig_type, size_t *sig_len, const u8 **sig, const char *name)
+ {
+ 	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+ 	struct module_signature ms;
+@@ -74,6 +67,7 @@ int mod_split_sig(const void *buf, size_t *buf_len, bool mangled,
+ 	if (ret)
+ 		return ret;
+ 
++	*sig_type = ms.id_type;
+ 	*sig_len = be32_to_cpu(ms.sig_len);
+ 	modlen -= *sig_len + sizeof(ms);
+ 	*buf_len = modlen;
+diff --git a/security/integrity/ima/ima_modsig.c b/security/integrity/ima/ima_modsig.c
+index a57342d39b0..a05008324a1 100644
+--- a/security/integrity/ima/ima_modsig.c
++++ b/security/integrity/ima/ima_modsig.c
+@@ -41,15 +41,21 @@ int ima_read_modsig(enum ima_hooks func, const void *buf, loff_t buf_len,
+ 		    struct modsig **modsig)
+ {
+ 	size_t buf_len_sz = buf_len;
++	enum pkey_id_type sig_type;
+ 	struct modsig *hdr;
+ 	size_t sig_len;
+ 	const u8 *sig;
+ 	int rc;
+ 
+-	rc = mod_split_sig(buf, &buf_len_sz, true, &sig_len, &sig, func_tokens[func]);
++	rc = mod_split_sig(buf, &buf_len_sz, true, &sig_type, &sig_len, &sig, func_tokens[func]);
+ 	if (rc)
+ 		return rc;
+ 
++	if (sig_type != PKEY_ID_PKCS7) {
++		pr_err("%s: not signed with expected PKCS#7 message\n", func_tokens[func]);
++		return -ENOPKG;
++	}
++
+ 	/* Allocate sig_len additional bytes to hold the raw PKCS#7 data. */
+ 	hdr = kzalloc(struct_size(hdr, raw_pkcs7, sig_len), GFP_KERNEL);
+ 	if (!hdr)
+-- 
+2.52.0
+

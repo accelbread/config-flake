@@ -1,0 +1,84 @@
+From 36806e6c1f2829e33f1f16bc8995fe27dd5c1af6 Mon Sep 17 00:00:00 2001
+From: Coiby Xu <coxu@redhat.com>
+Date: Tue, 13 Jan 2026 13:28:45 +0100
+Subject: [PATCH 01/16] module: Only declare set_module_sig_enforced when
+ CONFIG_MODULE_SIG=y
+
+Currently if set_module_sig_enforced is called with CONFIG_MODULE_SIG=n
+e.g. [1], it can lead to a linking error,
+
+    ld: security/integrity/ima/ima_appraise.o: in function `ima_appraise_measurement':
+    security/integrity/ima/ima_appraise.c:587:(.text+0xbbb): undefined reference to `set_module_sig_enforced'
+
+This happens because the actual implementation of
+set_module_sig_enforced comes from CONFIG_MODULE_SIG but both the
+function declaration and the empty stub definition are tied to
+CONFIG_MODULES.
+
+So bind set_module_sig_enforced to CONFIG_MODULE_SIG instead. This
+allows (future) users to call set_module_sig_enforced directly without
+the "if IS_ENABLED(CONFIG_MODULE_SIG)" safeguard.
+
+Note this issue hasn't caused a real problem because all current callers
+of set_module_sig_enforced e.g. security/integrity/ima/ima_efi.c
+use "if IS_ENABLED(CONFIG_MODULE_SIG)" safeguard.
+
+[1] https://lore.kernel.org/lkml/20250928030358.3873311-1-coxu@redhat.com/
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202510030029.VRKgik99-lkp@intel.com/
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ include/linux/module.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index e135cc79ace..fa251958b13 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -769,8 +769,6 @@ static inline bool is_livepatch_module(struct module *mod)
+ #endif
+ }
+ 
+-void set_module_sig_enforced(void);
+-
+ void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
+ 
+ #else /* !CONFIG_MODULES... */
+@@ -865,10 +863,6 @@ static inline bool module_requested_async_probing(struct module *module)
+ }
+ 
+ 
+-static inline void set_module_sig_enforced(void)
+-{
+-}
+-
+ /* Dereference module function descriptor */
+ static inline
+ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
+@@ -924,6 +918,8 @@ static inline bool retpoline_module_ok(bool has_retpoline)
+ #ifdef CONFIG_MODULE_SIG
+ bool is_module_sig_enforced(void);
+ 
++void set_module_sig_enforced(void);
++
+ static inline bool module_sig_ok(struct module *module)
+ {
+ 	return module->sig_ok;
+@@ -934,6 +930,10 @@ static inline bool is_module_sig_enforced(void)
+ 	return false;
+ }
+ 
++static inline void set_module_sig_enforced(void)
++{
++}
++
+ static inline bool module_sig_ok(struct module *module)
+ {
+ 	return true;
+-- 
+2.52.0
+

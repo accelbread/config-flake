@@ -1,0 +1,155 @@
+From 1e6432aad225c518ed7cf552dce8fb744369036d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:53 +0100
+Subject: [PATCH 09/16] module: Make module loading policy usable without
+ MODULE_SIG
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The loading policy functionality will also be used by the hash-based
+module validation. Split it out from CONFIG_MODULE_SIG so it is usable
+by both.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ include/linux/module.h  |  8 ++++----
+ kernel/module/Kconfig   |  5 ++++-
+ kernel/module/main.c    | 26 +++++++++++++++++++++++++-
+ kernel/module/signing.c | 21 ---------------------
+ 4 files changed, 33 insertions(+), 27 deletions(-)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index fa251958b13..dcb41b95199 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -443,7 +443,7 @@ struct module {
+ 	const u32 *gpl_crcs;
+ 	bool using_gplonly_symbols;
+ 
+-#ifdef CONFIG_MODULE_SIG
++#ifdef CONFIG_MODULE_SIG_POLICY
+ 	/* Signature was verified. */
+ 	bool sig_ok;
+ #endif
+@@ -915,7 +915,7 @@ static inline bool retpoline_module_ok(bool has_retpoline)
+ }
+ #endif
+ 
+-#ifdef CONFIG_MODULE_SIG
++#ifdef CONFIG_MODULE_SIG_POLICY
+ bool is_module_sig_enforced(void);
+ 
+ void set_module_sig_enforced(void);
+@@ -924,7 +924,7 @@ static inline bool module_sig_ok(struct module *module)
+ {
+ 	return module->sig_ok;
+ }
+-#else	/* !CONFIG_MODULE_SIG */
++#else	/* !CONFIG_MODULE_SIG_POLICY */
+ static inline bool is_module_sig_enforced(void)
+ {
+ 	return false;
+@@ -938,7 +938,7 @@ static inline bool module_sig_ok(struct module *module)
+ {
+ 	return true;
+ }
+-#endif	/* CONFIG_MODULE_SIG */
++#endif	/* CONFIG_MODULE_SIG_POLICY */
+ 
+ #if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
+ int module_kallsyms_on_each_symbol(const char *modname,
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index 2a1beebf1d3..f244a7104f3 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -270,9 +270,12 @@ config MODULE_SIG
+ 	  debuginfo strip done by some packagers (such as rpmbuild) and
+ 	  inclusion into an initramfs that wants the module size reduced.
+ 
++config MODULE_SIG_POLICY
++	def_bool MODULE_SIG
++
+ config MODULE_SIG_FORCE
+ 	bool "Require modules to be validly signed"
+-	depends on MODULE_SIG
++	depends on MODULE_SIG_POLICY
+ 	help
+ 	  Reject unsigned modules or signed modules for which we don't have a
+ 	  key.  Without this, such modules will simply taint the kernel.
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index ffa13b2cc43..953ce8a7668 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2541,7 +2541,7 @@ static void module_augment_kernel_taints(struct module *mod, struct load_info *i
+ 				mod->name);
+ 		add_taint_module(mod, TAINT_TEST, LOCKDEP_STILL_OK);
+ 	}
+-#ifdef CONFIG_MODULE_SIG
++#ifdef CONFIG_MODULE_SIG_POLICY
+ 	mod->sig_ok = info->sig_ok;
+ 	if (!mod->sig_ok) {
+ 		pr_notice_once("%s: module verification failed: signature "
+@@ -3910,3 +3910,27 @@ static int module_debugfs_init(void)
+ }
+ module_init(module_debugfs_init);
+ #endif
++
++#ifdef CONFIG_MODULE_SIG_POLICY
++
++#undef MODULE_PARAM_PREFIX
++#define MODULE_PARAM_PREFIX "module."
++
++static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
++module_param(sig_enforce, bool_enable_only, 0644);
++
++/*
++ * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
++ * on that instead of directly to CONFIG_MODULE_SIG_FORCE config.
++ */
++bool is_module_sig_enforced(void)
++{
++	return sig_enforce;
++}
++EXPORT_SYMBOL(is_module_sig_enforced);
++
++void set_module_sig_enforced(void)
++{
++	sig_enforce = true;
++}
++#endif
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 6d64c0d18d0..66d90784de8 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -16,27 +16,6 @@
+ #include <uapi/linux/module.h>
+ #include "internal.h"
+ 
+-#undef MODULE_PARAM_PREFIX
+-#define MODULE_PARAM_PREFIX "module."
+-
+-static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
+-module_param(sig_enforce, bool_enable_only, 0644);
+-
+-/*
+- * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
+- * on that instead of directly to CONFIG_MODULE_SIG_FORCE config.
+- */
+-bool is_module_sig_enforced(void)
+-{
+-	return sig_enforce;
+-}
+-EXPORT_SYMBOL(is_module_sig_enforced);
+-
+-void set_module_sig_enforced(void)
+-{
+-	sig_enforce = true;
+-}
+-
+ int module_sig_check(struct load_info *info, int flags)
+ {
+ 	int err;
+-- 
+2.52.0
+

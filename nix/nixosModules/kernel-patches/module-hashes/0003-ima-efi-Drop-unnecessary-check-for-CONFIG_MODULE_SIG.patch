@@ -1,0 +1,39 @@
+From 8ca45567dec66c9a6d2277b844ce256f98e22d60 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:47 +0100
+Subject: [PATCH 03/16] ima: efi: Drop unnecessary check for
+ CONFIG_MODULE_SIG/CONFIG_KEXEC_SIG
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When configuration settings are disabled the guarded functions are
+defined as empty stubs, so the check is unnecessary.
+The specific configuration option for set_module_sig_enforced() is
+about to change and removing the checks avoids some later churn.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ security/integrity/ima/ima_efi.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/security/integrity/ima/ima_efi.c b/security/integrity/ima/ima_efi.c
+index 138029bfcce..a35dd166ad4 100644
+--- a/security/integrity/ima/ima_efi.c
++++ b/security/integrity/ima/ima_efi.c
+@@ -68,10 +68,8 @@ static const char * const sb_arch_rules[] = {
+ const char * const *arch_get_ima_policy(void)
+ {
+ 	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot()) {
+-		if (IS_ENABLED(CONFIG_MODULE_SIG))
+-			set_module_sig_enforced();
+-		if (IS_ENABLED(CONFIG_KEXEC_SIG))
+-			set_kexec_sig_enforced();
++		set_module_sig_enforced();
++		set_kexec_sig_enforced();
+ 		return sb_arch_rules;
+ 	}
+ 	return NULL;
+-- 
+2.52.0
+

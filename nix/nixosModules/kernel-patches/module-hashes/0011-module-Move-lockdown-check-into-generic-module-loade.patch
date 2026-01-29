@@ -1,0 +1,57 @@
+From a027ef1f76a14a1654f9021f4fb50f470f665ff9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 13 Jan 2026 13:28:55 +0100
+Subject: [PATCH 11/16] module: Move lockdown check into generic module loader
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The lockdown check buried in module_sig_check() will not compose well
+with the introduction of hash-based module validation.
+Move it into module_integrity_check() which will work better.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/main.c    | 6 +++++-
+ kernel/module/signing.c | 3 +--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 89f115f79fd..cee9bc52736 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3351,7 +3351,11 @@ static int module_integrity_check(struct load_info *info, int flags)
+ 	if (IS_ENABLED(CONFIG_MODULE_SIG))
+ 		err = module_sig_check(info, flags);
+ 
+-	return err;
++	if (err)
++		return err;
++	if (info->sig_ok)
++		return 0;
++	return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
+ }
+ 
+ /*
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 66d90784de8..8a5f6638911 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -11,7 +11,6 @@
+ #include <linux/module_signature.h>
+ #include <linux/string.h>
+ #include <linux/verification.h>
+-#include <linux/security.h>
+ #include <crypto/public_key.h>
+ #include <uapi/linux/module.h>
+ #include "internal.h"
+@@ -68,5 +67,5 @@ int module_sig_check(struct load_info *info, int flags)
+ 		return -EKEYREJECTED;
+ 	}
+ 
+-	return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++	return 0;
+ }
+-- 
+2.52.0
+
