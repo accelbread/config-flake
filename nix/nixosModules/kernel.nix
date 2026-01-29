@@ -5,6 +5,7 @@ in
 {
   security = {
     forcePageTableIsolation = true;
+    lsm = [ "lockdown" ];
   };
 
   boot = {
@@ -81,6 +82,9 @@ in
           MODULE_SIG = no;
           MODULE_SIG_FORCE = yes;
           MODULE_HASHES = yes;
+          SECURITY_LOCKDOWN_LSM = lib.mkForce yes;
+          SECURITY_LOCKDOWN_LSM_EARLY = yes;
+          LOCK_DOWN_KERNEL_FORCE_INTEGRITY = yes;
         } // lib.optionalAttrs (pkgs.system == "aarch64-linux") {
           ARM64_SW_TTBR0_PAN = yes;
         };
