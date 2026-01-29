@@ -43,11 +43,8 @@ in
           KSTACK_ERASE = yes;
         };
       }
-      {
-        name = "reduce amdgpu warnings";
-        patch = ./misc/remove-warnings-with-amdgpu-gecc-enabled.patch;
-      }
-    ];
+    ] ++ (map (p: { name = baseNameOf p; patch = p; })
+      (lib.filesystem.listFilesRecursive ./kernel-patches));
 
     kernelParams = [
       "init_on_alloc=1"
