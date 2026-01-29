@@ -1,0 +1,113 @@
+From 46f2126297234d579e0e4e54871476573241ca65 Mon Sep 17 00:00:00 2001
+From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Date: Mon, 6 May 2019 17:07:11 +0200
+Subject: [PATCH 092/103] modpost: Add
+ CONFIG_DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE
+
+With 46c7dd56d541 ("modpost: always show verbose warning for section
+mismatch"), sec_mismatch_verbose was removed which would have printed
+errors for all writable function pointers during compilation if it
+hadn't been "#if 0"ed out for quite some time now.
+
+Let's introduce a new DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE Kconfig
+option to cleanly control this linux-hardened functionality.
+
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+---
+ lib/Kconfig.debug        |  3 +++
+ scripts/Makefile.modpost |  1 +
+ scripts/mod/modpost.c    | 21 +++++++++++++++------
+ 3 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 607cb4db60d..8f7c77149cb 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -510,6 +510,9 @@ config SECTION_MISMATCH_WARN_ONLY
+ 
+ 	  If unsure, say Y.
+ 
++config DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE
++	bool "Enable verbose reporting of writable function pointers"
++
+ config DEBUG_FORCE_FUNCTION_ALIGN_64B
+ 	bool "Force all function address 64B aligned"
+ 	depends on EXPERT && (X86_64 || ARM64 || PPC32 || PPC64 || ARC || RISCV || S390)
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index d7d45067d08..b501130c534 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -47,6 +47,7 @@ modpost-args =										\
+ 	$(if $(CONFIG_EXTENDED_MODVERSIONS),-x)						\
+ 	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)					\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
++	$(if $(CONFIG_DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE),-f)			\
+ 	$(if $(KBUILD_MODPOST_WARN),-w)							\
+ 	$(if $(KBUILD_NSDEPS),-d modules.nsdeps)					\
+ 	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N)	\
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 4d024f39564..612de453d70 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -50,6 +50,7 @@ static bool sec_mismatch_warn_only = true;
+ static bool trim_unused_exports;
+ 
+ static int writable_fptr_count = 0;
++static int writable_fptr_verbose = false;
+ /* ignore missing files */
+ static bool ignore_missing_files;
+ /* If set to 1, only warn (instead of error) about missing ns imports */
+@@ -1034,10 +1035,13 @@ static void default_mismatch_handler(const char *modname, struct elf_info *elf,
+ 	if (!secref_whitelist(fromsec, fromsym, tosec, tosym))
+ 		return;
+ 
+-	if (mismatch->mismatch == DATA_TO_TEXT)
++	if (mismatch->mismatch == DATA_TO_TEXT) {
+ 		writable_fptr_count++;
+-	else
++		if (!writable_fptr_verbose)
++			return;
++	} else {
+ 		sec_mismatch_count++;
++	}
+ 
+ 	if (!tosym[0])
+ 		snprintf(taddr_str, sizeof(taddr_str), "0x%x", (unsigned int)taddr);
+@@ -2284,7 +2288,7 @@ int main(int argc, char **argv)
+ 	LIST_HEAD(dump_lists);
+ 	struct dump_list *dl, *dl2;
+ 
+-	while ((opt = getopt(argc, argv, "ei:MmnT:to:au:WwENd:xb")) != -1) {
++	while ((opt = getopt(argc, argv, "ei:fMmnT:to:au:WwENd:xb")) != -1) {
+ 		switch (opt) {
+ 		case 'e':
+ 			external_module = true;
+@@ -2294,6 +2298,9 @@ int main(int argc, char **argv)
+ 			dl->file = optarg;
+ 			list_add_tail(&dl->list, &dump_lists);
+ 			break;
++		case 'f':
++			writable_fptr_verbose = true;
++			break;
+ 		case 'M':
+ 			module_enabled = true;
+ 			break;
+@@ -2394,9 +2401,11 @@ int main(int argc, char **argv)
+ 		warn("suppressed %u unresolved symbol warnings because there were too many)\n",
+ 		     nr_unresolved - MAX_UNRESOLVED_REPORTS);
+ 
+-	if (writable_fptr_count)
+-		warn("modpost: Found %d writable function pointer(s).\n",
+-				writable_fptr_count);
++	if (writable_fptr_count && !writable_fptr_verbose)
++		warn("modpost: Found %d writable function pointer%s.\n"
++		     "To see full details build your kernel with:\n"
++		     "'make CONFIG_DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE=y'\n",
++		     writable_fptr_count, (writable_fptr_count == 1 ? "" : "s"));
+ 
+ 	return error_occurred ? 1 : 0;
+ }
+-- 
+2.52.0
+

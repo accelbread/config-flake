@@ -1,0 +1,40 @@
+From 146fd82eaa5098c23cf191b818d49bcc90d3ab2f Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Tue, 4 Jul 2017 01:32:30 -0400
+Subject: [PATCH 055/103] mark open_softirq as only used for init
+
+[nicolas.bouchinet@ssi.gouv.fr: Adapt to commit 75e340ce106fa]
+---
+ include/linux/interrupt.h | 2 +-
+ kernel/softirq.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 51b6484c049..66ce30c9438 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -601,7 +601,7 @@ static inline void do_softirq_post_smp_call_flush(unsigned int unused)
+ }
+ #endif
+ 
+-extern void open_softirq(int nr, void (*action)(void));
++extern void __init open_softirq(int nr, void (*action)(void));
+ extern void softirq_init(void);
+ extern void __raise_softirq_irqoff(unsigned int nr);
+ 
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 77198911b8d..c83209f8458 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -790,7 +790,7 @@ void __raise_softirq_irqoff(unsigned int nr)
+ 	or_softirq_pending(1UL << nr);
+ }
+ 
+-void open_softirq(int nr, void (*action)(void))
++void __init open_softirq(int nr, void (*action)(void))
+ {
+ 	softirq_vec[nr].action = action;
+ }
+-- 
+2.52.0
+

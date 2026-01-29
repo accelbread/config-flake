@@ -1,0 +1,25 @@
+From 02e7111f950a4de44725a1a20bd6dce2183b2d43 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sun, 7 May 2017 00:28:23 -0400
+Subject: [PATCH 047/103] add __read_only for non-init related usage
+
+---
+ include/linux/cache.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/cache.h b/include/linux/cache.h
+index e69768f50d5..432c30a1fc7 100644
+--- a/include/linux/cache.h
++++ b/include/linux/cache.h
+@@ -60,6 +60,8 @@
+ #define __ro_after_init __section(".data..ro_after_init")
+ #endif
+ 
++#define __read_only __ro_after_init
++
+ #ifndef ____cacheline_aligned_in_smp
+ #ifdef CONFIG_SMP
+ #define ____cacheline_aligned_in_smp ____cacheline_aligned
+-- 
+2.52.0
+

@@ -1,0 +1,51 @@
+From e30dd0698e836df08d5d86685b841f0425f64474 Mon Sep 17 00:00:00 2001
+From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Date: Fri, 29 Nov 2019 16:27:14 +0100
+Subject: [PATCH 094/103] slub: Extend init_on_alloc to slab caches with
+ constructors
+
+This has required some rework during the port to 5.13, due to
+da844b787245 ("kasan, mm: integrate slab init_on_alloc with HW_TAGS"),
+and the patch is actually quite simpler now since we do not need to
+unpoison objects anymore.
+
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+[nicolas.bouchinet@ssi.gouv.fr: pre/post-alloc hooks moved from mm/slab.h to mm/slub.c (see 6011be59910fb12b7)]
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+---
+ mm/slab.h | 2 ++
+ mm/slub.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/mm/slab.h b/mm/slab.h
+index 8802ac0df72..08316f99c83 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -634,8 +634,10 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
+ {
+ 	if (static_branch_maybe(CONFIG_INIT_ON_ALLOC_DEFAULT_ON,
+ 				&init_on_alloc)) {
++#ifndef CONFIG_SLUB
+ 		if (c->ctor)
+ 			return false;
++#endif
+ 		if (c->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_POISON))
+ 			return flags & __GFP_ZERO;
+ 		return true;
+diff --git a/mm/slub.c b/mm/slub.c
+index 607c6a4514c..9f24a4e7ef9 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5060,6 +5060,8 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+ 		if (p[i] && init && (!kasan_init ||
+ 				     !kasan_has_integrated_init()))
+ 			memset(p[i], 0, zero_size);
++		if (p[i] && init && s->ctor)
++			s->ctor(p[i]);
+ 		if (gfpflags_allow_spinning(flags))
+ 			kmemleak_alloc_recursive(p[i], s->object_size, 1,
+ 						 s->flags, init_flags);
+-- 
+2.52.0
+

@@ -5,7 +5,6 @@ in
 {
   security = {
     forcePageTableIsolation = true;
-    unprivilegedUsernsClone = true;
   };
 
   boot = {
@@ -25,6 +24,7 @@ in
           RANDOM_KMALLOC_CACHES = yes;
           LIST_HARDENED = yes;
           INIT_ON_ALLOC_DEFAULT_ON = yes;
+          INIT_ON_FREE_DEFAULT_ON = yes;
           RESET_ATTACK_MITIGATION = yes;
           IOMMU_DEFAULT_DMA_STRICT = yes;
           LDISC_AUTOLOAD = no;
@@ -41,6 +41,43 @@ in
           KEXEC_SIG = yes;
           KEXEC_SIG_FORCE = yes;
           KSTACK_ERASE = yes;
+          CHECKPOINT_RESTORE = lib.mkForce no;
+          MEM_SOFT_DIRTY = lib.mkForce (option unset);
+          KCMP = yes;
+          HARDENED_USERCOPY = yes;
+          SECURITY_DMESG_RESTRICT = yes;
+          BUG_ON_DATA_CORRUPTION = yes;
+          RANDOMIZE_BASE = yes;
+          SLAB_FREELIST_RANDOM = yes;
+          SLAB_FREELIST_HARDENED = yes;
+          SLAB_MERGE_DEFAULT = no;
+          FORTIFY_SOURCE = yes;
+          PANIC_ON_OOPS = yes;
+          EXPERT = yes;
+          MODIFY_LDT_SYSCALL = no;
+          X86_16BIT = unset;
+          LEGACY_VSYSCALL_NONE = yes;
+          AIO = lib.mkForce no;
+          SYSVIPC = lib.mkForce no;
+          DEVPORT = no;
+          PROC_VMCORE = lib.mkForce no;
+          NFS_DEBUG = unset;
+          DEBUG_WX = yes;
+          LEGACY_PTYS = no;
+          DEVMEM = no;
+          COMPAT_BRK = no;
+          SECURITY = yes;
+          SECURITY_YAMA = yes;
+          SECURITY_NETWORK = yes;
+          AUDIT = yes;
+          SYN_COOKIES = yes;
+          DEBUG_FS_ALLOW_NONE = yes;
+          UID16 = no;
+          RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
+          LEGACY_TIOCSTI = no;
+          MSEAL_SYSTEM_MAPPINGS = yes;
+        } // lib.optionalAttrs (pkgs.system == "aarch64-linux") {
+          ARM64_SW_TTBR0_PAN = yes;
         };
       }
     ] ++ (map (p: { name = baseNameOf p; patch = p; })
@@ -66,6 +103,8 @@ in
     kernel.sysctl = {
       "dev.tty.ldisc_autoload" = 0;
       "dev.tty.legacy_tiocsti" = false;
+      "fs.protected_symlinks" = 1;
+      "fs.protected_hardlinks" = 1;
       "fs.protected_fifos" = 2;
       "fs.protected_regular" = 2;
       "kernel.dmesg_restrict" = true;

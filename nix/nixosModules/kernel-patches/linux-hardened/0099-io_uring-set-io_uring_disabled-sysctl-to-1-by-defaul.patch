@@ -1,0 +1,47 @@
+From b2190e38743dd65c36a7c1a0955ee41e340f88b2 Mon Sep 17 00:00:00 2001
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+Date: Fri, 8 Dec 2023 11:53:31 +0100
+Subject: [PATCH 099/103] io_uring: set io_uring_disabled sysctl to 1 by
+ default
+
+This forces processes to have `CAP_SYS_ADMIN` in order to use io_uring or
+to be in the io_uring_group.
+
+The patch alter the sysctl value range in order that once set to "2" it
+can't be lowered again.
+
+The io_uring_group sysctl option is set to -1 by default, user should
+define a proper group and set the sysctl properly if they want it configured.
+
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+---
+ io_uring/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 60adab71ad2..4d1eeedb565 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -153,7 +153,7 @@ static __read_mostly DEFINE_STATIC_KEY_FALSE(io_key_has_sqarray);
+ struct kmem_cache *req_cachep;
+ static struct workqueue_struct *iou_wq __ro_after_init;
+ 
+-static int __read_mostly sysctl_io_uring_disabled;
++static int __read_mostly sysctl_io_uring_disabled = 1;
+ static int __read_mostly sysctl_io_uring_group = -1;
+ 
+ #ifdef CONFIG_SYSCTL
+@@ -163,8 +163,9 @@ static const struct ctl_table kernel_io_uring_disabled_table[] = {
+ 		.data		= &sysctl_io_uring_disabled,
+ 		.maxlen		= sizeof(sysctl_io_uring_disabled),
+ 		.mode		= 0644,
++		/* only handle a transition from default "1" to "2" */
+ 		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
++		.extra1		= SYSCTL_TWO,
+ 		.extra2		= SYSCTL_TWO,
+ 	},
+ 	{
+-- 
+2.52.0
+

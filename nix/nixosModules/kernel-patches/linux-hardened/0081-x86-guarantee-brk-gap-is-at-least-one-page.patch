@@ -1,0 +1,31 @@
+From 8808f0d773e0e51340f8eb910ccd54058afe0dfc Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Thu, 1 Jun 2017 03:23:48 -0400
+Subject: [PATCH 081/103] x86: guarantee brk gap is at least one page
+
+Per PaX, but for this alternate brk randomization approach.
+
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+---
+ arch/x86/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index b92b3474470..63c96edc60a 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -1027,9 +1027,9 @@ unsigned long arch_align_stack(unsigned long sp)
+ unsigned long arch_randomize_brk(struct mm_struct *mm)
+ {
+ 	if (mmap_is_ia32())
+-		return mm->brk + get_random_long() % SZ_32M;
++		return mm->brk + get_random_long() % SZ_32M + PAGE_SIZE;
+ 
+-	return mm->brk + get_random_long() % SZ_1G;
++	return mm->brk + get_random_long() % SZ_1G + PAGE_SIZE;
+ }
+ 
+ /*
+-- 
+2.52.0
+

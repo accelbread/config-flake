@@ -1,0 +1,188 @@
+From 706b955ada83700837896bf0f2eb6f2876f7c031 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Tue, 16 May 2017 18:26:10 -0400
+Subject: [PATCH 082/103] restrict device timing side channels
+
+Based on the public grsecurity patches.
+
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+[levente@leventepolyak.net: move sysctl from kernel into fs]
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+---
+ fs/inode.c                 | 13 +++++++++++++
+ fs/stat.c                  | 23 ++++++++++++++++++++---
+ include/linux/capability.h |  5 +++++
+ include/linux/fs.h         | 11 +++++++++++
+ include/linux/fsnotify.h   |  3 +++
+ kernel/capability.c        |  6 ++++++
+ 6 files changed, 58 insertions(+), 3 deletions(-)
+
+diff --git a/fs/inode.c b/fs/inode.c
+index 2c55ec49b02..0c07e033904 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -167,6 +167,10 @@ late_initcall(mg_debugfs_init);
+ 
+ #endif /* CONFIG_DEBUG_FS */
+ 
++/* sysctl */
++int device_sidechannel_restrict __read_mostly = 1;
++EXPORT_SYMBOL(device_sidechannel_restrict);
++
+ /*
+  * Handle nr_inode sysctl
+  */
+@@ -199,6 +203,15 @@ static const struct ctl_table inodes_sysctls[] = {
+ 		.mode		= 0444,
+ 		.proc_handler	= proc_nr_inodes,
+ 	},
++	{
++		.procname	= "device_sidechannel_restrict",
++		.data		= &device_sidechannel_restrict,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax_sysadmin,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ };
+ 
+ static int __init init_fs_inode_sysctls(void)
+diff --git a/fs/stat.c b/fs/stat.c
+index 6c79661e1b9..d02fadfdd34 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -52,7 +52,10 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
+ 		return;
+ 	}
+ 
+-	stat->mtime = inode_get_mtime(inode);
++	if (is_sidechannel_device(inode) && !capable_noaudit(CAP_MKNOD))
++		stat->mtime = inode_get_ctime(inode);
++	else
++		stat->mtime = inode_get_mtime(inode);
+ 	stat->ctime.tv_sec = inode->i_ctime_sec;
+ 	stat->ctime.tv_nsec = (u32)atomic_read(pcn);
+ 	if (!(stat->ctime.tv_nsec & I_CTIME_QUERIED))
+@@ -84,6 +87,7 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ {
+ 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
+ 	vfsgid_t vfsgid = i_gid_into_vfsgid(idmap, inode);
++	bool sidechannel_device = false;
+ 
+ 	stat->dev = inode->i_sb->s_dev;
+ 	stat->ino = inode->i_ino;
+@@ -93,13 +97,22 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ 	stat->gid = vfsgid_into_kgid(vfsgid);
+ 	stat->rdev = inode->i_rdev;
+ 	stat->size = i_size_read(inode);
+-	stat->atime = inode_get_atime(inode);
++
++	if (is_sidechannel_device(inode) && !capable_noaudit(CAP_MKNOD))
++		sidechannel_device = true;
++	if (sidechannel_device)
++		stat->atime = inode_get_ctime(inode);
++	else
++		stat->atime = inode_get_atime(inode);
+ 
+ 	if (is_mgtime(inode)) {
+ 		fill_mg_cmtime(stat, request_mask, inode);
+ 	} else {
+ 		stat->ctime = inode_get_ctime(inode);
+-		stat->mtime = inode_get_mtime(inode);
++		if (sidechannel_device)
++			stat->mtime = inode_get_ctime(inode);
++		else
++			stat->mtime = inode_get_mtime(inode);
+ 	}
+ 
+ 	stat->blksize = i_blocksize(inode);
+@@ -212,6 +225,10 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+ 
+ 		ret = inode->i_op->getattr(idmap, path, stat, request_mask,
+ 				query_flags);
++		if (!ret && is_sidechannel_device(inode) && !capable_noaudit(CAP_MKNOD)) {
++			stat->atime = stat->ctime;
++			stat->mtime = stat->ctime;
++		}
+ 		if (ret)
+ 			return ret;
+ 	} else {
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index 1fb08922552..01406151068 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -145,6 +145,7 @@ extern bool has_capability_noaudit(struct task_struct *t, int cap);
+ extern bool has_ns_capability_noaudit(struct task_struct *t,
+ 				      struct user_namespace *ns, int cap);
+ extern bool capable(int cap);
++extern bool capable_noaudit(int cap);
+ extern bool ns_capable(struct user_namespace *ns, int cap);
+ extern bool ns_capable_noaudit(struct user_namespace *ns, int cap);
+ extern bool ns_capable_setid(struct user_namespace *ns, int cap);
+@@ -167,6 +168,10 @@ static inline bool capable(int cap)
+ {
+ 	return true;
+ }
++static inline bool capable_noaudit(int cap)
++{
++	return true;
++}
+ static inline bool ns_capable(struct user_namespace *ns, int cap)
+ {
+ 	return true;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 9b2230fb233..242b3d5a05e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -4067,4 +4067,15 @@ static inline bool extensible_ioctl_valid(unsigned int cmd_a,
+ 	return true;
+ }
+ 
++extern int device_sidechannel_restrict;
++
++static inline bool is_sidechannel_device(const struct inode *inode)
++{
++	umode_t mode;
++	if (!device_sidechannel_restrict)
++		return false;
++	mode = inode->i_mode;
++	return ((S_ISCHR(mode) || S_ISBLK(mode)) && (mode & (S_IROTH | S_IWOTH)));
++}
++
+ #endif /* _LINUX_FS_H */
+diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+index 28a9cb13fbf..e16cbb76bc4 100644
+--- a/include/linux/fsnotify.h
++++ b/include/linux/fsnotify.h
+@@ -124,6 +124,9 @@ static inline int fsnotify_file(struct file *file, __u32 mask)
+ 	if (FMODE_FSNOTIFY_NONE(file->f_mode))
+ 		return 0;
+ 
++	if (mask & (FS_ACCESS | FS_MODIFY) && is_sidechannel_device(file_inode(file)))
++		return 0;
++
+ 	return fsnotify_path(&file->f_path, mask);
+ }
+ 
+diff --git a/kernel/capability.c b/kernel/capability.c
+index 829f49ae07b..5bb7ee4028a 100644
+--- a/kernel/capability.c
++++ b/kernel/capability.c
+@@ -416,6 +416,12 @@ bool capable(int cap)
+ 	return ns_capable(&init_user_ns, cap);
+ }
+ EXPORT_SYMBOL(capable);
++
++bool capable_noaudit(int cap)
++{
++	return ns_capable_noaudit(&init_user_ns, cap);
++}
++EXPORT_SYMBOL(capable_noaudit);
+ #endif /* CONFIG_MULTIUSER */
+ 
+ /**
+-- 
+2.52.0
+

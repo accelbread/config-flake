@@ -1,0 +1,45 @@
+From a51f7d69aa69622ecebee47cce75198dac91900f Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Tue, 4 Jul 2017 01:24:28 -0400
+Subject: [PATCH 054/103] mark kobj_ns_type_register as only used for init
+
+This allows kobj_ns_ops_tbl to be __ro_after_init.
+
+Extracted from PaX.
+---
+ include/linux/kobject_ns.h | 2 +-
+ lib/kobject.c              | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/kobject_ns.h b/include/linux/kobject_ns.h
+index 150fe2ae1b6..67d22bb918c 100644
+--- a/include/linux/kobject_ns.h
++++ b/include/linux/kobject_ns.h
+@@ -45,7 +45,7 @@ struct kobj_ns_type_operations {
+ 	void (*drop_ns)(void *);
+ };
+ 
+-int kobj_ns_type_register(const struct kobj_ns_type_operations *ops);
++int __init kobj_ns_type_register(const struct kobj_ns_type_operations *ops);
+ int kobj_ns_type_registered(enum kobj_ns_type type);
+ const struct kobj_ns_type_operations *kobj_child_ns_ops(const struct kobject *parent);
+ const struct kobj_ns_type_operations *kobj_ns_ops(const struct kobject *kobj);
+diff --git a/lib/kobject.c b/lib/kobject.c
+index abe5f5b856c..a80fa9d8f2d 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -1019,9 +1019,9 @@ EXPORT_SYMBOL_GPL(kset_create_and_add);
+ 
+ 
+ static DEFINE_SPINLOCK(kobj_ns_type_lock);
+-static const struct kobj_ns_type_operations *kobj_ns_ops_tbl[KOBJ_NS_TYPES];
++static const struct kobj_ns_type_operations *kobj_ns_ops_tbl[KOBJ_NS_TYPES] __ro_after_init;
+ 
+-int kobj_ns_type_register(const struct kobj_ns_type_operations *ops)
++int __init kobj_ns_type_register(const struct kobj_ns_type_operations *ops)
+ {
+ 	enum kobj_ns_type type = ops->type;
+ 	int error;
+-- 
+2.52.0
+

@@ -1,0 +1,26 @@
+From da193780e7fa7b88e1bbe13e990cc1e93583859d Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Wed, 3 May 2017 23:36:14 -0400
+Subject: [PATCH 089/103] enable SECURITY_TIOCSTI_RESTRICT by default
+
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+---
+ security/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/Kconfig b/security/Kconfig
+index 5a3e6ac76d0..a6335394118 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -84,7 +84,7 @@ config SECURITY_PERF_EVENTS_RESTRICT
+ 
+ config SECURITY_TIOCSTI_RESTRICT
+ 	bool "Restrict unprivileged use of tiocsti command injection"
+-	default n
++	default y
+ 	help
+ 	  This enforces restrictions on unprivileged users injecting commands
+ 	  into other processes which share a tty session using the TIOCSTI
+-- 
+2.52.0
+

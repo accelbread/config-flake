@@ -1,0 +1,145 @@
+From 76595b796385c23c2c68f01b9e033cf551a53ea6 Mon Sep 17 00:00:00 2001
+From: Ben Hutchings <ben@decadent.org.uk>
+Date: Mon, 11 Jan 2016 15:23:55 +0000
+Subject: [PATCH 063/103] security,perf: Allow further restriction of
+ perf_event_open
+
+When kernel.perf_event_open is set to 3 (or greater), disallow all
+access to performance events by users without CAP_SYS_ADMIN or
+CAP_PERFMON.
+Add a Kconfig symbol CONFIG_SECURITY_PERF_EVENTS_RESTRICT that
+makes this value the default.
+
+This is based on a similar feature in grsecurity
+(CONFIG_GRKERNSEC_PERF_HARDEN).  This version doesn't include making
+the variable read-only.  It also allows enabling further restriction
+at run-time regardless of whether the default is changed.
+
+As part of the v5.5 linux-hardened rebase, this commit was adapted to
+work with the new perf_event LSM hooks, introduced in da97e18458fb42
+("perf_event: Add support for LSM and SELinux checks").
+
+As part of the v5.8 linux-hardened rebase, this commit was adapted to
+work with the new CAP_PERFMON capability.
+
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+[levente@leventepolyak.net: Adapt to work with the new perf_event LSM hooks]
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+[thibaut.sautereau@ssi.gouv.fr: Adapt to work with the new CAP_PERFMON capability]
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 2 ++
+ include/linux/perf_event.h                  | 8 ++++++++
+ kernel/events/core.c                        | 7 ++++++-
+ security/Kconfig                            | 9 +++++++++
+ tools/perf/Documentation/security.txt       | 1 +
+ tools/perf/util/evsel.c                     | 1 +
+ 6 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index f3ee807b5d8..3bcd46bfe95 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -991,6 +991,8 @@ with respect to CAP_PERFMON use cases.
+ >=1  Disallow CPU event access by users without ``CAP_PERFMON``.
+ 
+ >=2  Disallow kernel profiling by users without ``CAP_PERFMON``.
++
++>=3  Disallow use of any event by users without ``CAP_PERFMON``.
+ ===  ==================================================================
+ 
+ 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index fd1d91017b9..8c4db071cb5 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1776,6 +1776,14 @@ static inline int perf_is_paranoid(void)
+ 
+ extern int perf_allow_kernel(void);
+ 
++static inline int perf_allow_open(void)
++{
++	if (sysctl_perf_event_paranoid > 2 && !perfmon_capable())
++		return -EACCES;
++
++	return security_perf_event_open(PERF_SECURITY_OPEN);
++}
++
+ static inline int perf_allow_cpu(void)
+ {
+ 	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d95f9dce018..5d48dc9c1c7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -463,8 +463,13 @@ static struct kmem_cache *perf_event_cache;
+  *   0 - disallow raw tracepoint access for unpriv
+  *   1 - disallow cpu events for unpriv
+  *   2 - disallow kernel profiling for unpriv
++ *   3 - disallow all unpriv perf event use
+  */
++#ifdef CONFIG_SECURITY_PERF_EVENTS_RESTRICT
++int sysctl_perf_event_paranoid __read_mostly = 3;
++#else
+ int sysctl_perf_event_paranoid __read_mostly = 2;
++#endif
+ 
+ /* Minimum for 512 kiB + 1 user control page. 'free' kiB per user. */
+ static int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024);
+@@ -13415,7 +13420,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		return err;
+ 
+ 	/* Do we allow access to perf_event_open(2) ? */
+-	err = security_perf_event_open(PERF_SECURITY_OPEN);
++	err = perf_allow_open();
+ 	if (err)
+ 		return err;
+ 
+diff --git a/security/Kconfig b/security/Kconfig
+index 132b6fb4bc7..ea669f5e261 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -72,6 +72,15 @@ config MSEAL_SYSTEM_MAPPINGS
+ 	  For complete descriptions of memory sealing, please see
+ 	  Documentation/userspace-api/mseal.rst
+ 
++config SECURITY_PERF_EVENTS_RESTRICT
++	bool "Restrict unprivileged use of performance events"
++	depends on PERF_EVENTS
++	help
++	  If you say Y here, the kernel.perf_event_paranoid sysctl
++	  will be set to 3 by default, and no unprivileged use of the
++	  perf_event_open syscall will be permitted unless it is
++	  changed.
++
+ config SECURITY
+ 	bool "Enable different security models"
+ 	depends on SYSFS
+diff --git a/tools/perf/Documentation/security.txt b/tools/perf/Documentation/security.txt
+index 4fe3b8b1958..a7d88cc23a7 100644
+--- a/tools/perf/Documentation/security.txt
++++ b/tools/perf/Documentation/security.txt
+@@ -148,6 +148,7 @@ Perf tool provides a message similar to the one below:
+    >= 0: Disallow raw and ftrace function tracepoint access
+    >= 1: Disallow CPU event access
+    >= 2: Disallow kernel profiling
++   >= 3: Disallow use of any event
+    To make the adjusted perf_event_paranoid setting permanent preserve it
+    in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 9df9818e370..eef46803b2c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3850,6 +3850,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
+ 		 ">= 1: Disallow CPU event access\n"
+ 		 ">= 2: Disallow kernel profiling\n"
++		 ">= 3: Disallow use of any event\n"
+ 		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
+ 		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
+ 		 perf_event_paranoid());
+-- 
+2.52.0
+

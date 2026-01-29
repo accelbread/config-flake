@@ -1,0 +1,46 @@
+From a00dac6ba2e37613d9fcdfba8542d393633424a1 Mon Sep 17 00:00:00 2001
+From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Date: Thu, 16 Dec 2021 10:55:13 +0100
+Subject: [PATCH 098/103] slub: Bug on free of non-slab objects
+
+Before commit d0fe47c64152 ("slub: add back check for free nonslab
+objects"), freeing a non-slab object used to trigger a BUG if
+CONFIG_DEBUG_VM was enabled. Now it only warns, which I think is not
+enough for such a memory corruption. Let's restore the previous
+behaviour, but tie it to CONFIG_BUG_ON_DATA_CORRUPTION as suggested by
+Levente.
+
+After page folios were introduced in v5.17, this patch was adapted to
+trigger a bug when the order of the folio is zero instead of when the
+page is not a compound page, which is not equivalent but respects the
+semantics of the conversion to page folios and follows the change made
+to the WARN_ON_ONCE beneath.
+
+Suggested-by: Levente Polyak <levente@leventepolyak.net>
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+[nicolas.bouchinet@ssi.gouv.fr: kfree moved from mm/slab_common.c to mm/slub.c (see b774d3e326d30fc8e)]
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+---
+ mm/slub.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 9f24a4e7ef9..f363333b22c 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -6883,8 +6883,12 @@ static void free_large_kmalloc(struct folio *folio, void *object)
+ 		return;
+ 	}
+ 
++#ifdef CONFIG_BUG_ON_DATA_CORRUPTION
++	BUG_ON(order == 0);
++#else
+ 	if (WARN_ON_ONCE(order == 0))
+ 		pr_warn_once("object pointer: 0x%p\n", object);
++#endif
+ 
+ 	kmemleak_free(object);
+ 	kasan_kfree_large(object);
+-- 
+2.52.0
+

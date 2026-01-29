@@ -1,0 +1,31 @@
+From 96e512c6a2bac96d77691812499dd966543bfecb Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Thu, 1 Jun 2017 03:23:06 -0400
+Subject: [PATCH 079/103] x86: randomize lower bits of brk
+
+Per PaX, but for this alternate brk randomization approach.
+
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+---
+ arch/x86/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index ea45acfe4f0..b92b3474470 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -1027,9 +1027,9 @@ unsigned long arch_align_stack(unsigned long sp)
+ unsigned long arch_randomize_brk(struct mm_struct *mm)
+ {
+ 	if (mmap_is_ia32())
+-		return randomize_page(mm->brk, SZ_32M);
++		return mm->brk + get_random_long() % SZ_32M;
+ 
+-	return randomize_page(mm->brk, SZ_1G);
++	return mm->brk + get_random_long() % SZ_1G;
+ }
+ 
+ /*
+-- 
+2.52.0
+

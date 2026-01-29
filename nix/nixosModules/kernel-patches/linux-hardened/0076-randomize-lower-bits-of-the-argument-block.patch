@@ -1,0 +1,42 @@
+From be15dc7c2a1f5bc3126c8d281727b9d0203273b7 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Thu, 11 May 2017 16:02:49 -0400
+Subject: [PATCH 076/103] randomize lower bits of the argument block
+
+This was based on the PaX RANDUSTACK feature in grsecurity, where all of
+the lower bits are randomized. PaX keeps 16-byte alignment.
+
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+[levente@leventepolyak.net: do not randomize with ADDR_NO_RANDOMIZE personality]
+[levente@leventepolyak.net: adjust for mm: abstract initial stack setup to mm subsystem]
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+[nicolas.bouchinet@oss.cyber.gouv.fr: mm initialisation has moved to mm/vma_exec.c]
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@oss.cyber.gouv.fr>
+---
+ mm/vma_exec.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mm/vma_exec.c b/mm/vma_exec.c
+index 922ee51747a..dfcf19c76ce 100644
+--- a/mm/vma_exec.c
++++ b/mm/vma_exec.c
+@@ -7,6 +7,7 @@
+ 
+ #include "vma_internal.h"
+ #include "vma.h"
++#include <linux/random.h>
+ 
+ /*
+  * Relocate a VMA downwards by shift bytes. There cannot be any VMAs between
+@@ -148,6 +149,8 @@ int create_init_stack_vma(struct mm_struct *mm, struct vm_area_struct **vmap,
+ 	mmap_write_unlock(mm);
+ 	*vmap = vma;
+ 	*top_mem_p = vma->vm_end - sizeof(void *);
++	if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
++		*top_mem_p ^= get_random_u32() & ~PAGE_MASK;
+ 	return 0;
+ 
+ err:
+-- 
+2.52.0
+

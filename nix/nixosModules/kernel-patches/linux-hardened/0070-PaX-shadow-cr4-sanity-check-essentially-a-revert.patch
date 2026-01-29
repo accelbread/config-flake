@@ -1,0 +1,56 @@
+From 0134edf0c0c8aa92b9044db330a10c198808b741 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Tue, 16 May 2017 00:59:48 -0400
+Subject: [PATCH 070/103] PaX shadow cr4 sanity check (essentially a revert)
+
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+[levente@leventepolyak.net: Adapt to cpu_tlbstate moved out-of-line]
+Signed-off-by: Levente Polyak <levente@leventepolyak.net>
+[thibaut.sautereau@ssi.gouv.fr: Move BUG_ON from native_flush_tlb_global() to
+				new __native_tlb_flush_global() helper]
+Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+---
+ arch/x86/include/asm/tlbflush.h | 1 +
+ arch/x86/kernel/cpu/common.c    | 1 +
+ arch/x86/kernel/process.c       | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 00daedfefc1..a00d167fe5c 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -485,6 +485,7 @@ static inline void cpu_tlbstate_update_lam(unsigned long lam, u64 untag_mask)
+ 
+ static inline void __native_tlb_flush_global(unsigned long cr4)
+ {
++	BUG_ON(cr4 != __read_cr4());
+ 	native_write_cr4(cr4 ^ X86_CR4_PGE);
+ 	native_write_cr4(cr4);
+ }
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 02d97834a1d..3c7b08ec87e 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -455,6 +455,7 @@ EXPORT_SYMBOL_GPL(native_write_cr4);
+ void cr4_update_irqsoff(unsigned long set, unsigned long clear)
+ {
+ 	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
++	BUG_ON(cr4 != __read_cr4());
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 4c718f8adc5..ea45acfe4f0 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -706,6 +706,7 @@ void speculation_ctrl_update_current(void)
+ static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
+ {
+ 	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
++	BUG_ON(cr4 != __read_cr4());
+ 
+ 	newval = cr4 ^ mask;
+ 	if (newval != cr4) {
+-- 
+2.52.0
+
