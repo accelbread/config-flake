@@ -84,6 +84,7 @@ in
       (lib.filesystem.listFilesRecursive ./kernel-patches));
 
     kernelParams = [
+      "lockdown_hibernate"
       "init_on_alloc=1"
       "init_on_free=1"
       "iommu.passthrough=0"
