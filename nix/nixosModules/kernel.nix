@@ -61,7 +61,6 @@ in
           X86_16BIT = unset;
           LEGACY_VSYSCALL_NONE = yes;
           AIO = lib.mkForce no;
-          SYSVIPC = lib.mkForce no;
           DEVPORT = no;
           PROC_VMCORE = lib.mkForce no;
           NFS_DEBUG = unset;
