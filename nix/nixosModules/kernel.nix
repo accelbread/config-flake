@@ -3,10 +3,7 @@ let
   base-kernel = pkgs.linux_latest;
 in
 {
-  security = {
-    forcePageTableIsolation = true;
-    lsm = [ "lockdown" ];
-  };
+  security.lsm = [ "lockdown" ];
 
   boot = {
     kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
@@ -61,6 +58,7 @@ in
           MSEAL_SYSTEM_MAPPINGS = yes;
           NFS_DEBUG = unset;
           PANIC_ON_OOPS = yes;
+          PROC_MEM_NO_FORCE = yes;
           PROC_VMCORE = lib.mkForce no;
           RANDOMIZE_BASE = yes;
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
@@ -84,8 +82,22 @@ in
           X86_16BIT = unset;
           X86_IOPL_IOPERM = no;
           ZERO_CALL_USED_REGS = yes;
+        } // lib.optionalAttrs (pkgs.system == "x86_64-linux") {
+          INTEL_IOMMU_DEFAULT_ON = yes;
+          INTEL_IOMMU_SVM = yes;
         } // lib.optionalAttrs (pkgs.system == "aarch64-linux") {
+          ARM64_BTI = yes;
+          ARM64_BTI_KERNEL = yes;
+          ARM64_E0PD = yes;
+          ARM64_EPAN = yes;
+          ARM64_MTE = yes;
+          ARM64_PTR_AUTH = yes;
+          ARM64_PTR_AUTH_KERNEL = yes;
           ARM64_SW_TTBR0_PAN = yes;
+          KASAN_HW_TAGS = yes;
+          SHADOW_CALL_STACK = yes;
+          UNMAP_KERNEL_AT_EL0 = yes;
+          UNWIND_PATCH_PAC_INTO_SCS = yes;
         };
       }
     ] ++ (map (p: { name = baseNameOf p; patch = p; })
@@ -103,10 +115,17 @@ in
       "randomize_kstack_offset=on"
       "page_alloc.shuffle=1"
       "slab_nomerge"
+      "pti=on"
       "mce=0"
-      "vsyscall=none"
       "random.trust_bootloader=off"
       "random.trust_cpu=off"
+      "proc_mem.force_override=never"
+      "hash_pointers=always"
+      "slub_debug=ZF"
+    ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
+      "vsyscall=none"
+      "vdso32=0"
+      "cfi=kcfi"
     ];
 
     kernel.sysctl = {
@@ -116,6 +135,7 @@ in
       "fs.protected_hardlinks" = 1;
       "fs.protected_fifos" = 2;
       "fs.protected_regular" = 2;
+      "fs.suid_dumpable" = 0;
       "kernel.dmesg_restrict" = true;
       "kernel.ftrace_enabled" = false;
       "kernel.io_uring_disabled" = 2;
