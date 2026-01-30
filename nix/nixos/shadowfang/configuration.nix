@@ -17,12 +17,9 @@
     graphics.extraPackages = with pkgs; [ intel-compute-runtime ];
     bluetooth = {
       powerOnBoot = false;
-      settings = {
-        General = {
-          PairableTimeout = 30;
-          DiscoverableTimeout = 30;
-        };
-        Policy.Privacy = "network/on";
+      settings.General = {
+        PairableTimeout = 30;
+        DiscoverableTimeout = 30;
       };
     };
     framework.enableKmod = false;
