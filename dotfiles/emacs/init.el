@@ -1199,6 +1199,8 @@
                             flymake-diagnostic-functions)
         eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider
                                             :inlayHintProvider)
+        eglot-semantic-token-types '("keyword")
+        eglot-semantic-token-modifiers '("deprecated")
         eglot-autoshutdown t
         eglot-extend-to-xref t)
 
@@ -1768,6 +1770,11 @@ Returns the tree-sitter anchor for using the generated function."
 
 (put 'clang-format 'completion-predicate #'ignore)
 
+(defun c-configure-semantic-tokens ()
+  "Configure semantic tokens for C/C++."
+  (setq-local eglot-semantic-token-types
+              `("macro" . ,eglot-semantic-token-types)))
+
 (defun c-ts-add-custom-rules ()
   "Add additional highlighting rules for `c-ts-mode' and `c++-ts-mode'."
   (let ((mode (if (eq major-mode 'c++-ts-mode) 'cpp 'c)))
@@ -1815,6 +1822,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (dolist (hook '(c-ts-mode-hook c++-ts-mode-hook))
   (add-hook hook #'setup-eglot)
+  (add-hook hook #'c-configure-semantic-tokens)
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
   (add-hook hook #'c-set-font-overrides))
