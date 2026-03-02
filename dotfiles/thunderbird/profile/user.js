@@ -20,3 +20,5 @@ user_pref("network.cookie.cookieBehavior", 2);
 user_pref("network.trr.mode", 5);
 user_pref("places.history.enabled", false);
 user_pref("purple.conversations.im.send_typing", false);
+user_pref("svg.context-properties.content.enabled", true);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);

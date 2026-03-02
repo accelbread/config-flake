@@ -52,6 +52,10 @@ in
         recursive = false;
       };
       ".thunderbird".source = self + /dotfiles/thunderbird;
+      ".thunderbird/profile/chrome/thunderbird-gnome-theme" = {
+        source = pkgs.thunderbird-gnome-theme;
+        recursive = false;
+      };
       ".local/share/flatpak/overrides" = {
         source = self + /dotfiles/flatpak_overrides;
         force = true;

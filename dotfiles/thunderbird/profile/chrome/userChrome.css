@@ -1,0 +1,19 @@
+@import "thunderbird-gnome-theme/userChrome.css";
+
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+:root {
+  --gnome-accent-bg: #9141ac;
+  --gnome-accent: #9141ac;
+}
+
+#tabbrowser-tabs {
+  --tab-loading-fill: #9141ac !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gnome-accent-bg: #9141ac;
+    --gnome-accent: #9141ac;
+  }
+}
