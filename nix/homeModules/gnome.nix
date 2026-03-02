@@ -129,6 +129,7 @@
         favorite-apps = [
           "emacs.desktop"
           "librewolf.desktop"
+          "thunderbird.desktop"
           "org.gnome.Nautilus.desktop"
           "io.bassi.Amberol.desktop"
         ];

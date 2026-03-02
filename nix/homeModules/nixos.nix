@@ -22,6 +22,7 @@ in
       android-tools
     ];
     gui-packages = with pkgs; [
+      thunderbird
       gimp3
       libreoffice
       celluloid
@@ -50,6 +51,7 @@ in
         source = pkgs.firefox-gnome-theme;
         recursive = false;
       };
+      ".thunderbird".source = self + /dotfiles/thunderbird;
       ".local/share/flatpak/overrides" = {
         source = self + /dotfiles/flatpak_overrides;
         force = true;

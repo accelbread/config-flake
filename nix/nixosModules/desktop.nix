@@ -99,6 +99,7 @@
     } // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
       "/home/archit/.ssh"
       "/home/archit/.librewolf"
+      "/home/archit/.thunderbird"
     ]);
   };
 
@@ -219,6 +220,7 @@
           ".ssh/config.d"
           ".config/emacs"
           ".librewolf/profile"
+          ".thunderbird/profile"
           ".local/share/vault"
           ".local/share/gnupg"
           ".local/share/pass"
