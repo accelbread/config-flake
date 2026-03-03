@@ -1,6 +1,6 @@
 { pkgs, lib, inputs, ... }:
 let
-  base-kernel = pkgs.linux_latest;
+  base-kernel = pkgs.linux;
 in
 {
   security.lsm = [ "lockdown" ];
@@ -34,6 +34,7 @@ in
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
           HARDENED_USERCOPY = yes;
+          HW_RANDOM = yes;
           HW_RANDOM_TPM = yes;
           INIT_ON_ALLOC_DEFAULT_ON = yes;
           INIT_ON_FREE_DEFAULT_ON = yes;
@@ -74,6 +75,7 @@ in
           SLAB_FREELIST_RANDOM = yes;
           SLAB_MERGE_DEFAULT = no;
           SYN_COOKIES = yes;
+          TCG_TPM = yes;
           UBSAN = yes;
           UBSAN_BOUNDS = yes;
           UBSAN_TRAP = yes;

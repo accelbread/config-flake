@@ -121,7 +121,7 @@ in
     storage.settings.storage.driver = "btrfs";
   };
 
-  documentation.man.generateCaches = true;
+  documentation.man.cache.enable = true;
 
   systemd = {
     sleep.extraConfig = "HibernateDelaySec=10m";
