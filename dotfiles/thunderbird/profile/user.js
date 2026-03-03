@@ -5,6 +5,7 @@ user_pref("mail.close_message_window.on_delete", true);
 user_pref("mail.collect_email_address_outgoing", false);
 user_pref("mail.display_glyph", false);
 user_pref("mail.displayname.version", 1);
+user_pref("mail.identity.default.archive_granularity", 0);
 user_pref("mail.shell.checkDefaultClient", false);
 user_pref("mail.showCondensedAddresses", false);
 user_pref("mail.threadpane.cardsview.rowcount", 2);
