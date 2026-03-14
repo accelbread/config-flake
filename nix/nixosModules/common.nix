@@ -124,7 +124,7 @@ in
   documentation.man.cache.enable = true;
 
   systemd = {
-    sleep.extraConfig = "HibernateDelaySec=10m";
+    sleep.settings.Sleep.HibernateDelaySec = "10m";
     additionalUpstreamSystemUnits = [ "systemd-time-wait-sync.service" ];
     suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
     tpm2.enable = false;
