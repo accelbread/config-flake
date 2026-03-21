@@ -10,10 +10,14 @@
   nixpkgs.config.allowUnfreePredicate = pkg:
     (lib.getName pkg) == "steam-unwrapped";
 
-  nix.settings = {
-    keep-outputs = true;
-    extra-sandbox-paths = lib.optional config.programs.ccache.enable
-      config.programs.ccache.cacheDir;
+  nix = {
+    settings = {
+      keep-outputs = true;
+      extra-sandbox-paths = lib.optional config.programs.ccache.enable
+        config.programs.ccache.cacheDir;
+    };
+    daemonCPUSchedPolicy = "idle";
+    daemonIOSchedClass = "idle";
   };
 
   users.users.archit.extraGroups = [ "dialout" "wireshark" "video" "render" ];
