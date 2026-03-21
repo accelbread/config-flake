@@ -25,6 +25,7 @@ in
       experimental-features = "nix-command flakes";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
+      fsync-store-paths = true;
     };
   };
 
