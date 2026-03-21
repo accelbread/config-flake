@@ -36,7 +36,6 @@
         inputs.nixgl.overlays.default
         inputs.emacs-overlay.overlays.package
         inputs.self.overlays.overrides
-        inputs.self.overlays.lix
       ];
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
       legacyPackages = pkgs: pkgs;

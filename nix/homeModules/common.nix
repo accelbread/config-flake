@@ -50,7 +50,10 @@ in
     fonts.fontconfig.enable = true;
 
     xdg.configFile."direnv/direnvrc".text =
-      "source ${pkgs.nix-direnv}/share/nix-direnv/direnvrc";
+      let
+        nix-direnv = pkgs.nix-direnv.override { nix = config.nix.package; };
+      in
+      "source ${nix-direnv}/share/nix-direnv/direnvrc";
 
     programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
       man.generateCaches = true;

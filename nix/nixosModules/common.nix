@@ -1,4 +1,4 @@
-{ config, options, pkgs, lib, inputs, hostname, ... }:
+{ config, pkgs, lib, inputs, hostname, ... }:
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
@@ -9,7 +9,6 @@ in
   imports = [
     inputs.preservation.nixosModules.preservation
     inputs.lanzaboote.nixosModules.lanzaboote
-    self.nixosModules.lix
     self.nixosModules.kernel
     self.nixosModules.disks
     self.nixosModules.tailscale
@@ -18,6 +17,7 @@ in
   system.configurationRevision = self.rev or null;
 
   nix = {
+    package = pkgs.nixVersions.latest;
     registry = mapAttrs (_: v: { flake = v; }) inputs;
     nixPath =
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
