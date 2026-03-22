@@ -10,8 +10,6 @@ user_pref("mail.shell.checkDefaultClient", false);
 user_pref("mail.showCondensedAddresses", false);
 user_pref("mail.threadpane.cardsview.rowcount", 2);
 user_pref("mail.uidensity", 2);
-user_pref("mailnews.mark_message_read.delay", true);
-user_pref("mailnews.mark_message_read.delay.interval", 1);
 user_pref("mailnews.start_page.enabled", false);
 user_pref("messenger.options.messagesStyle.variant", "Dark");
 user_pref("messenger.startup.action", 0);
