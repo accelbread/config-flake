@@ -8,7 +8,7 @@
         swap = "64g";
       };
       networking.hostId = "fefcc72a";
-      system.stateVersion = "23.11";
+      system.stateVersion = "25.11";
     }
   ];
 }
