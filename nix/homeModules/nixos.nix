@@ -7,7 +7,7 @@ in
   imports = with self.homeModules; [ common gnome ];
 
   home = {
-    stateVersion = "23.11";
+    stateVersion = "25.11";
     sessionVariables = {
       BROWSER = "librewolf";
       DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
