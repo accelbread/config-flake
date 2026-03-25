@@ -27,7 +27,7 @@
     plymouth.theme = "details";
   };
 
-  systemd.sleep.extraConfig = "AllowSuspend=no";
+  systemd.sleep.settings.Sleep.AllowSuspend = false;
 
   sysconfig.monitors = ./monitors.xml;
 
