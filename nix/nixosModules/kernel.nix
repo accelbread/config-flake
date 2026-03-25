@@ -124,6 +124,8 @@ in
       "proc_mem.force_override=never"
       "hash_pointers=always"
       "slub_debug=ZF"
+      "zswap.enabled=1"
+      "zswap.shrinker_enabled=1"
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       "vsyscall=none"
       "vdso32=0"
