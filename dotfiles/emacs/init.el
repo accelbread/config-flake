@@ -65,7 +65,8 @@
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
            rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
            markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
-           geiser-guile scad-mode haskell-mode toml-mode git-modes pdf-tools)
+           geiser-guile scad-mode haskell-mode toml-mode git-modes nael
+           pdf-tools)
         package-native-compile t)
 
 
@@ -1925,6 +1926,12 @@ Returns the tree-sitter anchor for using the generated function."
     source-file))
 
 (add-to-list 'file-name-handler-alist '("\\`jdt://" . jdt-file-name-handler))
+
+
+;;; Lean
+
+(add-hook 'nael-mode-hook #'abbrev-mode)
+(add-hook 'nael-mode-hook #'setup-eglot)
 
 
 ;;; Yaml

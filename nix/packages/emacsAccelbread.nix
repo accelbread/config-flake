@@ -10,6 +10,7 @@
 , llvmPackages_latest
 , nixd
 , rust-analyzer
+, lean4
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -70,7 +71,8 @@ let
           fish-completion-command "${fish}/bin/fish"
           clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
           nixd-program "${nixd}/bin/nixd"
-          rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer")
+          rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer"
+          nael-eglot-contact '("${lean4}/bin/lake" "serve"))
   '';
 
   baseEmacs = emacs30-pgtk;
