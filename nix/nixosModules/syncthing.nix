@@ -97,6 +97,7 @@ in
       (dir: {
         "${cfg.dataDir}/${dir}" = {
           device = "/persist/data/home/archit/${dir}";
+          fsType = "none";
           inherit options;
         };
       })
