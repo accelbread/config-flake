@@ -40,7 +40,7 @@
       checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
       legacyPackages = pkgs: pkgs;
       formatters = pkgs: {
-        "*.js" = "${pkgs.nodePackages.prettier}/bin/prettier --write";
+        "*.js" = "${pkgs.prettier}/bin/prettier --write";
       };
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";
