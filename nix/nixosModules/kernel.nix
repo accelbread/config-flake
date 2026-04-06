@@ -11,13 +11,6 @@ in
     }));
     kernelPatches = [
       {
-        name = "nixpkgs hardened config";
-        patch = null;
-        structuredExtraConfig = import
-          (inputs.nixpkgs + /pkgs/os-specific/linux/kernel/hardened/config.nix)
-          { inherit (pkgs) stdenv lib; inherit (base-kernel) version; };
-      }
-      {
         name = "hardening";
         patch = null;
         structuredExtraConfig = with lib.kernel; {
@@ -28,14 +21,21 @@ in
           CHECKPOINT_RESTORE = lib.mkForce no;
           COMPAT_BRK = no;
           DEBUG_FS_ALLOW_NONE = yes;
+          DEBUG_NOTIFIERS = yes;
+          DEBUG_PLIST = yes;
+          DEBUG_SG = yes;
+          DEBUG_VIRTUAL = yes;
           DEBUG_WX = yes;
           DEVMEM = no;
           DEVPORT = no;
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
+          GCC_PLUGINS = yes;
+          GCC_PLUGIN_STACKLEAK = yes;
           HARDENED_USERCOPY = yes;
           HW_RANDOM = yes;
           HW_RANDOM_TPM = yes;
+          INET_DIAG = no;
           INIT_ON_ALLOC_DEFAULT_ON = yes;
           INIT_ON_FREE_DEFAULT_ON = yes;
           INIT_STACK_ALL_ZERO = yes;
@@ -59,12 +59,15 @@ in
           MSEAL_SYSTEM_MAPPINGS = yes;
           NFS_DEBUG = unset;
           PANIC_ON_OOPS = yes;
+          PANIC_TIMEOUT = freeform "-1";
+          PROC_KCORE = no;
           PROC_MEM_NO_FORCE = yes;
           PROC_VMCORE = lib.mkForce no;
           RANDOMIZE_BASE = yes;
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
           RANDOM_KMALLOC_CACHES = yes;
           RESET_ATTACK_MITIGATION = yes;
+          SCHED_STACK_END_CHECK = yes;
           SECURITY = yes;
           SECURITY_DMESG_RESTRICT = yes;
           SECURITY_LOCKDOWN_LSM = lib.mkForce yes;
@@ -84,6 +87,14 @@ in
           X86_16BIT = unset;
           X86_IOPL_IOPERM = no;
           ZERO_CALL_USED_REGS = yes;
+          # Disabled configs (set by nixos config)
+          INET_DIAG_DESTROY = option no;
+          INET_MPTCP_DIAG = option no;
+          INET_RAW_DIAG = option no;
+          INET_TCP_DIAG = option no;
+          INET_UDP_DIAG = option no;
+          IO_STRICT_DEVMEM = option no;
+          STRICT_DEVMEM = option no;
         } // lib.optionalAttrs (pkgs.system == "x86_64-linux") {
           INTEL_IOMMU_DEFAULT_ON = yes;
           INTEL_IOMMU_SVM = yes;
