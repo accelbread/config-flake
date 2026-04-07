@@ -23,6 +23,7 @@ in
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     settings = {
       experimental-features = "nix-command flakes";
+      flake-registry = "";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
       fsync-store-paths = true;
