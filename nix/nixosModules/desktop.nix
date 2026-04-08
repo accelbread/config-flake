@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }: {
+{ config, pkgs, lib, inputs, flake, ... }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.syncthing
@@ -19,6 +19,8 @@
     daemonCPUSchedPolicy = "idle";
     daemonIOSchedClass = "idle";
   };
+
+  system.extraDependencies = lib.attrValues flake.outputs'.devShells;
 
   users.users.archit.extraGroups = [ "dialout" "wireshark" "video" "render" ];
 
