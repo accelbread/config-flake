@@ -273,6 +273,7 @@
 (setopt frame-inhibit-implied-resize t
         frame-resize-pixelwise t
         window-resize-pixelwise t
+        window-combination-resize t
         whitespace-style '(face trailing tab-mark tabs missing-newline-at-eof)
         whitespace-global-modes '(prog-mode text-mode conf-mode)
         global-display-fill-column-indicator-modes '(prog-mode text-mode)
