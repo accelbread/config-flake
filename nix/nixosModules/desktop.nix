@@ -228,6 +228,7 @@
           ".config/emacs"
           ".librewolf/profile"
           ".thunderbird/profile"
+          ".local/share/keyrings"
           ".local/share/vault"
           ".local/share/gnupg"
           ".local/share/pass"
