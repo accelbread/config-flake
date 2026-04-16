@@ -23,6 +23,7 @@ in
     ];
     gui-packages = with pkgs; [
       thunderbird
+      fractal
       gimp3
       libreoffice
       celluloid

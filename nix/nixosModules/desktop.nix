@@ -232,6 +232,7 @@
           ".local/share/vault"
           ".local/share/gnupg"
           ".local/share/pass"
+          ".local/share/fractal"
           ".var/app/com.valvesoftware.Steam"
         ]) ++ (map (d: { directory = d; mode = "0755"; }) [
           ".local/share/icc"
@@ -254,6 +255,7 @@
       map (d: { directory = d; mode = "0700"; }) [
         "Downloads"
         "playground"
+        ".cache/fractal"
         ".local/share/flatpak"
       ];
   };

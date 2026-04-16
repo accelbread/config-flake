@@ -130,6 +130,7 @@
           "emacs.desktop"
           "librewolf.desktop"
           "thunderbird.desktop"
+          "org.gnome.Fractal.desktop"
           "org.gnome.Nautilus.desktop"
           "io.bassi.Amberol.desktop"
         ];
