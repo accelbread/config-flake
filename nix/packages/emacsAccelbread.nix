@@ -11,6 +11,7 @@
 , nixd
 , rust-analyzer
 , lean4
+, tinymist
 , openscad
 , symlinkJoin
 , vale-proselint
@@ -72,7 +73,8 @@ let
           clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
           nixd-program "${nixd}/bin/nixd"
           rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer"
-          nael-eglot-contact '("${lean4}/bin/lake" "serve"))
+          nael-eglot-contact '("${lean4}/bin/lake" "serve")
+          tinymist-program "${tinymist}/bin/tinymist")
   '';
 
   baseEmacs = emacs30-pgtk;
@@ -96,6 +98,7 @@ let
       tree-sitter-javascript
       tree-sitter-typescript
       tree-sitter-tsx
+      tree-sitter-typst
       tree-sitter-dockerfile
       tree-sitter-go
       tree-sitter-gomod

@@ -66,7 +66,7 @@
            rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
            markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
            geiser-guile scad-mode haskell-mode toml-mode git-modes nael
-           pdf-tools)
+           typst-ts-mode pdf-tools)
         package-native-compile t)
 
 
@@ -1241,6 +1241,11 @@
                `("rust-analyzer"
                  ,@(and (boundp 'rust-analyzer-program)
                         (list rust-analyzer-program)))))
+          (typst-ts-mode
+           . ,(eglot-alternatives
+               `("tinymist"
+                 ,@(and (boundp 'tinymist-program)
+                        (list tinymist-program)))))
           (java-ts-mode
            . ("jdtls"
               :initializationOptions
