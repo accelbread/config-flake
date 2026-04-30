@@ -27,7 +27,4 @@ final: prev: {
       ./patches/amberol/shuffle_all.patch
     ];
   });
-  lean4 = prev.lean4.overrideAttrs (old: {
-    cmakeFlags = old.cmakeFlags ++ [ "-DINSTALL_CADICAL=OFF" ];
-  });
 }
