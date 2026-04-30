@@ -1,6 +1,7 @@
 user_pref("datareporting.healthreport.uploadEnabled", false);
 user_pref("mail.SpellCheckBeforeSend", true);
 user_pref("mail.biff.play_sound", false);
+user_pref("mail.biff.show_alert", false);
 user_pref("mail.close_message_window.on_delete", true);
 user_pref("mail.collect_email_address_outgoing", false);
 user_pref("mail.display_glyph", false);
