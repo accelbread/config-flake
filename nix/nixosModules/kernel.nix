@@ -20,6 +20,11 @@ in
           BUG_ON_DATA_CORRUPTION = yes;
           CHECKPOINT_RESTORE = lib.mkForce no;
           COMPAT_BRK = no;
+          CRYPTO_USER_API = option no;
+          CRYPTO_USER_API_AEAD = no;
+          CRYPTO_USER_API_HASH = no;
+          CRYPTO_USER_API_RNG = no;
+          CRYPTO_USER_API_SKCIPHER = no;
           DEBUG_FS_ALLOW_NONE = yes;
           DEBUG_NOTIFIERS = yes;
           DEBUG_PLIST = yes;

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, hostname, ... }:
+{ config, options, pkgs, lib, hostname, ... }:
 let
   inherit (builtins) match mapAttrs listToAttrs head;
   cfg = config.sysconfig.disks;
@@ -29,13 +29,17 @@ in
   config = lib.mkIf (cfg.devices != [ ]) {
     boot = {
       initrd = {
-        luks.devices = listToAttrs (eachDevice (n: d: {
-          name = "${hostname}_disk${toString n}";
-          value = {
-            device = getPart 2 d;
-            bypassWorkqueues = true;
-          };
-        }));
+        luks = {
+          devices = listToAttrs (eachDevice (n: d: {
+            name = "${hostname}_disk${toString n}";
+            value = {
+              device = getPart 2 d;
+              bypassWorkqueues = true;
+            };
+          }));
+          cryptoModules = lib.subtractLists [ "af_alg" "algif_skcipher" ]
+            options.boot.initrd.luks.cryptoModules.default;
+        };
         systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
       };
       swraid.enable = false;
