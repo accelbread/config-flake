@@ -118,6 +118,14 @@ in
           UNWIND_PATCH_PAC_INTO_SCS = yes;
         };
       }
+      {
+        name = "performance";
+        patch = null;
+        structuredExtraConfig = with lib.kernel; {
+          TRANSPARENT_HUGEPAGE_ALWAYS = lib.mkForce yes;
+          TRANSPARENT_HUGEPAGE_MADVISE = lib.mkForce no;
+        };
+      }
     ] ++ (map (p: { name = baseNameOf p; patch = p; })
       (lib.filesystem.listFilesRecursive ./kernel-patches));
 
