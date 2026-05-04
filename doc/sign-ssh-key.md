@@ -1,6 +1,6 @@
 ## Create user key
 
-With host YubiKey plugged in:
+With machine YubiKey plugged in:
 
 ```sh
 ssh-keygen -t ed25519-sk -O verify-required -C 'archit@<hostname>'
@@ -19,6 +19,15 @@ ssh-keygen \
 
 After entering pin, tap the Yubikey.
 
+## Create host key
+
+With machine YubiKey plugged in:
+
+```sh
+ssh-keygen -t ed25519-sk -O no-touch-required -N '' -C '<hostname>' \
+  -f /persist/state/sshd/ssh_host_ed25519_sk_key
+```
+
 ## Sign host key
 
 With SSH CA YubiKey plugged in:
@@ -30,7 +39,7 @@ ssh-keygen \
   -I <hostname> \
   -n <hostname>.fluffy-bebop.ts.net \
   -h \
-  /persist/state/sshd/ssh_host_ed25519_key.pub
+  /persist/state/sshd/ssh_host_ed25519_sk_key.pub
 ```
 
 After entering pin, tap the Yubikey.

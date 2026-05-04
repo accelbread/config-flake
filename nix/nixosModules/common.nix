@@ -195,13 +195,12 @@ in
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
         TrustedUserCAKeys = "${self + /misc/ssh_ca_user_key.pub}";
-        HostCertificate = "/persist/state/sshd/ssh_host_ed25519_key-cert.pub";
+        HostKey =
+          "/persist/state/sshd/ssh_host_ed25519_sk_key";
+        HostCertificate =
+          "/persist/state/sshd/ssh_host_ed25519_sk_key-cert.pub";
         ClientAliveInterval = 15;
       };
-      hostKeys = [{
-        path = "/persist/state/sshd/ssh_host_ed25519_key";
-        type = "ed25519";
-      }];
     };
     printing.enable = false;
     bpftune.enable = true;
