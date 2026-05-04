@@ -7,7 +7,11 @@ in
 
   boot = {
     kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
-      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
+      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [
+        "INSTALL_MOD_STRIP=1"
+        "KCFLAGS=-march=x86-64-v3"
+        "KRUSTFLAGS=-Ctarget-cpu=x86-64-v3"
+      ];
     }));
     kernelPatches = [
       {
