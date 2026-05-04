@@ -17,3 +17,9 @@ Host codecommit
 
 Host hf.co
   User git
+
+Host *
+  CanonicalizeHostname yes
+  CanonicalizeMaxDots 0
+  CanonicalizeFallbackLocal no
+  CanonicalDomains fluffy-bebop.ts.net

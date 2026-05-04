@@ -27,7 +27,10 @@ With SSH CA YubiKey plugged in:
 ssh-keygen \
   -s /<path-to-flake>/misc/ssh_ca_host_key.pub \
   -D /etc/profiles/per-user/archit/lib/libykcs11.so \
-  -I <hostname> -h /persist/state/sshd/ssh_host_ed25519_key.pub
+  -I <hostname> \
+  -n <hostname>.fluffy-bebop.ts.net \
+  -h \
+  /persist/state/sshd/ssh_host_ed25519_key.pub
 ```
 
 After entering pin, tap the Yubikey.
