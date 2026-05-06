@@ -27,6 +27,10 @@
   hardware = {
     graphics.enable = true;
     sensor.iio.enable = true;
+    bluetooth.settings.General = {
+      Experimental = true;
+      KernelExperimental = true;
+    };
     steam-hardware.enable = true;
   };
 
