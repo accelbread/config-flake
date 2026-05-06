@@ -30,6 +30,7 @@
     bluetooth.settings.General = {
       Experimental = true;
       KernelExperimental = true;
+      Privacy = "limited-device";
     };
     steam-hardware.enable = true;
   };
