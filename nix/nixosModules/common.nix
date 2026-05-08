@@ -105,7 +105,8 @@ in
   location.provider = "geoclue2";
 
   security = {
-    sudo.extraConfig = "Defaults lecture = never";
+    sudo.enable = false;
+    doas.enable = true;
     pam = {
       services = lib.genAttrs [ "login" "systemd-user" "sshd" ] (_: {
         rules.session.umask = {

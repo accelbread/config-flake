@@ -1,13 +1,13 @@
 { pkgs, ... }:
 let
-  sudo = "/run/wrappers/bin/sudo";
+  doas = "/run/wrappers/bin/doas";
   poweroff = "/run/current-system/sw/bin/poweroff";
   notify-send = pkgs.writeShellScript "notify-send-wrapper" ''
     DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
       ${pkgs.libnotify}/bin/notify-send "$@"
   '';
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
-    ${sudo} -u archit ${notify-send} -c critical "$1"
+    ${doas} -u archit ${notify-send} -c critical "$1"
   '';
 in
 {
@@ -72,7 +72,7 @@ in
       RUN_AS_USER nut
       POWERDOWNFLAG /run/killpower
       MONITOR desk 1 monuser "upsmon_pass" primary
-      SHUTDOWNCMD "${sudo} ${poweroff}"
+      SHUTDOWNCMD "${doas} ${poweroff}"
       NOTIFYCMD ${notifycmd}
       NOTIFYFLAG ONLINE SYSLOG+EXEC
       NOTIFYFLAG ONBATT SYSLOG+EXEC
@@ -98,17 +98,18 @@ in
 
   services.udev.packages = [ pkgs.nut ];
 
-  security.sudo.extraRules = [
+  security.doas.extraRules = [
     {
       users = [ "nut" ];
       runAs = "root";
-      commands = [{ command = "${poweroff}"; options = [ "NOPASSWD" ]; }];
+      cmd = "${poweroff}";
+      noPass = true;
     }
     {
       users = [ "nut" ];
       runAs = "archit";
-      commands = [{ command = "${notify-send}"; options = [ "NOPASSWD" ]; }];
+      cmd = "${notify-send}";
+      noPass = true;
     }
   ];
 }
-

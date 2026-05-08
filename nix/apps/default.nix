@@ -6,7 +6,7 @@ let
     ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
     ${nix} build --no-link "$ref"
     script=$(${nix} eval --raw "$ref")
-    sudo $script
+    run0 $script
   '';
 in
 rec {
@@ -25,7 +25,7 @@ rec {
   nixosUnmount = mkBuildScript "unmountScript";
   nixosInstall = writeShellScript "nixos-install" ''
     set -eu
-    sudo nixos-install --no-root-passwd --flake ${src}#$1
+    run0 nixos-install --no-root-passwd --flake ${src}#$1
   '';
   nixosFullInstall = writeShellScript "nixos-fullinstall" ''
     set -xeu

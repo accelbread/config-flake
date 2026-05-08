@@ -2,8 +2,8 @@
 
 ```sh
 mkdir ~/Desktop/mnt
-sudo btrfs subvolume delete /persist/.data-backup
-sudo btrfs subvolume snapshot -r /persist/data /persist/.data-backup
+run0 btrfs subvolume delete /persist/.data-backup
+run0 btrfs subvolume snapshot -r /persist/data /persist/.data-backup
 cd /persist/.data-backup
 gocryptfs -reverse -ro --exclude-from backup-exclude . ~/Desktop/mnt
 cd ~/Desktop/mnt

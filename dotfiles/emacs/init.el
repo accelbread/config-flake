@@ -781,7 +781,8 @@
         tramp-use-scp-direct-remote-copying t)
 
 (with-eval-after-load 'tramp
-  (setopt tramp-default-method-alist `((,tramp-local-host-regexp nil "sudo"))
+  (tramp-enable-method "run0")
+  (setopt tramp-default-method-alist `((,tramp-local-host-regexp nil "run0"))
           tramp-default-method "ssh")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   (with-eval-after-load 'compile

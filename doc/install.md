@@ -35,13 +35,13 @@ usbguard generate-policy > usbguard-rules.conf
 Replace `usbguard.implictPolicyTarget` with `usbguard.rules`.
 
 ```sh
-sudo sbctl create-keys
+run0 sbctl create-keys
 ```
 
 Remove disabled lanzaboote and rebuild system.
 
 ```sh
-sudo sbctl verify
+run0 sbctl verify
 ```
 
 bzimage not signed is ok.
@@ -49,7 +49,7 @@ bzimage not signed is ok.
 Reboot.
 
 ```sh
-sudo sbctl enroll-keys
+run0 sbctl enroll-keys
 ```
 
 Enable secureboot and check with `bootctl status`.
