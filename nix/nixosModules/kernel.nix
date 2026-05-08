@@ -18,6 +18,8 @@ in
         name = "hardening";
         patch = null;
         structuredExtraConfig = with lib.kernel; {
+          AFS_FS = no;
+          AF_RXRPC = no;
           AIO = lib.mkForce no;
           AUDIT = yes;
           BPF_JIT_ALWAYS_ON = lib.mkForce yes;
@@ -44,7 +46,9 @@ in
           HARDENED_USERCOPY = yes;
           HW_RANDOM = yes;
           HW_RANDOM_TPM = yes;
+          INET6_ESP = no;
           INET_DIAG = no;
+          INET_ESP = no;
           INIT_ON_ALLOC_DEFAULT_ON = yes;
           INIT_ON_FREE_DEFAULT_ON = yes;
           INIT_STACK_ALL_ZERO = yes;
@@ -97,7 +101,9 @@ in
           X86_IOPL_IOPERM = no;
           ZERO_CALL_USED_REGS = yes;
           # Disabled configs (set by nixos config)
+          INET6_ESPINTCP = lib.mkForce (option no);
           INET_DIAG_DESTROY = option no;
+          INET_ESPINTCP = lib.mkForce (option no);
           INET_MPTCP_DIAG = option no;
           INET_RAW_DIAG = option no;
           INET_TCP_DIAG = option no;
