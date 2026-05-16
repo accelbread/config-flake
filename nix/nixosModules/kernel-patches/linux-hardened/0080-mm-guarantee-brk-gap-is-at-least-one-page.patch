@@ -1,7 +1,7 @@
-From 7f9a4d912ef176966ad3eacfa59209acd39d0b29 Mon Sep 17 00:00:00 2001
+From 8613a791165f0c1873b2b29bef38a6c366a140a6 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:39 -0400
-Subject: [PATCH 080/103] mm: guarantee brk gap is at least one page
+Subject: [PATCH 080/104] mm: guarantee brk gap is at least one page
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -17,7 +17,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/util.c b/mm/util.c
-index 954602a0c59..1059b5852a3 100644
+index 954602a0c59b..1059b5852a36 100644
 --- a/mm/util.c
 +++ b/mm/util.c
 @@ -391,9 +391,9 @@ unsigned long __weak arch_randomize_brk(struct mm_struct *mm)
@@ -33,5 +33,5 @@ index 954602a0c59..1059b5852a3 100644
  
  unsigned long arch_mmap_rnd(void)
 -- 
-2.52.0
+2.53.0
 

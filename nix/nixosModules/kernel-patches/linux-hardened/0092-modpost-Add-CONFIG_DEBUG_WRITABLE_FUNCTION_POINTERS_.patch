@@ -1,7 +1,7 @@
-From 46f2126297234d579e0e4e54871476573241ca65 Mon Sep 17 00:00:00 2001
+From 407356d0d8333eb04331a28cc964999460a03ad3 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Mon, 6 May 2019 17:07:11 +0200
-Subject: [PATCH 092/103] modpost: Add
+Subject: [PATCH 092/104] modpost: Add
  CONFIG_DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE
 
 With 46c7dd56d541 ("modpost: always show verbose warning for section
@@ -21,7 +21,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  3 files changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 607cb4db60d..8f7c77149cb 100644
+index e5c0ae2841c8..edd5974e0b5c 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -510,6 +510,9 @@ config SECTION_MISMATCH_WARN_ONLY
@@ -35,7 +35,7 @@ index 607cb4db60d..8f7c77149cb 100644
  	bool "Force all function address 64B aligned"
  	depends on EXPERT && (X86_64 || ARM64 || PPC32 || PPC64 || ARC || RISCV || S390)
 diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index d7d45067d08..b501130c534 100644
+index d7d45067d08b..b501130c534c 100644
 --- a/scripts/Makefile.modpost
 +++ b/scripts/Makefile.modpost
 @@ -47,6 +47,7 @@ modpost-args =										\
@@ -47,7 +47,7 @@ index d7d45067d08..b501130c534 100644
  	$(if $(KBUILD_NSDEPS),-d modules.nsdeps)					\
  	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N)	\
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 4d024f39564..612de453d70 100644
+index 6694518a1708..6c547d68a411 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
 @@ -50,6 +50,7 @@ static bool sec_mismatch_warn_only = true;
@@ -58,7 +58,7 @@ index 4d024f39564..612de453d70 100644
  /* ignore missing files */
  static bool ignore_missing_files;
  /* If set to 1, only warn (instead of error) about missing ns imports */
-@@ -1034,10 +1035,13 @@ static void default_mismatch_handler(const char *modname, struct elf_info *elf,
+@@ -1038,10 +1039,13 @@ static void default_mismatch_handler(const char *modname, struct elf_info *elf,
  	if (!secref_whitelist(fromsec, fromsym, tosec, tosym))
  		return;
  
@@ -74,7 +74,7 @@ index 4d024f39564..612de453d70 100644
  
  	if (!tosym[0])
  		snprintf(taddr_str, sizeof(taddr_str), "0x%x", (unsigned int)taddr);
-@@ -2284,7 +2288,7 @@ int main(int argc, char **argv)
+@@ -2288,7 +2292,7 @@ int main(int argc, char **argv)
  	LIST_HEAD(dump_lists);
  	struct dump_list *dl, *dl2;
  
@@ -83,7 +83,7 @@ index 4d024f39564..612de453d70 100644
  		switch (opt) {
  		case 'e':
  			external_module = true;
-@@ -2294,6 +2298,9 @@ int main(int argc, char **argv)
+@@ -2298,6 +2302,9 @@ int main(int argc, char **argv)
  			dl->file = optarg;
  			list_add_tail(&dl->list, &dump_lists);
  			break;
@@ -93,7 +93,7 @@ index 4d024f39564..612de453d70 100644
  		case 'M':
  			module_enabled = true;
  			break;
-@@ -2394,9 +2401,11 @@ int main(int argc, char **argv)
+@@ -2398,9 +2405,11 @@ int main(int argc, char **argv)
  		warn("suppressed %u unresolved symbol warnings because there were too many)\n",
  		     nr_unresolved - MAX_UNRESOLVED_REPORTS);
  
@@ -109,5 +109,5 @@ index 4d024f39564..612de453d70 100644
  	return error_occurred ? 1 : 0;
  }
 -- 
-2.52.0
+2.53.0
 

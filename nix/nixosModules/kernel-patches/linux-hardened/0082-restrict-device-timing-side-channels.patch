@@ -1,7 +1,7 @@
-From 706b955ada83700837896bf0f2eb6f2876f7c031 Mon Sep 17 00:00:00 2001
+From dd693f987af3c9fc11831094a9b57e8e3f882b4b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 18:26:10 -0400
-Subject: [PATCH 082/103] restrict device timing side channels
+Subject: [PATCH 082/104] restrict device timing side channels
 
 Based on the public grsecurity patches.
 
@@ -19,7 +19,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  6 files changed, 58 insertions(+), 3 deletions(-)
 
 diff --git a/fs/inode.c b/fs/inode.c
-index 2c55ec49b02..0c07e033904 100644
+index 2c55ec49b023..0c07e033904b 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -167,6 +167,10 @@ late_initcall(mg_debugfs_init);
@@ -50,7 +50,7 @@ index 2c55ec49b02..0c07e033904 100644
  
  static int __init init_fs_inode_sysctls(void)
 diff --git a/fs/stat.c b/fs/stat.c
-index 6c79661e1b9..d02fadfdd34 100644
+index 6c79661e1b96..d02fadfdd34b 100644
 --- a/fs/stat.c
 +++ b/fs/stat.c
 @@ -52,7 +52,10 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
@@ -110,7 +110,7 @@ index 6c79661e1b9..d02fadfdd34 100644
  			return ret;
  	} else {
 diff --git a/include/linux/capability.h b/include/linux/capability.h
-index 1fb08922552..01406151068 100644
+index 37db92b3d6f8..873416ba884c 100644
 --- a/include/linux/capability.h
 +++ b/include/linux/capability.h
 @@ -145,6 +145,7 @@ extern bool has_capability_noaudit(struct task_struct *t, int cap);
@@ -133,10 +133,10 @@ index 1fb08922552..01406151068 100644
  {
  	return true;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 9b2230fb233..242b3d5a05e 100644
+index 014cb04eefbe..687f1283f76b 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -4067,4 +4067,15 @@ static inline bool extensible_ioctl_valid(unsigned int cmd_a,
+@@ -4072,4 +4072,15 @@ static inline bool extensible_ioctl_valid(unsigned int cmd_a,
  	return true;
  }
  
@@ -153,7 +153,7 @@ index 9b2230fb233..242b3d5a05e 100644
 +
  #endif /* _LINUX_FS_H */
 diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
-index 28a9cb13fbf..e16cbb76bc4 100644
+index 28a9cb13fbfa..e16cbb76bc48 100644
 --- a/include/linux/fsnotify.h
 +++ b/include/linux/fsnotify.h
 @@ -124,6 +124,9 @@ static inline int fsnotify_file(struct file *file, __u32 mask)
@@ -167,7 +167,7 @@ index 28a9cb13fbf..e16cbb76bc4 100644
  }
  
 diff --git a/kernel/capability.c b/kernel/capability.c
-index 829f49ae07b..5bb7ee4028a 100644
+index 829f49ae07b9..5bb7ee4028ad 100644
 --- a/kernel/capability.c
 +++ b/kernel/capability.c
 @@ -416,6 +416,12 @@ bool capable(int cap)
@@ -184,5 +184,5 @@ index 829f49ae07b..5bb7ee4028a 100644
  
  /**
 -- 
-2.52.0
+2.53.0
 

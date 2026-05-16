@@ -1,7 +1,7 @@
-From e630283fa06434952bef29da938066dd34135b70 Mon Sep 17 00:00:00 2001
+From 800b6759bac9998618c6b42d9cd5c64b8c5092e1 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 22 May 2017 05:06:20 -0400
-Subject: [PATCH 075/103] arm64: determine stack entropy based on mmap entropy
+Subject: [PATCH 075/104] arm64: determine stack entropy based on mmap entropy
 
 Stack mapping entropy is currently hard-wired to 11 bits of entropy on
 32-bit and 18 bits of entropy on 64-bit. The stack itself gains an extra
@@ -29,7 +29,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index d7edf20ad21..ac3805f359d 100644
+index d7edf20ad215..ac3805f359de 100644
 --- a/arch/arm64/include/asm/elf.h
 +++ b/arch/arm64/include/asm/elf.h
 @@ -185,10 +185,10 @@ extern int arch_setup_additional_pages(struct linux_binprm *bprm,
@@ -47,5 +47,5 @@ index d7edf20ad21..ac3805f359d 100644
  
  #ifdef __AARCH64EB__
 -- 
-2.52.0
+2.53.0
 

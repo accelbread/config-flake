@@ -1,7 +1,7 @@
-From be15dc7c2a1f5bc3126c8d281727b9d0203273b7 Mon Sep 17 00:00:00 2001
+From 2dbe2303f316f7fddead741a5e0bed17f7e54b8b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 11 May 2017 16:02:49 -0400
-Subject: [PATCH 076/103] randomize lower bits of the argument block
+Subject: [PATCH 076/104] randomize lower bits of the argument block
 
 This was based on the PaX RANDUSTACK feature in grsecurity, where all of
 the lower bits are randomized. PaX keeps 16-byte alignment.
@@ -17,7 +17,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@oss.cyber.gouv.fr>
  1 file changed, 3 insertions(+)
 
 diff --git a/mm/vma_exec.c b/mm/vma_exec.c
-index 922ee51747a..dfcf19c76ce 100644
+index 922ee51747a6..dfcf19c76cee 100644
 --- a/mm/vma_exec.c
 +++ b/mm/vma_exec.c
 @@ -7,6 +7,7 @@
@@ -38,5 +38,5 @@ index 922ee51747a..dfcf19c76ce 100644
  
  err:
 -- 
-2.52.0
+2.53.0
 

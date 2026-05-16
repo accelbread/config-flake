@@ -1,7 +1,7 @@
-From 8808f0d773e0e51340f8eb910ccd54058afe0dfc Mon Sep 17 00:00:00 2001
+From 7b3f4a89a59cd39119917a33204640098e4c8975 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:48 -0400
-Subject: [PATCH 081/103] x86: guarantee brk gap is at least one page
+Subject: [PATCH 081/104] x86: guarantee brk gap is at least one page
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -11,7 +11,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index b92b3474470..63c96edc60a 100644
+index b92b3474470a..63c96edc60a5 100644
 --- a/arch/x86/kernel/process.c
 +++ b/arch/x86/kernel/process.c
 @@ -1027,9 +1027,9 @@ unsigned long arch_align_stack(unsigned long sp)
@@ -27,5 +27,5 @@ index b92b3474470..63c96edc60a 100644
  
  /*
 -- 
-2.52.0
+2.53.0
 

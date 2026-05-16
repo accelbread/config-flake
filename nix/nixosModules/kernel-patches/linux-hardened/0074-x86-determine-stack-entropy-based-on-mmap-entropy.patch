@@ -1,7 +1,7 @@
-From 6b362715d9eafafc73fbadf0e5e6e28f304644c4 Mon Sep 17 00:00:00 2001
+From 84c92215b65bfc9c091095d9b07318f7018ddadc Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 21 May 2017 20:30:44 -0400
-Subject: [PATCH 074/103] x86: determine stack entropy based on mmap entropy
+Subject: [PATCH 074/104] x86: determine stack entropy based on mmap entropy
 
 Stack mapping entropy is currently hard-wired to 11 bits of entropy on
 32-bit and 22 bits of entropy on 64-bit. The stack itself gains an extra
@@ -28,7 +28,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-index 10ee30f6d18..6d0abe9e5ad 100644
+index 10ee30f6d184..6d0abe9e5adc 100644
 --- a/arch/x86/include/asm/elf.h
 +++ b/arch/x86/include/asm/elf.h
 @@ -315,8 +315,8 @@ extern unsigned long get_sigframe_size(void);
@@ -56,5 +56,5 @@ index 10ee30f6d18..6d0abe9e5ad 100644
  
  #define ARCH_DLINFO							\
 -- 
-2.52.0
+2.53.0
 

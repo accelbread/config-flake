@@ -1,7 +1,7 @@
-From 83342e1a8454e4381c301aaa8b153578b69cd450 Mon Sep 17 00:00:00 2001
+From 6e9dfa15d70f2fcacca9f88341e2626d44ee3ad0 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 6 Sep 2020 20:28:32 +0200
-Subject: [PATCH 083/103] sysctl: expose proc_dointvec_minmax_sysadmin as API
+Subject: [PATCH 083/104] sysctl: expose proc_dointvec_minmax_sysadmin as API
  function
 
 Orthogonal to the other sysctl proc functions expose the variant that is
@@ -18,7 +18,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  3 files changed, 38 insertions(+), 9 deletions(-)
 
 diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 92e9146b110..3d99b6bdb80 100644
+index 92e9146b1104..3d99b6bdb80a 100644
 --- a/include/linux/sysctl.h
 +++ b/include/linux/sysctl.h
 @@ -72,6 +72,8 @@ int proc_douintvec(const struct ctl_table *, int, void *, size_t *, loff_t *);
@@ -31,7 +31,7 @@ index 92e9146b110..3d99b6bdb80 100644
  			size_t *lenp, loff_t *ppos);
  int proc_dointvec_jiffies(const struct ctl_table *, int, void *, size_t *, loff_t *);
 diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
-index da77f3f5c1f..1418fc33ed1 100644
+index da77f3f5c1fe..1418fc33ed1f 100644
 --- a/kernel/printk/sysctl.c
 +++ b/kernel/printk/sysctl.c
 @@ -11,15 +11,6 @@
@@ -51,7 +51,7 @@ index da77f3f5c1f..1418fc33ed1 100644
  	{
  		.procname	= "printk",
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 5b44614b380..1b1ab180ba4 100644
+index 694843e7cef3..dc229a9b1a7a 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
 @@ -699,6 +699,35 @@ int proc_douintvec(const struct ctl_table *table, int write, void *buffer,
@@ -112,5 +112,5 @@ index 5b44614b380..1b1ab180ba4 100644
  EXPORT_SYMBOL(proc_dointvec_ms_jiffies);
  EXPORT_SYMBOL(proc_dostring);
 -- 
-2.52.0
+2.53.0
 

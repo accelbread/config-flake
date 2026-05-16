@@ -135,6 +135,7 @@ in
           PREEMPT = lib.mkForce yes;
           PREEMPT_DYNAMIC = no;
           PREEMPT_LAZY = lib.mkForce no;
+          PREEMPT_VOLUNTARY = lib.mkForce no;
           TRANSPARENT_HUGEPAGE_ALWAYS = lib.mkForce yes;
           TRANSPARENT_HUGEPAGE_MADVISE = lib.mkForce no;
         };

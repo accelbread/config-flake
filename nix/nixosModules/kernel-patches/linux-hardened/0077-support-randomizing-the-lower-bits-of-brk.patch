@@ -1,7 +1,7 @@
-From b35b1664c433df8af5f8f6c242350516fb4cc1e4 Mon Sep 17 00:00:00 2001
+From c68f6e8cef1b8b9e58756821496d1a97f999a6f4 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 30 May 2017 18:03:30 -0400
-Subject: [PATCH 077/103] support randomizing the lower bits of brk
+Subject: [PATCH 077/104] support randomizing the lower bits of brk
 
 This adds support for arch_randomize_brk implementations not performing
 page alignment in order to randomize the lower bits of the brk heap.
@@ -20,7 +20,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 5fd3b80fda1..fc460b36007 100644
+index 5fd3b80fda1d..fc460b360078 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -152,6 +152,13 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
@@ -38,5 +38,5 @@ index 5fd3b80fda1..fc460b36007 100644
  		mm->brk = brk;
  		goto success;
 -- 
-2.52.0
+2.53.0
 

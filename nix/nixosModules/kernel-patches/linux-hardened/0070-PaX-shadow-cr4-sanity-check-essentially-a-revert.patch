@@ -1,7 +1,7 @@
-From 0134edf0c0c8aa92b9044db330a10c198808b741 Mon Sep 17 00:00:00 2001
+From 34f287556b34f543b27bdd23fa89ec5cb60eee58 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 00:59:48 -0400
-Subject: [PATCH 070/103] PaX shadow cr4 sanity check (essentially a revert)
+Subject: [PATCH 070/104] PaX shadow cr4 sanity check (essentially a revert)
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 [levente@leventepolyak.net: Adapt to cpu_tlbstate moved out-of-line]
@@ -16,7 +16,7 @@ Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
  3 files changed, 3 insertions(+)
 
 diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 00daedfefc1..a00d167fe5c 100644
+index 00daedfefc1b..a00d167fe5ce 100644
 --- a/arch/x86/include/asm/tlbflush.h
 +++ b/arch/x86/include/asm/tlbflush.h
 @@ -485,6 +485,7 @@ static inline void cpu_tlbstate_update_lam(unsigned long lam, u64 untag_mask)
@@ -28,7 +28,7 @@ index 00daedfefc1..a00d167fe5c 100644
  	native_write_cr4(cr4);
  }
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 02d97834a1d..3c7b08ec87e 100644
+index 68053f4f2c9b..987b2c6a33b5 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
 @@ -455,6 +455,7 @@ EXPORT_SYMBOL_GPL(native_write_cr4);
@@ -40,7 +40,7 @@ index 02d97834a1d..3c7b08ec87e 100644
  	lockdep_assert_irqs_disabled();
  
 diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 4c718f8adc5..ea45acfe4f0 100644
+index 4c718f8adc59..ea45acfe4f03 100644
 --- a/arch/x86/kernel/process.c
 +++ b/arch/x86/kernel/process.c
 @@ -706,6 +706,7 @@ void speculation_ctrl_update_current(void)
@@ -52,5 +52,5 @@ index 4c718f8adc5..ea45acfe4f0 100644
  	newval = cr4 ^ mask;
  	if (newval != cr4) {
 -- 
-2.52.0
+2.53.0
 

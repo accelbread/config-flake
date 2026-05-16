@@ -1,7 +1,7 @@
-From 6d5ffee721993669af61680720576b4c31422fba Mon Sep 17 00:00:00 2001
+From 838e5b5b66f0d08806d62520eefe1bab3eb667e1 Mon Sep 17 00:00:00 2001
 From: madaidan <50278627+madaidan@users.noreply.github.com>
 Date: Sun, 9 Feb 2020 00:03:41 +0000
-Subject: [PATCH 095/103] net: tcp: add option to disable TCP simultaneous
+Subject: [PATCH 095/104] net: tcp: add option to disable TCP simultaneous
  connect
 
 This is modified from Brad Spengler/PaX Team's code in the last public
@@ -34,7 +34,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  5 files changed, 53 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index a06cb99d66d..e83cdbdf3d4 100644
+index 7a637e87005f..15e206771816 100644
 --- a/Documentation/networking/ip-sysctl.rst
 +++ b/Documentation/networking/ip-sysctl.rst
 @@ -887,6 +887,24 @@ tcp_backlog_ack_defer - BOOLEAN
@@ -63,10 +63,10 @@ index a06cb99d66d..e83cdbdf3d4 100644
  	If enabled, provide RFC2861 behavior and time out the congestion
  	window after an idle period.  An idle period is defined at
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index ab20f549b8f..68b89b5b32b 100644
+index 7647ed5c732c..06fe9890c4a2 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -286,6 +286,7 @@ static_assert((1 << ATO_BITS) > TCP_DELACK_MAX);
+@@ -287,6 +287,7 @@ static_assert((1 << ATO_BITS) > TCP_DELACK_MAX);
  /* sysctl variables for tcp */
  extern int sysctl_tcp_max_orphans;
  extern long sysctl_tcp_mem[3];
@@ -75,10 +75,10 @@ index ab20f549b8f..68b89b5b32b 100644
  #define TCP_RACK_LOSS_DETECTION  0x1 /* Use RACK to detect losses */
  #define TCP_RACK_STATIC_REO_WND  0x2 /* Use static RACK reo wnd */
 diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
-index ff7a4b67eeb..2af4b691ecb 100644
+index 1e45957cf5d2..9d124af3dd21 100644
 --- a/net/ipv4/Kconfig
 +++ b/net/ipv4/Kconfig
-@@ -770,3 +770,26 @@ config TCP_MD5SIG
+@@ -771,3 +771,26 @@ config TCP_MD5SIG
  	  on the Internet.
  
  	  If unsure, say N.
@@ -106,10 +106,10 @@ index ff7a4b67eeb..2af4b691ecb 100644
 +
 +	  If unsure, say N.
 diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index 24dbc603cc4..08f833d4e25 100644
+index 0f1dd75dbf37..ecac9ab86432 100644
 --- a/net/ipv4/sysctl_net_ipv4.c
 +++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -619,6 +619,15 @@ static struct ctl_table ipv4_table[] = {
+@@ -620,6 +620,15 @@ static struct ctl_table ipv4_table[] = {
  		.extra1		= &sysctl_fib_sync_mem_min,
  		.extra2		= &sysctl_fib_sync_mem_max,
  	},
@@ -126,7 +126,7 @@ index 24dbc603cc4..08f833d4e25 100644
  
  static struct ctl_table ipv4_net_table[] = {
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index e4a979b75cc..9188fc198c8 100644
+index 96486eea2672..b43ebb89f46e 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
 @@ -85,6 +85,7 @@
@@ -137,7 +137,7 @@ index e4a979b75cc..9188fc198c8 100644
  
  #define FLAG_DATA		0x01 /* Incoming frame contained data.		*/
  #define FLAG_WIN_UPDATE		0x02 /* Incoming ACK was a window update.	*/
-@@ -6780,7 +6781,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
+@@ -6778,7 +6779,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
  		SKB_DR_SET(reason, TCP_RFC7323_PAWS);
  		goto discard_and_undo;
  	}
@@ -147,5 +147,5 @@ index e4a979b75cc..9188fc198c8 100644
  		 * simultaneous connect with crossed SYNs.
  		 * Particularly, it can be connect to self.
 -- 
-2.52.0
+2.53.0
 

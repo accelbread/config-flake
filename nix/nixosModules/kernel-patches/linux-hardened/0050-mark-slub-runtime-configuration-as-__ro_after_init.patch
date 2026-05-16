@@ -1,7 +1,7 @@
-From 3b46a84802fac36297d3fef6e373c931b8e9b3e2 Mon Sep 17 00:00:00 2001
+From 204db8ce79ffd38edbd2b68ee72f4db63e1cd09e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 14 May 2017 19:01:58 -0400
-Subject: [PATCH 050/103] mark slub runtime configuration as __ro_after_init
+Subject: [PATCH 050/104] mark slub runtime configuration as __ro_after_init
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 507f3461022..c6e5c68634d 100644
+index a89df6ddcc58..9f851e88f50a 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -973,13 +973,13 @@ static inline void *restore_red_left(struct kmem_cache *s, void *p)
+@@ -972,13 +972,13 @@ static inline void *restore_red_left(struct kmem_cache *s, void *p)
   * Debug settings:
   */
  #if defined(CONFIG_SLUB_DEBUG_ON)
@@ -30,7 +30,7 @@ index 507f3461022..c6e5c68634d 100644
  
  /*
   * slub is about to manipulate internal object metadata.  This memory lies
-@@ -7529,10 +7529,10 @@ EXPORT_SYMBOL(kmem_cache_alloc_bulk_noprof);
+@@ -7566,10 +7566,10 @@ EXPORT_SYMBOL(kmem_cache_alloc_bulk_noprof);
   * and increases the number of allocations possible without having to
   * take the list_lock.
   */
@@ -45,5 +45,5 @@ index 507f3461022..c6e5c68634d 100644
  /*
   * Calculate the order of allocation given an slab object size.
 -- 
-2.52.0
+2.53.0
 

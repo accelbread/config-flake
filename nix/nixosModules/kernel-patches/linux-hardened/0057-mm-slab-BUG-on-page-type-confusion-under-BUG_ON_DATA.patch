@@ -1,7 +1,7 @@
-From 7f17e78d7a575445087e72ebca66eb3e35e7d8bb Mon Sep 17 00:00:00 2001
+From 2e9f033d28a529de9d0f9930bf504dba9ec3b189 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 17 Sep 2019 18:00:54 +0200
-Subject: [PATCH 057/103] mm: slab: BUG on page type confusion under
+Subject: [PATCH 057/104] mm: slab: BUG on page type confusion under
  BUG_ON_DATA_CORRUPTION
 
 This change was extracted from PaX.
@@ -16,10 +16,10 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index c6e5c68634d..3950b2161ed 100644
+index 9f851e88f50a..7e59aa60b37e 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -6721,8 +6721,12 @@ static inline struct kmem_cache *virt_to_cache(const void *obj)
+@@ -6792,8 +6792,12 @@ static inline struct kmem_cache *virt_to_cache(const void *obj)
  	struct slab *slab;
  
  	slab = virt_to_slab(obj);
@@ -33,5 +33,5 @@ index c6e5c68634d..3950b2161ed 100644
  }
  
 -- 
-2.52.0
+2.53.0
 

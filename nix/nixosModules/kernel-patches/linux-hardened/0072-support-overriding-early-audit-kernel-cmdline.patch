@@ -1,14 +1,14 @@
-From b35fc11e7ebdda324b779a15aeeeed1ea69d7f3e Mon Sep 17 00:00:00 2001
+From 90aab547ab9cca6760af2288480b4b2983f84ae4 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 9 Jul 2017 17:20:29 -0400
-Subject: [PATCH 072/103] support overriding early audit kernel cmdline
+Subject: [PATCH 072/104] support overriding early audit kernel cmdline
 
 ---
  kernel/audit.c | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/kernel/audit.c b/kernel/audit.c
-index 26a332ffb1b..c30adeb1650 100644
+index 26a332ffb1b8..c30adeb1650b 100644
 --- a/kernel/audit.c
 +++ b/kernel/audit.c
 @@ -1779,6 +1779,9 @@ static int __init audit_enable(char *str)
@@ -22,5 +22,5 @@ index 26a332ffb1b..c30adeb1650 100644
  		pr_err("audit: error setting audit state (%d)\n",
  		       audit_default);
 -- 
-2.52.0
+2.53.0
 

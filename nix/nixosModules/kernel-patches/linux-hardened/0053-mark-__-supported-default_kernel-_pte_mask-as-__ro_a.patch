@@ -1,7 +1,7 @@
-From b0d8746869b247b6f1f0a90f53aaef2f94cc0703 Mon Sep 17 00:00:00 2001
+From a17f3ec03f1e78a119ab0713f9b2d3c663147193 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 12 May 2017 00:06:16 -0400
-Subject: [PATCH 053/103] mark __{supported,default_kernel}_pte_mask as
+Subject: [PATCH 053/104] mark __{supported,default_kernel}_pte_mask as
  __ro_after_init
 
 These changes were initially extracted from PaX where it was part of
@@ -21,7 +21,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index 8a34fff6ab2..172e2cd0053 100644
+index 8a34fff6ab2b..172e2cd0053e 100644
 --- a/arch/x86/mm/init_32.c
 +++ b/arch/x86/mm/init_32.c
 @@ -499,9 +499,9 @@ static void __init pagetable_init(void)
@@ -37,7 +37,7 @@ index 8a34fff6ab2..172e2cd0053 100644
  /* Used in PAGE_KERNEL_* macros which are reasonably used out-of-tree: */
  EXPORT_SYMBOL(__default_kernel_pte_mask);
 diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 0e4270e20fa..d58d13b0801 100644
+index 3d9a5e4ccaa4..41862cc42ff9 100644
 --- a/arch/x86/mm/init_64.c
 +++ b/arch/x86/mm/init_64.c
 @@ -104,9 +104,9 @@ static inline pgprot_t prot_sethuge(pgprot_t prot)
@@ -53,5 +53,5 @@ index 0e4270e20fa..d58d13b0801 100644
  /* Used in PAGE_KERNEL_* macros which are reasonably used out-of-tree: */
  EXPORT_SYMBOL(__default_kernel_pte_mask);
 -- 
-2.52.0
+2.53.0
 

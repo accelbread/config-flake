@@ -1,7 +1,7 @@
-From 1c4c568a91fcf5a593fb9c3923b6c5c26cd5f016 Mon Sep 17 00:00:00 2001
+From 27accbc5d2a7f472f8cc4db060483a44f59533e5 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 25 May 2021 21:04:47 +0200
-Subject: [PATCH 097/103] mm, kfence: bug on data corruption after error report
+Subject: [PATCH 097/104] mm, kfence: bug on data corruption after error report
 
 Trigger BUG when kfence encounters data corruption of kfence managed
 objects. This allows a finer-grained control instead of globally
@@ -14,7 +14,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  2 files changed, 14 insertions(+)
 
 diff --git a/lib/Kconfig.kfence b/lib/Kconfig.kfence
-index 6fbbebec683..e494618f719 100644
+index 6fbbebec683a..e494618f7193 100644
 --- a/lib/Kconfig.kfence
 +++ b/lib/Kconfig.kfence
 @@ -96,4 +96,13 @@ config KFENCE_KUNIT_TEST
@@ -32,7 +32,7 @@ index 6fbbebec683..e494618f719 100644
 +
  endif # KFENCE
 diff --git a/mm/kfence/report.c b/mm/kfence/report.c
-index 10e6802a2ed..01f8700fafc 100644
+index 10e6802a2edf..01f8700fafc6 100644
 --- a/mm/kfence/report.c
 +++ b/mm/kfence/report.c
 @@ -8,6 +8,7 @@
@@ -55,5 +55,5 @@ index 10e6802a2ed..01f8700fafc 100644
  
  	/* We encountered a memory safety error, taint the kernel! */
 -- 
-2.52.0
+2.53.0
 

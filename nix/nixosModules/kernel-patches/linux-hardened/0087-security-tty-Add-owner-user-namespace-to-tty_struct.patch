@@ -1,7 +1,7 @@
-From 2be06f7713b989b411dbd678cb87093e4e4ad648 Mon Sep 17 00:00:00 2001
+From 8a6ee4071813ecc70ffe84dce9fa8737d22230de Mon Sep 17 00:00:00 2001
 From: Matt Brown <matt@nmatt.com>
 Date: Mon, 29 May 2017 17:37:59 -0400
-Subject: [PATCH 087/103] security: tty: Add owner user namespace to tty_struct
+Subject: [PATCH 087/104] security: tty: Add owner user namespace to tty_struct
 
 This patch adds struct user_namespace *owner_user_ns to the tty_struct.
 Then it is set to current_user_ns() in the alloc_tty_struct function.
@@ -26,7 +26,7 @@ Signed-off-by: Matt Brown <matt@nmatt.com>
  2 files changed, 4 insertions(+)
 
 diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index e2d92cf70eb..1ac71a0960b 100644
+index e2d92cf70eb7..1ac71a0960b3 100644
 --- a/drivers/tty/tty_io.c
 +++ b/drivers/tty/tty_io.c
 @@ -171,6 +171,7 @@ static void free_tty_struct(struct tty_struct *tty)
@@ -46,7 +46,7 @@ index e2d92cf70eb..1ac71a0960b 100644
  	return tty;
  }
 diff --git a/include/linux/tty.h b/include/linux/tty.h
-index 0a46e4054de..99c733852fb 100644
+index 0a46e4054dec..99c733852fb2 100644
 --- a/include/linux/tty.h
 +++ b/include/linux/tty.h
 @@ -14,6 +14,7 @@
@@ -66,5 +66,5 @@ index 0a46e4054de..99c733852fb 100644
  
  /* Each of a tty's open files has private_data pointing to tty_file_private */
 -- 
-2.52.0
+2.53.0
 

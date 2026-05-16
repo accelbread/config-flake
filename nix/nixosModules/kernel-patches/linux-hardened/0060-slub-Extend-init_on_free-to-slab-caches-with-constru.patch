@@ -1,7 +1,7 @@
-From 156e1302df00a612a15e8e70ed70be2697480dc4 Mon Sep 17 00:00:00 2001
+From 4b2c560b6cb7f31f01653252435b151134831fbb Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Fri, 20 Sep 2019 14:02:42 +0200
-Subject: [PATCH 060/103] slub: Extend init_on_free to slab caches with
+Subject: [PATCH 060/104] slub: Extend init_on_free to slab caches with
  constructors
 
 This is the remaining non-upstream part of SLAB_SANITIZE, which was a
@@ -18,10 +18,10 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  2 files changed, 27 insertions(+), 3 deletions(-)
 
 diff --git a/mm/slab.h b/mm/slab.h
-index bf9d8940b8f..fd91cfd0cf8 100644
+index 36893299fa67..3d10fd5d2ceb 100644
 --- a/mm/slab.h
 +++ b/mm/slab.h
-@@ -641,9 +641,15 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
+@@ -639,9 +639,15 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
  static inline bool slab_want_init_on_free(struct kmem_cache *c)
  {
  	if (static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
@@ -41,10 +41,10 @@ index bf9d8940b8f..fd91cfd0cf8 100644
  }
  
 diff --git a/mm/slub.c b/mm/slub.c
-index 67cb995a856..bdb56196a22 100644
+index b0c4a0d0d6c5..56c8ac45918f 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -2538,6 +2538,8 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
+@@ -2574,6 +2574,8 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
  		 */
  		set_orig_size(s, x, orig_size);
  
@@ -53,7 +53,7 @@ index 67cb995a856..bdb56196a22 100644
  	}
  	/* KASAN might put x into memory quarantine, delaying its reuse. */
  	return !kasan_slab_free(s, x, init, still_accessible, false);
-@@ -2581,6 +2583,22 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
+@@ -2617,6 +2619,22 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
  			 * accordingly if object's reuse is delayed.
  			 */
  			--(*cnt);
@@ -77,5 +77,5 @@ index 67cb995a856..bdb56196a22 100644
  	} while (object != old_tail);
  
 -- 
-2.52.0
+2.53.0
 

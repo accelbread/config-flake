@@ -1,7 +1,7 @@
-From 0c4e52e1f68c575a19cd1392e04a9828fc35c227 Mon Sep 17 00:00:00 2001
+From 7a817f0e36d85725b6235558e57bed40ee650fe0 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 21:54:56 -0400
-Subject: [PATCH 059/103] mm: add support for verifying page sanitization
+Subject: [PATCH 059/104] mm: add support for verifying page sanitization
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
@@ -13,7 +13,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  3 files changed, 20 insertions(+)
 
 diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index abc20f9810f..548a9d608d5 100644
+index abc20f9810fd..548a9d608d58 100644
 --- a/include/linux/highmem.h
 +++ b/include/linux/highmem.h
 @@ -259,6 +259,13 @@ static inline bool tag_clear_highpages(struct page *page, int numpages)
@@ -31,10 +31,10 @@ index abc20f9810f..548a9d608d5 100644
   * If we pass in a base or tail page, we can zero up to PAGE_SIZE.
   * If we pass in a head page, we can zero up to the size of the compound page.
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 6e644f2744c..2b86eadeb6c 100644
+index f67696618003..d6a160ca46ef 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -1823,6 +1823,12 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+@@ -1864,6 +1864,12 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
  	 */
  	kernel_unpoison_pages(page, 1 << order);
  
@@ -48,7 +48,7 @@ index 6e644f2744c..2b86eadeb6c 100644
  	 * As memory initialization might be integrated into KASAN,
  	 * KASAN unpoisoning and memory initializion code must be
 diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 07f9286f144..b728851fec1 100644
+index 07f9286f1443..b728851fec14 100644
 --- a/security/Kconfig.hardening
 +++ b/security/Kconfig.hardening
 @@ -211,6 +211,13 @@ config ZERO_CALL_USED_REGS
@@ -66,5 +66,5 @@ index 07f9286f144..b728851fec1 100644
  
  menu "Bounds checking"
 -- 
-2.52.0
+2.53.0
 
