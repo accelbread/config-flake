@@ -204,7 +204,6 @@ in
       };
     };
     printing.enable = false;
-    bpftune.enable = true;
     jitterentropy-rngd.enable = true;
   };
 

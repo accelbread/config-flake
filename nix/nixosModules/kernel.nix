@@ -187,8 +187,8 @@ in
       "kernel.unprivileged_bpf_disabled" = 1;
       "kernel.yama.ptrace_scope" = 1;
       "net.core.bpf_jit_harden" = 2;
-      "net.core.rmem_max" = 2500000;
-      "net.core.wmem_max" = 2500000;
+      "net.core.rmem_max" = 5000000;
+      "net.core.wmem_max" = 5000000;
       "net.ipv4.conf.all.accept_redirects" = false;
       "net.ipv4.conf.all.rp_filter" = 2;
       "net.ipv4.conf.all.secure_redirects" = false;
@@ -197,6 +197,8 @@ in
       "net.ipv4.conf.default.rp_filter" = 2;
       "net.ipv4.conf.default.secure_redirects" = false;
       "net.ipv4.conf.default.send_redirects" = false;
+      "net.ipv4.tcp_congestion_control" = "brr";
+      "net.ipv4.tcp_thin_linear_timeouts" = 1;
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.all.use_tempaddr" = 2;
       "net.ipv6.conf.default.accept_redirects" = false;
