@@ -1,10 +1,24 @@
-From e4db4f07e77feb1c126e7afbf441e9eae34b4e57 Mon Sep 17 00:00:00 2001
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH RFC] Add a lockdown_hibernate parameter
 From: Kelvie Wong <kelvie@kelvie.ca>
-Date: Sun, 2 Oct 2022 13:23:25 -0700
-Subject: [PATCH] Add a lockdown_hibernate parameter
+Date: Mon, 13 Nov 2023 18:23:11 -0800
+Message-Id: <20231114022503.6310-1-kelvie@kelvie.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
 This allows the user to tell the kernel that they know better (namely,
 they secured their swap properly), and that it can enable hibernation.
+
+I've been using this for about a year now, as it doesn't seem like
+proper secure hibernation was going to be implemented back then, and
+it's now been a year since I've been building my own kernels with this
+patch, so getting this upstreamed would save some CO2 from me building
+my own kernels every upgrade.
+
+Some other not-me users have also tested the patch:
+
+https://community.frame.work/t/guide-fedora-36-hibernation-with-enabled-secure-boot-and-full-disk-encryption-fde-decrypting-over-tpm2/25474/17
 
 Signed-off-by: Kelvie Wong <kelvie@kelvie.ca>
 ---
@@ -13,10 +27,10 @@ Signed-off-by: Kelvie Wong <kelvie@kelvie.ca>
  2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b72e204..1e1d72a 100644
+index 426fa892d311..54785faba9e0 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2973,6 +2973,11 @@
+@@ -2804,6 +2804,11 @@
  			to extract confidential information from the kernel
  			are also disabled.
  
@@ -25,14 +39,14 @@ index b72e204..1e1d72a 100644
 +			your swap is encrypted and secured properly, as an attacker can
 +			modify the kernel offline during hibernation.
 +
- 	locktorture.acq_writer_lim= [KNL]
- 			Set the time limit in jiffies for a lock
- 			acquisition.  Acquisitions exceeding this limit
+ 	locktorture.nreaders_stress= [KNL]
+ 			Set the number of locking read-acquisition kthreads.
+ 			Defaults to being automatically set based on the
 diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index dee341a..45187b6 100644
+index 89c71fce225d..2221c531d54c 100644
 --- a/kernel/power/hibernate.c
 +++ b/kernel/power/hibernate.c
-@@ -37,6 +37,7 @@
+@@ -36,6 +36,7 @@
  #include "power.h"
  
  
@@ -40,7 +54,7 @@ index dee341a..45187b6 100644
  static int nocompress;
  static int noresume;
  static int nohibernate;
-@@ -92,7 +93,7 @@ void hibernate_release(void)
+@@ -82,7 +83,7 @@ void hibernate_release(void)
  bool hibernation_available(void)
  {
  	return nohibernate == 0 &&
@@ -49,7 +63,7 @@ index dee341a..45187b6 100644
  		!secretmem_active() && !cxl_mem_active();
  }
  
-@@ -1422,6 +1423,12 @@ static int __init nohibernate_setup(char *str)
+@@ -1340,6 +1341,12 @@ static int __init nohibernate_setup(char *str)
  	return 1;
  }
  
@@ -59,13 +73,14 @@ index dee341a..45187b6 100644
 +	return 1;
 +}
 +
- static const char * const comp_alg_enabled[] = {
- #if IS_ENABLED(CONFIG_CRYPTO_LZO)
- 	COMPRESSION_ALGO_LZO,
-@@ -1480,3 +1487,4 @@ __setup("hibernate=", hibernate_setup);
+ __setup("noresume", noresume_setup);
+ __setup("resume_offset=", resume_offset_setup);
+ __setup("resume=", resume_setup);
+@@ -1347,3 +1354,4 @@ __setup("hibernate=", hibernate_setup);
  __setup("resumewait", resumewait_setup);
  __setup("resumedelay=", resumedelay_setup);
  __setup("nohibernate", nohibernate_setup);
 +__setup("lockdown_hibernate", lockdown_hibernate_setup);
 -- 
-2.45.2
+2.37.3
+
