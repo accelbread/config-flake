@@ -1433,6 +1433,12 @@ Returns the tree-sitter anchor for using the generated function."
 (magit-wip-mode)
 
 
+;;; Diff
+
+;; mbox files output by `b4 am' use mbx extension.
+(add-to-list 'auto-mode-alist `(,(rx ".mbx" eos) . diff-mode))
+
+
 ;;; Ediff
 
 (setopt ediff-window-setup-function #'ediff-setup-windows-plain

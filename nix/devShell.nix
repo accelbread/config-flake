@@ -1,3 +1,3 @@
 pkgs: with pkgs; {
-  packages = [ esphome mqttui ];
+  packages = [ esphome mqttui b4 ];
 }
