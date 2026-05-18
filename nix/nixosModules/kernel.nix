@@ -198,7 +198,7 @@ in
       "net.ipv4.conf.default.rp_filter" = 2;
       "net.ipv4.conf.default.secure_redirects" = false;
       "net.ipv4.conf.default.send_redirects" = false;
-      "net.ipv4.tcp_congestion_control" = "brr";
+      "net.ipv4.tcp_congestion_control" = "bbr";
       "net.ipv4.tcp_thin_linear_timeouts" = 1;
       "net.ipv6.conf.all.accept_redirects" = false;
       "net.ipv6.conf.all.use_tempaddr" = 2;
