@@ -8,8 +8,8 @@ stdenvNoCC.mkDerivation (final: {
   src = fetchFromGitHub {
     owner = "taiwbi";
     repo = final.pname;
-    rev = "f658665b0ced7f16b445a63010ecb5b7705cd805";
-    hash = "sha256-uGLQ3DLiqCOBQElURz0bc/Tkn0T+sapWr8QrPKa/HfQ=";
+    rev = "7d96809684632911d2b4c63742a3360aefa20e98";
+    hash = "sha256-C8uCmDw9bMWKmbFEhUB0o6HxO7CY5g4wJk06dIaU1zQ=";
   };
 
   dontBuild = true;
