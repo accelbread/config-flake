@@ -129,6 +129,15 @@ in
         };
       }
       {
+        name = "linux-hardened config";
+        patch = null;
+        structuredExtraConfig = with lib.kernel; {
+          OVERLAY_FS_UNPRIVILEGED = yes;
+          SLAB_CANARY = no;
+          USER_NS_UNPRIVILEGED = yes;
+        };
+      }
+      {
         name = "performance";
         patch = null;
         structuredExtraConfig = with lib.kernel; {
