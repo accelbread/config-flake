@@ -11,7 +11,7 @@ elpaBuild rec {
   src = (fetchFromGitHub {
     owner = "nemethf";
     repo = pname;
-    rev = "b92c44e6b34f8df0539d3c8ab5992c5a7eb815d5";
-    sha256 = "sha256-VvamDqZ3NowM6XfRlC2exsM6ssRBqWUw6ziKgqdphwM=";
+    rev = "46bca93291727454dd92567e761a1e2ab5622590";
+    sha256 = "sha256-c8NzzK7SOYYDB803Osp3TOymrmwC07+dcvbI4waAfco=";
   }) + "/${pname}.el";
 }
