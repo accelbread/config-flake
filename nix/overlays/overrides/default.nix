@@ -21,10 +21,9 @@ final: prev: {
       wrapProgram $out/bin/mount --add-flags "-o noatime"
     '';
   };
-  amberol = prev.amberol.overrideAttrs (old: {
-    patches = old.patches or [ ] ++ [
-      ./patches/amberol/disable_cover_caching.patch
-      ./patches/amberol/shuffle_all.patch
-    ];
-  });
-}
+} // builtins.mapAttrs
+  (p: _: prev.${p}.overrideAttrs (old: {
+    patches = old.patches or [ ] ++
+      (final.lib.filesystem.listFilesRecursive (./patches + "/${p}"));
+  }))
+  (builtins.readDir ./patches)
