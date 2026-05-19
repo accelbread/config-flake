@@ -151,6 +151,7 @@ in
           AF_RXRPC = no;
           INET6_ESP = no;
           INET_ESP = no;
+          RDS = no;
           # Disabled configs (set by nixos config)
           INET6_ESPINTCP = lib.mkForce (option no);
           INET_ESPINTCP = lib.mkForce (option no);
