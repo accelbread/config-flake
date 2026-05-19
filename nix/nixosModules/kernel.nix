@@ -7,11 +7,7 @@ in
 
   boot = {
     kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
-      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [
-        "INSTALL_MOD_STRIP=1"
-        "KCFLAGS=-march=x86-64-v3"
-        "KRUSTFLAGS=-Ctarget-cpu=x86-64-v3"
-      ];
+      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
     }));
     kernelPatches = map (p: { name = baseNameOf p; patch = p; })
       (lib.filesystem.listFilesRecursive ./kernel-patches) ++
@@ -134,6 +130,7 @@ in
           PREEMPT_VOLUNTARY = lib.mkForce no;
           TRANSPARENT_HUGEPAGE_ALWAYS = lib.mkForce yes;
           TRANSPARENT_HUGEPAGE_MADVISE = lib.mkForce no;
+          X86_64_VERSION = freeform "3";
         };
         "Disable vulernable kernel modules" = {
           AFS_FS = no;
