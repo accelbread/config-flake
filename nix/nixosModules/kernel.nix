@@ -13,11 +13,12 @@ in
         "KRUSTFLAGS=-Ctarget-cpu=x86-64-v3"
       ];
     }));
-    kernelPatches = [
-      {
-        name = "hardening";
-        patch = null;
-        structuredExtraConfig = with lib.kernel; {
+    kernelPatches = map (p: { name = baseNameOf p; patch = p; })
+      (lib.filesystem.listFilesRecursive ./kernel-patches) ++
+    lib.mapAttrsToList
+      (k: v: { name = k; patch = null; structuredExtraConfig = v; })
+      (with lib.kernel; {
+        "hardening" = {
           AIO = lib.mkForce no;
           AUDIT = yes;
           BPF_JIT_ALWAYS_ON = lib.mkForce yes;
@@ -121,20 +122,12 @@ in
           UNMAP_KERNEL_AT_EL0 = yes;
           UNWIND_PATCH_PAC_INTO_SCS = yes;
         };
-      }
-      {
-        name = "linux-hardened config";
-        patch = null;
-        structuredExtraConfig = with lib.kernel; {
+        "linux-hardened config" = {
           OVERLAY_FS_UNPRIVILEGED = yes;
           SLAB_CANARY = no;
           USER_NS_UNPRIVILEGED = yes;
         };
-      }
-      {
-        name = "performance";
-        patch = null;
-        structuredExtraConfig = with lib.kernel; {
+        "performance" = {
           PREEMPT = lib.mkForce yes;
           PREEMPT_DYNAMIC = no;
           PREEMPT_LAZY = lib.mkForce no;
@@ -142,11 +135,7 @@ in
           TRANSPARENT_HUGEPAGE_ALWAYS = lib.mkForce yes;
           TRANSPARENT_HUGEPAGE_MADVISE = lib.mkForce no;
         };
-      }
-      {
-        name = "Disable vulernable kernel modules";
-        patch = null;
-        structuredExtraConfig = with lib.kernel; {
+        "Disable vulernable kernel modules" = {
           AFS_FS = no;
           AF_RXRPC = no;
           INET6_ESP = no;
@@ -156,9 +145,7 @@ in
           INET6_ESPINTCP = lib.mkForce (option no);
           INET_ESPINTCP = lib.mkForce (option no);
         };
-      }
-    ] ++ (map (p: { name = baseNameOf p; patch = p; })
-      (lib.filesystem.listFilesRecursive ./kernel-patches));
+      });
 
     kernelParams = [
       "lockdown_hibernate"
