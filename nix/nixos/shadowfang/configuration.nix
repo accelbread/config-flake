@@ -10,7 +10,10 @@
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
     kernelModules = [ "cpuid" "coretemp" ];
-    kernelParams = [ "rcu_nocbs=all" ];
+    kernelParams = [
+      "rcu_nocbs=all"
+      "workqueue.power_efficient=1"
+    ];
   };
 
   hardware = {
