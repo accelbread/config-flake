@@ -244,12 +244,14 @@ in
         };
         "hardening" = {
           AIO = no;
+          AMD_IOMMU = yes;
           AUDIT = yes;
           BLK_DEV_WRITE_MOUNTED = no;
           BPF_JIT_ALWAYS_ON = yes;
           BUG = yes;
           BUG_ON_DATA_CORRUPTION = yes;
           COMPAT_BRK = no;
+          COMPAT_VDSO = no;
           CRYPTO_USER_API = option no;
           CRYPTO_USER_API_AEAD = no;
           CRYPTO_USER_API_HASH = no;
@@ -264,6 +266,7 @@ in
           DEBUG_WX = yes;
           DEVMEM = no;
           DEVPORT = no;
+          EFI_DISABLE_PCI_DMA = yes;
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
           GCC_PLUGINS = yes;
@@ -275,9 +278,11 @@ in
           INIT_ON_ALLOC_DEFAULT_ON = yes;
           INIT_ON_FREE_DEFAULT_ON = yes;
           INIT_STACK_ALL_ZERO = yes;
+          INTEL_IOMMU = yes;
           INTEL_IOMMU_DEFAULT_ON = yes;
           INTEL_IOMMU_SVM = yes;
           IOMMU_DEFAULT_DMA_STRICT = yes;
+          IOMMU_SUPPORT = yes;
           KEXEC = no;
           KEXEC_SIG = yes;
           KEXEC_SIG_FORCE = yes;
@@ -296,6 +301,8 @@ in
           MODULE_SIG_FORCE = yes;
           MSEAL_SYSTEM_MAPPINGS = yes;
           NFS_DEBUG = unset;
+          PAGE_TABLE_CHECK = yes;
+          PAGE_TABLE_CHECK_ENFORCED = yes;
           PANIC_ON_OOPS = yes;
           PANIC_TIMEOUT = freeform "-1";
           PROC_KCORE = no;
@@ -303,6 +310,7 @@ in
           PROC_VMCORE = no;
           RANDOMIZE_BASE = yes;
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
+          RANDOMIZE_MEMORY = yes;
           RANDOM_KMALLOC_CACHES = yes;
           RESET_ATTACK_MITIGATION = yes;
           SCHED_STACK_END_CHECK = yes;
@@ -315,18 +323,29 @@ in
           SLAB_FREELIST_HARDENED = yes;
           SLAB_FREELIST_RANDOM = yes;
           SLAB_MERGE_DEFAULT = no;
+          STACKPROTECTOR = yes;
+          STACKPROTECTOR_STRONG = yes;
           STRICT_KERNEL_RWX = yes;
           STRICT_MODULE_RWX = yes;
           SYN_COOKIES = yes;
           TCG_TPM = yes;
           UBSAN = yes;
+          UBSAN_ALIGNMENT = option no;
+          UBSAN_BOOL = option no;
           UBSAN_BOUNDS = yes;
+          UBSAN_DIV_ZERO = option no;
+          UBSAN_ENUM = option no;
+          UBSAN_INTEGER_WRAP = option no;
+          UBSAN_SHIFT = option no;
           UBSAN_TRAP = yes;
+          UBSAN_UNREACHABLE = option no;
           UID16 = no;
           USERFAULTFD = no;
+          VMAP_STACK = yes;
           X86_16BIT = unset;
           X86_INTEL_TSX_MODE_OFF = yes;
           X86_IOPL_IOPERM = no;
+          X86_KERNEL_IBT = yes;
           ZERO_CALL_USED_REGS = yes;
         };
         "linux-hardened config" = {

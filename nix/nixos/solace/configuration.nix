@@ -19,6 +19,7 @@
     initrd.availableKernelModules = [ "nvme" ];
     kernelModules = [ "cpuid" "k10temp" "it87" ];
     kernelParams = [
+      "efi=no_disable_early_pci_dma"
       "amdgpu.seamless=1"
       "amdgpu.ras_enable=1"
       "amdgpu.deep_color=1"
