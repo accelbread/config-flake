@@ -1,6 +1,6 @@
 { src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
 let
-  nix = ''nix --extra-experimental-features "nix-command flakes"'';
+  nix = ''nix --extra-experimental-features "nix-command flakes ca-derivations"'';
   mkBuildScript = script: writeShellScript script ''
     set -eu
     ref="${src}#nixosConfigurations.$1.config.system.build.${script}"

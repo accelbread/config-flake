@@ -23,7 +23,7 @@ in
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     channel.enable = false;
     settings = {
-      experimental-features = "nix-command flakes";
+      experimental-features = "nix-command flakes ca-derivations";
       flake-registry = "";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;

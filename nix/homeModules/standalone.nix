@@ -8,7 +8,7 @@ in
   nix = {
     package = pkgs.nix;
     registry = mapAttrs (_: v: { flake = v; }) inputs;
-    settings.experimental-features = "nix-command flakes";
+    settings.experimental-features = "nix-command flakes ca-derivations";
   };
 
   home = {
