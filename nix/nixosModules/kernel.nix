@@ -73,7 +73,6 @@ in
           PROC_FS = yes;
           RTC_HCTOSYS = yes;
           RT_GROUP_SCHED = no;
-          RUST = yes;
           SCHED_CORE = yes;
           SECCOMP = yes;
           SECCOMP_FILTER = yes;
@@ -433,7 +432,6 @@ in
           CRAMFS = no;
           DEBUG_DEVRES = no;
           DEBUG_STACK_USAGE = no;
-          DRM_NOVA = no;
           DVB_CORE = no;
           ECRYPT_FS = no;
           EDAC_IGEN6 = no;
@@ -467,7 +465,6 @@ in
           NETWORK_FILESYSTEMS = no;
           NILFS2_FS = no;
           NOTIFIER_ERROR_INJECTION = no;
-          NOVA_CORE = no;
           NTFS_FS = no;
           NUMA = no;
           OCFS2_FS = no;
