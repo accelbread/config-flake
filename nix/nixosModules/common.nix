@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, hostname, ... }:
+{ config, options, pkgs, lib, inputs, hostname, ... }:
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
@@ -124,7 +124,15 @@ in
     storage.settings.storage.driver = "btrfs";
   };
 
-  documentation.man.cache.enable = true;
+  documentation.man = {
+    cache.enable = true;
+    man-db.manualPages =
+      let
+        makeContentAddressed = drv: pkgs.runCommandLocal drv.name
+          { __contentAddressed = true; } "cp -r ${drv} $out";
+      in
+      makeContentAddressed options.documentation.man.man-db.manualPages.default;
+  };
 
   systemd = {
     sleep.settings.Sleep.HibernateDelaySec = "10m";
