@@ -184,6 +184,8 @@ in
     openssh = {
       enable = true;
       openFirewall = false;
+      generateHostKeys = false;
+      hostKeys = [ ];
       settings = {
         PermitRootLogin = "no";
         AllowGroups = [ "users" ];
