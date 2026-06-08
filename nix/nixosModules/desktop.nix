@@ -17,7 +17,6 @@
         config.programs.ccache.cacheDir;
     };
     daemonCPUSchedPolicy = "idle";
-    daemonIOSchedClass = "idle";
   };
 
   system.extraDependencies = lib.attrValues flake.outputs'.devShells;
