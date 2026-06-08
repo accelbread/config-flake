@@ -117,7 +117,6 @@ in
       });
       mount.fuseMountOptions = [ "noatime" "nosuid" "nodev" ];
     };
-    rtkit.enable = true;
   };
 
   virtualisation.containers = {

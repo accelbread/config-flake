@@ -21,7 +21,13 @@
 
   system.extraDependencies = lib.attrValues flake.outputs'.devShells;
 
-  users.users.archit.extraGroups = [ "dialout" "wireshark" "video" "render" ];
+  users.users.archit.extraGroups = [
+    "dialout"
+    "wireshark"
+    "video"
+    "render"
+    "audio"
+  ];
 
   hardware = {
     graphics.enable = true;
@@ -155,6 +161,11 @@
       source = "${pkgs.poop}/bin/poop";
       capabilities = "cap_perfmon+p";
     };
+    pam.loginLimits = [
+      { domain = "@audio"; item = "memlock"; type = "-"; value = "unlimited"; }
+      { domain = "@audio"; item = "rtprio"; type = "-"; value = "95"; }
+      { domain = "@audio"; item = "nice"; type = "-"; value = "-19"; }
+    ];
   };
 
   programs = {
