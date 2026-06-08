@@ -112,6 +112,40 @@
       "/home/archit/.librewolf"
       "/home/archit/.thunderbird"
     ]);
+    # Remove when bluez removes AF_ALG use
+    services.bluetooth-generate-irk = {
+      description = "Generate missing Bluetooth IRKs";
+      wantedBy = [ "bluetooth.service" ];
+      before = [ "bluetooth.service" ];
+      after = [ "local-fs.target" ];
+      path = [ pkgs.bluez ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        shopt -s nullglob
+        for dev in /sys/class/bluetooth/hci*; do
+          hci=$(basename "$dev")
+          mac=$(hciconfig "$hci" | grep -oP 'BD Address: \K[0-9A-F:]+')
+          if [[ -z "$mac" ]]; then
+            echo "Could not get address for $hci"
+            continue
+          fi
+          adapter="/var/lib/bluetooth/$mac"
+          identity="$adapter/identity"
+          if [[ -f "$identity" ]]; then
+            continue
+          fi
+          mkdir -p "$adapter"
+          irk=$(${pkgs.coreutils}/bin/head -c 16 /dev/urandom | \
+                  ${pkgs.xxd}/bin/xxd -p -c 32)
+          echo "[General]"$'\n'"IdentityResolvingKey=$irk" > "$identity"
+          chmod 600 "$identity"
+          echo "Generated IRK for $mac"
+        done
+      '';
+    };
   };
 
   security = {
