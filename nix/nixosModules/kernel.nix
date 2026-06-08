@@ -205,5 +205,13 @@ in
       "net.ipv6.conf.all.use_tempaddr" = 2;
       "net.ipv6.conf.default.accept_redirects" = false;
     };
+
+    initrd.systemd.contents."/etc/lvm/lvm.conf".text = lib.mkAfter ''
+      global/use_aio = 0
+    '';
   };
+
+  environment.etc."lvm/lvm.conf".text = lib.mkAfter ''
+    global/use_aio = 0
+  '';
 }
