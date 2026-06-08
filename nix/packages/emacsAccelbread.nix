@@ -12,7 +12,7 @@
 , rust-analyzer
 , lean4
 , tinymist
-, openscad
+, openscad-unstable
 , symlinkJoin
 , vale-proselint
 , vale-write-good
@@ -68,7 +68,7 @@ let
           flymake-vale-program-args '("--config=${valeConfig}")
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
           envrc-direnv-executable "${direnv}/bin/direnv"
-          scad-command "${openscad}/bin/openscad"
+          scad-command "${openscad-unstable}/bin/openscad"
           fish-completion-command "${fish}/bin/fish"
           clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
           nixd-program "${nixd}/bin/nixd"
