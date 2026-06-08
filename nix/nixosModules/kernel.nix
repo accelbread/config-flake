@@ -118,6 +118,7 @@ in
           RCU_EXPERT = yes;
           RCU_LAZY = yes;
           RCU_NOCB_CPU = yes;
+          READ_ONLY_THP_FOR_FS = yes;
           SCHED_AUTOGROUP = yes;
           TCP_CONG_BBR = yes;
           THERMAL_DEFAULT_GOV_STEP_WISE = yes;
