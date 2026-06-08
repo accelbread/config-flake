@@ -1,4 +1,4 @@
-From 3df34c2865e642a5ad3a7c2499ab1faebc09e63e Mon Sep 17 00:00:00 2001
+From d9d51a1fe395fd44331ef730e680a5b7b83fabb6 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:22:12 -0400
 Subject: [PATCH 001/103] make DEFAULT_MMAP_MIN_ADDR match LSM_MMAP_MIN_ADDR
@@ -26,7 +26,7 @@ index 76001e9ba04f..feab6c021b30 100644
 2.53.0
 
 
-From 6e8253ccd7b53b2532fef2036f0b11ffb2f35bb3 Mon Sep 17 00:00:00 2001
+From 58e39964c4e0174bb3607379d16cca12e6665a1e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 06:17:41 -0400
 Subject: [PATCH 002/103] enable HARDENED_USERCOPY by default
@@ -52,7 +52,7 @@ index 86f8768c63d4..26ad690e0c80 100644
 2.53.0
 
 
-From 0ac0d04b5e15bfe737501578cb835e6270d14550 Mon Sep 17 00:00:00 2001
+From 475c80e11c00b042ce6e2d6bb1d6172b87944ed1 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:05:15 -0400
 Subject: [PATCH 003/103] enable SECURITY_DMESG_RESTRICT by default
@@ -79,7 +79,7 @@ index 285f284dfcac..108797420fe1 100644
 2.53.0
 
 
-From 64158e43dfd45365287654be94481eb36d56babc Mon Sep 17 00:00:00 2001
+From 6f47ae1549f383db887c1afef5ede376862e9dac Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:06:14 -0400
 Subject: [PATCH 004/103] set kptr_restrict=2 by default
@@ -106,7 +106,7 @@ index a356965c1d73..ab0b2b1d6cb3 100644
 2.53.0
 
 
-From e101dcdd5f690bb9555bae5f8ddcde9981f4c2d6 Mon Sep 17 00:00:00 2001
+From f45861f7996d1a1f9d7800cfcb62c7817956f67b Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 19 Sep 2023 00:57:29 +0200
 Subject: [PATCH 005/103] enable LIST_HARDENED by default
@@ -132,7 +132,7 @@ index 26ad690e0c80..ed25c8ea8381 100644
 2.53.0
 
 
-From 208efbd9f700b005866f140282273f385695423d Mon Sep 17 00:00:00 2001
+From 1d3a49279939b9ca14e1b4c1bf419a7fb7e55157 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 12:21:21 -0400
 Subject: [PATCH 006/103] enable BUG_ON_DATA_CORRUPTION by default
@@ -158,7 +158,7 @@ index ed25c8ea8381..11bd5d6c5f7f 100644
 2.53.0
 
 
-From cf229f95074659a2246ee8e1709f963e805e1595 Mon Sep 17 00:00:00 2001
+From 381e3a2d10439d802eb041dc2648f9c30443a7b2 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 01:39:32 -0500
 Subject: [PATCH 007/103] enable ARM64_SW_TTBR0_PAN by default
@@ -183,7 +183,7 @@ index 840a945cb4ac..0d6dd2b01aae 100644
 2.53.0
 
 
-From a01b2ca043091c4d63c91c67079f62e9171d7da6 Mon Sep 17 00:00:00 2001
+From 490fd71b6d8014b8fd8d78afe80277e244b4127b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 01:33:48 -0500
 Subject: [PATCH 008/103] arm64: enable RANDOMIZE_BASE by default
@@ -208,7 +208,7 @@ index 0d6dd2b01aae..db4179cb58a1 100644
 2.53.0
 
 
-From f10a7e715c2b24b0491d3492be4323250d791232 Mon Sep 17 00:00:00 2001
+From 0d01b9fbb6458196e868dcf8e050a59428bf703a Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 19:43:38 -0400
 Subject: [PATCH 009/103] enable SLAB_FREELIST_RANDOM by default
@@ -234,7 +234,7 @@ index feab6c021b30..1ac954518469 100644
 2.53.0
 
 
-From 89e0ef3eb51340b76cd39dbc253f88230b9063c7 Mon Sep 17 00:00:00 2001
+From be5512f96c9e3f2ebb1bab663500c082a7abc71f Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 20 Aug 2017 15:39:25 -0400
 Subject: [PATCH 010/103] enable SLAB_FREELIST_HARDENED by default
@@ -259,7 +259,7 @@ index 1ac954518469..8a62385aec1d 100644
 2.53.0
 
 
-From 0748100f8ca9ec3f2e7017391aeb4fa7a5a8265a Mon Sep 17 00:00:00 2001
+From 1bb14c9be4ea8e417de4b91f90b7d54c940b4528 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 8 Jul 2017 02:38:54 -0400
 Subject: [PATCH 011/103] disable SLAB_MERGE_DEFAULT by default
@@ -284,7 +284,7 @@ index 8a62385aec1d..037564f437ad 100644
 2.53.0
 
 
-From 866ce2cd80772bca66e92ce92493280eed78d4e4 Mon Sep 17 00:00:00 2001
+From 22ac85ec84fba63d4fedc89443d03c043b246da4 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 8 May 2017 12:51:54 -0400
 Subject: [PATCH 012/103] enable FORTIFY_SOURCE by default
@@ -310,7 +310,7 @@ index 11bd5d6c5f7f..e42e319485ae 100644
 2.53.0
 
 
-From d8291d96a8172433d894314058399e8303403fd7 Mon Sep 17 00:00:00 2001
+From 3caabfee6b8262320f338e5ff892a47b59ff0f17 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:09:17 -0400
 Subject: [PATCH 013/103] enable PANIC_ON_OOPS by default
@@ -345,7 +345,7 @@ index 21cd68084e46..3ca926287400 100644
 2.53.0
 
 
-From f6db85281a8977ac77e6ec8a240f2f91d64c5cf1 Mon Sep 17 00:00:00 2001
+From 754eef5e9e1191a8da864df2bb5e70bb5b66ea9b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 14 May 2017 22:39:34 -0400
 Subject: [PATCH 014/103] stop hiding SLUB_DEBUG behind EXPERT
@@ -372,7 +372,7 @@ index 32b65073d0cc..a7795b68b5ec 100644
 2.53.0
 
 
-From 3792b8e50206e1759fd3a5b89db2ad577c650a2e Mon Sep 17 00:00:00 2001
+From b2ed3228f379d5bc6784d6c1c278b4a392c83494 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:11:31 -0400
 Subject: [PATCH 015/103] stop hiding X86_16BIT behind EXPERT
@@ -398,7 +398,7 @@ index 8623c4a5ce7b..52ebb5d8ee38 100644
 2.53.0
 
 
-From 19f0cbea0f9631dc0401a8201229a153ad018398 Mon Sep 17 00:00:00 2001
+From aba8f9b86ce696d8afc0d25e5d337120c7962290 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:11:52 -0400
 Subject: [PATCH 016/103] disable X86_16BIT by default
@@ -424,7 +424,7 @@ index 52ebb5d8ee38..d247ab009af6 100644
 2.53.0
 
 
-From b5af2b0992a8ea774028ab2b4293cc0dfa27c907 Mon Sep 17 00:00:00 2001
+From 8b1d42e717ea4a1e067a301641cab1d162957a5c Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:15:52 -0400
 Subject: [PATCH 017/103] stop hiding MODIFY_LDT_SYSCALL behind EXPERT
@@ -450,7 +450,7 @@ index d247ab009af6..accd0bb83bf8 100644
 2.53.0
 
 
-From 2096bcce93e4bff7ab46a4a130592b5c78997d9d Mon Sep 17 00:00:00 2001
+From 67b2a49fc9f92424c4ce1fc2b7855584c1a2e7a5 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:16:16 -0400
 Subject: [PATCH 018/103] disable MODIFY_LDT_SYSCALL by default
@@ -476,7 +476,7 @@ index accd0bb83bf8..bd2daec2274d 100644
 2.53.0
 
 
-From 20ee8e43503b0e623e12054a4a0ff97796eaca1f Mon Sep 17 00:00:00 2001
+From f05ee7a7773396331ba5234b49205bb87a5fce16 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 07:08:42 -0400
 Subject: [PATCH 019/103] set LEGACY_VSYSCALL_NONE by default
@@ -502,7 +502,7 @@ index bd2daec2274d..e0f647a640a9 100644
 2.53.0
 
 
-From d45c0a52ff362e52a3b827dbe0eb9d03ed14723b Mon Sep 17 00:00:00 2001
+From f8c15bcb98f819f57af27ceb1b9f9a8c44985d6d Mon Sep 17 00:00:00 2001
 From: Bernhard40 <32568352+Bernhard40@users.noreply.github.com>
 Date: Fri, 6 Oct 2017 10:21:50 +0000
 Subject: [PATCH 020/103] stop hiding AIO behind EXPERT
@@ -528,7 +528,7 @@ index cab3ad28ca49..5022b44b35f7 100644
 2.53.0
 
 
-From 3938f3a09884b16b3d4ee5af5497dea48d4c0858 Mon Sep 17 00:00:00 2001
+From b3fcf8f31d5d0179edc8467123352f81c258c51c Mon Sep 17 00:00:00 2001
 From: Bernhard40 <32568352+Bernhard40@users.noreply.github.com>
 Date: Fri, 6 Oct 2017 10:24:10 +0000
 Subject: [PATCH 021/103] disable AIO by default
@@ -553,7 +553,7 @@ index 5022b44b35f7..6fd55ef02a21 100644
 2.53.0
 
 
-From 0ebbd5c012f9f65e68cf232e25929d3bd9102643 Mon Sep 17 00:00:00 2001
+From 3282e525be513ef1ea3a6a2aaefb37373c797b7f Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:08:49 -0500
 Subject: [PATCH 022/103] remove SYSVIPC from arm64/x86_64 defconfigs
@@ -586,7 +586,7 @@ index 7d7310cdf8b0..21ebfefe9c90 100644
 2.53.0
 
 
-From e2cbd78a271fdf3c9393d4bb976d0c80765baf2a Mon Sep 17 00:00:00 2001
+From 6aebfb3e4bdf67d3e7f0f47793c21324e3b51eda Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:28:10 -0400
 Subject: [PATCH 023/103] disable DEVPORT by default
@@ -611,7 +611,7 @@ index d2cfc584e202..258a33a54e8e 100644
 2.53.0
 
 
-From 5691e99ec11606d01a216cbaae0db406f1790f9a Mon Sep 17 00:00:00 2001
+From 2b091036910997dadb7186d219d3befd405b8c9b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:29:45 -0400
 Subject: [PATCH 024/103] disable PROC_VMCORE by default
@@ -636,7 +636,7 @@ index 6ae966c561e7..27d78d669f95 100644
 2.53.0
 
 
-From c0c337289c16f2bf88320f0611f85d8c11d4deec Mon Sep 17 00:00:00 2001
+From 202ce19398e77b7b3a6f639283906e945ac21cae Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 28 May 2017 03:03:46 -0400
 Subject: [PATCH 025/103] disable NFS_DEBUG by default
@@ -661,7 +661,7 @@ index 07932ce9246c..c6754a2a6448 100644
 2.53.0
 
 
-From 7b10d3f226789b170bf8daf48b2111838808bfea Mon Sep 17 00:00:00 2001
+From 94aee108f33e4dbe9571236ba6b8815f255f45ae Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 12:11:11 -0400
 Subject: [PATCH 026/103] enable DEBUG_WX by default
@@ -687,7 +687,7 @@ index a7795b68b5ec..614bb7f4793f 100644
 2.53.0
 
 
-From 1bb5d5930de42d480c0b05645772db3902a24ead Mon Sep 17 00:00:00 2001
+From aecc4f4020db2151ff00d08e6bf02a75b2a704fc Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 13:21:16 -0500
 Subject: [PATCH 027/103] disable LEGACY_PTYS by default
@@ -712,7 +712,7 @@ index 149f3d53b760..3c51e08c1d8c 100644
 2.53.0
 
 
-From 45a7ab7ff118511ce705b1bfac0961bf196bfd3e Mon Sep 17 00:00:00 2001
+From cb5ee1c2e949840c8d36c794a68d68e0e94258cf Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 12:41:42 -0500
 Subject: [PATCH 028/103] disable DEVMEM by default
@@ -737,7 +737,7 @@ index 258a33a54e8e..72907b30ef13 100644
 2.53.0
 
 
-From 08714123c37a72236ee4e7b1d681d1ba34e84645 Mon Sep 17 00:00:00 2001
+From bd5082a10d1c2e8f101efb8df8ff48bf60f2dcf5 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 12:43:49 -0500
 Subject: [PATCH 029/103] enable IO_STRICT_DEVMEM by default
@@ -762,7 +762,7 @@ index 3ca926287400..484c53f1aa00 100644
 2.53.0
 
 
-From 59200d8271548233b8a9f93beee0a74995787628 Mon Sep 17 00:00:00 2001
+From 60cfe41e82376f7b69b58a469961083a0d8e7b73 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 18:28:33 -0400
 Subject: [PATCH 030/103] disable COMPAT_BRK by default
@@ -787,7 +787,7 @@ index 037564f437ad..36bd2ae7b171 100644
 2.53.0
 
 
-From f914679ce9842d0b6783758e7cce87b3aa395c17 Mon Sep 17 00:00:00 2001
+From d21bad0e2c6628810a131e72d6e25cca3fb1201b Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 16:16:39 -0400
 Subject: [PATCH 031/103] use maximum supported mmap rnd entropy by default
@@ -823,7 +823,7 @@ index 61130b88964b..eb9fef665a0e 100644
 2.53.0
 
 
-From 92ae146da9e7a10cf3407ac1fdad7b2e2d12c3a7 Mon Sep 17 00:00:00 2001
+From b78df3b4643b8a86264b87fcf2f646ea71757148 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 30 May 2017 10:47:23 -0400
 Subject: [PATCH 032/103] enable protected_{symlinks,hardlinks} by default
@@ -851,7 +851,7 @@ index 7377020a2cba..bbfb7a185e72 100644
 2.53.0
 
 
-From e6b7919d76a490db9cf722812d43245fdc429a17 Mon Sep 17 00:00:00 2001
+From c3a838bd5f963abaf6a00bc3e18322c03c27b96d Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:13:48 -0500
 Subject: [PATCH 033/103] enable SECURITY by default
@@ -876,7 +876,7 @@ index 108797420fe1..23fa5391a438 100644
 2.53.0
 
 
-From 40985c4917de57a0135a3ff8cbb62101b8c621c2 Mon Sep 17 00:00:00 2001
+From 00e1bbbb93257c6e4733eb047cc888540fcc2849 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 06:17:59 -0400
 Subject: [PATCH 034/103] enable SECURITY_YAMA by default
@@ -902,7 +902,7 @@ index a810304123ca..b809050b25d2 100644
 2.53.0
 
 
-From 119765e6f6dd05f41a60017db5ce27dc4177d4de Mon Sep 17 00:00:00 2001
+From e7392fd7c5d606e11901dc4937c5e18f6cea9c27 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:14:02 -0500
 Subject: [PATCH 035/103] enable SECURITY_NETWORK by default
@@ -927,7 +927,7 @@ index 23fa5391a438..132b6fb4bc7e 100644
 2.53.0
 
 
-From 2c43f3598ebaef95fb0b27e27d5925cf2dfa6625 Mon Sep 17 00:00:00 2001
+From 7fc1efd0472ea871327b91429dd68000a5309e31 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:15:24 -0500
 Subject: [PATCH 036/103] enable AUDIT by default
@@ -952,7 +952,7 @@ index 6fd55ef02a21..d8374d39fc6f 100644
 2.53.0
 
 
-From 73d94d70d390f79c269115030e24ef1e75569804 Mon Sep 17 00:00:00 2001
+From ff557d3da553ffa68ec32238e6f4cdf947ad400c Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:16:49 -0500
 Subject: [PATCH 037/103] enable SECURITY_SELINUX by default
@@ -978,7 +978,7 @@ index 61abc1e094a8..ceda05c0c4f6 100644
 2.53.0
 
 
-From ea2e9359bbc39199f0f4f24b6a55b9730d61e2ea Mon Sep 17 00:00:00 2001
+From f24326c036d32fb65e249188cde8fb71284c54b9 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 6 Jan 2018 13:41:11 -0500
 Subject: [PATCH 038/103] enable SYN_COOKIES by default
@@ -1003,7 +1003,7 @@ index 06cb9c9c5b9e..1e45957cf5d2 100644
 2.53.0
 
 
-From 7110b4477cc991243a78030609583c0e325bfb0d Mon Sep 17 00:00:00 2001
+From 8c4c19bd994710ba6c7a4bcaef6376bb3a61414e Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 19 Sep 2019 19:02:23 +0200
 Subject: [PATCH 039/103] enable INIT_ON_ALLOC_DEFAULT_ON by default
@@ -1028,7 +1028,7 @@ index e42e319485ae..226193bf5ebc 100644
 2.53.0
 
 
-From 9c3cf55c57a33a350ba5180de5c0f69d064fc5e7 Mon Sep 17 00:00:00 2001
+From 4635e7734a4b1812dbcef5a259552015f9cf1b24 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 19 Sep 2019 19:03:01 +0200
 Subject: [PATCH 040/103] enable INIT_ON_FREE_DEFAULT_ON by default
@@ -1053,7 +1053,7 @@ index 226193bf5ebc..07f9286f1443 100644
 2.53.0
 
 
-From da85a05f5834c6feef160000ae4b65a58f99a4f5 Mon Sep 17 00:00:00 2001
+From 7ac92eb56c35fa509adf6b3bfa25826b467de99f Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 27 Sep 2020 00:43:48 +0200
 Subject: [PATCH 041/103] kconfig: select DEBUG_FS_ALLOW_NONE by default if
@@ -1081,7 +1081,7 @@ index 484c53f1aa00..e5c0ae2841c8 100644
 2.53.0
 
 
-From dbb257d5c0283d31609b9b00dc7236f1862a39f4 Mon Sep 17 00:00:00 2001
+From 43c3d8cb5d2537fcb2bf4437665a630f5b990909 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 22 Dec 2020 23:40:09 +0100
 Subject: [PATCH 042/103] stop hiding UID16 behind EXPERT
@@ -1107,7 +1107,7 @@ index d8374d39fc6f..1c0c7d94de82 100644
 2.53.0
 
 
-From 3434787a2f06c3ee2548f38e56a2e3bbde178e15 Mon Sep 17 00:00:00 2001
+From 956204315906b75326272e87c8dc2259d9c3d87f Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 22 Dec 2020 23:41:32 +0100
 Subject: [PATCH 043/103] disable UID16 by default
@@ -1132,7 +1132,7 @@ index 1c0c7d94de82..dd369d43316b 100644
 2.53.0
 
 
-From 07437900d0bd783cce9ffac8f504d5874af49792 Mon Sep 17 00:00:00 2001
+From 8eede0b6f5af2310d892598fbc71f0589ebe25bf Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 25 Aug 2021 22:24:10 +0200
 Subject: [PATCH 044/103] kconfig: enable RANDOMIZE_KSTACK_OFFSET_DEFAULT by
@@ -1158,7 +1158,7 @@ index eb9fef665a0e..17c0a3dbb249 100644
 2.53.0
 
 
-From c47804e1db0ecfb7055025755b03f0b1e568fc3f Mon Sep 17 00:00:00 2001
+From dc63ccfff89c3f780fcacb6f3d762e798e1ffc6d Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Mon, 1 May 2023 23:20:43 +0200
 Subject: [PATCH 045/103] kconfig: disable LEGACY_TIOCSTI by default
@@ -1183,7 +1183,7 @@ index 3c51e08c1d8c..a3e62d52ebcf 100644
 2.53.0
 
 
-From 38a31847f3998dee1ee5f176e40d4d7448fe694a Mon Sep 17 00:00:00 2001
+From ab834b5b800a686c6cb97b952823f5fe708f0c5b Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 12 Dec 2023 18:35:05 +0100
 Subject: [PATCH 046/103] mm/slab: enable RANDOM_KMALLOC_CACHES by default
@@ -1209,7 +1209,7 @@ index 36bd2ae7b171..02e9eb82ad85 100644
 2.53.0
 
 
-From 3a73bc17d052c7971da1d64caeb5567bd6c0fbf1 Mon Sep 17 00:00:00 2001
+From 9cac8ff8bad330fde2bde32560b25fbc1d3e521e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 00:28:23 -0400
 Subject: [PATCH 047/103] add __read_only for non-init related usage
@@ -1235,7 +1235,7 @@ index e69768f50d53..432c30a1fc7e 100644
 2.53.0
 
 
-From dd707c5c2a7fefd5c89bacad3e7ff4fce500590c Mon Sep 17 00:00:00 2001
+From 3fd9baa7eed1885349a7355061d4573d2994439e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 12 May 2017 03:22:00 -0400
 Subject: [PATCH 048/103] mark kernel_set_to_readonly as __ro_after_init
@@ -1303,7 +1303,7 @@ index 3d9a5e4ccaa4..f9b8d0a2531a 100644
 2.53.0
 
 
-From 3a4c5a477333a777deee154845666bba73be56bf Mon Sep 17 00:00:00 2001
+From 2a7c52a2aeef46c26a247ec6035f056be4df491e Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 13 Jan 2019 21:42:45 +0100
 Subject: [PATCH 049/103] Revert "mark kernel_set_to_readonly as
@@ -1374,7 +1374,7 @@ index f9b8d0a2531a..3d9a5e4ccaa4 100644
 2.53.0
 
 
-From 204db8ce79ffd38edbd2b68ee72f4db63e1cd09e Mon Sep 17 00:00:00 2001
+From 4c374efb8db3498c5eb64943efe71e1fdeefbe04 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 14 May 2017 19:01:58 -0400
 Subject: [PATCH 050/103] mark slub runtime configuration as __ro_after_init
@@ -1424,7 +1424,7 @@ index a89df6ddcc58..9f851e88f50a 100644
 2.53.0
 
 
-From 11d63e583ffefcfdc9ff75cc784683a767410bbf Mon Sep 17 00:00:00 2001
+From 5d0dc3deea488ecad32ad88f75dc44f7f541d325 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 11:35:35 -0400
 Subject: [PATCH 051/103] add __ro_after_init to slab_nomerge and slab_state
@@ -1463,7 +1463,7 @@ index 0f58265ca200..35be9f901bdd 100644
 2.53.0
 
 
-From 1ce57b7d1805902f2958ae65ab0f6b0da92b1102 Mon Sep 17 00:00:00 2001
+From 858f3bd1e4d21da1feb9fa12d817d37f6df106cb Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 28 May 2017 18:51:30 -0400
 Subject: [PATCH 052/103] mark kmem_cache as __ro_after_init
@@ -1489,7 +1489,7 @@ index 35be9f901bdd..9f9c17dede03 100644
 2.53.0
 
 
-From a17f3ec03f1e78a119ab0713f9b2d3c663147193 Mon Sep 17 00:00:00 2001
+From fc4a06ebd0b31e8f48cb3e4334beb01c1df590eb Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 12 May 2017 00:06:16 -0400
 Subject: [PATCH 053/103] mark __{supported,default_kernel}_pte_mask as
@@ -1547,7 +1547,7 @@ index 3d9a5e4ccaa4..41862cc42ff9 100644
 2.53.0
 
 
-From 746e6c58b4b558241d4cf3ed0fad007faeb4f282 Mon Sep 17 00:00:00 2001
+From e6f59716c23afa86f9650f9fd1d32477e419d953 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:24:28 -0400
 Subject: [PATCH 054/103] mark kobj_ns_type_register as only used for init
@@ -1593,7 +1593,7 @@ index abe5f5b856ce..a80fa9d8f2db 100644
 2.53.0
 
 
-From 635ad2c0b4f2968155550eaab84a8662ca4ec0fc Mon Sep 17 00:00:00 2001
+From c0540251d62769f581c5ecf7738c65dd68301fa4 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:32:30 -0400
 Subject: [PATCH 055/103] mark open_softirq as only used for init
@@ -1634,7 +1634,7 @@ index 77198911b8dd..c83209f8458b 100644
 2.53.0
 
 
-From 80e54d98667e65d0c7616060856e0de82bf31e58 Mon Sep 17 00:00:00 2001
+From c57b37b7a30713bf1e6f31b90e337955159b2422 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:42:33 -0400
 Subject: [PATCH 056/103] mark softirq_vec as __ro_after_init
@@ -1663,7 +1663,7 @@ index c83209f8458b..1c508ce336ae 100644
 2.53.0
 
 
-From 2e9f033d28a529de9d0f9930bf504dba9ec3b189 Mon Sep 17 00:00:00 2001
+From 1a4e878d89c2643bb400e733a473290e3336867a Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 17 Sep 2019 18:00:54 +0200
 Subject: [PATCH 057/103] mm: slab: BUG on page type confusion under
@@ -1701,7 +1701,7 @@ index 9f851e88f50a..7e59aa60b37e 100644
 2.53.0
 
 
-From 41591c58da9655cd19e71c98af495e16213a5b24 Mon Sep 17 00:00:00 2001
+From b69de76f8562260255f0a6c0cef34e56cba4f592 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 11:50:53 -0400
 Subject: [PATCH 058/103] bug on kmem_cache_free with the wrong cache
@@ -1744,7 +1744,7 @@ index 7e59aa60b37e..b0c4a0d0d6c5 100644
 2.53.0
 
 
-From 7a817f0e36d85725b6235558e57bed40ee650fe0 Mon Sep 17 00:00:00 2001
+From 170379f676400278e36ba0561b39b5c9fd573ef4 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 21:54:56 -0400
 Subject: [PATCH 059/103] mm: add support for verifying page sanitization
@@ -1759,10 +1759,10 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  3 files changed, 20 insertions(+)
 
 diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index abc20f9810fd..548a9d608d58 100644
+index 029172383b76..f21e9837aee5 100644
 --- a/include/linux/highmem.h
 +++ b/include/linux/highmem.h
-@@ -259,6 +259,13 @@ static inline bool tag_clear_highpages(struct page *page, int numpages)
+@@ -260,6 +260,13 @@ static inline bool tag_clear_highpages(struct page *page, int numpages,
  
  #endif
  
@@ -1777,7 +1777,7 @@ index abc20f9810fd..548a9d608d58 100644
   * If we pass in a base or tail page, we can zero up to PAGE_SIZE.
   * If we pass in a head page, we can zero up to the size of the compound page.
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f67696618003..d6a160ca46ef 100644
+index 775e02b797a3..bf08341f9850 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
 @@ -1864,6 +1864,12 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
@@ -1815,7 +1815,7 @@ index 07f9286f1443..b728851fec14 100644
 2.53.0
 
 
-From 4b2c560b6cb7f31f01653252435b151134831fbb Mon Sep 17 00:00:00 2001
+From dfa63da0771e3e1c79b7c63a5bd61cd340f2cce8 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Fri, 20 Sep 2019 14:02:42 +0200
 Subject: [PATCH 060/103] slub: Extend init_on_free to slab caches with
@@ -1897,7 +1897,7 @@ index b0c4a0d0d6c5..56c8ac45918f 100644
 2.53.0
 
 
-From 4d604212b920eee064cfd28b6107291d0eedb0d0 Mon Sep 17 00:00:00 2001
+From 0465db8b7f09abfabd8d4ef38bb409a9a3113e38 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 15:58:57 -0400
 Subject: [PATCH 061/103] slub: Add support for verifying slab sanitization
@@ -2040,7 +2040,7 @@ index b728851fec14..0068460db967 100644
 2.53.0
 
 
-From fa55cac0cee043eabd993bc4fa804a4d5df6a77e Mon Sep 17 00:00:00 2001
+From 0c23f1ff3ca8391e4c17b427531d4866b661cd05 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 16:16:58 -0400
 Subject: [PATCH 062/103] slub: add multi-purpose random canaries
@@ -2426,7 +2426,7 @@ index 8a8786833d23..637458daa63f 100644
 2.53.0
 
 
-From 1feaddb2a91c757c876e074b9baea53f1376284b Mon Sep 17 00:00:00 2001
+From 3c12bdac0e2e2532e91d2b4215103d6124982919 Mon Sep 17 00:00:00 2001
 From: Ben Hutchings <ben@decadent.org.uk>
 Date: Mon, 11 Jan 2016 15:23:55 +0000
 Subject: [PATCH 063/103] security,perf: Allow further restriction of
@@ -2572,7 +2572,7 @@ index 9df9818e3701..eef46803b2cf 100644
 2.53.0
 
 
-From 64e6269ad0b222c6c66c911a3f9beb21265395d5 Mon Sep 17 00:00:00 2001
+From 898cbfe56b5339d88c70df6a71ae9df0c7c4aa67 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 14:45:59 -0400
 Subject: [PATCH 064/103] enable SECURITY_PERF_EVENTS_RESTRICT by default
@@ -2598,7 +2598,7 @@ index ea669f5e261b..731c88508ab6 100644
 2.53.0
 
 
-From cc2639b9e6b359428726120398f5782fde2b6366 Mon Sep 17 00:00:00 2001
+From 03fe15406963fb7f9abde48ff6eec0659733ff03 Mon Sep 17 00:00:00 2001
 From: Serge Hallyn <serge.hallyn@canonical.com>
 Date: Fri, 31 May 2013 19:12:12 +0100
 Subject: [PATCH 065/103] userns: add sysctl to disallow unprivileged
@@ -2641,7 +2641,7 @@ index 9a9aebbf96b9..3c93ce42d2ca 100644
  {
  	return &init_user_ns;
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 34e6b94c2212..321b33374ec2 100644
+index 1215d3f52c6d..44b419ea0516 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -83,6 +83,7 @@
@@ -2652,7 +2652,7 @@ index 34e6b94c2212..321b33374ec2 100644
  #include <linux/oom.h>
  #include <linux/khugepaged.h>
  #include <linux/signalfd.h>
-@@ -1947,6 +1948,10 @@ __latent_entropy struct task_struct *copy_process(
+@@ -1949,6 +1950,10 @@ __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -2663,7 +2663,7 @@ index 34e6b94c2212..321b33374ec2 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -3109,6 +3114,12 @@ int ksys_unshare(unsigned long unshare_flags)
+@@ -3107,6 +3112,12 @@ int ksys_unshare(unsigned long unshare_flags)
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  
@@ -2727,7 +2727,7 @@ index 03cb63883d04..520ed001ae58 100644
 2.53.0
 
 
-From c6999072a1c144504d9553e96dbf62815a1be76a Mon Sep 17 00:00:00 2001
+From 933b085d99ff3dbd4ecc55eeb4435b34655b8ee0 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 31 Jul 2019 20:50:48 +0100
 Subject: [PATCH 066/103] userns: add kconfig to set default for unprivileged
@@ -2797,7 +2797,7 @@ index 520ed001ae58..597c33a2ea16 100644
 2.53.0
 
 
-From 37b1240deb33e9e204bcfb9fdb926c42c88a1771 Mon Sep 17 00:00:00 2001
+From 7ea6f3f64516ae1a6bc3d9b5d7319b529f10781b Mon Sep 17 00:00:00 2001
 From: Emese Revfy <re.emese@gmail.com>
 Date: Tue, 31 May 2016 01:34:02 +0200
 Subject: [PATCH 067/103] Add the extra_latent_entropy kernel parameter
@@ -2834,7 +2834,7 @@ index ab4e03f91e74..eaaf2b6114fc 100644
  
  	pci=option[,option...]	[PCI,EARLY] various PCI subsystem options.
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d6a160ca46ef..c71deaaaada9 100644
+index bf08341f9850..b39187efc1c1 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
 @@ -213,6 +213,15 @@ EXPORT_PER_CPU_SYMBOL(_numa_mem_);
@@ -2895,7 +2895,7 @@ index 6b34ba19358d..d83e715c9d40 100644
 2.53.0
 
 
-From 46d941293e5ef81b94a8130dfe7afb042480cbd1 Mon Sep 17 00:00:00 2001
+From 1947839c9bac5360d2100f8f5ca57be600876a31 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 15 May 2017 23:45:34 -0400
 Subject: [PATCH 068/103] ata: avoid null pointer dereference on bug
@@ -2910,7 +2910,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 4fb8990d22d5..c5f63427ede7 100644
+index 5ee4adc62342..2304eccca649 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
 @@ -4849,6 +4849,7 @@ void __ata_qc_complete(struct ata_queued_cmd *qc)
@@ -2925,7 +2925,7 @@ index 4fb8990d22d5..c5f63427ede7 100644
 2.53.0
 
 
-From c557016ac98c3004a1ee5961087c2820b6bdddb3 Mon Sep 17 00:00:00 2001
+From ad314ac5adec20f096af1c25314f22493e6b10f8 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 15 May 2017 23:51:12 -0400
 Subject: [PATCH 069/103] sanity check for negative length in nla_memcpy
@@ -2954,7 +2954,7 @@ index be9c576b6e2d..484d839bcf5e 100644
 2.53.0
 
 
-From 34f287556b34f543b27bdd23fa89ec5cb60eee58 Mon Sep 17 00:00:00 2001
+From 3f34ee2c2c6b7379d1a7ed941cabb54e12d136c0 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 00:59:48 -0400
 Subject: [PATCH 070/103] PaX shadow cr4 sanity check (essentially a revert)
@@ -3011,7 +3011,7 @@ index 4c718f8adc59..ea45acfe4f03 100644
 2.53.0
 
 
-From e3c6c0c87d51ce9bb74044c18689c54321c3a4ff Mon Sep 17 00:00:00 2001
+From 324c2703bb2e2e65e8821d348d3ae39406df6c22 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 9 Jul 2017 17:53:23 -0400
 Subject: [PATCH 071/103] add writable function pointer detection
@@ -3095,7 +3095,7 @@ index 010c398f6a70..6694518a1708 100644
 2.53.0
 
 
-From 90aab547ab9cca6760af2288480b4b2983f84ae4 Mon Sep 17 00:00:00 2001
+From dae00c7768a218c6a09760e1563469259f55d001 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 9 Jul 2017 17:20:29 -0400
 Subject: [PATCH 072/103] support overriding early audit kernel cmdline
@@ -3105,10 +3105,10 @@ Subject: [PATCH 072/103] support overriding early audit kernel cmdline
  1 file changed, 3 insertions(+)
 
 diff --git a/kernel/audit.c b/kernel/audit.c
-index 26a332ffb1b8..c30adeb1650b 100644
+index 7bbd05cc3d6a..4c818861c88f 100644
 --- a/kernel/audit.c
 +++ b/kernel/audit.c
-@@ -1779,6 +1779,9 @@ static int __init audit_enable(char *str)
+@@ -1783,6 +1783,9 @@ static int __init audit_enable(char *str)
  
  	if (audit_default == AUDIT_OFF)
  		audit_initialized = AUDIT_DISABLED;
@@ -3122,7 +3122,7 @@ index 26a332ffb1b8..c30adeb1650b 100644
 2.53.0
 
 
-From 5f7d0adcf3921a52c43532d048bfda46e7c8ec46 Mon Sep 17 00:00:00 2001
+From 4ad61c7a7857589d1db0e0d9dc302e609e4839d5 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 26 Aug 2017 20:16:03 -0400
 Subject: [PATCH 073/103] Revert "mm: revert x86_64 and arm64 ELF_ET_DYN_BASE
@@ -3177,7 +3177,7 @@ index 6c8fdc96be7e..10ee30f6d184 100644
 2.53.0
 
 
-From 84c92215b65bfc9c091095d9b07318f7018ddadc Mon Sep 17 00:00:00 2001
+From 8454a4d35d97e1d95cc04b595b60af71f778b1de Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 21 May 2017 20:30:44 -0400
 Subject: [PATCH 074/103] x86: determine stack entropy based on mmap entropy
@@ -3238,7 +3238,7 @@ index 10ee30f6d184..6d0abe9e5adc 100644
 2.53.0
 
 
-From 800b6759bac9998618c6b42d9cd5c64b8c5092e1 Mon Sep 17 00:00:00 2001
+From 7061a598c4b4d10b3acf33978a346b0ad9180df7 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 22 May 2017 05:06:20 -0400
 Subject: [PATCH 075/103] arm64: determine stack entropy based on mmap entropy
@@ -3290,7 +3290,7 @@ index d7edf20ad215..ac3805f359de 100644
 2.53.0
 
 
-From 2dbe2303f316f7fddead741a5e0bed17f7e54b8b Mon Sep 17 00:00:00 2001
+From 33938efbe40cf52b8276870b71ee3d5173abd889 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 11 May 2017 16:02:49 -0400
 Subject: [PATCH 076/103] randomize lower bits of the argument block
@@ -3333,7 +3333,7 @@ index 922ee51747a6..dfcf19c76cee 100644
 2.53.0
 
 
-From c68f6e8cef1b8b9e58756821496d1a97f999a6f4 Mon Sep 17 00:00:00 2001
+From 76de50457e47d063b891fd7475d2a07e4b92c589 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 30 May 2017 18:03:30 -0400
 Subject: [PATCH 077/103] support randomizing the lower bits of brk
@@ -3376,7 +3376,7 @@ index 5fd3b80fda1d..fc460b360078 100644
 2.53.0
 
 
-From a33dbf6c49421a48a8c9ab7a358f023c17d261b6 Mon Sep 17 00:00:00 2001
+From f9c6c8ee186e113e0f56a97c7a167d21e46c03be Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:22:38 -0400
 Subject: [PATCH 078/103] mm: randomize lower bits of brk
@@ -3414,7 +3414,7 @@ index 8989d5767528..954602a0c59b 100644
 2.53.0
 
 
-From 945c0e1d30935527e68b38d79a4a369431f0a798 Mon Sep 17 00:00:00 2001
+From d4f78e6f4a8253a134bbbf8794ebab2234886b11 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:06 -0400
 Subject: [PATCH 079/103] x86: randomize lower bits of brk
@@ -3446,7 +3446,7 @@ index ea45acfe4f03..b92b3474470a 100644
 2.53.0
 
 
-From 8613a791165f0c1873b2b29bef38a6c366a140a6 Mon Sep 17 00:00:00 2001
+From 8c7ca07889a91b9204f3e6ec6a369e69ec413592 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:39 -0400
 Subject: [PATCH 080/103] mm: guarantee brk gap is at least one page
@@ -3484,7 +3484,7 @@ index 954602a0c59b..1059b5852a36 100644
 2.53.0
 
 
-From 7b3f4a89a59cd39119917a33204640098e4c8975 Mon Sep 17 00:00:00 2001
+From 83193139adc4a0686b76f8de1e3992432f3459a8 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:48 -0400
 Subject: [PATCH 081/103] x86: guarantee brk gap is at least one page
@@ -3516,7 +3516,7 @@ index b92b3474470a..63c96edc60a5 100644
 2.53.0
 
 
-From dd693f987af3c9fc11831094a9b57e8e3f882b4b Mon Sep 17 00:00:00 2001
+From 9d40d01ac201b348de588d2de3f50e838a2b1194 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 18:26:10 -0400
 Subject: [PATCH 082/103] restrict device timing side channels
@@ -3705,7 +3705,7 @@ index 829f49ae07b9..5bb7ee4028ad 100644
 2.53.0
 
 
-From 6e9dfa15d70f2fcacca9f88341e2626d44ee3ad0 Mon Sep 17 00:00:00 2001
+From 8b9353f466df684321b1282c16c4049c30d6c3a7 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 6 Sep 2020 20:28:32 +0200
 Subject: [PATCH 083/103] sysctl: expose proc_dointvec_minmax_sysadmin as API
@@ -3822,7 +3822,7 @@ index 694843e7cef3..dc229a9b1a7a 100644
 2.53.0
 
 
-From d06a35fe7e762e45078405d474285edcdc5bce45 Mon Sep 17 00:00:00 2001
+From c5af85206763d3c2b98c6aa585c19a23b9a9ed91 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 17:51:48 -0400
 Subject: [PATCH 084/103] usb: add toggle for disabling newly added USB devices
@@ -3917,7 +3917,7 @@ index dc229a9b1a7a..6131deaa9b29 100644
 2.53.0
 
 
-From 03e00c5fae8221bddd02d59654ffd848d51bea80 Mon Sep 17 00:00:00 2001
+From 9445f25b3c5ab925d4e720f852fb5250b96baffa Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 6 Sep 2020 21:08:16 +0200
 Subject: [PATCH 085/103] usb: implement dedicated subsystem sysctl tables
@@ -4104,7 +4104,7 @@ index 6131deaa9b29..dc229a9b1a7a 100644
 2.53.0
 
 
-From 18b95a114675bbf2936f1fd9318c4b60b21e768d Mon Sep 17 00:00:00 2001
+From 70abb3d3df07df20b4e805db9e84a55e581e5643 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 03:26:45 -0500
 Subject: [PATCH 086/103] hard-wire legacy checkreqprot option to 0
@@ -4166,7 +4166,7 @@ index 3da3017ad2ca..69a8d49ee142 100644
 2.53.0
 
 
-From 8a6ee4071813ecc70ffe84dce9fa8737d22230de Mon Sep 17 00:00:00 2001
+From 09f2dc7030ed4b4d3a1f848e26ad4377b081e1b8 Mon Sep 17 00:00:00 2001
 From: Matt Brown <matt@nmatt.com>
 Date: Mon, 29 May 2017 17:37:59 -0400
 Subject: [PATCH 087/103] security: tty: Add owner user namespace to tty_struct
@@ -4237,7 +4237,7 @@ index 0a46e4054dec..99c733852fb2 100644
 2.53.0
 
 
-From 04bbda17524ffe11bd18e34d7e8afb2cdd410e6d Mon Sep 17 00:00:00 2001
+From f8a8bd33bc5897cfec636b3d53a4ac7d81d7a34f Mon Sep 17 00:00:00 2001
 From: Matt Brown <matt@nmatt.com>
 Date: Mon, 29 May 2017 17:38:00 -0400
 Subject: [PATCH 088/103] security: tty: make TIOCSTI ioctl require
@@ -4405,7 +4405,7 @@ index 731c88508ab6..5a3e6ac76d06 100644
 2.53.0
 
 
-From d167724564bc2ca81f33044a0e90e81a29e4dfcc Mon Sep 17 00:00:00 2001
+From cfa275fbc562bed34d503257f173a2e4e2a67f9e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 23:36:14 -0400
 Subject: [PATCH 089/103] enable SECURITY_TIOCSTI_RESTRICT by default
@@ -4432,7 +4432,7 @@ index 5a3e6ac76d06..a6335394118d 100644
 2.53.0
 
 
-From 09a10d2db901fddcc0fb7832c9b9a7e700bfd4a0 Mon Sep 17 00:00:00 2001
+From 5b36d7af7c948c0439a9e9d37ef696626f59559c Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Mon, 7 May 2018 20:37:55 +0200
 Subject: [PATCH 090/103] enable BPF JIT hardening by default (if available)
@@ -4442,7 +4442,7 @@ Subject: [PATCH 090/103] enable BPF JIT hardening by default (if available)
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 8de006d388f6..cb142e06b98f 100644
+index 931a4ddd8530..a144ef073360 100644
 --- a/kernel/bpf/core.c
 +++ b/kernel/bpf/core.c
 @@ -543,7 +543,7 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
@@ -4458,7 +4458,7 @@ index 8de006d388f6..cb142e06b98f 100644
 2.53.0
 
 
-From bc280bb00cc74786e3b38526af10b40a2bd589b8 Mon Sep 17 00:00:00 2001
+From 57bd2e4947f1bad382431ece30b1fd7bf8e29173 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 4 Nov 2018 18:48:53 +0100
 Subject: [PATCH 091/103] enable protected_{fifos,regular} by default
@@ -4486,7 +4486,7 @@ index bbfb7a185e72..fbcebb6181eb 100644
 2.53.0
 
 
-From 407356d0d8333eb04331a28cc964999460a03ad3 Mon Sep 17 00:00:00 2001
+From 10690762ce8025d4eecc388d9e4930d1caa4f515 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Mon, 6 May 2019 17:07:11 +0200
 Subject: [PATCH 092/103] modpost: Add
@@ -4600,7 +4600,7 @@ index 6694518a1708..6c547d68a411 100644
 2.53.0
 
 
-From 228da44d80b04950103b94b90541f2814ef97157 Mon Sep 17 00:00:00 2001
+From d05ad6015d58643282f60b0f6f20ed3a3503a35c Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Tue, 7 May 2019 11:46:21 +0200
 Subject: [PATCH 093/103] mm: Fix extra_latent_entropy
@@ -4672,7 +4672,7 @@ index 7712d887b696..904db4846b9a 100644
  }
  
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c71deaaaada9..1f023e26ac1a 100644
+index b39187efc1c1..56a402ebcd91 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
 @@ -1632,6 +1632,25 @@ static void __free_pages_ok(struct page *page, unsigned int order,
@@ -4727,7 +4727,7 @@ index c71deaaaada9..1f023e26ac1a 100644
 2.53.0
 
 
-From 9e474300f9b73c6addcb14ca25051ac4f09a3005 Mon Sep 17 00:00:00 2001
+From 98be0245dd7a791e02281e417b9b305aa81d47d2 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Fri, 29 Nov 2019 16:27:14 +0100
 Subject: [PATCH 094/103] slub: Extend init_on_alloc to slab caches with
@@ -4779,7 +4779,7 @@ index 637458daa63f..4145dd1d4288 100644
 2.53.0
 
 
-From 838e5b5b66f0d08806d62520eefe1bab3eb667e1 Mon Sep 17 00:00:00 2001
+From 929520ddf6de6a853fcbb8cb07e16a8b70c0075f Mon Sep 17 00:00:00 2001
 From: madaidan <50278627+madaidan@users.noreply.github.com>
 Date: Sun, 9 Feb 2020 00:03:41 +0000
 Subject: [PATCH 095/103] net: tcp: add option to disable TCP simultaneous
@@ -4844,10 +4844,10 @@ index 7a637e87005f..15e206771816 100644
  	If enabled, provide RFC2861 behavior and time out the congestion
  	window after an idle period.  An idle period is defined at
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 7647ed5c732c..06fe9890c4a2 100644
+index f460d2c391de..dffcd3713211 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -287,6 +287,7 @@ static_assert((1 << ATO_BITS) > TCP_DELACK_MAX);
+@@ -285,6 +285,7 @@ static_assert((1 << ATO_BITS) > TCP_DELACK_MAX);
  /* sysctl variables for tcp */
  extern int sysctl_tcp_max_orphans;
  extern long sysctl_tcp_mem[3];
@@ -4907,7 +4907,7 @@ index 0f1dd75dbf37..ecac9ab86432 100644
  
  static struct ctl_table ipv4_net_table[] = {
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 96486eea2672..b43ebb89f46e 100644
+index c650398e9199..1372dba9dcb0 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
 @@ -85,6 +85,7 @@
@@ -4918,7 +4918,7 @@ index 96486eea2672..b43ebb89f46e 100644
  
  #define FLAG_DATA		0x01 /* Incoming frame contained data.		*/
  #define FLAG_WIN_UPDATE		0x02 /* Incoming ACK was a window update.	*/
-@@ -6778,7 +6779,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
+@@ -6784,7 +6785,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
  		SKB_DR_SET(reason, TCP_RFC7323_PAWS);
  		goto discard_and_undo;
  	}
@@ -4931,7 +4931,7 @@ index 96486eea2672..b43ebb89f46e 100644
 2.53.0
 
 
-From c8cff58b22c6166d4cbf55cc60b2c6d309e882c0 Mon Sep 17 00:00:00 2001
+From 36790782c53fd198554e6f17ed7ad1391718d667 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 11 Mar 2021 23:09:50 +0100
 Subject: [PATCH 096/103] ovl: add config to disable unprivileged user
@@ -4990,7 +4990,7 @@ index 0e971ea97580..f7c49dfb55ff 100644
 2.53.0
 
 
-From 27accbc5d2a7f472f8cc4db060483a44f59533e5 Mon Sep 17 00:00:00 2001
+From d34a9d25ba4a497e6c148b3e47c8f62a4d954ee3 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 25 May 2021 21:04:47 +0200
 Subject: [PATCH 097/103] mm, kfence: bug on data corruption after error report
@@ -5050,7 +5050,7 @@ index 10e6802a2edf..01f8700fafc6 100644
 2.53.0
 
 
-From e31229c350cc248cd22d99741407c9a92163725e Mon Sep 17 00:00:00 2001
+From 95a428a17b2220b16b970bd4364127c5c10fb0d1 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Thu, 16 Dec 2021 10:55:13 +0100
 Subject: [PATCH 098/103] slub: Bug on free of non-slab objects
@@ -5097,7 +5097,7 @@ index 4145dd1d4288..45171a48111e 100644
 2.53.0
 
 
-From 7a19cb27d4ba6bf33347d4b77a70b1fba7ab5eaf Mon Sep 17 00:00:00 2001
+From 738728f8fc4bb4885b02a2bdbebc35d3b554bdd9 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Fri, 8 Dec 2023 11:53:31 +0100
 Subject: [PATCH 099/103] io_uring: set io_uring_disabled sysctl to 1 by
@@ -5145,7 +5145,7 @@ index 03e7b9d6b448..8c1425a44281 100644
 2.53.0
 
 
-From fc032d9abc55c7098344f401c801ade90486140c Mon Sep 17 00:00:00 2001
+From fbdff366e0a04ee9808ca0eed36b8884ee24546d Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Thu, 17 Oct 2024 17:02:29 +0200
 Subject: [PATCH 100/103] sysctl: Add proc_dointvec_minmax_sysadmin sanity
@@ -5175,7 +5175,7 @@ index 49ab74e0bfde..4be54d32a60a 100644
 2.53.0
 
 
-From 2e05dcd34c19852872f6000a973f1040e5d941b3 Mon Sep 17 00:00:00 2001
+From fb80f3a6487157d77d125f4cfd194be10a73663d Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 14 May 2025 21:00:09 +0200
 Subject: [PATCH 101/103] kconfig: enable MSEAL_SYSTEM_MAPPINGS by default
@@ -5201,7 +5201,7 @@ index a6335394118d..5ab4df72aedd 100644
 2.53.0
 
 
-From ab1e7d49df22522bb214a957f5f7383c79372923 Mon Sep 17 00:00:00 2001
+From e94c69d0e84ed9a196566033fe824054f960ab86 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Tue, 14 Oct 2025 15:19:31 +0200
 Subject: [PATCH 102/103] mm/slub: Only instrument slab allocation with
@@ -5499,7 +5499,7 @@ index 45171a48111e..8aea6edff5b4 100644
 2.53.0
 
 
-From 6d3e0290560976d2b74dc8b8c2cad464ab06a8c7 Mon Sep 17 00:00:00 2001
+From 0c1adf408ca75c7936987dda7c8609d1228d6058 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Thu, 15 Jan 2026 15:31:34 +0100
 Subject: [PATCH 103/103] mm/slub: Add canary on sheaf alloc and free

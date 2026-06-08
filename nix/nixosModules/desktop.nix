@@ -245,13 +245,6 @@
     "org/gnome/desktop/session" = {
       idle-delay = mkUint32 180;
     };
-    "org/gnome/mutter" = {
-      experimental-features = [
-        "scale-monitor-framebuffer"
-        "variable-refresh-rate"
-        "xwayland-native-scaling"
-      ];
-    };
     "org/gnome/settings-daemon/plugins/color" = {
       night-light-enabled = true;
       night-light-temperature = mkUint32 4226;
