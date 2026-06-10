@@ -15,8 +15,7 @@ target tag in a git checkout. On failure, can run
 `patch -p1 --no-backup-if-mismatch < .git/rebase-apply/00<XX>` to apply the
 failed patch manually and fix it up.
 
-To re-export:
-`TERM=dumb git format-patch --stdout <base>..HEAD > patchset.mbx`.
+To re-export: `TERM=dumb git format-patch --stdout <base>..HEAD > patchset.mbx`.
 
 ## Generating linux-hardened mbox file
 
