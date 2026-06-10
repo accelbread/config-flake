@@ -293,12 +293,16 @@
         "Videos"
         "Library"
       ];
-    cache.users.archit.directories =
-      map (d: { directory = d; mode = "0700"; }) [
+    cache = {
+      directories = [
+        { directory = "/var/cache/ccache"; mode = "0770"; group = "nixbld"; }
+      ];
+      users.archit.directories = map (d: { directory = d; mode = "0700"; }) [
         "Downloads"
         "playground"
         ".cache/fractal"
         ".local/share/flatpak"
       ];
+    };
   };
 }

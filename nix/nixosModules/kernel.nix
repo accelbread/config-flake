@@ -1,5 +1,6 @@
 { pkgs, lib, ... }:
 let
+  use-ccache = false;
   base-kernel = pkgs.linux;
 in
 {
@@ -9,6 +10,11 @@ in
     kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
       enableCommonConfig = false;
       extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
+    } // lib.optionalAttrs use-ccache {
+      stdenv = pkgs.ccacheStdenv;
+      buildPackages = pkgs.buildPackages // {
+        stdenv = pkgs.buildPackages.ccacheStdenv;
+      };
     }));
     kernelPatches = map (p: { name = baseNameOf p; patch = p; })
       (lib.filesystem.listFilesRecursive ./kernel-patches) ++
