@@ -1,0 +1,104 @@
+From 8ccabd8d9dcd987d443ede042a34325c8ad2b97a Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Wed, 10 Jun 2026 01:10:04 -0700
+Subject: [PATCH] Add missing intel-lpss debugfs guards
+
+---
+ drivers/mfd/intel-lpss.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 63d6694f7145..318b344b6ef6 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -90,7 +90,9 @@ struct intel_lpss {
+ 	u32 caps;
+ 	u32 active_ltr;
+ 	u32 idle_ltr;
++#ifdef CONFIG_DEBUG_FS
+ 	struct dentry *debugfs;
++#endif
+ };
+ 
+ static const struct resource intel_lpss_dev_resources[] = {
+@@ -134,7 +136,9 @@ static const struct mfd_cell intel_lpss_spi_cell = {
+ };
+ 
+ static DEFINE_IDA(intel_lpss_devid_ida);
++#ifdef CONFIG_DEBUG_FS
+ static struct dentry *intel_lpss_debugfs;
++#endif
+ 
+ static void intel_lpss_cache_ltr(struct intel_lpss *lpss)
+ {
+@@ -142,6 +146,7 @@ static void intel_lpss_cache_ltr(struct intel_lpss *lpss)
+ 	lpss->idle_ltr = readl(lpss->priv + LPSS_PRIV_IDLELTR);
+ }
+ 
++#ifdef CONFIG_DEBUG_FS
+ static int intel_lpss_debugfs_add(struct intel_lpss *lpss)
+ {
+ 	struct dentry *dir;
+@@ -165,6 +170,7 @@ static void intel_lpss_debugfs_remove(struct intel_lpss *lpss)
+ {
+ 	debugfs_remove_recursive(lpss->debugfs);
+ }
++#endif
+ 
+ static void intel_lpss_ltr_set(struct device *dev, s32 val)
+ {
+@@ -433,9 +439,11 @@ int intel_lpss_probe(struct device *dev,
+ 
+ 	intel_lpss_ltr_expose(lpss);
+ 
++#ifdef CONFIG_DEBUG_FS
+ 	ret = intel_lpss_debugfs_add(lpss);
+ 	if (ret)
+ 		dev_warn(dev, "Failed to create debugfs entries\n");
++#endif
+ 
+ 	if (intel_lpss_has_idma(lpss)) {
+ 		ret = mfd_add_devices(dev, lpss->devid, &intel_lpss_idma64_cell,
+@@ -455,7 +463,9 @@ int intel_lpss_probe(struct device *dev,
+ 	return 0;
+ 
+ err_remove_ltr:
++#ifdef CONFIG_DEBUG_FS
+ 	intel_lpss_debugfs_remove(lpss);
++#endif
+ 	intel_lpss_ltr_hide(lpss);
+ 	intel_lpss_unregister_clock(lpss);
+ 
+@@ -471,7 +481,9 @@ void intel_lpss_remove(struct device *dev)
+ 	struct intel_lpss *lpss = dev_get_drvdata(dev);
+ 
+ 	mfd_remove_devices(dev);
++#ifdef CONFIG_DEBUG_FS
+ 	intel_lpss_debugfs_remove(lpss);
++#endif
+ 	intel_lpss_ltr_hide(lpss);
+ 	intel_lpss_unregister_clock(lpss);
+ 	ida_free(&intel_lpss_devid_ida, lpss->devid);
+@@ -538,7 +550,9 @@ EXPORT_NS_GPL_DEV_PM_OPS(intel_lpss_pm_ops, INTEL_LPSS) = {
+ 
+ static int __init intel_lpss_init(void)
+ {
++#ifdef CONFIG_DEBUG_FS
+ 	intel_lpss_debugfs = debugfs_create_dir("intel_lpss", NULL);
++#endif
+ 	return 0;
+ }
+ module_init(intel_lpss_init);
+@@ -546,7 +560,9 @@ module_init(intel_lpss_init);
+ static void __exit intel_lpss_exit(void)
+ {
+ 	ida_destroy(&intel_lpss_devid_ida);
++#ifdef CONFIG_DEBUG_FS
+ 	debugfs_remove(intel_lpss_debugfs);
++#endif
+ }
+ module_exit(intel_lpss_exit);
+ 
+-- 
+2.54.0
+
