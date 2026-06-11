@@ -244,7 +244,6 @@ in
         "misc" = {
           IKCONFIG = yes;
           IKCONFIG_PROC = yes;
-          KEXEC_FILE = yes;
           SCHED_CLASS_EXT = yes;
         };
         "debug" = {
@@ -296,8 +295,7 @@ in
           IOMMU_DEFAULT_PASSTHROUGH = no;
           IOMMU_SUPPORT = yes;
           KEXEC = no;
-          KEXEC_SIG = yes;
-          KEXEC_SIG_FORCE = yes;
+          KEXEC_FILE = no;
           KFENCE = yes;
           KSTACK_ERASE = yes;
           LDISC_AUTOLOAD = no;
@@ -320,7 +318,6 @@ in
           PANIC_TIMEOUT = freeform "-1";
           PROC_KCORE = no;
           PROC_MEM_NO_FORCE = yes;
-          PROC_VMCORE = no;
           RANDOMIZE_BASE = yes;
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
           RANDOMIZE_MEMORY = yes;
