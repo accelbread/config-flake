@@ -1,0 +1,26 @@
+From e8c71ca5ea2040ca162b55c5b15371e22272664c Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 11 Jun 2026 00:37:18 -0700
+Subject: [PATCH] Make FINEIBT configurable
+
+---
+ arch/x86/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 8623c4a5ce7b..afcba2a5462a 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2413,7 +2413,8 @@ config CALL_PADDING
+ 	select FUNCTION_ALIGNMENT_16B
+ 
+ config FINEIBT
+-	def_bool y
++	bool "Enable FineIBT"
++	default n
+ 	depends on X86_KERNEL_IBT && CFI && MITIGATION_RETPOLINE
+ 	select CALL_PADDING
+ 
+-- 
+2.54.0
+

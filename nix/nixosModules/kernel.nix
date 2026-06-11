@@ -359,6 +359,7 @@ in
         } // lib.optionalAttrs stdenv.cc.isClang {
           CFI = yes;
           CFI_PERMISSIVE = no;
+          FINEIBT = no;
         };
         "linux-hardened config" = {
           OVERLAY_FS_UNPRIVILEGED = yes;
@@ -529,7 +530,6 @@ in
       "zswap.shrinker_enabled=1"
       "vsyscall=none"
       "vdso32=0"
-      "cfi=kcfi"
     ];
 
     kernel.sysctl = {
