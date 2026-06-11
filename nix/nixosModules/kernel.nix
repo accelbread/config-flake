@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 let
   use-ccache = false;
+  stdenv = pkgs.clangStdenv;
   base-kernel = pkgs.linux;
 in
 {
@@ -10,8 +11,9 @@ in
     kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
       enableCommonConfig = false;
       extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
+      inherit stdenv;
     } // lib.optionalAttrs use-ccache {
-      stdenv = pkgs.ccacheStdenv;
+      stdenv = pkgs.ccacheStdenv.override { inherit stdenv; };
       buildPackages = pkgs.buildPackages // {
         stdenv = pkgs.buildPackages.ccacheStdenv;
       };
@@ -275,8 +277,6 @@ in
           EFI_DISABLE_PCI_DMA = yes;
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
-          GCC_PLUGINS = yes;
-          GCC_PLUGIN_STACKLEAK = yes;
           HARDENED_USERCOPY = yes;
           HW_RANDOM = yes;
           HW_RANDOM_TPM = yes;
@@ -353,6 +353,12 @@ in
           X86_IOPL_IOPERM = no;
           X86_KERNEL_IBT = yes;
           ZERO_CALL_USED_REGS = yes;
+        } // lib.optionalAttrs (!stdenv.cc.isClang) {
+          GCC_PLUGINS = yes;
+          GCC_PLUGIN_STACKLEAK = yes;
+        } // lib.optionalAttrs stdenv.cc.isClang {
+          CFI = yes;
+          CFI_PERMISSIVE = no;
         };
         "linux-hardened config" = {
           OVERLAY_FS_UNPRIVILEGED = yes;
