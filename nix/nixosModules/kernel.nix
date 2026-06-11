@@ -282,6 +282,7 @@ in
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
           HARDENED_USERCOPY = yes;
+          HARDENED_USERCOPY_DEFAULT_ON = yes;
           HW_RANDOM = yes;
           HW_RANDOM_TPM = yes;
           INET_DIAG = no;
@@ -292,6 +293,7 @@ in
           INTEL_IOMMU_DEFAULT_ON = yes;
           INTEL_IOMMU_SVM = yes;
           IOMMU_DEFAULT_DMA_STRICT = yes;
+          IOMMU_DEFAULT_PASSTHROUGH = no;
           IOMMU_SUPPORT = yes;
           KEXEC = no;
           KEXEC_SIG = yes;
@@ -304,6 +306,7 @@ in
           LEGACY_VSYSCALL_NONE = yes;
           LIST_HARDENED = yes;
           LOCK_DOWN_KERNEL_FORCE_INTEGRITY = yes;
+          MITIGATION_PAGE_TABLE_ISOLATION = yes;
           MITIGATION_SLS = yes;
           MODIFY_LDT_SYSCALL = no;
           MODULE_HASHES = yes;
@@ -333,6 +336,7 @@ in
           SLAB_FREELIST_HARDENED = yes;
           SLAB_FREELIST_RANDOM = yes;
           SLAB_MERGE_DEFAULT = no;
+          SLUB_DEBUG = yes;
           STACKPROTECTOR = yes;
           STACKPROTECTOR_STRONG = yes;
           STRICT_KERNEL_RWX = yes;
