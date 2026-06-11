@@ -280,6 +280,7 @@ in
           EFI_DISABLE_PCI_DMA = yes;
           EXPERT = yes;
           FORTIFY_SOURCE = yes;
+          FUNCTION_TRACER = no;
           HARDENED_USERCOPY = yes;
           HARDENED_USERCOPY_DEFAULT_ON = yes;
           HW_RANDOM = yes;
@@ -360,7 +361,6 @@ in
           ZERO_CALL_USED_REGS = yes;
         } // lib.optionalAttrs (!stdenv.cc.isClang) {
           GCC_PLUGINS = yes;
-          GCC_PLUGIN_STACKLEAK = yes;
         } // lib.optionalAttrs stdenv.cc.isClang {
           CFI = yes;
           CFI_PERMISSIVE = no;
@@ -514,18 +514,11 @@ in
 
     kernelParams = [
       "lockdown_hibernate"
-      "init_on_alloc=1"
-      "init_on_free=1"
-      "iommu.passthrough=0"
-      "iommu.strict=1"
       "iommu=force"
       "intel_iommu=on"
       "amd_iommu=force_isolation"
-      "randomize_kstack_offset=on"
       "page_alloc.shuffle=1"
-      "slab_nomerge"
       "pti=on"
-      "mce=0"
       "random.trust_bootloader=off"
       "random.trust_cpu=off"
       "proc_mem.force_override=never"
@@ -533,22 +526,16 @@ in
       "slub_debug=ZF"
       "zswap.enabled=1"
       "zswap.shrinker_enabled=1"
-      "vsyscall=none"
       "vdso32=0"
     ];
 
     kernel.sysctl = {
-      "dev.tty.ldisc_autoload" = 0;
-      "dev.tty.legacy_tiocsti" = false;
       "fs.protected_symlinks" = 1;
       "fs.protected_hardlinks" = 1;
       "fs.protected_fifos" = 2;
       "fs.protected_regular" = 2;
       "fs.suid_dumpable" = 0;
-      "kernel.dmesg_restrict" = true;
-      "kernel.ftrace_enabled" = false;
       "kernel.io_uring_disabled" = 2;
-      "kernel.kexec_load_disabled" = true;
       "kernel.kptr_restrict" = 2;
       "kernel.perf_event_paranoid" = 3;
       "kernel.sysrq" = 0;
