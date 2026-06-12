@@ -15,7 +15,12 @@ target tag in a git checkout. On failure, can run
 `patch -p1 --no-backup-if-mismatch < .git/rebase-apply/00<XX>` to apply the
 failed patch manually and fix it up.
 
-To re-export: `TERM=dumb git format-patch --stdout <base>..HEAD > patchset.mbx`.
+To re-export:
+
+```
+TERM=dumb git format-patch --stdout --zero-commit --no-signature <base>..HEAD \
+  > patchset.mbx
+```
 
 ## Generating linux-hardened mbox file
 
@@ -25,7 +30,8 @@ Checkout linux repo with linux-hardened and stable upstreams.
 TAG=v6.18.31
 PATCHV=1
 HARDV=$TAG-hardened$PATCHV
-TERM=dumb git format-patch --stdout $TAG..$HARDV^ > linux_hardened_$HARDV.mbx
+TERM=dumb git format-patch --stdout --zero-commit --no-signature $TAG..$HARDV^ \
+  > linux_hardened_$HARDV.mbx
 ```
 
 We're skipping last commit as that just sets EXTRAVERSION.
