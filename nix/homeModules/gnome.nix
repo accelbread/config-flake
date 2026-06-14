@@ -91,6 +91,9 @@
       "org/gnome/desktop/input-sources" = {
         xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
       };
+      "org/gnome/desktop/interface" = {
+        gtk-enable-primary-paste = true;
+      };
       "org/gnome/desktop/privacy" = {
         old-files-age = mkUint32 30;
         recent-files-max-age = -1;
