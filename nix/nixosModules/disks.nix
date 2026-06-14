@@ -112,47 +112,53 @@ in
     };
 
     system.build = {
-      provisionScript = pkgs.substituteAll {
+      provisionScript = pkgs.replaceVarsWith {
         src = ./disk-scripts/provision-disks;
         isExecutable = true;
-        inherit hostname;
-        inherit (cfg) devices size swap;
-        devicesPart = map getPartPrefix cfg.devices;
-        path = lib.makeBinPath (with pkgs; [
-          coreutils
-          util-linux
-          parted
-          dosfstools
-          cryptsetup
-          lvm2
-          btrfs-progs
-          mkpasswd
-        ]);
+        replacements = {
+          inherit hostname;
+          inherit (cfg) devices size swap;
+          devicesPart = map getPartPrefix cfg.devices;
+          path = lib.makeBinPath (with pkgs; [
+            coreutils
+            util-linux
+            parted
+            dosfstools
+            cryptsetup
+            lvm2
+            btrfs-progs
+            mkpasswd
+          ]);
+        };
       };
 
-      mountScript = pkgs.substituteAll {
+      mountScript = pkgs.replaceVarsWith {
         src = ./disk-scripts/mount-disks;
         isExecutable = true;
-        inherit hostname;
-        devicesPart = map getPartPrefix cfg.devices;
-        path = lib.makeBinPath (with pkgs; [
-          coreutils
-          util-linux
-          cryptsetup
-        ]);
+        replacements = {
+          inherit hostname;
+          devicesPart = map getPartPrefix cfg.devices;
+          path = lib.makeBinPath (with pkgs; [
+            coreutils
+            util-linux
+            cryptsetup
+          ]);
+        };
       };
 
-      unmountScript = pkgs.substituteAll {
+      unmountScript = pkgs.replaceVarsWith {
         src = ./disk-scripts/unmount-disks;
         isExecutable = true;
-        inherit hostname;
-        devicesPart = map getPartPrefix cfg.devices;
-        path = lib.makeBinPath (with pkgs; [
-          coreutils
-          util-linux
-          lvm2
-          cryptsetup
-        ]);
+        replacements = {
+          inherit hostname;
+          devicesPart = map getPartPrefix cfg.devices;
+          path = lib.makeBinPath (with pkgs; [
+            coreutils
+            util-linux
+            lvm2
+            cryptsetup
+          ]);
+        };
       };
     };
   };
