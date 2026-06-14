@@ -106,7 +106,7 @@ in
 
   security = {
     sudo.enable = false;
-    doas.enable = true;
+    doas.enable = true; # needed for btrbk
     pam = {
       services = lib.genAttrs [ "login" "systemd-user" "sshd" ] (_: {
         rules.session.umask = {

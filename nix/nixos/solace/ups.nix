@@ -1,13 +1,11 @@
 { pkgs, ... }:
 let
-  doas = "/run/wrappers/bin/doas";
-  poweroff = "/run/current-system/sw/bin/poweroff";
   notify-send = pkgs.writeShellScript "notify-send-wrapper" ''
     DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
       ${pkgs.libnotify}/bin/notify-send "$@"
   '';
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
-    ${doas} -u archit ${notify-send} -u critical "$1"
+    /run/wrappers/bin/pkexec --user archit ${notify-send} -u critical "$1"
   '';
 in
 {
@@ -72,7 +70,7 @@ in
       RUN_AS_USER nut
       POWERDOWNFLAG /run/killpower
       MONITOR desk 1 monuser "upsmon_pass" primary
-      SHUTDOWNCMD "${doas} ${poweroff}"
+      SHUTDOWNCMD /run/current-system/sw/bin/poweroff
       NOTIFYCMD ${notifycmd}
       NOTIFYFLAG ONLINE SYSLOG+EXEC
       NOTIFYFLAG ONBATT SYSLOG+EXEC
@@ -98,18 +96,10 @@ in
 
   services.udev.packages = [ pkgs.nut ];
 
-  security.doas.extraRules = [
-    {
-      users = [ "nut" ];
-      runAs = "root";
-      cmd = "${poweroff}";
-      noPass = true;
-    }
-    {
-      users = [ "nut" ];
-      runAs = "archit";
-      cmd = "${notify-send}";
-      noPass = true;
-    }
-  ];
+  security.polkit = {
+    enable = true;
+    extraConfig = builtins.replaceStrings
+      [ "@notify_prog@" ] [ "${notify-send}" ]
+      (builtins.readFile ./polkit-nut.js);
+  };
 }
