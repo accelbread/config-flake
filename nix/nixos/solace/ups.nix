@@ -7,7 +7,7 @@ let
       ${pkgs.libnotify}/bin/notify-send "$@"
   '';
   notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
-    ${doas} -u archit ${notify-send} -c critical "$1"
+    ${doas} -u archit ${notify-send} -u critical "$1"
   '';
 in
 {
