@@ -1,8 +1,12 @@
 { pkgs, lib, ... }:
 let
   use-ccache = false;
-  stdenv = pkgs.clangStdenv;
+  stdenv = llvmStdenv pkgs.llvmPackages;
   base-kernel = pkgs.linux;
+
+  llvmStdenv = llvmPackages:
+    let inherit (llvmPackages) stdenv bintools; in
+    pkgs.overrideCC stdenv (stdenv.cc.override { inherit bintools; });
 in
 {
   security.lsm = [ "lockdown" ];
