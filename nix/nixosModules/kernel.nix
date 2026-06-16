@@ -124,6 +124,7 @@ in
           BLK_WBT_MQ = yes;
           CPU_FREQ_DEFAULT_GOV_SCHEDUTIL = yes;
           DEFAULT_BBR = yes;
+          HIBERNATION_COMP_LZ4 = yes;
           NO_HZ_IDLE = yes;
           PREEMPT = yes;
           PREEMPT_DYNAMIC = no;
