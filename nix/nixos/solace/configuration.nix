@@ -17,7 +17,7 @@
 
   boot = {
     initrd.availableKernelModules = [ "nvme" ];
-    kernelModules = [ "cpuid" "k10temp" "it87" ];
+    kernelModules = [ "k10temp" "it87" ];
     kernelParams = [
       "efi=no_disable_early_pci_dma"
       "amdgpu.seamless=1"
