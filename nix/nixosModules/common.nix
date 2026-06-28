@@ -48,16 +48,17 @@ in
     initrd.systemd = {
       enable = true;
       contents."/etc/machine-id".text = machine-id;
-      storePaths = with pkgs;
-        [
-          coreutils
-          util-linux
-          btrfs-progs
-          btrfs-subvol-rm-r
-          bash
-          gawk
-          gnused
-        ];
+      tpm2.enable = false;
+      storePaths = with pkgs; [
+        tpm2-tss
+        coreutils
+        util-linux
+        btrfs-progs
+        btrfs-subvol-rm-r
+        bash
+        gawk
+        gnused
+      ];
       services.wipe-root-subvolume = {
         wantedBy = [ "initrd.target" ];
         requires = [ "local-fs-pre.target" "initrd-root-device.target" ];
