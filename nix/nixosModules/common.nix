@@ -91,6 +91,7 @@ in
       wifi.macAddress = "random";
       ethernet.macAddress = "random";
     };
+    modemmanager.enable = false;
     nftables.enable = true;
     firewall = {
       checkReversePath = "loose";
