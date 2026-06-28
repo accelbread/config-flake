@@ -8,7 +8,15 @@
   nixpkgs.hostPlatform.system = "x86_64-linux";
 
   boot = {
-    initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
+    initrd.availableKernelModules = [
+      "nvme"
+      "atkbd"
+      "i8042"
+      "xhci_pci"
+      "usbhid"
+      "hid_generic"
+      "thunderbolt"
+    ];
     kernelModules = [ "coretemp" ];
     kernelParams = [
       "rcu_nocbs=all"

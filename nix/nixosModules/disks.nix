@@ -29,6 +29,7 @@ in
   config = lib.mkIf (cfg.devices != [ ]) {
     boot = {
       initrd = {
+        kernelModules = [ "dm_mod" ];
         luks = {
           devices = listToAttrs (eachDevice (n: d: {
             name = "${hostname}_disk${toString n}";
@@ -37,8 +38,12 @@ in
               bypassWorkqueues = true;
             };
           }));
-          cryptoModules = lib.subtractLists [ "af_alg" "algif_skcipher" ]
-            options.boot.initrd.luks.cryptoModules.default;
+          cryptoModules = [
+            "aes"
+            "xts"
+            "sha256"
+            "input_leds"
+          ];
         };
         systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
       };

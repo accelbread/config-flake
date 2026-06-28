@@ -16,7 +16,12 @@
     lib.mkForce "5E:34:87:DE:A3:7A";
 
   boot = {
-    initrd.availableKernelModules = [ "nvme" ];
+    initrd.availableKernelModules = [
+      "nvme"
+      "xhci_pci"
+      "usbhid"
+      "hid_generic"
+    ];
     kernelModules = [ "k10temp" "it87" ];
     kernelParams = [
       "efi=no_disable_early_pci_dma"
