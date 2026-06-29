@@ -3050,6 +3050,7 @@ in
           VF610_ADC = no;
           VF610_DAC = no;
           VFIO = no;
+          VHOST_MENU = no;
           VIA_WDT = no;
           VIDEO_ADP1653 = no;
           VIDEO_ADV7170 = no;
