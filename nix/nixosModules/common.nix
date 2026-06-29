@@ -159,8 +159,10 @@ in
       (lib.flip lib.genAttrs
         (k: { d = { user = "root"; group = "root"; mode = "0755"; }; }) [
         "/etc"
-      ])
-    ;
+      ]) // {
+        "/var/lib/systemd/coredump" = lib.mkForce { };
+        "/var/log" = lib.mkForce { };
+      };
   };
 
   services = {
