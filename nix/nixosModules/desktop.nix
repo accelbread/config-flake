@@ -41,7 +41,12 @@
   };
 
   boot = {
-    kernelParams = [ "quiet" "plymouth.use-simpledrm" ];
+    kernelParams = [
+      "quiet"
+      "plymouth.use-simpledrm"
+      "rd.udev.log_level=3"
+    ];
+    consoleLogLevel = 3;
     plymouth = {
       enable = true;
       font =
