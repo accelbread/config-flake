@@ -49,13 +49,6 @@
 
   dconf.settings =
     with lib.hm.gvariant; let
-      background = {
-        color-shading-type = "solid";
-        picture-uri = "none";
-        picture-uri-dark = "none";
-        primary-color = "#7767B2";
-      };
-
       utc = mkVariant (mkTuple [
         (mkUint32 2)
         (mkVariant (mkTuple [
@@ -87,7 +80,10 @@
       "org/gnome/clocks" = {
         world-clocks = [ [ (mkDictionaryEntry [ "location" utc ]) ] ];
       };
-      "org/gnome/desktop/background" = background;
+      "org/gnome/desktop/background" = {
+        picture-uri = "file://${inputs.self + /misc/desktop.svg}";
+        picture-uri-dark = "file://${inputs.self + /misc/desktop.svg}";
+      };
       "org/gnome/desktop/input-sources" = {
         xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
       };
@@ -104,7 +100,7 @@
       "org/gnome/desktop/search-providers" = {
         disabled = [ "org.gnome.Software.desktop" "org.gnome.Epiphany.desktop" ];
       };
-      "org/gnome/desktop/screensaver" = background // {
+      "org/gnome/desktop/screensaver" = {
         lock-delay = mkUint32 30;
       };
       "org/gnome/desktop/wm/preferences" = {
