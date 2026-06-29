@@ -160,7 +160,6 @@ in
         (k: { d = { user = "root"; group = "root"; mode = "0755"; }; }) [
         "/etc"
       ]) // {
-        "/var/lib/systemd/coredump" = lib.mkForce { };
         "/var/log" = lib.mkForce { };
       };
   };
@@ -307,7 +306,6 @@ in
             "/var/lib/private/tailscale"
           ]) ++ [
             "/var/log"
-            "/var/lib/systemd/coredump"
             "/var/lib/systemd/timesync"
           ];
           files = [{
