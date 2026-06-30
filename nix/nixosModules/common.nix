@@ -126,14 +126,17 @@ in
     storage.settings.storage.driver = "btrfs";
   };
 
-  documentation.man = {
-    cache.enable = true;
-    man-db.manualPages =
-      let
-        makeContentAddressed = drv: pkgs.runCommandLocal drv.name
-          { __contentAddressed = true; } "cp -r ${drv} $out";
-      in
-      makeContentAddressed options.documentation.man.man-db.manualPages.default;
+  documentation = {
+    nixos.enable = false;
+    man = {
+      cache.enable = true;
+      man-db.manualPages =
+        let
+          makeContentAddressed = drv: pkgs.runCommandLocal drv.name
+            { __contentAddressed = true; } "cp -r ${drv} $out";
+        in
+        makeContentAddressed options.documentation.man.man-db.manualPages.default;
+    };
   };
 
   systemd = {
