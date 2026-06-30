@@ -109,6 +109,9 @@
         visual-bell = true;
         visual-bell-type = "frame-flash";
       };
+      "org/gnome/Fractal/Stable" = {
+        is-maximized = true;
+      };
       "org/gnome/mutter" = {
         dynamic-workspaces = true;
         edge-tiling = true;
