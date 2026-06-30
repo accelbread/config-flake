@@ -137,6 +137,12 @@
   (trusted-content-p))
 
 
+;;; Maximize initial frame
+
+(after-frame
+ (toggle-frame-maximized))
+
+
 ;;; Hide welcome messages
 
 (setopt inhibit-startup-screen t
