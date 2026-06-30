@@ -22,7 +22,8 @@ in
         stdenv = pkgs.buildPackages.ccacheStdenv;
       };
     }));
-    kernelPatches = map (p: { name = baseNameOf p; patch = p; })
+    kernelPatches = map
+      (p: { name = baseNameOf p; patch = builtins.path { path = p; }; })
       (lib.filesystem.listFilesRecursive ./kernel-patches) ++
     lib.mapAttrsToList
       (k: v: { name = k; patch = null; structuredExtraConfig = v; })

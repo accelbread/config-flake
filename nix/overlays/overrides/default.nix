@@ -32,6 +32,7 @@ final: prev: {
 } // builtins.mapAttrs
   (p: _: prev.${p}.overrideAttrs (old: {
     patches = old.patches or [ ] ++
-      (final.lib.filesystem.listFilesRecursive (./patches + "/${p}"));
+      (map (p: builtins.path { path = p; })
+        (final.lib.filesystem.listFilesRecursive (./patches + "/${p}")));
   }))
   (builtins.readDir ./patches)

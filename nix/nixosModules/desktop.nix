@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, flake, ... }: {
+{ config, pkgs, lib, inputs, flake, flakeResource, ... }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.syncthing
@@ -55,7 +55,7 @@
         DeviceScale=2
       '';
       logo = pkgs.runCommand "boot_logo.png" { }
-        "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
+        "${lib.getExe pkgs.resvg} ${flakeResource /misc/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -188,7 +188,7 @@
     };
     dconf.profiles.gdm.databases = [{
       settings."org/gnome/login-screen".logo =
-        "${flake.src + /misc/boot_logo.svg}";
+        "${flakeResource /misc/boot_logo.svg}";
     }];
   };
 

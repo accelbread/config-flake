@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, config, ... }: {
+{ inputs, lib, pkgs, config, flakeResource, ... }: {
   imports = [ inputs.self.homeModules.gnome-extensions ];
 
   home = {
@@ -81,8 +81,8 @@
         world-clocks = [ [ (mkDictionaryEntry [ "location" utc ]) ] ];
       };
       "org/gnome/desktop/background" = {
-        picture-uri = "file://${inputs.self + /misc/desktop.svg}";
-        picture-uri-dark = "file://${inputs.self + /misc/desktop.svg}";
+        picture-uri = "file://${flakeResource /misc/desktop.svg}";
+        picture-uri-dark = "file://${flakeResource /misc/desktop.svg}";
       };
       "org/gnome/desktop/input-sources" = {
         xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];

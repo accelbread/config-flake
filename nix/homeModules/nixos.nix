@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, flakeResource, ... }:
 let
   inherit (builtins) mapAttrs;
   inherit (inputs) self;
@@ -41,10 +41,10 @@ in
       warp
     ];
     file = mapAttrs (_: v: { recursive = true; } // v) {
-      ".face".source = self + /misc/icon.png;
-      ".config".source = self + /dotfiles/config;
-      ".ssh".source = self + /dotfiles/ssh;
-      ".librewolf".source = self + /dotfiles/librewolf;
+      ".face".source = flakeResource /misc/icon.png;
+      ".config".source = flakeResource /dotfiles/config;
+      ".ssh".source = flakeResource /dotfiles/ssh;
+      ".librewolf".source = flakeResource /dotfiles/librewolf;
       ".librewolf/native-messaging-hosts/passff.json".source =
         "${pkgs.passff-host.override {
           pass = config.programs.password-store.package;
@@ -53,13 +53,13 @@ in
         source = pkgs.firefox-gnome-theme;
         recursive = false;
       };
-      ".thunderbird".source = self + /dotfiles/thunderbird;
+      ".thunderbird".source = flakeResource /dotfiles/thunderbird;
       ".thunderbird/profile/chrome/thunderbird-gnome-theme" = {
         source = pkgs.thunderbird-gnome-theme;
         recursive = false;
       };
       ".local/share/flatpak/overrides" = {
-        source = self + /dotfiles/flatpak_overrides;
+        source = flakeResource /dotfiles/flatpak_overrides;
         force = true;
       };
       ".config/celluloid/scripts" = {

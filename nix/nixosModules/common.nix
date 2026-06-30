@@ -1,4 +1,4 @@
-{ config, options, pkgs, lib, inputs, hostname, ... }:
+{ config, options, pkgs, lib, inputs, hostname, flake, flakeResource, ... }:
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
@@ -15,6 +15,8 @@ in
   ];
 
   system.configurationRevision = self.rev or null;
+
+  _module.args.flakeResource = p: builtins.path { path = flake.src + p; };
 
   nix = {
     package = pkgs.nixVersions.latest;
@@ -210,7 +212,7 @@ in
         AllowTcpForwarding = false;
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
-        TrustedUserCAKeys = "${self + /misc/ssh_ca_user_key.pub}";
+        TrustedUserCAKeys = "${flakeResource /misc/ssh_ca_user_key.pub}";
         HostKey =
           "/persist/state/sshd/ssh_host_ed25519_sk_key";
         HostCertificate =
@@ -274,7 +276,7 @@ in
     '';
     ssh = {
       knownHosts."*" = {
-        publicKeyFile = self + /misc/ssh_ca_host_key.pub;
+        publicKeyFile = flakeResource /misc/ssh_ca_host_key.pub;
         certAuthority = true;
       };
       extraConfig = ''
