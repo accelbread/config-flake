@@ -54,6 +54,8 @@
       extraConfig = ''
         DeviceScale=2
       '';
+      logo = pkgs.runCommand "boot_logo.png" { }
+        "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -184,6 +186,10 @@
       enable = true;
       unixSocket = false;
     };
+    dconf.profiles.gdm.databases = [{
+      settings."org/gnome/login-screen".logo =
+        "${flake.src + /misc/boot_logo.svg}";
+    }];
   };
 
   home-manager = {
