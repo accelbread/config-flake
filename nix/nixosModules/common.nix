@@ -265,6 +265,7 @@ in
   };
 
   programs = {
+    fuse.enable = true;
     nano.enable = false;
     bash.interactiveShellInit = ''
       HISTCONTROL=ignoreboth
