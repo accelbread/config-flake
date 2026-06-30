@@ -196,6 +196,15 @@
   xdg.portal.xdgOpenUsePortal = true;
 
   environment = {
+    gnome.excludePackages = [
+      pkgs.epiphany
+      pkgs.gnome-backgrounds
+      pkgs.gnome-contacts
+      pkgs.gnome-music
+      pkgs.gnome-tour
+      pkgs.showtime
+      pkgs.snapshot # broken
+    ];
     sessionVariables = {
       GST_PLUGIN_SYSTEM_PATH_1_0 =
         lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [

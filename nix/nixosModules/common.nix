@@ -263,7 +263,6 @@ in
         databasePath = "/persist/state/secureboot";
       })
     ];
-    gnome.excludePackages = [ pkgs.gnome-tour ];
     variables.EDITOR = "zile";
   };
 
