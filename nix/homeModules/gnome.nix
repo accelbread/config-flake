@@ -8,6 +8,7 @@
     gui-packages = with pkgs; [
       dconf-editor
       crosspipe
+      cheese # snapshot is broken
     ];
   };
 
