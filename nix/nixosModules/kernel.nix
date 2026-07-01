@@ -3290,6 +3290,8 @@ in
       "net.ipv6.conf.default.accept_redirects" = false;
     };
 
+    kernelModules = [ "configs" ];
+
     initrd = {
       includeDefaultModules = false;
       systemd.contents."/etc/lvm/lvm.conf".text = lib.mkAfter ''
