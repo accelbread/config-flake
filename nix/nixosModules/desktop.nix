@@ -1,4 +1,24 @@
-{ config, pkgs, lib, inputs, flake, flakeResource, ... }: {
+{ config, pkgs, lib, inputs, flake, flakeResource, ... }:
+let
+  desktopBackgrounds = pkgs.writeTextFile {
+    name = "desktop-backgrounds";
+    text = ''
+      <?xml version="1.0"?>
+      <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+      <wallpapers>
+        <wallpaper>
+          <name>Catbox</name>
+          <filename>${flakeResource /misc/desktop.svg}</filename>
+          <options>scaled</options>
+          <shade_type>solid</shade_type>
+          <pcolor>#7767B2</pcolor>
+        </wallpaper>
+      </wallpapers>
+    '';
+    destination = "/share/gnome-background-properties/custom_backgrounds.xml";
+  };
+in
+{
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.syncthing
@@ -229,6 +249,7 @@
       pkgs.qadwaitadecorations-qt6
       pkgs.gst-thumbnailers
       pkgs.gnome-epub-thumbnailer
+      desktopBackgrounds
     ];
     wordlist = {
       enable = true;
