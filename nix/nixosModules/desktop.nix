@@ -43,7 +43,6 @@
   boot = {
     kernelParams = [
       "quiet"
-      "plymouth.use-simpledrm"
       "rd.udev.log_level=3"
     ];
     consoleLogLevel = 3;
@@ -52,6 +51,7 @@
       font =
         "${pkgs.adwaita-fonts}/share/fonts/Adwaita/AdwaitaSans-Regular.ttf";
       extraConfig = ''
+        UseSimpledrm=1
         DeviceScale=2
       '';
       logo = pkgs.runCommand "boot_logo.png" { }
