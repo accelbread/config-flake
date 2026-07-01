@@ -26,7 +26,7 @@
 
   hardware = {
     cpu.intel.updateMicrocode = true;
-    graphics.extraPackages = with pkgs; [ intel-compute-runtime ];
+    intelgpu.vaapiDriver = "intel-media-driver";
     bluetooth = {
       powerOnBoot = false;
       settings.General = {
