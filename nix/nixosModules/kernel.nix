@@ -407,7 +407,7 @@ in
           CROS_EC_CHARDEV = module;
           CROS_EC_LPC = module;
           CROS_KBD_LED_BACKLIGHT = module;
-          DRM_I915 = module;
+          DRM_XE = module;
           HID_SENSOR_ALS = module;
           HID_SENSOR_HUB = module;
           HOTPLUG_PCI_PCIE = yes;
@@ -912,7 +912,7 @@ in
           DRM_GUD = no;
           DRM_HISI_HIBMC = no;
           DRM_I2C_NXP_TDA998X = no;
-          DRM_I915_CAPTURE_ERROR = no;
+          DRM_I915 = no;
           DRM_MGAG200 = no;
           DRM_NOUVEAU = no;
           DRM_PANEL_RASPBERRYPI_TOUCHSCREEN = no;
@@ -924,7 +924,6 @@ in
           DRM_VBOXVIDEO = no;
           DRM_VGEM = no;
           DRM_VKMS = no;
-          DRM_XE = no;
           DS1682 = no;
           DS1803 = no;
           DS4424 = no;
