@@ -13,7 +13,7 @@ in
 {
   inherit (kernel) stdenv;
   inputsFrom = [ kernel ];
-  packages = with pkgs; [ b4 ];
+  packages = with pkgs; [ b4 ] ++ kernel.configEnv.depsBuildBuild;
 } // lib.optionalAttrs kernel.stdenv.cc.isClang {
   env.LLVM = "1";
 }
