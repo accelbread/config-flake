@@ -21,7 +21,6 @@
     kernelParams = [
       "rcu_nocbs=all"
       "workqueue.power_efficient=1"
-      "xe.force_probe=a7a0"
     ];
   };
 

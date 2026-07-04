@@ -408,6 +408,7 @@ in
           CROS_EC_LPC = module;
           CROS_KBD_LED_BACKLIGHT = module;
           DRM_XE = module;
+          DRM_XE_FORCE_PROBE = freeform "*";
           HID_SENSOR_ALS = module;
           HID_SENSOR_HUB = module;
           HOTPLUG_PCI_PCIE = yes;
@@ -924,6 +925,7 @@ in
           DRM_VBOXVIDEO = no;
           DRM_VGEM = no;
           DRM_VKMS = no;
+          DRM_XE_PAGEMAP = no;
           DS1682 = no;
           DS1803 = no;
           DS4424 = no;
@@ -1379,7 +1381,9 @@ in
           INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON = no;
           INTEL_IPS = no;
           INTEL_ISH_HID = no;
+          INTEL_MEI_GSC = no;
           INTEL_MEI_HDCP = no;
+          INTEL_MEI_LB = no;
           INTEL_MEI_PXP = no;
           INTEL_MEI_TXE = no;
           INTEL_MEI_WDT = no;
