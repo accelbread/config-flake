@@ -1,7 +1,7 @@
-From d9d51a1fe395fd44331ef730e680a5b7b83fabb6 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:22:12 -0400
-Subject: [PATCH 001/103] make DEFAULT_MMAP_MIN_ADDR match LSM_MMAP_MIN_ADDR
+Subject: [PATCH 001/101] make DEFAULT_MMAP_MIN_ADDR match LSM_MMAP_MIN_ADDR
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -22,14 +22,11 @@ index 76001e9ba04f..feab6c021b30 100644
  	help
  	  This is the portion of low virtual memory which should be protected
  	  from userspace allocation.  Keeping a user from writing to low pages
--- 
-2.53.0
 
-
-From 58e39964c4e0174bb3607379d16cca12e6665a1e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 06:17:41 -0400
-Subject: [PATCH 002/103] enable HARDENED_USERCOPY by default
+Subject: [PATCH 002/101] enable HARDENED_USERCOPY by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -48,14 +45,11 @@ index 86f8768c63d4..26ad690e0c80 100644
  	help
  	  This option checks for obviously wrong memory regions when
  	  copying memory to/from the kernel (via copy_to_user() and
--- 
-2.53.0
 
-
-From 475c80e11c00b042ce6e2d6bb1d6172b87944ed1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:05:15 -0400
-Subject: [PATCH 003/103] enable SECURITY_DMESG_RESTRICT by default
+Subject: [PATCH 003/101] enable SECURITY_DMESG_RESTRICT by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -75,14 +69,11 @@ index 285f284dfcac..108797420fe1 100644
  	help
  	  This enforces restrictions on unprivileged users reading the kernel
  	  syslog via dmesg(8).
--- 
-2.53.0
 
-
-From 6f47ae1549f383db887c1afef5ede376862e9dac Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:06:14 -0400
-Subject: [PATCH 004/103] set kptr_restrict=2 by default
+Subject: [PATCH 004/101] set kptr_restrict=2 by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -102,14 +93,11 @@ index a356965c1d73..ab0b2b1d6cb3 100644
  
  static noinline_for_stack
  char *restricted_pointer(char *buf, char *end, const void *ptr,
--- 
-2.53.0
 
-
-From f45861f7996d1a1f9d7800cfcb62c7817956f67b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 19 Sep 2023 00:57:29 +0200
-Subject: [PATCH 005/103] enable LIST_HARDENED by default
+Subject: [PATCH 005/101] enable LIST_HARDENED by default
 
 Signed-off-by: Levente Polyak <levente@leventepolyak.net>
 ---
@@ -128,14 +116,11 @@ index 26ad690e0c80..ed25c8ea8381 100644
  	help
  	  Minimal integrity checking in the linked-list manipulation routines
  	  to catch memory corruptions that are not guaranteed to result in an
--- 
-2.53.0
 
-
-From 1d3a49279939b9ca14e1b4c1bf419a7fb7e55157 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 12:21:21 -0400
-Subject: [PATCH 006/103] enable BUG_ON_DATA_CORRUPTION by default
+Subject: [PATCH 006/101] enable BUG_ON_DATA_CORRUPTION by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -154,24 +139,21 @@ index ed25c8ea8381..11bd5d6c5f7f 100644
  	help
  	  Select this option if the kernel should BUG when it encounters
  	  data corruption in kernel memory structures when they get checked
--- 
-2.53.0
 
-
-From 381e3a2d10439d802eb041dc2648f9c30443a7b2 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 01:39:32 -0500
-Subject: [PATCH 007/103] enable ARM64_SW_TTBR0_PAN by default
+Subject: [PATCH 007/101] enable ARM64_SW_TTBR0_PAN by default
 
 ---
  arch/arm64/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 840a945cb4ac..0d6dd2b01aae 100644
+index 9e834f0f8dd0..91990c7ff1cb 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -1692,6 +1692,7 @@ config ARM64_SW_TTBR0_PAN
+@@ -1730,6 +1730,7 @@ config ARM64_SW_TTBR0_PAN
  	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
  	depends on !KCSAN
  	select ARM64_PAN
@@ -179,24 +161,21 @@ index 840a945cb4ac..0d6dd2b01aae 100644
  	help
  	  Enabling this option prevents the kernel from accessing
  	  user-space memory directly by pointing TTBR0_EL1 to a reserved
--- 
-2.53.0
 
-
-From 490fd71b6d8014b8fd8d78afe80277e244b4127b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 01:33:48 -0500
-Subject: [PATCH 008/103] arm64: enable RANDOMIZE_BASE by default
+Subject: [PATCH 008/101] arm64: enable RANDOMIZE_BASE by default
 
 ---
  arch/arm64/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0d6dd2b01aae..db4179cb58a1 100644
+index 91990c7ff1cb..e16cef2f246f 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -2297,6 +2297,7 @@ config RELOCATABLE
+@@ -2335,6 +2335,7 @@ config RELOCATABLE
  config RANDOMIZE_BASE
  	bool "Randomize the address of the kernel image"
  	select RELOCATABLE
@@ -204,14 +183,11 @@ index 0d6dd2b01aae..db4179cb58a1 100644
  	help
  	  Randomizes the virtual address at which the kernel image is
  	  loaded, as a security feature that deters exploit attempts
--- 
-2.53.0
 
-
-From 0d01b9fbb6458196e868dcf8e050a59428bf703a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 19:43:38 -0400
-Subject: [PATCH 009/103] enable SLAB_FREELIST_RANDOM by default
+Subject: [PATCH 009/101] enable SLAB_FREELIST_RANDOM by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -230,14 +206,11 @@ index feab6c021b30..1ac954518469 100644
  	help
  	  Randomizes the freelist order used on creating new pages. This
  	  security feature reduces the predictability of the kernel slab
--- 
-2.53.0
 
-
-From be5512f96c9e3f2ebb1bab663500c082a7abc71f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 20 Aug 2017 15:39:25 -0400
-Subject: [PATCH 010/103] enable SLAB_FREELIST_HARDENED by default
+Subject: [PATCH 010/101] enable SLAB_FREELIST_HARDENED by default
 
 ---
  mm/Kconfig | 1 +
@@ -255,14 +228,11 @@ index 1ac954518469..8a62385aec1d 100644
  	help
  	  Many kernel heap attacks try to target slab cache metadata and
  	  other infrastructure. This options makes minor performance
--- 
-2.53.0
 
-
-From 1bb14c9be4ea8e417de4b91f90b7d54c940b4528 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 8 Jul 2017 02:38:54 -0400
-Subject: [PATCH 011/103] disable SLAB_MERGE_DEFAULT by default
+Subject: [PATCH 011/101] disable SLAB_MERGE_DEFAULT by default
 
 ---
  mm/Kconfig | 1 -
@@ -280,14 +250,11 @@ index 8a62385aec1d..037564f437ad 100644
  	help
  	  For reduced kernel memory fragmentation, slab caches can be
  	  merged when they share the same size and other characteristics.
--- 
-2.53.0
 
-
-From 22ac85ec84fba63d4fedc89443d03c043b246da4 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 8 May 2017 12:51:54 -0400
-Subject: [PATCH 012/103] enable FORTIFY_SOURCE by default
+Subject: [PATCH 012/101] enable FORTIFY_SOURCE by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -306,14 +273,11 @@ index 11bd5d6c5f7f..e42e319485ae 100644
  	help
  	  Detect overflows of buffers in common string and memory functions
  	  where the compiler can determine and validate the buffer sizes.
--- 
-2.53.0
 
-
-From 3caabfee6b8262320f338e5ff892a47b59ff0f17 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 12:09:17 -0400
-Subject: [PATCH 013/103] enable PANIC_ON_OOPS by default
+Subject: [PATCH 013/101] enable PANIC_ON_OOPS by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -341,14 +305,11 @@ index 21cd68084e46..3ca926287400 100644
  
  config PANIC_TIMEOUT
  	int "panic timeout"
--- 
-2.53.0
 
-
-From 754eef5e9e1191a8da864df2bb5e70bb5b66ea9b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 14 May 2017 22:39:34 -0400
-Subject: [PATCH 014/103] stop hiding SLUB_DEBUG behind EXPERT
+Subject: [PATCH 014/101] stop hiding SLUB_DEBUG behind EXPERT
 
 It can make sense to disable this to reduce attack surface / complexity.
 ---
@@ -368,14 +329,11 @@ index 32b65073d0cc..a7795b68b5ec 100644
  	depends on SYSFS && !SLUB_TINY
  	select STACKDEPOT if STACKTRACE_SUPPORT
  	help
--- 
-2.53.0
 
-
-From b2ed3228f379d5bc6784d6c1c278b4a392c83494 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:11:31 -0400
-Subject: [PATCH 015/103] stop hiding X86_16BIT behind EXPERT
+Subject: [PATCH 015/101] stop hiding X86_16BIT behind EXPERT
 
 ---
  arch/x86/Kconfig | 2 +-
@@ -394,14 +352,11 @@ index 8623c4a5ce7b..52ebb5d8ee38 100644
  	default y
  	depends on MODIFY_LDT_SYSCALL
  	help
--- 
-2.53.0
 
-
-From aba8f9b86ce696d8afc0d25e5d337120c7962290 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:11:52 -0400
-Subject: [PATCH 016/103] disable X86_16BIT by default
+Subject: [PATCH 016/101] disable X86_16BIT by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -420,14 +375,11 @@ index 52ebb5d8ee38..d247ab009af6 100644
  	depends on MODIFY_LDT_SYSCALL
  	help
  	  This option is required by programs like Wine to run 16-bit
--- 
-2.53.0
 
-
-From 8b1d42e717ea4a1e067a301641cab1d162957a5c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:15:52 -0400
-Subject: [PATCH 017/103] stop hiding MODIFY_LDT_SYSCALL behind EXPERT
+Subject: [PATCH 017/101] stop hiding MODIFY_LDT_SYSCALL behind EXPERT
 
 ---
  arch/x86/Kconfig | 2 +-
@@ -446,14 +398,11 @@ index d247ab009af6..accd0bb83bf8 100644
  	default y
  	help
  	  Linux can allow user programs to install a per-process x86
--- 
-2.53.0
 
-
-From 67b2a49fc9f92424c4ce1fc2b7855584c1a2e7a5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 18:16:16 -0400
-Subject: [PATCH 018/103] disable MODIFY_LDT_SYSCALL by default
+Subject: [PATCH 018/101] disable MODIFY_LDT_SYSCALL by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -472,14 +421,11 @@ index accd0bb83bf8..bd2daec2274d 100644
  	help
  	  Linux can allow user programs to install a per-process x86
  	  Local Descriptor Table (LDT) using the modify_ldt(2) system
--- 
-2.53.0
 
-
-From f05ee7a7773396331ba5234b49205bb87a5fce16 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 07:08:42 -0400
-Subject: [PATCH 019/103] set LEGACY_VSYSCALL_NONE by default
+Subject: [PATCH 019/101] set LEGACY_VSYSCALL_NONE by default
 
 ---
  arch/x86/Kconfig | 2 +-
@@ -498,14 +444,11 @@ index bd2daec2274d..e0f647a640a9 100644
  	help
  	  Legacy user code that does not know how to find the vDSO expects
  	  to be able to issue three syscalls by calling fixed addresses in
--- 
-2.53.0
 
-
-From f8c15bcb98f819f57af27ceb1b9f9a8c44985d6d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Bernhard40 <32568352+Bernhard40@users.noreply.github.com>
 Date: Fri, 6 Oct 2017 10:21:50 +0000
-Subject: [PATCH 020/103] stop hiding AIO behind EXPERT
+Subject: [PATCH 020/101] stop hiding AIO behind EXPERT
 
 ---
  init/Kconfig | 2 +-
@@ -524,14 +467,11 @@ index cab3ad28ca49..5022b44b35f7 100644
  	default y
  	help
  	  This option enables POSIX asynchronous I/O which may by used
--- 
-2.53.0
 
-
-From b3fcf8f31d5d0179edc8467123352f81c258c51c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Bernhard40 <32568352+Bernhard40@users.noreply.github.com>
 Date: Fri, 6 Oct 2017 10:24:10 +0000
-Subject: [PATCH 021/103] disable AIO by default
+Subject: [PATCH 021/101] disable AIO by default
 
 ---
  init/Kconfig | 1 -
@@ -549,14 +489,11 @@ index 5022b44b35f7..6fd55ef02a21 100644
  	help
  	  This option enables POSIX asynchronous I/O which may by used
  	  by some high performance threaded applications. Disabling
--- 
-2.53.0
 
-
-From 3282e525be513ef1ea3a6a2aaefb37373c797b7f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:08:49 -0500
-Subject: [PATCH 022/103] remove SYSVIPC from arm64/x86_64 defconfigs
+Subject: [PATCH 022/101] remove SYSVIPC from arm64/x86_64 defconfigs
 
 ---
  arch/arm64/configs/defconfig      | 1 -
@@ -582,14 +519,11 @@ index 7d7310cdf8b0..21ebfefe9c90 100644
  CONFIG_POSIX_MQUEUE=y
  CONFIG_AUDIT=y
  CONFIG_NO_HZ=y
--- 
-2.53.0
 
-
-From 6aebfb3e4bdf67d3e7f0f47793c21324e3b51eda Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:28:10 -0400
-Subject: [PATCH 023/103] disable DEVPORT by default
+Subject: [PATCH 023/101] disable DEVPORT by default
 
 ---
  drivers/char/Kconfig | 1 -
@@ -607,14 +541,11 @@ index d2cfc584e202..258a33a54e8e 100644
  	help
  	  Say Y here if you want to support the /dev/port device. The /dev/port
  	  device is similar to /dev/mem, but for I/O ports.
--- 
-2.53.0
 
-
-From 2b091036910997dadb7186d219d3befd405b8c9b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 27 May 2017 07:29:45 -0400
-Subject: [PATCH 024/103] disable PROC_VMCORE by default
+Subject: [PATCH 024/101] disable PROC_VMCORE by default
 
 ---
  fs/proc/Kconfig | 1 -
@@ -632,14 +563,11 @@ index 6ae966c561e7..27d78d669f95 100644
  	help
  	  Exports the dump image of crashed kernel in ELF format.
  
--- 
-2.53.0
 
-
-From 202ce19398e77b7b3a6f639283906e945ac21cae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 28 May 2017 03:03:46 -0400
-Subject: [PATCH 025/103] disable NFS_DEBUG by default
+Subject: [PATCH 025/101] disable NFS_DEBUG by default
 
 ---
  fs/nfs/Kconfig | 1 -
@@ -657,14 +585,11 @@ index 07932ce9246c..c6754a2a6448 100644
  
  config NFS_DISABLE_UDP_SUPPORT
         bool "NFS: Disable NFS UDP protocol support"
--- 
-2.53.0
 
-
-From 94aee108f33e4dbe9571236ba6b8815f255f45ae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 12:11:11 -0400
-Subject: [PATCH 026/103] enable DEBUG_WX by default
+Subject: [PATCH 026/101] enable DEBUG_WX by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -683,14 +608,11 @@ index a7795b68b5ec..614bb7f4793f 100644
  	help
  	  Generate a warning if any W+X mappings are found at boot.
  
--- 
-2.53.0
 
-
-From aecc4f4020db2151ff00d08e6bf02a75b2a704fc Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 13:21:16 -0500
-Subject: [PATCH 027/103] disable LEGACY_PTYS by default
+Subject: [PATCH 027/101] disable LEGACY_PTYS by default
 
 ---
  drivers/tty/Kconfig | 1 -
@@ -708,14 +630,11 @@ index 149f3d53b760..3c51e08c1d8c 100644
  	help
  	  A pseudo terminal (PTY) is a software device consisting of two
  	  halves: a master and a slave. The slave device behaves identical to
--- 
-2.53.0
 
-
-From cb5ee1c2e949840c8d36c794a68d68e0e94258cf Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 12:41:42 -0500
-Subject: [PATCH 028/103] disable DEVMEM by default
+Subject: [PATCH 028/101] disable DEVMEM by default
 
 ---
  drivers/char/Kconfig | 1 -
@@ -733,14 +652,11 @@ index 258a33a54e8e..72907b30ef13 100644
  	help
  	  Say Y here if you want to support the /dev/mem device.
  	  The /dev/mem device is used to access areas of physical
--- 
-2.53.0
 
-
-From bd5082a10d1c2e8f101efb8df8ff48bf60f2dcf5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 5 Jan 2018 12:43:49 -0500
-Subject: [PATCH 029/103] enable IO_STRICT_DEVMEM by default
+Subject: [PATCH 029/101] enable IO_STRICT_DEVMEM by default
 
 ---
  lib/Kconfig.debug | 1 +
@@ -758,14 +674,11 @@ index 3ca926287400..484c53f1aa00 100644
  	help
  	  If this option is disabled, you allow userspace (root) access to all
  	  io-memory regardless of whether a driver is actively using that
--- 
-2.53.0
 
-
-From 60cfe41e82376f7b69b58a469961083a0d8e7b73 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 18:28:33 -0400
-Subject: [PATCH 030/103] disable COMPAT_BRK by default
+Subject: [PATCH 030/101] disable COMPAT_BRK by default
 
 ---
  mm/Kconfig | 1 -
@@ -783,14 +696,11 @@ index 037564f437ad..36bd2ae7b171 100644
  	help
  	  Randomizing heap placement makes heap exploits harder, but it
  	  also breaks ancient binaries (including anything libc5 based).
--- 
-2.53.0
 
-
-From d21bad0e2c6628810a131e72d6e25cca3fb1201b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 16:16:39 -0400
-Subject: [PATCH 031/103] use maximum supported mmap rnd entropy by default
+Subject: [PATCH 031/101] use maximum supported mmap rnd entropy by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -819,14 +729,11 @@ index 61130b88964b..eb9fef665a0e 100644
  	depends on HAVE_ARCH_MMAP_RND_COMPAT_BITS
  	help
  	  This value can be used to select the number of bits to use to
--- 
-2.53.0
 
-
-From b78df3b4643b8a86264b87fcf2f646ea71757148 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 30 May 2017 10:47:23 -0400
-Subject: [PATCH 032/103] enable protected_{symlinks,hardlinks} by default
+Subject: [PATCH 032/101] enable protected_{symlinks,hardlinks} by default
 
 ---
  fs/namei.c | 4 ++--
@@ -847,14 +754,11 @@ index 7377020a2cba..bbfb7a185e72 100644
  static int sysctl_protected_fifos __read_mostly;
  static int sysctl_protected_regular __read_mostly;
  
--- 
-2.53.0
 
-
-From c3a838bd5f963abaf6a00bc3e18322c03c27b96d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:13:48 -0500
-Subject: [PATCH 033/103] enable SECURITY by default
+Subject: [PATCH 033/101] enable SECURITY by default
 
 ---
  security/Kconfig | 1 +
@@ -872,14 +776,11 @@ index 108797420fe1..23fa5391a438 100644
  	help
  	  This allows you to choose different security modules to be
  	  configured into your kernel.
--- 
-2.53.0
 
-
-From 00e1bbbb93257c6e4733eb047cc888540fcc2849 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 29 May 2017 06:17:59 -0400
-Subject: [PATCH 034/103] enable SECURITY_YAMA by default
+Subject: [PATCH 034/101] enable SECURITY_YAMA by default
 
 ---
  security/yama/Kconfig | 2 +-
@@ -898,14 +799,11 @@ index a810304123ca..b809050b25d2 100644
  	help
  	  This selects Yama, which extends DAC support with additional
  	  system-wide security settings beyond regular Linux discretionary
--- 
-2.53.0
 
-
-From e7392fd7c5d606e11901dc4937c5e18f6cea9c27 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:14:02 -0500
-Subject: [PATCH 035/103] enable SECURITY_NETWORK by default
+Subject: [PATCH 035/101] enable SECURITY_NETWORK by default
 
 ---
  security/Kconfig | 1 +
@@ -923,14 +821,11 @@ index 23fa5391a438..132b6fb4bc7e 100644
  	help
  	  This enables the socket and networking security hooks.
  	  If enabled, a security module can use these hooks to
--- 
-2.53.0
 
-
-From 7fc1efd0472ea871327b91429dd68000a5309e31 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:15:24 -0500
-Subject: [PATCH 036/103] enable AUDIT by default
+Subject: [PATCH 036/101] enable AUDIT by default
 
 ---
  init/Kconfig | 1 +
@@ -948,14 +843,11 @@ index 6fd55ef02a21..d8374d39fc6f 100644
  	help
  	  Enable auditing infrastructure that can be used with another
  	  kernel subsystem, such as SELinux (which requires this for
--- 
-2.53.0
 
-
-From ff557d3da553ffa68ec32238e6f4cdf947ad400c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 02:16:49 -0500
-Subject: [PATCH 037/103] enable SECURITY_SELINUX by default
+Subject: [PATCH 037/101] enable SECURITY_SELINUX by default
 
 ---
  security/selinux/Kconfig | 2 +-
@@ -974,14 +866,11 @@ index 61abc1e094a8..ceda05c0c4f6 100644
  	help
  	  This selects Security-Enhanced Linux (SELinux).
  	  You will also need a policy configuration and a labeled filesystem.
--- 
-2.53.0
 
-
-From f24326c036d32fb65e249188cde8fb71284c54b9 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 6 Jan 2018 13:41:11 -0500
-Subject: [PATCH 038/103] enable SYN_COOKIES by default
+Subject: [PATCH 038/101] enable SYN_COOKIES by default
 
 ---
  net/ipv4/Kconfig | 1 +
@@ -999,14 +888,11 @@ index 06cb9c9c5b9e..1e45957cf5d2 100644
  	help
  	  Normal TCP/IP networking is open to an attack known as "SYN
  	  flooding". This denial-of-service attack prevents legitimate remote
--- 
-2.53.0
 
-
-From 8c4c19bd994710ba6c7a4bcaef6376bb3a61414e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 19 Sep 2019 19:02:23 +0200
-Subject: [PATCH 039/103] enable INIT_ON_ALLOC_DEFAULT_ON by default
+Subject: [PATCH 039/101] enable INIT_ON_ALLOC_DEFAULT_ON by default
 
 ---
  security/Kconfig.hardening | 1 +
@@ -1024,14 +910,11 @@ index e42e319485ae..226193bf5ebc 100644
  	depends on !KMSAN
  	help
  	  This has the effect of setting "init_on_alloc=1" on the kernel
--- 
-2.53.0
 
-
-From 4635e7734a4b1812dbcef5a259552015f9cf1b24 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 19 Sep 2019 19:03:01 +0200
-Subject: [PATCH 040/103] enable INIT_ON_FREE_DEFAULT_ON by default
+Subject: [PATCH 040/101] enable INIT_ON_FREE_DEFAULT_ON by default
 
 ---
  security/Kconfig.hardening | 1 +
@@ -1049,14 +932,11 @@ index 226193bf5ebc..07f9286f1443 100644
  	depends on !KMSAN
  	help
  	  This has the effect of setting "init_on_free=1" on the kernel
--- 
-2.53.0
 
-
-From 7ac92eb56c35fa509adf6b3bfa25826b467de99f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 27 Sep 2020 00:43:48 +0200
-Subject: [PATCH 041/103] kconfig: select DEBUG_FS_ALLOW_NONE by default if
+Subject: [PATCH 041/101] kconfig: select DEBUG_FS_ALLOW_NONE by default if
  DEBUG_FS is enabled
 
 Signed-off-by: Levente Polyak <levente@leventepolyak.net>
@@ -1077,14 +957,11 @@ index 484c53f1aa00..e5c0ae2841c8 100644
  	help
  	  This selects the default access restrictions for debugfs.
  	  It can be overridden with kernel command line option
--- 
-2.53.0
 
-
-From 43c3d8cb5d2537fcb2bf4437665a630f5b990909 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 22 Dec 2020 23:40:09 +0100
-Subject: [PATCH 042/103] stop hiding UID16 behind EXPERT
+Subject: [PATCH 042/101] stop hiding UID16 behind EXPERT
 
 ---
  init/Kconfig | 2 +-
@@ -1103,14 +980,11 @@ index d8374d39fc6f..1c0c7d94de82 100644
  	depends on HAVE_UID16 && MULTIUSER
  	default y
  	help
--- 
-2.53.0
 
-
-From 956204315906b75326272e87c8dc2259d9c3d87f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 22 Dec 2020 23:41:32 +0100
-Subject: [PATCH 043/103] disable UID16 by default
+Subject: [PATCH 043/101] disable UID16 by default
 
 ---
  init/Kconfig | 1 -
@@ -1128,14 +1002,11 @@ index 1c0c7d94de82..dd369d43316b 100644
  	help
  	  This enables the legacy 16-bit UID syscall wrappers.
  
--- 
-2.53.0
 
-
-From 8eede0b6f5af2310d892598fbc71f0589ebe25bf Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 25 Aug 2021 22:24:10 +0200
-Subject: [PATCH 044/103] kconfig: enable RANDOMIZE_KSTACK_OFFSET_DEFAULT by
+Subject: [PATCH 044/101] kconfig: enable RANDOMIZE_KSTACK_OFFSET_DEFAULT by
  default
 
 ---
@@ -1154,14 +1025,11 @@ index eb9fef665a0e..17c0a3dbb249 100644
  	help
  	  Kernel stack offset randomization is controlled by kernel boot param
  	  "randomize_kstack_offset=on/off", and this config chooses the default
--- 
-2.53.0
 
-
-From dc63ccfff89c3f780fcacb6f3d762e798e1ffc6d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Mon, 1 May 2023 23:20:43 +0200
-Subject: [PATCH 045/103] kconfig: disable LEGACY_TIOCSTI by default
+Subject: [PATCH 045/101] kconfig: disable LEGACY_TIOCSTI by default
 
 ---
  drivers/tty/Kconfig | 1 -
@@ -1179,14 +1047,11 @@ index 3c51e08c1d8c..a3e62d52ebcf 100644
  	help
  	  Historically the kernel has allowed TIOCSTI, which will push
  	  characters into a controlling TTY. This continues to be used
--- 
-2.53.0
 
-
-From ab834b5b800a686c6cb97b952823f5fe708f0c5b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 12 Dec 2023 18:35:05 +0100
-Subject: [PATCH 046/103] mm/slab: enable RANDOM_KMALLOC_CACHES by default
+Subject: [PATCH 046/101] mm/slab: enable RANDOM_KMALLOC_CACHES by default
 
 ---
  mm/Kconfig | 2 +-
@@ -1205,14 +1070,11 @@ index 36bd2ae7b171..02e9eb82ad85 100644
  	depends on !SLUB_TINY
  	bool "Randomize slab caches for normal kmalloc"
  	help
--- 
-2.53.0
 
-
-From 9cac8ff8bad330fde2bde32560b25fbc1d3e521e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 7 May 2017 00:28:23 -0400
-Subject: [PATCH 047/103] add __read_only for non-init related usage
+Subject: [PATCH 047/101] add __read_only for non-init related usage
 
 ---
  include/linux/cache.h | 2 ++
@@ -1231,14 +1093,11 @@ index e69768f50d53..432c30a1fc7e 100644
  #ifndef ____cacheline_aligned_in_smp
  #ifdef CONFIG_SMP
  #define ____cacheline_aligned_in_smp ____cacheline_aligned
--- 
-2.53.0
 
-
-From 3fd9baa7eed1885349a7355061d4573d2994439e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 12 May 2017 03:22:00 -0400
-Subject: [PATCH 048/103] mark kernel_set_to_readonly as __ro_after_init
+Subject: [PATCH 048/101] mark kernel_set_to_readonly as __ro_after_init
 
 This change was extracted from PaX where it's part of KERNEXEC.
 
@@ -1299,14 +1158,11 @@ index 3d9a5e4ccaa4..f9b8d0a2531a 100644
  
  	/*
  	 * The rodata/data/bss/brk section (but not the kernel text!)
--- 
-2.53.0
 
-
-From 2a7c52a2aeef46c26a247ec6035f056be4df491e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 13 Jan 2019 21:42:45 +0100
-Subject: [PATCH 049/103] Revert "mark kernel_set_to_readonly as
+Subject: [PATCH 049/101] Revert "mark kernel_set_to_readonly as
  __ro_after_init"
 
     This commit causes CPA conflicts, cf.
@@ -1370,14 +1226,11 @@ index f9b8d0a2531a..3d9a5e4ccaa4 100644
  	/*
  	 * The rodata/data/bss/brk section (but not the kernel text!)
  	 * should also be not-executable.
--- 
-2.53.0
 
-
-From 4c374efb8db3498c5eb64943efe71e1fdeefbe04 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 14 May 2017 19:01:58 -0400
-Subject: [PATCH 050/103] mark slub runtime configuration as __ro_after_init
+Subject: [PATCH 050/101] mark slub runtime configuration as __ro_after_init
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -1385,7 +1238,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index a89df6ddcc58..9f851e88f50a 100644
+index 5fdec3b83706..58d70f9e4174 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -972,13 +972,13 @@ static inline void *restore_red_left(struct kmem_cache *s, void *p)
@@ -1406,7 +1259,7 @@ index a89df6ddcc58..9f851e88f50a 100644
  
  /*
   * slub is about to manipulate internal object metadata.  This memory lies
-@@ -7566,10 +7566,10 @@ EXPORT_SYMBOL(kmem_cache_alloc_bulk_noprof);
+@@ -7567,10 +7567,10 @@ EXPORT_SYMBOL(kmem_cache_alloc_bulk_noprof);
   * and increases the number of allocations possible without having to
   * take the list_lock.
   */
@@ -1420,14 +1273,11 @@ index a89df6ddcc58..9f851e88f50a 100644
  
  /*
   * Calculate the order of allocation given an slab object size.
--- 
-2.53.0
 
-
-From 5d0dc3deea488ecad32ad88f75dc44f7f541d325 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 11:35:35 -0400
-Subject: [PATCH 051/103] add __ro_after_init to slab_nomerge and slab_state
+Subject: [PATCH 051/101] add __ro_after_init to slab_nomerge and slab_state
 
 This was extracted from the PaX patch where it's part of the KERNEXEC
 feature as __read_only.
@@ -1438,7 +1288,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 0f58265ca200..35be9f901bdd 100644
+index 04583044a2bf..8a4c1c13b649 100644
 --- a/mm/slab_common.c
 +++ b/mm/slab_common.c
 @@ -37,7 +37,7 @@
@@ -1459,21 +1309,18 @@ index 0f58265ca200..35be9f901bdd 100644
  
  static int __init setup_slab_nomerge(char *str)
  {
--- 
-2.53.0
 
-
-From 858f3bd1e4d21da1feb9fa12d817d37f6df106cb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 28 May 2017 18:51:30 -0400
-Subject: [PATCH 052/103] mark kmem_cache as __ro_after_init
+Subject: [PATCH 052/101] mark kmem_cache as __ro_after_init
 
 ---
  mm/slab_common.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 35be9f901bdd..9f9c17dede03 100644
+index 8a4c1c13b649..02475dc2332e 100644
 --- a/mm/slab_common.c
 +++ b/mm/slab_common.c
 @@ -40,7 +40,7 @@
@@ -1485,14 +1332,11 @@ index 35be9f901bdd..9f9c17dede03 100644
  
  /*
   * Set of flags that will prevent slab merging
--- 
-2.53.0
 
-
-From fc4a06ebd0b31e8f48cb3e4334beb01c1df590eb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 12 May 2017 00:06:16 -0400
-Subject: [PATCH 053/103] mark __{supported,default_kernel}_pte_mask as
+Subject: [PATCH 053/101] mark __{supported,default_kernel}_pte_mask as
  __ro_after_init
 
 These changes were initially extracted from PaX where it was part of
@@ -1543,14 +1387,11 @@ index 3d9a5e4ccaa4..41862cc42ff9 100644
  EXPORT_SYMBOL_GPL(__supported_pte_mask);
  /* Used in PAGE_KERNEL_* macros which are reasonably used out-of-tree: */
  EXPORT_SYMBOL(__default_kernel_pte_mask);
--- 
-2.53.0
 
-
-From e6f59716c23afa86f9650f9fd1d32477e419d953 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:24:28 -0400
-Subject: [PATCH 054/103] mark kobj_ns_type_register as only used for init
+Subject: [PATCH 054/101] mark kobj_ns_type_register as only used for init
 
 This allows kobj_ns_ops_tbl to be __ro_after_init.
 
@@ -1589,14 +1430,11 @@ index abe5f5b856ce..a80fa9d8f2db 100644
  {
  	enum kobj_ns_type type = ops->type;
  	int error;
--- 
-2.53.0
 
-
-From c0540251d62769f581c5ecf7738c65dd68301fa4 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:32:30 -0400
-Subject: [PATCH 055/103] mark open_softirq as only used for init
+Subject: [PATCH 055/101] mark open_softirq as only used for init
 
 [nicolas.bouchinet@ssi.gouv.fr: Adapt to commit 75e340ce106fa]
 ---
@@ -1630,14 +1468,11 @@ index 77198911b8dd..c83209f8458b 100644
  {
  	softirq_vec[nr].action = action;
  }
--- 
-2.53.0
 
-
-From c57b37b7a30713bf1e6f31b90e337955159b2422 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 4 Jul 2017 01:42:33 -0400
-Subject: [PATCH 056/103] mark softirq_vec as __ro_after_init
+Subject: [PATCH 056/101] mark softirq_vec as __ro_after_init
 
 Note: __cacheline_aligned_in_smp conflicts with __ro_after_init on x86.
 
@@ -1659,14 +1494,11 @@ index c83209f8458b..1c508ce336ae 100644
  
  DEFINE_PER_CPU(struct task_struct *, ksoftirqd);
  
--- 
-2.53.0
 
-
-From 1a4e878d89c2643bb400e733a473290e3336867a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 17 Sep 2019 18:00:54 +0200
-Subject: [PATCH 057/103] mm: slab: BUG on page type confusion under
+Subject: [PATCH 057/101] mm: slab: BUG on page type confusion under
  BUG_ON_DATA_CORRUPTION
 
 This change was extracted from PaX.
@@ -1681,10 +1513,10 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 9f851e88f50a..7e59aa60b37e 100644
+index 58d70f9e4174..0a1a0dda55da 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -6792,8 +6792,12 @@ static inline struct kmem_cache *virt_to_cache(const void *obj)
+@@ -6793,8 +6793,12 @@ static inline struct kmem_cache *virt_to_cache(const void *obj)
  	struct slab *slab;
  
  	slab = virt_to_slab(obj);
@@ -1697,14 +1529,11 @@ index 9f851e88f50a..7e59aa60b37e 100644
  	return slab->slab_cache;
  }
  
--- 
-2.53.0
 
-
-From b69de76f8562260255f0a6c0cef34e56cba4f592 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 11:50:53 -0400
-Subject: [PATCH 058/103] bug on kmem_cache_free with the wrong cache
+Subject: [PATCH 058/101] bug on kmem_cache_free with the wrong cache
 
 At least when CONFIG_BUG_ON_DATA_CORRUPTION is enabled.
 
@@ -1718,10 +1547,10 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 7e59aa60b37e..b0c4a0d0d6c5 100644
+index 0a1a0dda55da..f1753f4c8cd1 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -6810,10 +6810,15 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+@@ -6811,10 +6811,15 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
  		return s;
  
  	cachep = virt_to_cache(x);
@@ -1740,14 +1569,11 @@ index 7e59aa60b37e..b0c4a0d0d6c5 100644
  	return cachep;
  }
  
--- 
-2.53.0
 
-
-From 170379f676400278e36ba0561b39b5c9fd573ef4 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 21:54:56 -0400
-Subject: [PATCH 059/103] mm: add support for verifying page sanitization
+Subject: [PATCH 059/101] mm: add support for verifying page sanitization
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
@@ -1811,14 +1637,11 @@ index 07f9286f1443..b728851fec14 100644
  endmenu
  
  menu "Bounds checking"
--- 
-2.53.0
 
-
-From dfa63da0771e3e1c79b7c63a5bd61cd340f2cce8 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Fri, 20 Sep 2019 14:02:42 +0200
-Subject: [PATCH 060/103] slub: Extend init_on_free to slab caches with
+Subject: [PATCH 060/101] slub: Extend init_on_free to slab caches with
  constructors
 
 This is the remaining non-upstream part of SLAB_SANITIZE, which was a
@@ -1858,7 +1681,7 @@ index 36893299fa67..3d10fd5d2ceb 100644
  }
  
 diff --git a/mm/slub.c b/mm/slub.c
-index b0c4a0d0d6c5..56c8ac45918f 100644
+index f1753f4c8cd1..c357e193abcf 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -2574,6 +2574,8 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
@@ -1893,14 +1716,11 @@ index b0c4a0d0d6c5..56c8ac45918f 100644
  		}
  	} while (object != old_tail);
  
--- 
-2.53.0
 
-
-From 0465db8b7f09abfabd8d4ef38bb409a9a3113e38 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 15:58:57 -0400
-Subject: [PATCH 061/103] slub: Add support for verifying slab sanitization
+Subject: [PATCH 061/101] slub: Add support for verifying slab sanitization
 
 This is an extension to the sanitization feature in PaX for when
 sacricifing more performance for security is acceptable.
@@ -1919,7 +1739,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  2 files changed, 49 insertions(+), 4 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 56c8ac45918f..8a8786833d23 100644
+index c357e193abcf..01aa99418d6d 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -254,6 +254,12 @@ static inline bool kmem_cache_debug(struct kmem_cache *s)
@@ -1953,7 +1773,7 @@ index 56c8ac45918f..8a8786833d23 100644
  		kasan_unpoison_new_object(s, object);
  		s->ctor(object);
  		kasan_poison_new_object(s, object);
-@@ -5352,7 +5358,19 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
+@@ -5353,7 +5359,19 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
  		object = __slab_alloc_node(s, gfpflags, node, addr, orig_size);
  
  	maybe_wipe_obj_freeptr(s, object);
@@ -1974,7 +1794,7 @@ index 56c8ac45918f..8a8786833d23 100644
  
  out:
  	/*
-@@ -7524,6 +7542,21 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+@@ -7525,6 +7543,21 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
  	local_unlock_irqrestore(&s->cpu_slab->lock, irqflags);
  	slub_put_cpu_ptr(s->cpu_slab);
  
@@ -1996,7 +1816,7 @@ index 56c8ac45918f..8a8786833d23 100644
  	return i;
  
  error:
-@@ -7538,6 +7571,7 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
+@@ -7539,6 +7572,7 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
  				 void **p)
  {
  	unsigned int i = 0;
@@ -2004,7 +1824,7 @@ index 56c8ac45918f..8a8786833d23 100644
  
  	if (!size)
  		return 0;
-@@ -7565,8 +7599,11 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
+@@ -7566,8 +7600,11 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
  	 * memcg and kmem_cache debug support and memory initialization.
  	 * Done outside of the IRQ disabled fastpath loop.
  	 */
@@ -2036,400 +1856,11 @@ index b728851fec14..0068460db967 100644
  endmenu
  
  menu "Bounds checking"
--- 
-2.53.0
 
-
-From 0c23f1ff3ca8391e4c17b427531d4866b661cd05 Mon Sep 17 00:00:00 2001
-From: Daniel Micay <danielmicay@gmail.com>
-Date: Wed, 3 May 2017 16:16:58 -0400
-Subject: [PATCH 062/103] slub: add multi-purpose random canaries
-
-Place canaries at the end of kernel slab allocations, sacrificing
-some performance and memory usage for security.
-
-Canaries can detect some forms of heap corruption when allocations
-are freed and as part of the HARDENED_USERCOPY feature. It provides
-basic use-after-free detection for HARDENED_USERCOPY.
-
-Canaries absorb small overflows (rendering them harmless), mitigate
-non-NUL terminated C string overflows on 64-bit via a guaranteed zero
-byte and provide basic double-free detection.
-
-Signed-off-by: Daniel Micay <danielmicay@gmail.com>
-[levente@leventepolyak.net: make canaries work without SLUB_DEBUG]
-[levente@leventepolyak.net: fix compatibility with KFENCE]
-Signed-off-by: Levente Polyak <levente@leventepolyak.net>
-[nicolas.bouchinet@ssi.gouv.fr: Fix conflicts with commit 782f8906f8057efc7]
-[nicolas.bouchinet@ssi.gouv.fr: Take slab canary in account for object size]
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
----
- mm/Kconfig |  17 ++++++++
- mm/slab.h  |   7 +++-
- mm/slub.c  | 117 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 130 insertions(+), 11 deletions(-)
-
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 02e9eb82ad85..81b475dbbb49 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -235,6 +235,23 @@ config SLAB_BUCKETS
- 
- 	  If unsure, say Y.
- 
-+config SLAB_CANARY
-+	depends on SLUB
-+	depends on !SLAB_MERGE_DEFAULT
-+	bool "SLAB canaries"
-+	default y
-+	help
-+	  Place canaries at the end of kernel slab allocations, sacrificing
-+	  some performance and memory usage for security.
-+
-+	  Canaries can detect some forms of heap corruption when allocations
-+	  are freed and as part of the HARDENED_USERCOPY feature. It provides
-+	  basic use-after-free detection for HARDENED_USERCOPY.
-+
-+	  Canaries absorb small overflows (rendering them harmless), mitigate
-+	  non-NUL terminated C string overflows on 64-bit via a guaranteed zero
-+	  byte and provide basic double-free detection.
-+
- config SLUB_STATS
- 	default n
- 	bool "Enable performance statistics"
-diff --git a/mm/slab.h b/mm/slab.h
-index 3d10fd5d2ceb..8c2c407036c9 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -272,6 +272,11 @@ struct kmem_cache {
- 	unsigned long random;
- #endif
- 
-+#ifdef CONFIG_SLAB_CANARY
-+	unsigned long random_active;
-+	unsigned long random_inactive;
-+#endif
-+
- #ifdef CONFIG_NUMA
- 	/*
- 	 * Defragmentation by allocating from a remote node.
-@@ -592,7 +597,7 @@ static inline size_t slab_ksize(const struct kmem_cache *s)
- 	 * back there or track user information then we can
- 	 * only use the space before that information.
- 	 */
--	if (s->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_STORE_USER))
-+	if ((s->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_STORE_USER)) || IS_ENABLED(CONFIG_SLAB_CANARY))
- 		return s->inuse;
- 	/*
- 	 * Else we can use all the padding etc for the allocation
-diff --git a/mm/slub.c b/mm/slub.c
-index 8a8786833d23..637458daa63f 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -42,6 +42,7 @@
- #include <linux/memcontrol.h>
- #include <linux/random.h>
- #include <linux/prandom.h>
-+#include <linux/stackprotector.h>
- #include <kunit/test.h>
- #include <kunit/test-bug.h>
- #include <linux/sort.h>
-@@ -876,6 +877,8 @@ static inline void set_orig_size(struct kmem_cache *s,
- 		return;
- 
- 	p += get_info_end(s);
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		p = (void *)p + sizeof(void *);
- 	p += sizeof(struct track) * 2;
- 
- 	*(unsigned long *)p = orig_size;
-@@ -892,11 +895,40 @@ static inline unsigned long get_orig_size(struct kmem_cache *s, void *object)
- 		return s->object_size;
- 
- 	p += get_info_end(s);
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		p = (void *)p + sizeof(void *);
- 	p += sizeof(struct track) * 2;
- 
- 	return *(unsigned long *)p;
- }
- 
-+#ifdef CONFIG_SLAB_CANARY
-+static inline unsigned long *get_canary(struct kmem_cache *s, void *object)
-+{
-+	return object + get_info_end(s);
-+}
-+
-+static inline unsigned long get_canary_value(const void *canary, unsigned long value)
-+{
-+	return (value ^ (unsigned long)canary) & CANARY_MASK;
-+}
-+
-+static inline void set_canary(struct kmem_cache *s, void *object, unsigned long value)
-+{
-+	unsigned long *canary = get_canary(s, object);
-+	*canary = get_canary_value(canary, value);
-+}
-+
-+static inline void check_canary(struct kmem_cache *s, void *object, unsigned long value)
-+{
-+	unsigned long *canary = get_canary(s, object);
-+	BUG_ON(*canary != get_canary_value(canary, value));
-+}
-+#else
-+#define set_canary(s, object, value)
-+#define check_canary(s, object, value)
-+#endif
-+
- #ifdef CONFIG_SLUB_DEBUG
- 
- /*
-@@ -1044,6 +1076,9 @@ static struct track *get_track(struct kmem_cache *s, void *object,
- 
- 	p = object + get_info_end(s);
- 
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		p = (void *)p + sizeof(void *);
-+
- 	return kasan_reset_tag(p + alloc);
- }
- 
-@@ -1205,6 +1240,9 @@ static void print_trailer(struct kmem_cache *s, struct slab *slab, u8 *p)
- 
- 	off = get_info_end(s);
- 
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		off += sizeof(void *);
-+
- 	if (s->flags & SLAB_STORE_USER)
- 		off += 2 * sizeof(struct track);
- 
-@@ -1380,9 +1418,10 @@ check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
-  * 	Meta data starts here.
-  *
-  * 	A. Free pointer (if we cannot overwrite object on free)
-- * 	B. Tracking data for SLAB_STORE_USER
-- *	C. Original request size for kmalloc object (SLAB_STORE_USER enabled)
-- *	D. Padding to reach required alignment boundary or at minimum
-+ * 	B. Canary for SLAB_CANARY
-+ * 	C. Tracking data for SLAB_STORE_USER
-+ * 	D. Original request size for kmalloc object (SLAB_STORE_USER enabled)
-+ * 	E. Padding to reach required alignment boundary or at minimum
-  * 		one word if debugging is on to be able to detect writes
-  * 		before the word boundary.
-  *
-@@ -1400,6 +1439,9 @@ static int check_pad_bytes(struct kmem_cache *s, struct slab *slab, u8 *p)
- {
- 	unsigned long off = get_info_end(s);	/* The end of info */
- 
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		off += sizeof(void *);
-+
- 	if (s->flags & SLAB_STORE_USER) {
- 		/* We also have user information there */
- 		off += 2 * sizeof(struct track);
-@@ -2502,11 +2544,19 @@ struct rcu_delayed_free {
-  */
- static __always_inline
- bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
--		    bool after_rcu_delay)
-+		    bool after_rcu_delay, bool canary)
- {
- 	/* Are the object contents still accessible? */
- 	bool still_accessible = (s->flags & SLAB_TYPESAFE_BY_RCU) && !after_rcu_delay;
- 
-+	/*
-+	 * Postpone setting the inactive canary until the metadata
-+	 * has potentially been cleared at the end of this function.
-+	 */
-+	if (canary) {
-+		check_canary(s, x, s->random_active);
-+	}
-+
- 	kmemleak_free_recursive(x, s->flags);
- 	kmsan_slab_free(s, x);
- 
-@@ -2572,8 +2622,14 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
- 		if (!kasan_has_integrated_init())
- 			memset(kasan_reset_tag(x), 0, orig_size);
- 		rsize = (s->flags & SLAB_RED_ZONE) ? s->red_left_pad : 0;
-+
-+#ifdef CONFIG_SLAB_CANARY
-+		memset((char *)kasan_reset_tag(x) + inuse + sizeof(void *), 0,
-+		       s->size - inuse - sizeof(void *) - rsize);
-+#else
- 		memset((char *)kasan_reset_tag(x) + inuse, 0,
- 		       s->size - inuse - rsize);
-+#endif
- 		/*
- 		 * Restore orig_size, otherwise kmalloc redzone overwritten
- 		 * would be reported
-@@ -2583,6 +2639,11 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
- 		if (!IS_ENABLED(CONFIG_SLAB_SANITIZE_VERIFY) && s->ctor)
- 			s->ctor(x);
- 	}
-+
-+	if (canary) {
-+		set_canary(s, x, s->random_inactive);
-+	}
-+
- 	/* KASAN might put x into memory quarantine, delaying its reuse. */
- 	return !kasan_slab_free(s, x, init, still_accessible, false);
- }
-@@ -2598,7 +2659,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
- 	bool init;
- 
- 	if (is_kfence_address(next)) {
--		slab_free_hook(s, next, false, false);
-+		slab_free_hook(s, next, false, false, false);
- 		return false;
- 	}
- 
-@@ -2613,7 +2674,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
- 		next = get_freepointer(s, object);
- 
- 		/* If object's reuse doesn't have to be delayed */
--		if (likely(slab_free_hook(s, object, init, false))) {
-+		if (likely(slab_free_hook(s, object, init, false, true))) {
- 			/* Move object to the new freelist */
- 			set_freepointer(s, object, *head);
- 			*head = object;
-@@ -2650,6 +2711,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
- static void *setup_object(struct kmem_cache *s, void *object)
- {
- 	setup_object_debug(s, object);
-+	set_canary(s, object, s->random_inactive);
- 	object = kasan_init_slab_obj(s, object);
- 	if (unlikely(s->ctor) && !has_sanitize_verify(s)) {
- 		kasan_unpoison_new_object(s, object);
-@@ -5372,6 +5434,11 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 		init = slab_want_init_on_alloc(gfpflags, s);
- 	}
- 
-+	if (object) {
-+		check_canary(s, object, s->random_inactive);
-+		set_canary(s, object, s->random_active);
-+	}
-+
- out:
- 	/*
- 	 * When init equals 'true', like for kzalloc() family, only
-@@ -6746,10 +6813,16 @@ static __fastpath_inline
- void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	       unsigned long addr)
- {
-+	bool canary = true;
-+
- 	memcg_slab_free_hook(s, slab, &object, 1);
- 	alloc_tagging_slab_free_hook(s, slab, &object, 1);
- 
--	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false)))
-+	/* Make sure canaries are not used on kfence objects. */
-+	if (is_kfence_address(object))
-+		canary = false;
-+
-+	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false, canary)))
- 		return;
- 
- 	if (s->cpu_sheaves && likely(!IS_ENABLED(CONFIG_NUMA) ||
-@@ -6766,11 +6839,16 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- static noinline
- void memcg_alloc_abort_single(struct kmem_cache *s, void *object)
- {
-+	bool canary = true;
- 	struct slab *slab = virt_to_slab(object);
- 
- 	alloc_tagging_slab_free_hook(s, slab, &object, 1);
- 
--	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s), false)))
-+	/* Make sure canaries are not used on kfence objects. */
-+	if (is_kfence_address(object))
-+		canary = false;
-+
-+	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s), false, canary)))
- 		do_slab_free(s, slab, object, object, 1, _RET_IP_);
- }
- #endif
-@@ -6811,7 +6889,7 @@ static void slab_free_after_rcu_debug(struct rcu_head *rcu_head)
- 		return;
- 
- 	/* resume freeing */
--	if (slab_free_hook(s, object, slab_want_init_on_free(s), true))
-+	if (slab_free_hook(s, object, slab_want_init_on_free(s), true, true))
- 		do_slab_free(s, slab, object, object, 1, _THIS_IP_);
- }
- #endif /* CONFIG_SLUB_RCU_DEBUG */
-@@ -7486,7 +7564,7 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
- {
- 	struct kmem_cache_cpu *c;
- 	unsigned long irqflags;
--	int i;
-+	int i, k;
- 
- 	/*
- 	 * Drain objects in the per cpu slab, while disabling local
-@@ -7557,6 +7635,13 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
- 		}
- 	}
- 
-+	for (k = 0; k < i; k++) {
-+		if (!is_kfence_address(p[k])) {
-+			check_canary(s, p[k], s->random_inactive);
-+			set_canary(s, p[k], s->random_active);
-+		}
-+	}
-+
- 	return i;
- 
- error:
-@@ -7831,6 +7916,7 @@ static void early_kmem_cache_node_alloc(int node)
- #ifdef CONFIG_SLUB_DEBUG
- 	init_object(kmem_cache_node, n, SLUB_RED_ACTIVE);
- #endif
-+	set_canary(kmem_cache_node, n, kmem_cache_node->random_active);
- 	n = kasan_slab_alloc(kmem_cache_node, n, GFP_KERNEL, false);
- 	slab->freelist = get_freepointer(kmem_cache_node, n);
- 	slab->inuse = 1;
-@@ -8021,6 +8107,9 @@ static int calculate_sizes(struct kmem_cache_args *args, struct kmem_cache *s)
- 		s->offset = ALIGN_DOWN(s->object_size / 2, sizeof(void *));
- 	}
- 
-+	if (IS_ENABLED(CONFIG_SLAB_CANARY))
-+		size += sizeof(void *);
-+
- #ifdef CONFIG_SLUB_DEBUG
- 	if (flags & SLAB_STORE_USER) {
- 		/*
-@@ -8333,6 +8422,10 @@ void __check_heap_object(const void *ptr, unsigned long n,
- 		offset -= s->red_left_pad;
- 	}
- 
-+	if (!is_kfence) {
-+		check_canary(s, (void *)ptr - offset, s->random_active);
-+	}
-+
- 	/* Allow address range falling entirely within usercopy region. */
- 	if (offset >= s->useroffset &&
- 	    offset - s->useroffset <= s->usersize &&
-@@ -8659,6 +8752,10 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
- 	s->flags = kmem_cache_flags(flags, s->name);
- #ifdef CONFIG_SLAB_FREELIST_HARDENED
- 	s->random = get_random_long();
-+#endif
-+#ifdef CONFIG_SLAB_CANARY
-+	s->random_active = get_random_long();
-+	s->random_inactive = get_random_long();
- #endif
- 	s->align = args->align;
- 	s->ctor = args->ctor;
--- 
-2.53.0
-
-
-From 3c12bdac0e2e2532e91d2b4215103d6124982919 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ben Hutchings <ben@decadent.org.uk>
 Date: Mon, 11 Jan 2016 15:23:55 +0000
-Subject: [PATCH 063/103] security,perf: Allow further restriction of
+Subject: [PATCH 062/101] security,perf: Allow further restriction of
  perf_event_open
 
 When kernel.perf_event_open is set to 3 (or greater), disallow all
@@ -2568,14 +1999,11 @@ index 9df9818e3701..eef46803b2cf 100644
  		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
  		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
  		 perf_event_paranoid());
--- 
-2.53.0
 
-
-From 898cbfe56b5339d88c70df6a71ae9df0c7c4aa67 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 4 May 2017 14:45:59 -0400
-Subject: [PATCH 064/103] enable SECURITY_PERF_EVENTS_RESTRICT by default
+Subject: [PATCH 063/101] enable SECURITY_PERF_EVENTS_RESTRICT by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -2594,14 +2022,11 @@ index ea669f5e261b..731c88508ab6 100644
  	help
  	  If you say Y here, the kernel.perf_event_paranoid sysctl
  	  will be set to 3 by default, and no unprivileged use of the
--- 
-2.53.0
 
-
-From 03fe15406963fb7f9abde48ff6eec0659733ff03 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Serge Hallyn <serge.hallyn@canonical.com>
 Date: Fri, 31 May 2013 19:12:12 +0100
-Subject: [PATCH 065/103] userns: add sysctl to disallow unprivileged
+Subject: [PATCH 064/101] userns: add sysctl to disallow unprivileged
  CLONE_NEWUSER by default
 
 Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
@@ -2723,14 +2148,11 @@ index 03cb63883d04..520ed001ae58 100644
  static struct kmem_cache *user_ns_cachep __ro_after_init;
  static DEFINE_MUTEX(userns_state_mutex);
  
--- 
-2.53.0
 
-
-From 933b085d99ff3dbd4ecc55eeb4435b34655b8ee0 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 31 Jul 2019 20:50:48 +0100
-Subject: [PATCH 066/103] userns: add kconfig to set default for unprivileged
+Subject: [PATCH 065/101] userns: add kconfig to set default for unprivileged
  CLONE_NEWUSER
 
 When disabled, unprivileged users will not be able to create
@@ -2793,14 +2215,11 @@ index 520ed001ae58..597c33a2ea16 100644
  
  static struct kmem_cache *user_ns_cachep __ro_after_init;
  static DEFINE_MUTEX(userns_state_mutex);
--- 
-2.53.0
 
-
-From 7ea6f3f64516ae1a6bc3d9b5d7319b529f10781b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Emese Revfy <re.emese@gmail.com>
 Date: Tue, 31 May 2016 01:34:02 +0200
-Subject: [PATCH 067/103] Add the extra_latent_entropy kernel parameter
+Subject: [PATCH 066/101] Add the extra_latent_entropy kernel parameter
 
 When extra_latent_entropy is passed on the kernel command line,
 entropy will be extracted from up to the first 4GB of RAM while the
@@ -2891,14 +2310,11 @@ index 6b34ba19358d..d83e715c9d40 100644
  	  Note that entropy extracted this way is not cryptographically
  	  secure!
  
--- 
-2.53.0
 
-
-From 1947839c9bac5360d2100f8f5ca57be600876a31 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 15 May 2017 23:45:34 -0400
-Subject: [PATCH 068/103] ata: avoid null pointer dereference on bug
+Subject: [PATCH 067/101] ata: avoid null pointer dereference on bug
 
 Extracted from PaX.
 
@@ -2921,14 +2337,11 @@ index 5ee4adc62342..2304eccca649 100644
  	if (WARN_ON_ONCE(!(qc->flags & ATA_QCFLAG_ACTIVE)))
  		return;
  
--- 
-2.53.0
 
-
-From ad314ac5adec20f096af1c25314f22493e6b10f8 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 15 May 2017 23:51:12 -0400
-Subject: [PATCH 069/103] sanity check for negative length in nla_memcpy
+Subject: [PATCH 068/101] sanity check for negative length in nla_memcpy
 
 Extracted from PaX.
 
@@ -2950,14 +2363,11 @@ index be9c576b6e2d..484d839bcf5e 100644
  	memcpy(dest, nla_data(src), minlen);
  	if (count > minlen)
  		memset(dest + minlen, 0, count - minlen);
--- 
-2.53.0
 
-
-From 3f34ee2c2c6b7379d1a7ed941cabb54e12d136c0 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 00:59:48 -0400
-Subject: [PATCH 070/103] PaX shadow cr4 sanity check (essentially a revert)
+Subject: [PATCH 069/101] PaX shadow cr4 sanity check (essentially a revert)
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 [levente@leventepolyak.net: Adapt to cpu_tlbstate moved out-of-line]
@@ -3007,14 +2417,11 @@ index 4c718f8adc59..ea45acfe4f03 100644
  
  	newval = cr4 ^ mask;
  	if (newval != cr4) {
--- 
-2.53.0
 
-
-From 324c2703bb2e2e65e8821d348d3ae39406df6c22 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 9 Jul 2017 17:53:23 -0400
-Subject: [PATCH 071/103] add writable function pointer detection
+Subject: [PATCH 070/101] add writable function pointer detection
 
 Taken from the public PaX patches.
 
@@ -3091,14 +2498,11 @@ index 010c398f6a70..6694518a1708 100644
 +
  	return error_occurred ? 1 : 0;
  }
--- 
-2.53.0
 
-
-From dae00c7768a218c6a09760e1563469259f55d001 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 9 Jul 2017 17:20:29 -0400
-Subject: [PATCH 072/103] support overriding early audit kernel cmdline
+Subject: [PATCH 071/101] support overriding early audit kernel cmdline
 
 ---
  kernel/audit.c | 3 +++
@@ -3118,14 +2522,11 @@ index 7bbd05cc3d6a..4c818861c88f 100644
  	if (audit_set_enabled(audit_default))
  		pr_err("audit: error setting audit state (%d)\n",
  		       audit_default);
--- 
-2.53.0
 
-
-From 4ad61c7a7857589d1db0e0d9dc302e609e4839d5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 26 Aug 2017 20:16:03 -0400
-Subject: [PATCH 073/103] Revert "mm: revert x86_64 and arm64 ELF_ET_DYN_BASE
+Subject: [PATCH 072/101] Revert "mm: revert x86_64 and arm64 ELF_ET_DYN_BASE
  base changes"
 
 This reverts commit aab425db4279aeb83b7911693f0cccbd3644c9fd.
@@ -3173,14 +2574,11 @@ index 6c8fdc96be7e..10ee30f6d184 100644
  
  /* This yields a mask that user programs can use to figure out what
     instruction set this CPU supports.  This could be done in user space,
--- 
-2.53.0
 
-
-From 8454a4d35d97e1d95cc04b595b60af71f778b1de Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 21 May 2017 20:30:44 -0400
-Subject: [PATCH 074/103] x86: determine stack entropy based on mmap entropy
+Subject: [PATCH 073/101] x86: determine stack entropy based on mmap entropy
 
 Stack mapping entropy is currently hard-wired to 11 bits of entropy on
 32-bit and 22 bits of entropy on 64-bit. The stack itself gains an extra
@@ -3234,14 +2632,11 @@ index 10ee30f6d184..6d0abe9e5adc 100644
  #define STACK_RND_MASK __STACK_RND_MASK(mmap_is_ia32())
  
  #define ARCH_DLINFO							\
--- 
-2.53.0
 
-
-From 7061a598c4b4d10b3acf33978a346b0ad9180df7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Mon, 22 May 2017 05:06:20 -0400
-Subject: [PATCH 075/103] arm64: determine stack entropy based on mmap entropy
+Subject: [PATCH 074/101] arm64: determine stack entropy based on mmap entropy
 
 Stack mapping entropy is currently hard-wired to 11 bits of entropy on
 32-bit and 18 bits of entropy on 64-bit. The stack itself gains an extra
@@ -3286,14 +2681,11 @@ index d7edf20ad215..ac3805f359de 100644
  #endif
  
  #ifdef __AARCH64EB__
--- 
-2.53.0
 
-
-From 33938efbe40cf52b8276870b71ee3d5173abd889 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 11 May 2017 16:02:49 -0400
-Subject: [PATCH 076/103] randomize lower bits of the argument block
+Subject: [PATCH 075/101] randomize lower bits of the argument block
 
 This was based on the PaX RANDUSTACK feature in grsecurity, where all of
 the lower bits are randomized. PaX keeps 16-byte alignment.
@@ -3329,14 +2721,11 @@ index 922ee51747a6..dfcf19c76cee 100644
  	return 0;
  
  err:
--- 
-2.53.0
 
-
-From 76de50457e47d063b891fd7475d2a07e4b92c589 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 30 May 2017 18:03:30 -0400
-Subject: [PATCH 077/103] support randomizing the lower bits of brk
+Subject: [PATCH 076/101] support randomizing the lower bits of brk
 
 This adds support for arch_randomize_brk implementations not performing
 page alignment in order to randomize the lower bits of the brk heap.
@@ -3372,14 +2761,11 @@ index 5fd3b80fda1d..fc460b360078 100644
  	if (oldbrk == newbrk) {
  		mm->brk = brk;
  		goto success;
--- 
-2.53.0
 
-
-From f9c6c8ee186e113e0f56a97c7a167d21e46c03be Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:22:38 -0400
-Subject: [PATCH 078/103] mm: randomize lower bits of brk
+Subject: [PATCH 077/101] mm: randomize lower bits of brk
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -3410,14 +2796,11 @@ index 8989d5767528..954602a0c59b 100644
  }
  
  unsigned long arch_mmap_rnd(void)
--- 
-2.53.0
 
-
-From d4f78e6f4a8253a134bbbf8794ebab2234886b11 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:06 -0400
-Subject: [PATCH 079/103] x86: randomize lower bits of brk
+Subject: [PATCH 078/101] x86: randomize lower bits of brk
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -3442,14 +2825,11 @@ index ea45acfe4f03..b92b3474470a 100644
  }
  
  /*
--- 
-2.53.0
 
-
-From 8c7ca07889a91b9204f3e6ec6a369e69ec413592 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:39 -0400
-Subject: [PATCH 080/103] mm: guarantee brk gap is at least one page
+Subject: [PATCH 079/101] mm: guarantee brk gap is at least one page
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -3480,14 +2860,11 @@ index 954602a0c59b..1059b5852a36 100644
  }
  
  unsigned long arch_mmap_rnd(void)
--- 
-2.53.0
 
-
-From 83193139adc4a0686b76f8de1e3992432f3459a8 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 1 Jun 2017 03:23:48 -0400
-Subject: [PATCH 081/103] x86: guarantee brk gap is at least one page
+Subject: [PATCH 080/101] x86: guarantee brk gap is at least one page
 
 Per PaX, but for this alternate brk randomization approach.
 
@@ -3512,14 +2889,11 @@ index b92b3474470a..63c96edc60a5 100644
  }
  
  /*
--- 
-2.53.0
 
-
-From 9d40d01ac201b348de588d2de3f50e838a2b1194 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 18:26:10 -0400
-Subject: [PATCH 082/103] restrict device timing side channels
+Subject: [PATCH 081/101] restrict device timing side channels
 
 Based on the public grsecurity patches.
 
@@ -3701,14 +3075,11 @@ index 829f49ae07b9..5bb7ee4028ad 100644
  #endif /* CONFIG_MULTIUSER */
  
  /**
--- 
-2.53.0
 
-
-From 8b9353f466df684321b1282c16c4049c30d6c3a7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 6 Sep 2020 20:28:32 +0200
-Subject: [PATCH 083/103] sysctl: expose proc_dointvec_minmax_sysadmin as API
+Subject: [PATCH 082/101] sysctl: expose proc_dointvec_minmax_sysadmin as API
  function
 
 Orthogonal to the other sysctl proc functions expose the variant that is
@@ -3818,14 +3189,11 @@ index 694843e7cef3..dc229a9b1a7a 100644
  EXPORT_SYMBOL(proc_dointvec_userhz_jiffies);
  EXPORT_SYMBOL(proc_dointvec_ms_jiffies);
  EXPORT_SYMBOL(proc_dostring);
--- 
-2.53.0
 
-
-From c5af85206763d3c2b98c6aa585c19a23b9a9ed91 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Tue, 16 May 2017 17:51:48 -0400
-Subject: [PATCH 084/103] usb: add toggle for disabling newly added USB devices
+Subject: [PATCH 083/101] usb: add toggle for disabling newly added USB devices
 
 Based on the public grsecurity patches.
 
@@ -3913,14 +3281,11 @@ index dc229a9b1a7a..6131deaa9b29 100644
  #endif
  	{
  		.procname	= "ngroups_max",
--- 
-2.53.0
 
-
-From 9445f25b3c5ab925d4e720f852fb5250b96baffa Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 6 Sep 2020 21:08:16 +0200
-Subject: [PATCH 085/103] usb: implement dedicated subsystem sysctl tables
+Subject: [PATCH 084/101] usb: implement dedicated subsystem sysctl tables
 
 This moves the usb related sysctl knobs to an own usb local sysctl table
 in order to clean up the global sysctl as well as allow the knob to be
@@ -4100,14 +3465,11 @@ index 6131deaa9b29..dc229a9b1a7a 100644
  #endif
  	{
  		.procname	= "ngroups_max",
--- 
-2.53.0
 
-
-From 70abb3d3df07df20b4e805db9e84a55e581e5643 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 25 Feb 2018 03:26:45 -0500
-Subject: [PATCH 086/103] hard-wire legacy checkreqprot option to 0
+Subject: [PATCH 085/101] hard-wire legacy checkreqprot option to 0
 
 The userspace API is left intact for compatibility.
 
@@ -4162,14 +3524,11 @@ index 3da3017ad2ca..69a8d49ee142 100644
  /**
   * selinux_secmark_enabled - Check to see if SECMARK is currently enabled
   *
--- 
-2.53.0
 
-
-From 09f2dc7030ed4b4d3a1f848e26ad4377b081e1b8 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Matt Brown <matt@nmatt.com>
 Date: Mon, 29 May 2017 17:37:59 -0400
-Subject: [PATCH 087/103] security: tty: Add owner user namespace to tty_struct
+Subject: [PATCH 086/101] security: tty: Add owner user namespace to tty_struct
 
 This patch adds struct user_namespace *owner_user_ns to the tty_struct.
 Then it is set to current_user_ns() in the alloc_tty_struct function.
@@ -4233,14 +3592,11 @@ index 0a46e4054dec..99c733852fb2 100644
  } __randomize_layout;
  
  /* Each of a tty's open files has private_data pointing to tty_file_private */
--- 
-2.53.0
 
-
-From f8a8bd33bc5897cfec636b3d53a4ac7d81d7a34f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Matt Brown <matt@nmatt.com>
 Date: Mon, 29 May 2017 17:38:00 -0400
-Subject: [PATCH 088/103] security: tty: make TIOCSTI ioctl require
+Subject: [PATCH 087/101] security: tty: make TIOCSTI ioctl require
  CAP_SYS_ADMIN
 
 This introduces the tiocsti_restrict sysctl, whose default is controlled
@@ -4401,14 +3757,11 @@ index 731c88508ab6..5a3e6ac76d06 100644
  config SECURITY
  	bool "Enable different security models"
  	depends on SYSFS
--- 
-2.53.0
 
-
-From cfa275fbc562bed34d503257f173a2e4e2a67f9e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Wed, 3 May 2017 23:36:14 -0400
-Subject: [PATCH 089/103] enable SECURITY_TIOCSTI_RESTRICT by default
+Subject: [PATCH 088/101] enable SECURITY_TIOCSTI_RESTRICT by default
 
 Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 ---
@@ -4428,14 +3781,11 @@ index 5a3e6ac76d06..a6335394118d 100644
  	help
  	  This enforces restrictions on unprivileged users injecting commands
  	  into other processes which share a tty session using the TIOCSTI
--- 
-2.53.0
 
-
-From 5b36d7af7c948c0439a9e9d37ef696626f59559c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Mon, 7 May 2018 20:37:55 +0200
-Subject: [PATCH 090/103] enable BPF JIT hardening by default (if available)
+Subject: [PATCH 089/101] enable BPF JIT hardening by default (if available)
 
 ---
  kernel/bpf/core.c | 2 +-
@@ -4454,14 +3804,11 @@ index 931a4ddd8530..a144ef073360 100644
  long bpf_jit_limit   __read_mostly;
  long bpf_jit_limit_max __read_mostly;
  
--- 
-2.53.0
 
-
-From 57bd2e4947f1bad382431ece30b1fd7bf8e29173 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Sun, 4 Nov 2018 18:48:53 +0100
-Subject: [PATCH 091/103] enable protected_{fifos,regular} by default
+Subject: [PATCH 090/101] enable protected_{fifos,regular} by default
 
 ---
  fs/namei.c | 4 ++--
@@ -4482,14 +3829,11 @@ index bbfb7a185e72..fbcebb6181eb 100644
  
  #ifdef CONFIG_SYSCTL
  static const struct ctl_table namei_sysctls[] = {
--- 
-2.53.0
 
-
-From 10690762ce8025d4eecc388d9e4930d1caa4f515 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Mon, 6 May 2019 17:07:11 +0200
-Subject: [PATCH 092/103] modpost: Add
+Subject: [PATCH 091/101] modpost: Add
  CONFIG_DEBUG_WRITABLE_FUNCTION_POINTERS_VERBOSE
 
 With 46c7dd56d541 ("modpost: always show verbose warning for section
@@ -4596,14 +3940,11 @@ index 6694518a1708..6c547d68a411 100644
  
  	return error_occurred ? 1 : 0;
  }
--- 
-2.53.0
 
-
-From d05ad6015d58643282f60b0f6f20ed3a3503a35c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Tue, 7 May 2019 11:46:21 +0200
-Subject: [PATCH 093/103] mm: Fix extra_latent_entropy
+Subject: [PATCH 092/101] mm: Fix extra_latent_entropy
 
 Commit a9cd410a3d29 ("mm/page_alloc.c: memory hotplug: free pages as
 higher order") changed `static void __init __free_pages_boot_core()`
@@ -4723,14 +4064,11 @@ index b39187efc1c1..56a402ebcd91 100644
  		/* memblock adjusts totalram_pages() manually. */
  		atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
  	}
--- 
-2.53.0
 
-
-From 98be0245dd7a791e02281e417b9b305aa81d47d2 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Fri, 29 Nov 2019 16:27:14 +0100
-Subject: [PATCH 094/103] slub: Extend init_on_alloc to slab caches with
+Subject: [PATCH 093/101] slub: Extend init_on_alloc to slab caches with
  constructors
 
 This has required some rework during the port to 5.13, due to
@@ -4748,10 +4086,10 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  2 files changed, 4 insertions(+)
 
 diff --git a/mm/slab.h b/mm/slab.h
-index 8c2c407036c9..1083841ea128 100644
+index 3d10fd5d2ceb..42135b67c7ed 100644
 --- a/mm/slab.h
 +++ b/mm/slab.h
-@@ -632,8 +632,10 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
+@@ -627,8 +627,10 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
  {
  	if (static_branch_maybe(CONFIG_INIT_ON_ALLOC_DEFAULT_ON,
  				&init_on_alloc)) {
@@ -4763,10 +4101,10 @@ index 8c2c407036c9..1083841ea128 100644
  			return flags & __GFP_ZERO;
  		return true;
 diff --git a/mm/slub.c b/mm/slub.c
-index 637458daa63f..4145dd1d4288 100644
+index 01aa99418d6d..76419ceb55b7 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -5123,6 +5123,8 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+@@ -5062,6 +5062,8 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
  		if (p[i] && init && (!kasan_init ||
  				     !kasan_has_integrated_init()))
  			memset(p[i], 0, zero_size);
@@ -4775,14 +4113,11 @@ index 637458daa63f..4145dd1d4288 100644
  		if (gfpflags_allow_spinning(flags))
  			kmemleak_alloc_recursive(p[i], s->object_size, 1,
  						 s->flags, init_flags);
--- 
-2.53.0
 
-
-From 929520ddf6de6a853fcbb8cb07e16a8b70c0075f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: madaidan <50278627+madaidan@users.noreply.github.com>
 Date: Sun, 9 Feb 2020 00:03:41 +0000
-Subject: [PATCH 095/103] net: tcp: add option to disable TCP simultaneous
+Subject: [PATCH 094/101] net: tcp: add option to disable TCP simultaneous
  connect
 
 This is modified from Brad Spengler/PaX Team's code in the last public
@@ -4887,7 +4222,7 @@ index 1e45957cf5d2..9d124af3dd21 100644
 +
 +	  If unsure, say N.
 diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index 0f1dd75dbf37..ecac9ab86432 100644
+index ce9b077343ca..b3d8c31d1237 100644
 --- a/net/ipv4/sysctl_net_ipv4.c
 +++ b/net/ipv4/sysctl_net_ipv4.c
 @@ -620,6 +620,15 @@ static struct ctl_table ipv4_table[] = {
@@ -4927,14 +4262,11 @@ index c650398e9199..1372dba9dcb0 100644
  		/* We see SYN without ACK. It is attempt of
  		 * simultaneous connect with crossed SYNs.
  		 * Particularly, it can be connect to self.
--- 
-2.53.0
 
-
-From 36790782c53fd198554e6f17ed7ad1391718d667 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Thu, 11 Mar 2021 23:09:50 +0100
-Subject: [PATCH 096/103] ovl: add config to disable unprivileged user
+Subject: [PATCH 095/101] ovl: add config to disable unprivileged user
  namespace mounts
 
 When disabled, unprivileged users will not be able to create
@@ -4986,14 +4318,11 @@ index 0e971ea97580..f7c49dfb55ff 100644
  	.kill_sb		= kill_anon_super,
  };
  MODULE_ALIAS_FS("overlay");
--- 
-2.53.0
 
-
-From d34a9d25ba4a497e6c148b3e47c8f62a4d954ee3 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Tue, 25 May 2021 21:04:47 +0200
-Subject: [PATCH 097/103] mm, kfence: bug on data corruption after error report
+Subject: [PATCH 096/101] mm, kfence: bug on data corruption after error report
 
 Trigger BUG when kfence encounters data corruption of kfence managed
 objects. This allows a finer-grained control instead of globally
@@ -5046,14 +4375,11 @@ index 10e6802a2edf..01f8700fafc6 100644
  	check_panic_on_warn("KFENCE");
  
  	/* We encountered a memory safety error, taint the kernel! */
--- 
-2.53.0
 
-
-From 95a428a17b2220b16b970bd4364127c5c10fb0d1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
 Date: Thu, 16 Dec 2021 10:55:13 +0100
-Subject: [PATCH 098/103] slub: Bug on free of non-slab objects
+Subject: [PATCH 097/101] slub: Bug on free of non-slab objects
 
 Before commit d0fe47c64152 ("slub: add back check for free nonslab
 objects"), freeing a non-slab object used to trigger a BUG if
@@ -5077,10 +4403,10 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 4145dd1d4288..45171a48111e 100644
+index 76419ceb55b7..925f27735542 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -6965,8 +6965,12 @@ static void free_large_kmalloc(struct folio *folio, void *object)
+@@ -6888,8 +6888,12 @@ static void free_large_kmalloc(struct folio *folio, void *object)
  		return;
  	}
  
@@ -5093,14 +4419,11 @@ index 4145dd1d4288..45171a48111e 100644
  
  	kmemleak_free(object);
  	kasan_kfree_large(object);
--- 
-2.53.0
 
-
-From 738728f8fc4bb4885b02a2bdbebc35d3b554bdd9 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Fri, 8 Dec 2023 11:53:31 +0100
-Subject: [PATCH 099/103] io_uring: set io_uring_disabled sysctl to 1 by
+Subject: [PATCH 098/101] io_uring: set io_uring_disabled sysctl to 1 by
  default
 
 This forces processes to have `CAP_SYS_ADMIN` in order to use io_uring or
@@ -5118,7 +4441,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 03e7b9d6b448..8c1425a44281 100644
+index 7f398c4a3a6e..a670973cbd35 100644
 --- a/io_uring/io_uring.c
 +++ b/io_uring/io_uring.c
 @@ -153,7 +153,7 @@ static __read_mostly DEFINE_STATIC_KEY_DEFERRED_FALSE(io_key_has_sqarray, HZ);
@@ -5141,14 +4464,11 @@ index 03e7b9d6b448..8c1425a44281 100644
  		.extra2		= SYSCTL_TWO,
  	},
  	{
--- 
-2.53.0
 
-
-From fbdff366e0a04ee9808ca0eed36b8884ee24546d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 Date: Thu, 17 Oct 2024 17:02:29 +0200
-Subject: [PATCH 100/103] sysctl: Add proc_dointvec_minmax_sysadmin sanity
+Subject: [PATCH 099/101] sysctl: Add proc_dointvec_minmax_sysadmin sanity
  check
 
 Since we expose proc_dointvec_minmax_sysadmin, add it to sanity checking
@@ -5171,14 +4491,11 @@ index 49ab74e0bfde..4be54d32a60a 100644
  		    (entry->proc_handler == proc_dou8vec_minmax) ||
  		    (entry->proc_handler == proc_dointvec_jiffies) ||
  		    (entry->proc_handler == proc_dointvec_userhz_jiffies) ||
--- 
-2.53.0
 
-
-From fb80f3a6487157d77d125f4cfd194be10a73663d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Levente Polyak <levente@leventepolyak.net>
 Date: Wed, 14 May 2025 21:00:09 +0200
-Subject: [PATCH 101/103] kconfig: enable MSEAL_SYSTEM_MAPPINGS by default
+Subject: [PATCH 100/101] kconfig: enable MSEAL_SYSTEM_MAPPINGS by default
 
 Signed-off-by: Levente Polyak <levente@leventepolyak.net>
 ---
@@ -5197,73 +4514,341 @@ index a6335394118d..5ab4df72aedd 100644
  	help
  	  Apply mseal on system mappings.
  	  The system mappings includes vdso, vvar, vvar_vclock,
--- 
-2.53.0
 
-
-From e94c69d0e84ed9a196566033fe824054f960ab86 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
-Date: Tue, 14 Oct 2025 15:19:31 +0200
-Subject: [PATCH 102/103] mm/slub: Only instrument slab allocation with
- canaries
+Date: Fri, 26 Jun 2026 20:21:47 +0200
+Subject: [PATCH 101/101] slub: add multi-purpose random canaries
 
-With barn and sheaves introduction, slab objects are used to prefill or
-refill sheaves, which are cache of small objects taking the form of an
-array of pointers to slab objects.
+Place canaries at the end of kernel slab objects, sacrificing some
+performance and memory usage for security.
 
-Sheaves are then used for quick allocation and free, which consist of
-shrinking and growing the array index.
-Thus, there is two vision of allocation state for those objects. While
-they are seen as allocated by the slab allocator, the sheaf allocator
-see them as free and then allocates them.
+Canaries are build from random values stored in its cache. Their value
+are checked upon allocation and free of those objects.
 
-We thus need to adapt the slab canary patch in order to avoid sanitizing
-objects allocation and free from this array.
+With the introduction of barn and sheaves, slab objects are used to
+prefill or refill sheaves, which are cache of small objects taking the
+form of an array of pointers to slab objects. Sheaves are then used for
+quick allocation and freeing, which consist of shrinking and growing the
+array index. Thus, there are two variants of free state for those
+objects. While they are seen as allocated by the slab allocator, the
+sheaf allocator see them as free and then allocates them. With sheaves,
+slab canaries can thus have three states:
 
-A next patch will add a per-sheave canary random value which would lead
-to a better tracking of objects overflow.
+1. random_active          The object is allocated.
+2. random_inactive        The object is in a free state and is stored in
+                          a slab.
+3. sheaf_random_inactive  The object is in a free state and is stored in
+                          a slab, backed by a sheaf.
+
+When an object is freed, its active (random_active) state is checked and
+then set to an inactive state whose value depends on whether it is freed
+back to a sheaf or a slab. Upon allocation, the inverse transition
+occurs.
+
+Canaries can detect some forms of heap corruption when allocations
+are freed and as part of the HARDENED_USERCOPY feature. They provide
+basic use-after-free detection for HARDENED_USERCOPY.
+
+Canaries absorb small overflows (rendering them harmless), mitigate
+non-NUL terminated C string overflows on 64-bit via a guaranteed zero
+byte and provide basic double-free detection.
+
+This patch was originally written by Daniel Micay.
+
+[danielmicay@gmail.com: Introduce slab canaries]
+[levente@leventepolyak.net: make canaries work without SLUB_DEBUG]
+[levente@leventepolyak.net: fix compatibility with KFENCE]
+[nicolas.bouchinet@ssi.gouv.fr: Fix conflicts with commit 782f8906f8057efc7]
+[nicolas.bouchinet@ssi.gouv.fr: Take slab canary in account for object size]
+[nicolas.bouchinet@ssi.gouv.fr: Add sheaf support]
+[nicolas.bouchinet@ssi.gouv.fr: Complete canaries revamp]
+[levente@leventepolyak.net: mm/slub: Fix swapped canary booleans in rcu_free_sheaf_nobarn()]
+[levente@leventepolyak.net: mm/slub: Fix canary on alloc_from_pcs() in kmalloc_nolock_noprof()]
+[levente@leventepolyak.net: mm/slub: Backport and adapt logic to 6.18]
 
 Signed-off-by: Levente Polyak <levente@leventepolyak.net>
 Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 ---
- mm/slub.c | 78 ++++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 52 insertions(+), 26 deletions(-)
+ mm/Kconfig |  17 ++++
+ mm/slab.h  |   8 +-
+ mm/slub.c  | 241 +++++++++++++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 238 insertions(+), 28 deletions(-)
 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 02e9eb82ad85..81b475dbbb49 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -235,6 +235,23 @@ config SLAB_BUCKETS
+ 
+ 	  If unsure, say Y.
+ 
++config SLAB_CANARY
++	depends on SLUB
++	depends on !SLAB_MERGE_DEFAULT
++	bool "SLAB canaries"
++	default y
++	help
++	  Place canaries at the end of kernel slab allocations, sacrificing
++	  some performance and memory usage for security.
++
++	  Canaries can detect some forms of heap corruption when allocations
++	  are freed and as part of the HARDENED_USERCOPY feature. It provides
++	  basic use-after-free detection for HARDENED_USERCOPY.
++
++	  Canaries absorb small overflows (rendering them harmless), mitigate
++	  non-NUL terminated C string overflows on 64-bit via a guaranteed zero
++	  byte and provide basic double-free detection.
++
+ config SLUB_STATS
+ 	default n
+ 	bool "Enable performance statistics"
+diff --git a/mm/slab.h b/mm/slab.h
+index 42135b67c7ed..dcbb8ff8aac3 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -272,6 +272,12 @@ struct kmem_cache {
+ 	unsigned long random;
+ #endif
+ 
++#ifdef CONFIG_SLAB_CANARY
++	unsigned long random_active;
++	unsigned long random_inactive;
++	unsigned long sheaf_random_inactive;
++#endif
++
+ #ifdef CONFIG_NUMA
+ 	/*
+ 	 * Defragmentation by allocating from a remote node.
+@@ -592,7 +598,7 @@ static inline size_t slab_ksize(const struct kmem_cache *s)
+ 	 * back there or track user information then we can
+ 	 * only use the space before that information.
+ 	 */
+-	if (s->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_STORE_USER))
++	if ((s->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_STORE_USER)) || IS_ENABLED(CONFIG_SLAB_CANARY))
+ 		return s->inuse;
+ 	/*
+ 	 * Else we can use all the padding etc for the allocation
 diff --git a/mm/slub.c b/mm/slub.c
-index 45171a48111e..8aea6edff5b4 100644
+index 925f27735542..98ea0cf41ef3 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -924,9 +924,21 @@ static inline void check_canary(struct kmem_cache *s, void *object, unsigned lon
- 	unsigned long *canary = get_canary(s, object);
- 	BUG_ON(*canary != get_canary_value(canary, value));
+@@ -42,6 +42,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/random.h>
+ #include <linux/prandom.h>
++#include <linux/stackprotector.h>
+ #include <kunit/test.h>
+ #include <kunit/test-bug.h>
+ #include <linux/sort.h>
+@@ -876,6 +877,8 @@ static inline void set_orig_size(struct kmem_cache *s,
+ 		return;
+ 
+ 	p += get_info_end(s);
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		p = (void *)p + sizeof(void *);
+ 	p += sizeof(struct track) * 2;
+ 
+ 	*(unsigned long *)p = orig_size;
+@@ -892,11 +895,57 @@ static inline unsigned long get_orig_size(struct kmem_cache *s, void *object)
+ 		return s->object_size;
+ 
+ 	p += get_info_end(s);
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		p = (void *)p + sizeof(void *);
+ 	p += sizeof(struct track) * 2;
+ 
+ 	return *(unsigned long *)p;
  }
-+
-+static inline void check_set_canary_bulk(struct kmem_cache *s, unsigned int size, void **objects, unsigned long check_value, unsigned long set_value)
+ 
++#ifdef CONFIG_SLAB_CANARY
++static inline unsigned long *get_canary(struct kmem_cache *s, void *object)
 +{
-+	for (int i = 0; i < size; i++) {
-+		if (!is_kfence_address(objects[i])) {
-+			check_canary(s, objects[i], check_value);
-+			set_canary(s, objects[i], set_value);
-+		}
++	return object + get_info_end(s);
++}
++
++static inline unsigned long get_canary_value(const void *canary, unsigned long value)
++{
++	return (value ^ (unsigned long)canary) & CANARY_MASK;
++}
++
++static inline void set_canary(struct kmem_cache *s, void *object, unsigned long value)
++{
++	unsigned long *canary = get_canary(s, object);
++	*canary = get_canary_value(canary, value);
++}
++
++static inline void check_canary(struct kmem_cache *s, void *object, unsigned long value)
++{
++	unsigned long *canary = get_canary(s, object);
++	BUG_ON(*canary != get_canary_value(canary, value));
++}
++
++static inline void check_set_canary(struct kmem_cache *s, void *object, unsigned long check_value, unsigned long set_value)
++{
++	if (object && !is_kfence_address(object)) {
++		check_canary(s, object, check_value);
++		set_canary(s, object, set_value);
 +	}
 +}
 +
- #else
- #define set_canary(s, object, value)
- #define check_canary(s, object, value)
++static inline void check_set_canary_bulk(struct kmem_cache *s, unsigned int size, void **objects, unsigned long check_value, unsigned long set_value)
++{
++	for (int i = 0; i < size; i++)
++		check_set_canary(s, objects[i], check_value, set_value);
++}
++
++#else
++#define set_canary(s, object, value)
++#define check_canary(s, object, value)
++#define check_set_canary(s, object, check_value, set_value)
 +#define check_set_canary_bulk(s, size, objects, check_value, set_value)
- #endif
- 
++#endif
++
  #ifdef CONFIG_SLUB_DEBUG
-@@ -2825,6 +2837,7 @@ static unsigned int __sheaf_flush_main_batch(struct kmem_cache *s)
+ 
+ /*
+@@ -1044,6 +1093,9 @@ static struct track *get_track(struct kmem_cache *s, void *object,
+ 
+ 	p = object + get_info_end(s);
+ 
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		p = (void *)p + sizeof(void *);
++
+ 	return kasan_reset_tag(p + alloc);
+ }
+ 
+@@ -1205,6 +1257,9 @@ static void print_trailer(struct kmem_cache *s, struct slab *slab, u8 *p)
+ 
+ 	off = get_info_end(s);
+ 
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		off += sizeof(void *);
++
+ 	if (s->flags & SLAB_STORE_USER)
+ 		off += 2 * sizeof(struct track);
+ 
+@@ -1380,9 +1435,10 @@ check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
+  * 	Meta data starts here.
+  *
+  * 	A. Free pointer (if we cannot overwrite object on free)
+- * 	B. Tracking data for SLAB_STORE_USER
+- *	C. Original request size for kmalloc object (SLAB_STORE_USER enabled)
+- *	D. Padding to reach required alignment boundary or at minimum
++ * 	B. Canary for SLAB_CANARY
++ * 	C. Tracking data for SLAB_STORE_USER
++ * 	D. Original request size for kmalloc object (SLAB_STORE_USER enabled)
++ * 	E. Padding to reach required alignment boundary or at minimum
+  * 		one word if debugging is on to be able to detect writes
+  * 		before the word boundary.
+  *
+@@ -1400,6 +1456,9 @@ static int check_pad_bytes(struct kmem_cache *s, struct slab *slab, u8 *p)
+ {
+ 	unsigned long off = get_info_end(s);	/* The end of info */
+ 
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		off += sizeof(void *);
++
+ 	if (s->flags & SLAB_STORE_USER) {
+ 		/* We also have user information there */
+ 		off += 2 * sizeof(struct track);
+@@ -2502,11 +2561,19 @@ struct rcu_delayed_free {
+  */
+ static __always_inline
+ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
+-		    bool after_rcu_delay)
++		    bool after_rcu_delay, bool canary)
+ {
+ 	/* Are the object contents still accessible? */
+ 	bool still_accessible = (s->flags & SLAB_TYPESAFE_BY_RCU) && !after_rcu_delay;
+ 
++	/*
++	 * Postpone setting the inactive canary until the metadata
++	 * has potentially been cleared at the end of this function.
++	 */
++	if (canary) {
++		check_canary(s, x, s->random_active);
++	}
++
+ 	kmemleak_free_recursive(x, s->flags);
+ 	kmsan_slab_free(s, x);
+ 
+@@ -2572,8 +2639,14 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
+ 		if (!kasan_has_integrated_init())
+ 			memset(kasan_reset_tag(x), 0, orig_size);
+ 		rsize = (s->flags & SLAB_RED_ZONE) ? s->red_left_pad : 0;
++
++#ifdef CONFIG_SLAB_CANARY
++		memset((char *)kasan_reset_tag(x) + inuse + sizeof(void *), 0,
++		       s->size - inuse - sizeof(void *) - rsize);
++#else
+ 		memset((char *)kasan_reset_tag(x) + inuse, 0,
+ 		       s->size - inuse - rsize);
++#endif
+ 		/*
+ 		 * Restore orig_size, otherwise kmalloc redzone overwritten
+ 		 * would be reported
+@@ -2583,6 +2656,11 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
+ 		if (!IS_ENABLED(CONFIG_SLAB_SANITIZE_VERIFY) && s->ctor)
+ 			s->ctor(x);
+ 	}
++
++	if (canary) {
++		set_canary(s, x, s->random_inactive);
++	}
++
+ 	/* KASAN might put x into memory quarantine, delaying its reuse. */
+ 	return !kasan_slab_free(s, x, init, still_accessible, false);
+ }
+@@ -2598,7 +2676,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
+ 	bool init;
+ 
+ 	if (is_kfence_address(next)) {
+-		slab_free_hook(s, next, false, false);
++		slab_free_hook(s, next, false, false, false);
+ 		return false;
+ 	}
+ 
+@@ -2613,7 +2691,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
+ 		next = get_freepointer(s, object);
+ 
+ 		/* If object's reuse doesn't have to be delayed */
+-		if (likely(slab_free_hook(s, object, init, false))) {
++		if (likely(slab_free_hook(s, object, init, false, true))) {
+ 			/* Move object to the new freelist */
+ 			set_freepointer(s, object, *head);
+ 			*head = object;
+@@ -2650,6 +2728,7 @@ bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
+ static void *setup_object(struct kmem_cache *s, void *object)
+ {
+ 	setup_object_debug(s, object);
++	set_canary(s, object, s->random_inactive);
+ 	object = kasan_init_slab_obj(s, object);
+ 	if (unlikely(s->ctor) && !has_sanitize_verify(s)) {
+ 		kasan_unpoison_new_object(s, object);
+@@ -2697,6 +2776,13 @@ static int refill_sheaf(struct kmem_cache *s, struct slab_sheaf *sheaf,
+ 	filled = __kmem_cache_alloc_bulk(s, gfp, to_fill,
+ 					 &sheaf->objects[sheaf->size]);
+ 
++	/*
++	 * linux-hardened: __kmem_cache_alloc_bulk() hands back active (allocated)
++	 * objects straight from the slab freelist. As they are going into a sheaf
++	 * instead of to the caller, transition them to the sheaf-inactive state.
++	 */
++	check_set_canary_bulk(s, filled, &sheaf->objects[sheaf->size], s->random_active, s->sheaf_random_inactive);
++
+ 	sheaf->size += filled;
+ 
+ 	stat_add(s, SHEAF_REFILL, filled);
+@@ -2763,6 +2849,7 @@ static unsigned int __sheaf_flush_main_batch(struct kmem_cache *s)
  
  	local_unlock(&s->cpu_sheaves->lock);
  
-+	check_set_canary_bulk(s, batch, &objects[0], s->random_active, s->random_inactive);
++	check_set_canary_bulk(s, batch, &objects[0], s->sheaf_random_inactive, s->random_inactive);
  	__kmem_cache_free_bulk(s, batch, &objects[0]);
  
  	stat_add(s, SHEAF_FLUSH, batch);
-@@ -2870,20 +2883,24 @@ static bool sheaf_try_flush_main(struct kmem_cache *s)
+@@ -2808,20 +2895,24 @@ static bool sheaf_try_flush_main(struct kmem_cache *s)
   * necessary when flushing cpu's sheaves (both spare and main) during cpu
   * hotremove as the cpu is not executing anymore.
   */
@@ -5276,7 +4861,7 @@ index 45171a48111e..8aea6edff5b4 100644
  	stat_add(s, SHEAF_FLUSH, sheaf->size);
  
 +	if (canary) {
-+		check_set_canary_bulk(s, sheaf->size, &sheaf->objects[0], s->random_active, s->random_inactive);
++		check_set_canary_bulk(s, sheaf->size, &sheaf->objects[0], s->sheaf_random_inactive, s->random_inactive);
 +	}
  	__kmem_cache_free_bulk(s, sheaf->size, &sheaf->objects[0]);
  
@@ -5290,7 +4875,7 @@ index 45171a48111e..8aea6edff5b4 100644
  {
  	bool init = slab_want_init_on_free(s);
  	void **p = &sheaf->objects[0];
-@@ -2895,7 +2912,7 @@ static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
+@@ -2833,7 +2924,7 @@ static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
  		memcg_slab_free_hook(s, slab, p + i, 1);
  		alloc_tagging_slab_free_hook(s, slab, p + i, 1);
  
@@ -5299,19 +4884,19 @@ index 45171a48111e..8aea6edff5b4 100644
  			p[i] = p[--sheaf->size];
  			continue;
  		}
-@@ -2912,9 +2929,9 @@ static void rcu_free_sheaf_nobarn(struct rcu_head *head)
+@@ -2850,9 +2941,9 @@ static void rcu_free_sheaf_nobarn(struct rcu_head *head)
  	sheaf = container_of(head, struct slab_sheaf, rcu_head);
  	s = sheaf->cache;
  
 -	__rcu_free_sheaf_prepare(s, sheaf);
-+	__rcu_free_sheaf_prepare(s, sheaf, true);
++	__rcu_free_sheaf_prepare(s, sheaf, false);
  
 -	sheaf_flush_unused(s, sheaf);
-+	sheaf_flush_unused(s, sheaf, false);
++	sheaf_flush_unused(s, sheaf, true);
  
  	free_empty_sheaf(s, sheaf);
  }
-@@ -2945,7 +2962,7 @@ static void pcs_flush_all(struct kmem_cache *s)
+@@ -2883,7 +2974,7 @@ static void pcs_flush_all(struct kmem_cache *s)
  	local_unlock(&s->cpu_sheaves->lock);
  
  	if (spare) {
@@ -5320,7 +4905,7 @@ index 45171a48111e..8aea6edff5b4 100644
  		free_empty_sheaf(s, spare);
  	}
  
-@@ -2962,9 +2979,9 @@ static void __pcs_flush_all_cpu(struct kmem_cache *s, unsigned int cpu)
+@@ -2900,9 +2991,9 @@ static void __pcs_flush_all_cpu(struct kmem_cache *s, unsigned int cpu)
  	pcs = per_cpu_ptr(s->cpu_sheaves, cpu);
  
  	/* The cpu is not executing anymore so we don't need pcs->lock */
@@ -5332,7 +4917,7 @@ index 45171a48111e..8aea6edff5b4 100644
  		free_empty_sheaf(s, pcs->spare);
  		pcs->spare = NULL;
  	}
-@@ -3182,7 +3199,7 @@ static void barn_shrink(struct kmem_cache *s, struct node_barn *barn)
+@@ -3120,7 +3211,7 @@ static void barn_shrink(struct kmem_cache *s, struct node_barn *barn)
  	spin_unlock_irqrestore(&barn->lock, flags);
  
  	list_for_each_entry_safe(sheaf, sheaf2, &full_list, barn_list) {
@@ -5341,37 +4926,55 @@ index 45171a48111e..8aea6edff5b4 100644
  		free_empty_sheaf(s, sheaf);
  	}
  
-@@ -5406,6 +5423,7 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- {
- 	void *object;
- 	bool init = false;
-+	bool from_pcs = false;
+@@ -5249,6 +5340,8 @@ void *alloc_from_pcs(struct kmem_cache *s, gfp_t gfp, int node)
  
- 	s = slab_pre_alloc_hook(s, gfpflags);
- 	if (unlikely(!s))
-@@ -5415,8 +5433,11 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 	if (unlikely(object))
- 		goto out;
+ 	pcs->main->size--;
  
--	if (s->cpu_sheaves)
-+	if (s->cpu_sheaves) {
++	check_set_canary(s, object, s->sheaf_random_inactive, s->random_active);
++
+ 	local_unlock(&s->cpu_sheaves->lock);
+ 
+ 	stat(s, ALLOC_PCS);
+@@ -5314,6 +5407,8 @@ unsigned int alloc_from_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
+ 	main->size -= batch;
+ 	memcpy(p, main->objects + main->size, batch * sizeof(void *));
+ 
++	check_set_canary_bulk(s, batch, p, s->sheaf_random_inactive, s->random_active);
++
+ 	local_unlock(&s->cpu_sheaves->lock);
+ 
+ 	stat_add(s, ALLOC_PCS, batch);
+@@ -5357,8 +5452,15 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
+ 	if (s->cpu_sheaves)
  		object = alloc_from_pcs(s, gfpflags, node);
-+		if (object)
-+			from_pcs = true;
+ 
+-	if (!object)
++	if (!object) {
+ 		object = __slab_alloc_node(s, gfpflags, node, addr, orig_size);
++		/*
++		 * linux-hardened: object taken from the slab freelist are
++		 * transitioned from slab-inactive to active state. Objects
++		 * returned by alloc_from_pcs() are already transitioned there.
++		 */
++		check_set_canary(s, object, s->random_inactive, s->random_active);
 +	}
  
- 	if (!object)
- 		object = __slab_alloc_node(s, gfpflags, node, addr, orig_size);
-@@ -5436,7 +5457,7 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 		init = slab_want_init_on_alloc(gfpflags, s);
- 	}
+ 	maybe_wipe_obj_freeptr(s, object);
  
--	if (object) {
-+	if (object && !from_pcs) {
- 		check_canary(s, object, s->random_inactive);
- 		set_canary(s, object, s->random_active);
- 	}
-@@ -5580,7 +5601,7 @@ kmem_cache_prefill_sheaf(struct kmem_cache *s, gfp_t gfp, unsigned int size)
+@@ -5482,6 +5584,12 @@ kmem_cache_prefill_sheaf(struct kmem_cache *s, gfp_t gfp, unsigned int size)
+ 			return NULL;
+ 		}
+ 
++		/*
++		 * linux-hardened: objects came back active from the slab freelist,
++		 * transition them to the sheaf-inactive state as we prefill a sheaf.
++		 */
++		check_set_canary_bulk(s, size, &sheaf->objects[0], s->random_active, s->sheaf_random_inactive);
++
+ 		sheaf->size = size;
+ 
+ 		return sheaf;
+@@ -5514,7 +5622,7 @@ kmem_cache_prefill_sheaf(struct kmem_cache *s, gfp_t gfp, unsigned int size)
  
  	if (sheaf && sheaf->size < size) {
  		if (refill_sheaf(s, sheaf, gfp)) {
@@ -5380,7 +4983,7 @@ index 45171a48111e..8aea6edff5b4 100644
  			free_empty_sheaf(s, sheaf);
  			sheaf = NULL;
  		}
-@@ -5609,7 +5630,7 @@ void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
+@@ -5543,7 +5651,7 @@ void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
  	struct node_barn *barn;
  
  	if (unlikely(sheaf->capacity != s->sheaf_capacity)) {
@@ -5389,7 +4992,7 @@ index 45171a48111e..8aea6edff5b4 100644
  		kfree(sheaf);
  		return;
  	}
-@@ -5637,7 +5658,7 @@ void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
+@@ -5571,7 +5679,7 @@ void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
  	 */
  	if (!barn || data_race(barn->nr_full) >= MAX_FULL_SHEAVES ||
  	    refill_sheaf(s, sheaf, gfp)) {
@@ -5398,7 +5001,43 @@ index 45171a48111e..8aea6edff5b4 100644
  		free_empty_sheaf(s, sheaf);
  		return;
  	}
-@@ -6254,7 +6275,7 @@ __pcs_replace_full_main(struct kmem_cache *s, struct slub_percpu_sheaves *pcs)
+@@ -5614,6 +5722,13 @@ int kmem_cache_refill_sheaf(struct kmem_cache *s, gfp_t gfp,
+ 					     &sheaf->objects[sheaf->size])) {
+ 			return -ENOMEM;
+ 		}
++
++		/*
++		 * linux-hardened: objects came back active from the slab freelist,
++		 * transition them to the sheaf-inactive state as we refill a sheaf.
++		 */
++		check_set_canary_bulk(s, sheaf->capacity - sheaf->size, &sheaf->objects[sheaf->size], s->random_active, s->sheaf_random_inactive);
++
+ 		sheaf->size = sheaf->capacity;
+ 
+ 		return 0;
+@@ -5658,6 +5773,8 @@ kmem_cache_alloc_from_sheaf_noprof(struct kmem_cache *s, gfp_t gfp,
+ 
+ 	/* add __GFP_NOFAIL to force successful memcg charging */
+ 	slab_post_alloc_hook(s, NULL, gfp | __GFP_NOFAIL, 1, &ret, init, s->object_size);
++
++	check_set_canary(s, ret, s->sheaf_random_inactive, s->random_active);
+ out:
+ 	trace_kmem_cache_alloc(_RET_IP_, ret, s, gfp, NUMA_NO_NODE);
+ 
+@@ -5848,6 +5965,12 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node)
+ 		ret = NULL;
+ 	}
+ 
++	/*
++	 * linux-hardened: only allocates from the slab freelist where the object
++	 * comes from the freelist. There is no percpu-sheaf path and transitions.
++	 */
++	check_set_canary(s, ret, s->random_inactive, s->random_active);
++
+ 	maybe_wipe_obj_freeptr(s, ret);
+ 	slab_post_alloc_hook(s, NULL, alloc_gfp, 1, &ret,
+ 			     slab_want_init_on_alloc(alloc_gfp, s), size);
+@@ -6188,7 +6311,7 @@ __pcs_replace_full_main(struct kmem_cache *s, struct slub_percpu_sheaves *pcs)
  		pcs->spare = NULL;
  		local_unlock(&s->cpu_sheaves->lock);
  
@@ -5407,7 +5046,15 @@ index 45171a48111e..8aea6edff5b4 100644
  		empty = to_flush;
  		goto got_empty;
  	}
-@@ -6356,7 +6377,7 @@ static void rcu_free_sheaf(struct rcu_head *head)
+@@ -6262,6 +6385,7 @@ bool free_to_pcs(struct kmem_cache *s, void *object)
+ 			return false;
+ 	}
+ 
++	check_set_canary(s, object, s->random_active, s->sheaf_random_inactive);
+ 	pcs->main->objects[pcs->main->size++] = object;
+ 
+ 	local_unlock(&s->cpu_sheaves->lock);
+@@ -6290,7 +6414,7 @@ static void rcu_free_sheaf(struct rcu_head *head)
  	 * allocations when reused. It only happens due to debugging, which is a
  	 * performance hit anyway.
  	 */
@@ -5416,7 +5063,7 @@ index 45171a48111e..8aea6edff5b4 100644
  
  	n = get_node(s, sheaf->node);
  	if (!n)
-@@ -6382,7 +6403,7 @@ static void rcu_free_sheaf(struct rcu_head *head)
+@@ -6316,7 +6440,7 @@ static void rcu_free_sheaf(struct rcu_head *head)
  
  flush:
  	stat(s, BARN_PUT_FAIL);
@@ -5425,7 +5072,16 @@ index 45171a48111e..8aea6edff5b4 100644
  
  empty:
  	if (barn && data_race(barn->nr_empty) < MAX_EMPTY_SHEAVES) {
-@@ -6524,7 +6545,7 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
+@@ -6407,6 +6531,8 @@ bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj)
+ 	 * Since we flush immediately when size reaches capacity, we never reach
+ 	 * this with size already at capacity, so no OOB write is possible.
+ 	 */
++
++	check_set_canary(s, obj, s->random_active, s->sheaf_random_inactive);
+ 	rcu_sheaf->objects[rcu_sheaf->size++] = obj;
+ 
+ 	if (likely(rcu_sheaf->size < s->sheaf_capacity)) {
+@@ -6458,7 +6584,7 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
  		memcg_slab_free_hook(s, slab, p + i, 1);
  		alloc_tagging_slab_free_hook(s, slab, p + i, 1);
  
@@ -5434,7 +5090,22 @@ index 45171a48111e..8aea6edff5b4 100644
  			p[i] = p[--size];
  			continue;
  		}
-@@ -6610,10 +6631,12 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
+@@ -6518,6 +6644,14 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
+ 	main = pcs->main;
+ 	batch = min(size, s->sheaf_capacity - main->size);
+ 
++	/*
++	 * linux-hardened: these active (allocated) objects are being parked in
++	 * a sheaf, transition them to the sheaf-inactive state. Objects that
++	 * instead go to the slab freelist (via fallback / flush_remote below)
++	 * keep the active state and are transitioned to slab-inactive there.
++	 */
++	check_set_canary_bulk(s, batch, p, s->random_active, s->sheaf_random_inactive);
++
+ 	memcpy(main->objects + main->size, p, batch * sizeof(void *));
+ 	main->size += batch;
+ 
+@@ -6544,10 +6678,12 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
  	 * many full sheaves, free the rest to slab pages
  	 */
  fallback:
@@ -5447,43 +5118,98 @@ index 45171a48111e..8aea6edff5b4 100644
  		__kmem_cache_free_bulk(s, remote_nr, &remote_objects[0]);
  		if (i < size) {
  			remote_nr = 0;
-@@ -6824,6 +6847,12 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	if (is_kfence_address(object))
- 		canary = false;
+@@ -6749,10 +6885,22 @@ static __fastpath_inline
+ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+ 	       unsigned long addr)
+ {
++	bool canary = true;
++
+ 	memcg_slab_free_hook(s, slab, &object, 1);
+ 	alloc_tagging_slab_free_hook(s, slab, &object, 1);
  
-+	/* Do not check or set canary if the object is freed back to pcs. */
+-	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false)))
++	/* Make sure canaries are not used on kfence objects. */
++	if (is_kfence_address(object))
++		canary = false;
++
++	/* Defer canary checking if the object is freed back to pcs. */
 +	if (s->cpu_sheaves && likely(!IS_ENABLED(CONFIG_NUMA) ||
 +				     slab_nid(slab) == numa_mem_id())) {
 +		canary = false;
 +	}
 +
- 	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false, canary)))
++	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false, canary)))
  		return;
  
-@@ -7570,7 +7599,7 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
- {
- 	struct kmem_cache_cpu *c;
- 	unsigned long irqflags;
--	int i, k;
-+	int i;
+ 	if (s->cpu_sheaves && likely(!IS_ENABLED(CONFIG_NUMA) ||
+@@ -6761,6 +6909,15 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+ 			return;
+ 	}
  
++	/*
++	 * linux-hardened: the object's canary transition was deferred in
++	 * slab_free_hook() because it was meant to be freed to a sheaf, but
++	 * free_to_pcs() failed. It is now freed straight to the slab freelist,
++	 * so transition from active to slab-inactive state.
++	 */
++	if (unlikely(!canary))
++		check_set_canary(s, object, s->random_active, s->random_inactive);
++
+ 	do_slab_free(s, slab, object, object, 1, addr);
+ }
+ 
+@@ -6769,11 +6926,16 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+ static noinline
+ void memcg_alloc_abort_single(struct kmem_cache *s, void *object)
+ {
++	bool canary = true;
+ 	struct slab *slab = virt_to_slab(object);
+ 
+ 	alloc_tagging_slab_free_hook(s, slab, &object, 1);
+ 
+-	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s), false)))
++	/* Make sure canaries are not used on kfence objects. */
++	if (is_kfence_address(object))
++		canary = false;
++
++	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s), false, canary)))
+ 		do_slab_free(s, slab, object, object, 1, _RET_IP_);
+ }
+ #endif
+@@ -6814,7 +6976,7 @@ static void slab_free_after_rcu_debug(struct rcu_head *rcu_head)
+ 		return;
+ 
+ 	/* resume freeing */
+-	if (slab_free_hook(s, object, slab_want_init_on_free(s), true))
++	if (slab_free_hook(s, object, slab_want_init_on_free(s), true, true))
+ 		do_slab_free(s, slab, object, object, 1, _THIS_IP_);
+ }
+ #endif /* CONFIG_SLUB_RCU_DEBUG */
+@@ -7031,6 +7193,14 @@ void kfree_nolock(const void *object)
+ 	 */
+ 	if (kasan_slab_pre_free(s, x))
+ 		return;
++	/*
++	 * linux-hardened: kfree_nolock() bypasses slab_free_hook(), so transition
++	 * the canary from active to slab-inactive.
++	 * do_slab_free() puts it back on the freelist via either the lockless
++	 * fastpath or the deferred-free path, so transition the canary here
++	 * instead of free_deferred_objects().
++	 */
++	check_set_canary(s, x, s->random_active, s->random_inactive);
  	/*
- 	 * Drain objects in the per cpu slab, while disabling local
-@@ -7641,12 +7670,7 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+ 	 * memcg, kasan_slab_pre_free are done for 'x'.
+ 	 * The only thing left is kasan_poison without quarantine,
+@@ -7564,6 +7734,8 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
  		}
  	}
  
--	for (k = 0; k < i; k++) {
--		if (!is_kfence_address(p[k])) {
--			check_canary(s, p[k], s->random_inactive);
--			set_canary(s, p[k], s->random_active);
--		}
--	}
 +	check_set_canary_bulk(s, i, p, s->random_inactive, s->random_active);
- 
++
  	return i;
  
-@@ -7680,8 +7704,10 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
+ error:
+@@ -7596,8 +7768,10 @@ int kmem_cache_alloc_bulk_noprof(struct kmem_cache *s, gfp_t flags, size_t size,
  		 * the percpu sheaves, we have bigger problems.
  		 */
  		if (unlikely(__kmem_cache_alloc_bulk(s, flags, size - i, p + i) == 0)) {
@@ -5495,206 +5221,44 @@ index 45171a48111e..8aea6edff5b4 100644
  			return 0;
  		}
  	}
--- 
-2.53.0
-
-
-From 0c1adf408ca75c7936987dda7c8609d1228d6058 Mon Sep 17 00:00:00 2001
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
-Date: Thu, 15 Jan 2026 15:31:34 +0100
-Subject: [PATCH 103/103] mm/slub: Add canary on sheaf alloc and free
-
-Sheaf allocation is an allocation cache that uses pre-allocated slab
-objects for faster free and allocation from a sheaf array.
-This patch adds a sheaf canary in order to detect small overflows and
-double-free of sheaf objects.
-
-Signed-off-by: Levente Polyak <levente@leventepolyak.net>
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
----
- mm/slab.h |  1 +
- mm/slub.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 59 insertions(+), 4 deletions(-)
-
-diff --git a/mm/slab.h b/mm/slab.h
-index 1083841ea128..837003585aad 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -275,6 +275,7 @@ struct kmem_cache {
- #ifdef CONFIG_SLAB_CANARY
- 	unsigned long random_active;
- 	unsigned long random_inactive;
-+	unsigned long sheaf_random_active;
+@@ -7838,6 +8012,7 @@ static void early_kmem_cache_node_alloc(int node)
+ #ifdef CONFIG_SLUB_DEBUG
+ 	init_object(kmem_cache_node, n, SLUB_RED_ACTIVE);
  #endif
- 
- #ifdef CONFIG_NUMA
-diff --git a/mm/slub.c b/mm/slub.c
-index 8aea6edff5b4..ad366555c1ff 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5327,6 +5327,11 @@ void *alloc_from_pcs(struct kmem_cache *s, gfp_t gfp, int node)
- 
- 	pcs->main->size--;
- 
-+	if (!is_kfence_address(object)) {
-+		check_canary(s, object, s->random_active);
-+		set_canary(s, object, s->sheaf_random_active);
-+	}
-+
- 	local_unlock(&s->cpu_sheaves->lock);
- 
- 	stat(s, ALLOC_PCS);
-@@ -5392,6 +5397,8 @@ unsigned int alloc_from_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
- 	main->size -= batch;
- 	memcpy(p, main->objects + main->size, batch * sizeof(void *));
- 
-+	check_set_canary_bulk(s, batch, p, s->random_active, s->sheaf_random_active);
-+
- 	local_unlock(&s->cpu_sheaves->lock);
- 
- 	stat_add(s, ALLOC_PCS, batch);
-@@ -5424,6 +5431,7 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 	void *object;
- 	bool init = false;
- 	bool from_pcs = false;
-+	bool from_pcs_failed = false;
- 
- 	s = slab_pre_alloc_hook(s, gfpflags);
- 	if (unlikely(!s))
-@@ -5435,12 +5443,14 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 
- 	if (s->cpu_sheaves) {
- 		object = alloc_from_pcs(s, gfpflags, node);
--		if (object)
--			from_pcs = true;
-+		from_pcs = true;
++	set_canary(kmem_cache_node, n, kmem_cache_node->random_active);
+ 	n = kasan_slab_alloc(kmem_cache_node, n, GFP_KERNEL, false);
+ 	slab->freelist = get_freepointer(kmem_cache_node, n);
+ 	slab->inuse = 1;
+@@ -8028,6 +8203,9 @@ static int calculate_sizes(struct kmem_cache_args *args, struct kmem_cache *s)
+ 		s->offset = ALIGN_DOWN(s->object_size / 2, sizeof(void *));
  	}
  
--	if (!object)
-+	if (!object) {
- 		object = __slab_alloc_node(s, gfpflags, node, addr, orig_size);
-+		if (from_pcs)
-+			from_pcs_failed = true;
-+	}
- 
- 	maybe_wipe_obj_freeptr(s, object);
- 
-@@ -5457,9 +5467,18 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
- 		init = slab_want_init_on_alloc(gfpflags, s);
++	if (IS_ENABLED(CONFIG_SLAB_CANARY))
++		size += sizeof(void *);
++
+ #ifdef CONFIG_SLUB_DEBUG
+ 	if (flags & SLAB_STORE_USER) {
+ 		/*
+@@ -8340,6 +8518,10 @@ void __check_heap_object(const void *ptr, unsigned long n,
+ 		offset -= s->red_left_pad;
  	}
  
-+	/*
-+	 * linux-hardened: In the scenario where an object is intended to be allocated
-+	 * from a sheaf but it's allocation failed, it is instead directly allocated from the
-+	 * slab allocator but will later be freed back to a sheaf. We thus need to
-+	 * set the canary to a sheaf_random_active.
-+	 */
- 	if (object && !from_pcs) {
- 		check_canary(s, object, s->random_inactive);
- 		set_canary(s, object, s->random_active);
-+	} else if (object && from_pcs_failed) {
-+		check_canary(s, object, s->random_inactive);
-+		set_canary(s, object, s->sheaf_random_active);
- 	}
- 
- out:
-@@ -5745,6 +5764,11 @@ kmem_cache_alloc_from_sheaf_noprof(struct kmem_cache *s, gfp_t gfp,
- 
- 	/* add __GFP_NOFAIL to force successful memcg charging */
- 	slab_post_alloc_hook(s, NULL, gfp | __GFP_NOFAIL, 1, &ret, init, s->object_size);
-+
-+	if (!is_kfence_address(ret)) {
-+		check_canary(s, ret, s->random_active);
-+		set_canary(s, ret, s->sheaf_random_active);
-+	}
- out:
- 	trace_kmem_cache_alloc(_RET_IP_, ret, s, gfp, NUMA_NO_NODE);
- 
-@@ -6349,6 +6373,10 @@ bool free_to_pcs(struct kmem_cache *s, void *object)
- 			return false;
- 	}
- 
-+	if (!is_kfence_address(object)) {
-+		check_canary(s, object, s->sheaf_random_active);
-+		set_canary(s, object, s->random_active);
-+	}
- 	pcs->main->objects[pcs->main->size++] = object;
- 
- 	local_unlock(&s->cpu_sheaves->lock);
-@@ -6494,6 +6522,11 @@ bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj)
- 	 * Since we flush immediately when size reaches capacity, we never reach
- 	 * this with size already at capacity, so no OOB write is possible.
- 	 */
-+
-+	if (!is_kfence_address(obj)) {
-+		check_canary(s, obj, s->sheaf_random_active);
-+		set_canary(s, obj, s->random_active);
-+	}
- 	rcu_sheaf->objects[rcu_sheaf->size++] = obj;
- 
- 	if (likely(rcu_sheaf->size < s->sheaf_capacity)) {
-@@ -6550,6 +6583,11 @@ static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
- 			continue;
- 		}
- 
-+		if (!is_kfence_address(p[i])) {
-+			check_canary(s, p[i], s->sheaf_random_active);
-+			set_canary(s, p[i], s->random_active);
-+		}
-+
- 		if (unlikely(IS_ENABLED(CONFIG_NUMA) && slab_nid(slab) != node)) {
- 			remote_objects[remote_nr] = p[i];
- 			p[i] = p[--size];
-@@ -6839,6 +6877,7 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	       unsigned long addr)
- {
- 	bool canary = true;
-+	bool to_sheaf = false;
- 
- 	memcg_slab_free_hook(s, slab, &object, 1);
- 	alloc_tagging_slab_free_hook(s, slab, &object, 1);
-@@ -6847,7 +6886,7 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	if (is_kfence_address(object))
- 		canary = false;
- 
--	/* Do not check or set canary if the object is freed back to pcs. */
-+	/* Defer canary checking if the object is freed back to pcs. */
- 	if (s->cpu_sheaves && likely(!IS_ENABLED(CONFIG_NUMA) ||
- 				     slab_nid(slab) == numa_mem_id())) {
- 		canary = false;
-@@ -6858,10 +6897,21 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 
- 	if (s->cpu_sheaves && likely(!IS_ENABLED(CONFIG_NUMA) ||
- 				     slab_nid(slab) == numa_mem_id())) {
-+		to_sheaf = true;
- 		if (likely(free_to_pcs(s, object)))
- 			return;
- 	}
- 
-+	/*
-+	 * linux-hardened: In this scenario, the object was intended to be freed to a
-+	 * sheaf but it failed. The object will thus be freed back to the slab allocator,
-+	 * the canary thus need to be checked as a sheaf one and set back to a slab inactive one.
-+	 */
-+	if (to_sheaf && canary) {
-+		check_canary(s, object, s->sheaf_random_active);
-+		set_canary(s, object, s->random_inactive);
++	if (!is_kfence) {
++		check_canary(s, (void *)ptr - offset, s->random_active);
 +	}
 +
- 	do_slab_free(s, slab, object, object, 1, addr);
- }
- 
-@@ -8788,6 +8838,10 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
- #ifdef CONFIG_SLAB_CANARY
- 	s->random_active = get_random_long();
- 	s->random_inactive = get_random_long();
-+	if (__slub_debug_enabled())
-+		s->sheaf_random_active = s->random_active;
-+	else
-+		s->sheaf_random_active = get_random_long();
+ 	/* Allow address range falling entirely within usercopy region. */
+ 	if (offset >= s->useroffset &&
+ 	    offset - s->useroffset <= s->usersize &&
+@@ -8666,6 +8848,11 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
+ 	s->flags = kmem_cache_flags(flags, s->name);
+ #ifdef CONFIG_SLAB_FREELIST_HARDENED
+ 	s->random = get_random_long();
++#endif
++#ifdef CONFIG_SLAB_CANARY
++	s->random_active = get_random_long();
++	s->random_inactive = get_random_long();
++	s->sheaf_random_inactive = get_random_long();
  #endif
  	s->align = args->align;
  	s->ctor = args->ctor;
--- 
-2.53.0
-
