@@ -71,6 +71,7 @@ in
           MODULE_COMPRESS = yes;
           MODULE_COMPRESS_ALL = yes;
           MODULE_COMPRESS_ZSTD = yes;
+          MODULE_UNLOAD = yes;
           MPTCP = yes;
           MPTCP_IPV6 = yes;
           MQ_IOSCHED_DEADLINE = yes;
@@ -1788,7 +1789,7 @@ in
           MMA9553 = no;
           MMC = no;
           MMC35240 = no;
-          MODULE_UNLOAD = no;
+          MODULE_FORCE_UNLOAD = no;
           MOTORCOMM_PHY = no;
           MOUSE_APPLETOUCH = no;
           MOUSE_BCM5974 = no;
