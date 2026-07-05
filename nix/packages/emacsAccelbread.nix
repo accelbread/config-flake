@@ -7,6 +7,7 @@
 , shellcheck
 , direnv
 , fish
+, guile
 , llvmPackages_latest
 , nixd
 , rust-analyzer
@@ -68,6 +69,7 @@ let
           flymake-vale-program-args '("--config=${valeConfig}")
           sh-shellcheck-program "${shellcheck}/bin/shellcheck"
           envrc-direnv-executable "${direnv}/bin/direnv"
+          geiser-guile-binary "${guile}/bin/guile"
           scad-command "${openscad-unstable}/bin/openscad"
           fish-completion-command "${fish}/bin/fish"
           clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
