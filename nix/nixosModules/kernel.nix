@@ -53,6 +53,7 @@ in
           HWMON = yes;
           I2C = yes;
           I2C_CHARDEV = module;
+          INET = yes;
           INOTIFY_USER = yes;
           INPUT = yes;
           INPUT_EVDEV = module;
@@ -82,6 +83,7 @@ in
           NF_TABLES_IPV4 = yes;
           NF_TABLES_IPV6 = yes;
           NVME_HWMON = yes;
+          PACKET = module;
           PCIEAER = yes;
           POSIX_MQUEUE = yes;
           PROC_FS = yes;
@@ -110,13 +112,19 @@ in
         "x86_64" = {
           ACPI = yes;
           ACPI_APEI = yes;
+          ACPI_BUTTON = module;
+          ACPI_THERMAL = module;
+          ACPI_TINY_POWER_BUTTON = module;
           CRYPTO_AES_NI_INTEL = module;
+          CRYPTO_GHASH_CLMUL_NI_INTEL = module;
           HPET = no;
           IRQ_REMAP = yes;
           MICROCODE = yes;
           MTRR = yes;
+          PERF_EVENTS_INTEL_RAPL = module;
           PROCESSOR_SELECT = yes;
           RTC_DRV_CMOS = yes;
+          SERIO = module;
           X86_MCE = yes;
           X86_PAT = yes;
           X86_USER_SHADOW_STACK = yes;
@@ -171,6 +179,7 @@ in
           CGROUP_SCHED = yes;
           DEBUG_INFO_BTF = yes;
           DMIID = yes;
+          DMI_SYSFS = module;
           FAIR_GROUP_SCHED = yes;
           FHANDLE = yes;
           FW_LOADER_USER_HELPER = no;
@@ -200,6 +209,7 @@ in
           BTRFS_FS = module;
           BTRFS_FS_POSIX_ACL = yes;
           FS_VERITY = yes;
+          OVERLAY_FS = module;
           OVERLAY_FS_XINO_AUTO = yes;
         };
         "display" = {
@@ -223,6 +233,7 @@ in
           SND = module;
           SND_DYNAMIC_MINORS = yes;
           SND_HDA_CODEC_HDMI = module;
+          SND_HDA_GENERIC = module;
           SND_HDA_INTEL = module;
           SND_HDA_POWER_SAVE_DEFAULT = freeform "10";
           SND_MAX_CARDS = freeform "16";
@@ -238,6 +249,7 @@ in
           USB_XHCI_HCD = module;
         };
         "hid" = {
+          HID = module;
           HIDRAW = yes;
           HID_BATTERY_STRENGTH = yes;
           HID_GENERIC = module;
@@ -245,15 +257,18 @@ in
           HID_MULTITOUCH = module;
         };
         "wireless" = {
+          BT = module;
           BT_HCIBTUSB_AUTOSUSPEND = yes;
           CFG80211 = module;
           MAC80211 = module;
+          RFKILL = module;
           RFKILL_INPUT = yes;
           UHID = module;
         };
         "amdgpu" = {
           DEVICE_PRIVATE = yes;
           DMABUF_MOVE_NOTIFY = yes;
+          DRM_AMDGPU = module;
           DRM_AMD_DC = yes;
           HSA_AMD = yes;
           HSA_AMD_P2P = yes;
@@ -261,16 +276,45 @@ in
           MEMORY_HOTPLUG = yes;
           MEMORY_HOTREMOVE = yes;
           PCI_P2PDMA = yes;
+          RANDOMIZE_MEMORY_PHYSICAL_PADDING = freeform "0x1";
           ZONE_DEVICE = yes;
         };
         "VMs" = {
+          KVM = module;
           UDMABUF = yes;
         };
+        "nftables" = {
+          NETLINK_DIAG = module;
+          NFT_CT = module;
+          NFT_FIB_INET = module;
+          NFT_FIB_IPV4 = module;
+          NFT_FIB_IPV6 = module;
+          NFT_LIMIT = module;
+          NFT_LOG = module;
+          NFT_MASQ = module;
+          NFT_NAT = module;
+          NFT_REDIR = module;
+          NFT_REJECT = module;
+          NFT_SOCKET = module;
+          NFT_TPROXY = module;
+          NF_CONNTRACK = module;
+          NF_CONNTRACK_MARK = yes;
+          NF_LOG_SYSLOG = module;
+          NF_TABLES = module;
+        };
         "misc" = {
+          BLK_DEV_LOOP = module;
           IKCONFIG = module;
           IKCONFIG_PROC = yes;
+          IKHEADERS = module;
+          INPUT_UINPUT = module;
+          NTSYNC = module;
           PACKET_DIAG = module;
           SCHED_CLASS_EXT = yes;
+          TUN = module;
+          UNIX_DIAG = module;
+          VETH = module;
+          WIREGUARD = module;
           # FIRMWARE_MEMMAP = yes; # kexec
         };
         "debug" = {
@@ -399,7 +443,11 @@ in
           USER_NS_UNPRIVILEGED = yes;
         };
         "shadowfang hardware" = {
+          ACPI_AC = module;
+          ACPI_BATTERY = module;
           ACPI_EC = yes;
+          ACPI_FAN = module;
+          ACPI_PROCESSOR_AGGREGATOR = module;
           BT_HCIBTUSB = module;
           CHARGER_CROS_CONTROL = module;
           CHROME_PLATFORMS = yes;
@@ -421,18 +469,28 @@ in
           INT340X_THERMAL = module;
           INTEL_HFI_THERMAL = yes; # used by intel-lpmd
           INTEL_IDLE = yes;
+          INTEL_MEI = module;
           INTEL_PMC_CORE = module;
+          INTEL_PMT_TELEMETRY = module;
           INTEL_POWERCLAMP = module; # used by thermald
           INTEL_RAPL = module;
+          INTEL_VSEC = module;
+          ITCO_WDT = module;
           IWLMVM = module;
+          IWLWIFI = module;
           KEYBOARD_ATKBD = module;
           KVM_INTEL = module;
           MFD_CROS_EC_DEV = module;
           MFD_INTEL_LPSS_PCI = module;
           MOUSE_PS2 = module;
+          PERF_EVENTS_INTEL_CSTATE = module;
+          PERF_EVENTS_INTEL_UNCORE = module;
           PINCTRL_TIGERLAKE = module;
           SCHED_CLUSTER = yes;
           SENSORS_CORETEMP = module;
+          SERIO = module;
+          SND_HDA_CODEC_SIGMATEL = module;
+          SND_SOC = module;
           SND_SOC_SOF_HDA_AUDIO_CODEC = yes;
           SND_SOC_SOF_HDA_LINK = yes;
           SND_SOC_SOF_INTEL_TOPLEVEL = yes;
@@ -441,9 +499,11 @@ in
           SND_SOC_SOF_TOPLEVEL = yes;
           TCG_TIS = yes;
           THERMAL_GOV_USER_SPACE = yes; # used by thermald
+          TYPEC = module;
           TYPEC_DP_ALTMODE = module;
           TYPEC_TBT_ALTMODE = module;
           TYPEC_UCSI = module;
+          UCSI_ACPI = module;
           USB4 = module;
           X86_INTEL_LPSS = yes;
           X86_INTEL_PSTATE = yes;
@@ -455,24 +515,32 @@ in
           BT_HCIBTUSB = module;
           EDAC = module;
           EDAC_AMD64 = module;
+          GIGABYTE_WMI = module;
           I2C_PIIX4 = module;
           IGB = module;
           IWLMVM = module;
+          IWLWIFI = module;
           KVM_AMD = module;
           MEMORY_FAILURE = yes;
           PERF_EVENTS_AMD_BRS = yes;
           PINCTRL_AMD = yes;
           R8169 = module;
           SENSORS_IT87 = module;
+          SENSORS_K10TEMP = module;
+          SND_HDA_CODEC_REALTEK = module;
+          SP5100_TCO = module;
           TCG_TIS = yes;
           X86_AMD_PLATFORM_DEVICE = yes;
           X86_AMD_PSTATE = yes;
         };
         "peripherals" = {
+          BT_RFCOMM = module;
+          HID_LOGITECH = module;
           HID_LOGITECH_DJ = module;
           HID_MAGICMOUSE = module;
           HID_MICROSOFT = module;
           HID_PLAYSTATION = module;
+          HID_STEAM = module;
           HID_WACOM = module;
           INPUT_JOYDEV = module;
           INPUT_JOYSTICK = yes;
@@ -481,14 +549,18 @@ in
           JOYSTICK_XPAD_LEDS = yes;
           LEDS_CLASS_MULTICOLOR = module;
           MEDIA_CAMERA_SUPPORT = yes;
+          MEDIA_SUPPORT = module;
           MEDIA_USB_SUPPORT = yes;
           PLAYSTATION_FF = yes;
           USB_ACM = module;
+          USB_NET_DRIVERS = module;
+          USB_RTL8152 = module;
           USB_SERIAL = yes;
           USB_SERIAL_CH341 = module;
           USB_SERIAL_CP210X = module;
           USB_SERIAL_FTDI_SIO = module;
           USB_SERIAL_PL2303 = module;
+          USB_VIDEO_CLASS = module;
         };
         "defconfig junk" = {
           "60XX_WDT" = no;
@@ -2207,6 +2279,7 @@ in
           SDP500 = no;
           SD_ADC_MODULATOR = no;
           SECRETMEM = no;
+          SECURITYFS = no;
           SECURITY_SELINUX = no;
           SEN0322 = no;
           SENSEAIR_SUNRISE_CO2 = no;
