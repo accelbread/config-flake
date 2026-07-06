@@ -627,9 +627,7 @@ in
           ALLOW_DEV_COREDUMP = no;
           ATA_FORCE = no;
           ATA_SFF = no;
-          BLK_CGROUP_IOCOST = no;
-          BLK_CGROUP_IOLATENCY = no;
-          BLK_CGROUP_IOPRIO = no;
+          BLK_CGROUP = no;
           BLK_DEV_IO_TRACE = no;
           BLK_DEV_MD = no;
           BLOCK_LEGACY_AUTOLOAD = no;
@@ -644,6 +642,7 @@ in
           CGROUP_NET_PRIO = no;
           CGROUP_RDMA = no;
           CHARGER_CROS_PCHG = no;
+          CHR_DEV_SG = no;
           CONNECTOR = no;
           CPU_FREQ_GOV_ONDEMAND = no;
           CPU_ISOLATION = no;
