@@ -77,7 +77,7 @@ in
           BINFMT_MISC = yes;
           BINFMT_SCRIPT = yes;
           BLK_DEV_INITRD = yes;
-          BLK_DEV_NVME = module;
+          BLK_DEV_NVME = yes;
           BPF = yes;
           BPF_JIT = yes;
           BPF_SYSCALL = yes;
@@ -161,7 +161,7 @@ in
           ACPI_BUTTON = module;
           ACPI_THERMAL = module;
           ACPI_TINY_POWER_BUTTON = module;
-          CRYPTO_AES_NI_INTEL = module;
+          CRYPTO_AES_NI_INTEL = yes;
           CRYPTO_GHASH_CLMUL_NI_INTEL = module;
           HPET = no;
           IRQ_REMAP = yes;
@@ -245,13 +245,13 @@ in
           VFAT_FS = module;
         };
         "dm-crypt" = {
-          CRYPTO_AES = module;
-          CRYPTO_SHA256 = module;
-          CRYPTO_XTS = module;
-          DM_CRYPT = module;
+          CRYPTO_AES = yes;
+          CRYPTO_SHA256 = yes;
+          CRYPTO_XTS = yes;
+          DM_CRYPT = yes;
         };
         "filesystem" = {
-          BLK_DEV_DM = module;
+          BLK_DEV_DM = yes;
           BTRFS_FS = module;
           BTRFS_FS_POSIX_ACL = yes;
           FS_VERITY = yes;
