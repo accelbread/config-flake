@@ -47,7 +47,6 @@ let
       mkdir -p "$buildRoot"
       export MAKEFLAGS="$makeFlags"
       ./scripts/kconfig/merge_config.sh -O "$buildRoot" -Q \
-        arch/x86/configs/x86_64_defconfig \
         kernel/configs/hardening.config \
         arch/x86/configs/hardening.config \
         ${configFragment}
@@ -81,6 +80,7 @@ in
           BINFMT_SCRIPT = yes;
           BLK_DEV_INITRD = yes;
           BLK_DEV_NVME = yes;
+          BLK_DEV_SD = module;
           BPF = yes;
           BPF_JIT = yes;
           BPF_SYSCALL = yes;
@@ -98,6 +98,8 @@ in
           FW_LOADER_COMPRESS = yes;
           FW_LOADER_COMPRESS_ZSTD = yes;
           HAVE_EBPF_JIT = yes;
+          HIBERNATION = yes;
+          HIGH_RES_TIMERS = yes;
           HWMON = yes;
           I2C = yes;
           I2C_CHARDEV = module;
@@ -108,14 +110,18 @@ in
           INPUT_KEYBOARD = yes;
           IPV6 = yes;
           IPV6_MULTIPLE_TABLES = yes;
+          IP_ADVANCED_ROUTER = yes;
           IP_MULTICAST = yes;
           IP_MULTIPLE_TABLES = yes;
+          IP_ROUTE_VERBOSE = yes;
           KCMP = yes;
           KERNEL_ZSTD = yes;
+          LOG_BUF_SHIFT = freeform "18";
           LRU_GEN = yes;
           LRU_GEN_ENABLED = yes;
           MD = yes;
           MEDIA_SUPPORT_FILTER = yes;
+          MODULES = yes;
           MODULE_COMPRESS = yes;
           MODULE_COMPRESS_ALL = yes;
           MODULE_COMPRESS_ZSTD = yes;
@@ -124,6 +130,8 @@ in
           MPTCP_IPV6 = yes;
           MQ_IOSCHED_DEADLINE = yes;
           NAMESPACES = yes;
+          NET = yes;
+          NETDEVICES = yes;
           NETFILTER = yes;
           NETFILTER_ADVANCED = yes;
           NET_NS = yes;
@@ -135,15 +143,18 @@ in
           PACKET = module;
           PCIEAER = yes;
           POSIX_MQUEUE = yes;
+          PRINTK_TIME = yes;
           PROC_FS = yes;
           RTC_HCTOSYS = yes;
           RT_GROUP_SCHED = no;
           SCHED_CORE = yes;
+          SCSI_CONSTANTS = yes;
           SECCOMP = yes;
           SECCOMP_FILTER = yes;
           SECURITY = yes;
           SECURITY_LANDLOCK = yes;
           SIGNALFD = yes;
+          SMP = yes;
           SYSFS = yes;
           SYSVIPC = yes;
           THERMAL = yes;
@@ -156,6 +167,7 @@ in
           TRANSPARENT_HUGEPAGE = yes;
           UNIX = yes;
           USER_NS = yes;
+          WATCHDOG = yes;
           WATCHDOG_SYSFS = yes;
         };
         "x86_64" = {
@@ -167,11 +179,14 @@ in
           CRYPTO_AES_NI_INTEL = yes;
           CRYPTO_GHASH_CLMUL_NI_INTEL = module;
           HPET = no;
+          IA32_EMULATION = yes;
           IRQ_REMAP = yes;
           MICROCODE = yes;
           MTRR = yes;
+          PCI = yes;
           PERF_EVENTS_INTEL_RAPL = module;
           PROCESSOR_SELECT = yes;
+          RTC_CLASS = yes;
           RTC_DRV_CMOS = yes;
           SERIO = module;
           X86_MCE = yes;
@@ -190,8 +205,12 @@ in
           DEFAULT_FQ_CODEL = yes;
           DEFERRED_STRUCT_PAGE_INIT = yes;
           HIBERNATION_COMP_LZ4 = yes;
+          HIGH_RES_TIMERS = yes;
+          HZ_1000 = yes;
+          JUMP_LABEL = yes;
           NET_SCH_DEFAULT = yes;
           NET_SCH_FQ_CODEL = yes;
+          NO_HZ = yes;
           NO_HZ_IDLE = yes;
           PCIEASPM_POWER_SUPERSAVE = yes;
           PERSISTENT_HUGE_ZERO_FOLIO = yes;
@@ -202,6 +221,7 @@ in
           RCU_NOCB_CPU = yes;
           READ_ONLY_THP_FOR_FS = yes;
           SCHED_AUTOGROUP = yes;
+          TCP_CONG_ADVANCED = yes;
           TCP_CONG_BBR = yes;
           THERMAL_DEFAULT_GOV_STEP_WISE = yes;
           TRANSPARENT_HUGEPAGE_ALWAYS = yes;
@@ -218,6 +238,7 @@ in
         "monitoring" = {
           IRQ_TIME_ACCOUNTING = yes;
           TASKSTATS = yes;
+          TASK_DELAY_ACCT = yes;
           TASK_IO_ACCOUNTING = yes;
           TASK_XACCT = yes;
         };
@@ -262,6 +283,7 @@ in
           OVERLAY_FS_XINO_AUTO = yes;
         };
         "display" = {
+          ACPI_BGRT = yes;
           BACKLIGHT_CLASS_DEVICE = yes;
           DRM = yes;
           DRM_FBDEV_EMULATION = yes;
@@ -292,6 +314,7 @@ in
         };
         "usb" = {
           USB = yes;
+          USB_ANNOUNCE_NEW_DEVICES = yes;
           USB_HID = module;
           USB_HIDDEV = yes;
           USB_STORAGE = module;
@@ -311,6 +334,7 @@ in
           BT_HCIBTUSB_AUTOSUSPEND = yes;
           CFG80211 = module;
           MAC80211 = module;
+          MAC80211_LEDS = yes;
           RFKILL = module;
           RFKILL_INPUT = yes;
           UHID = module;
@@ -354,9 +378,12 @@ in
         };
         "misc" = {
           BLK_DEV_LOOP = module;
+          CGROUP_PERF = yes;
+          CPUSETS = yes;
           IKCONFIG = module;
           IKCONFIG_PROC = yes;
           IKHEADERS = module;
+          INPUT_MISC = yes;
           INPUT_UINPUT = module;
           NTSYNC = module;
           PACKET_DIAG = module;
@@ -575,15 +602,18 @@ in
           PERF_EVENTS_AMD_BRS = yes;
           PINCTRL_AMD = yes;
           R8169 = module;
+          SATA_AHCI = module;
           SENSORS_IT87 = module;
           SENSORS_K10TEMP = module;
           SND_HDA_CODEC_REALTEK = module;
+          SND_HRTIMER = module;
           SP5100_TCO = module;
           TCG_TIS = yes;
           X86_AMD_PLATFORM_DEVICE = yes;
           X86_AMD_PSTATE = yes;
         };
         "peripherals" = {
+          BLK_DEV_SR = module;
           BT_RFCOMM = module;
           HID_LOGITECH = module;
           HID_LOGITECH_DJ = module;
@@ -613,9 +643,7 @@ in
           USB_VIDEO_CLASS = module;
         };
         "defconfig junk" = {
-          "8139TOO" = no;
           ACPI_DEBUG = no;
-          ACPI_DOCK = no;
           ACPI_I2C_OPREGION = no;
           ACPI_PCC = no;
           ACPI_PRMT = no;
@@ -623,28 +651,13 @@ in
           ACPI_SPCR_TABLE = no;
           ACPI_TABLE_UPGRADE = no;
           AF_UNIX_OOB = no;
-          AGP = no;
           ALLOW_DEV_COREDUMP = no;
           ATA_FORCE = no;
           ATA_SFF = no;
-          BLK_CGROUP = no;
-          BLK_DEV_IO_TRACE = no;
-          BLK_DEV_MD = no;
           BLOCK_LEGACY_AUTOLOAD = no;
-          BSD_PROCESS_ACCT = no;
           BT_HCIBTUSB_BCM = no;
           BT_HCIBTUSB_RTL = no;
-          CGROUP_CPUACCT = no;
-          CGROUP_DEBUG = no;
-          CGROUP_DEVICE = no;
-          CGROUP_FREEZER = no;
-          CGROUP_MISC = no;
-          CGROUP_NET_PRIO = no;
-          CGROUP_RDMA = no;
           CHARGER_CROS_PCHG = no;
-          CHR_DEV_SG = no;
-          CONNECTOR = no;
-          CPU_FREQ_GOV_ONDEMAND = no;
           CPU_ISOLATION = no;
           CPU_SUP_CENTAUR = no;
           CPU_SUP_HYGON = no;
@@ -655,69 +668,34 @@ in
           CROS_TYPEC_SWITCH = no;
           CROS_USBPD_NOTIFY = no;
           CRYPTO_HW = no;
-          DEBUG_DEVRES = no;
-          DEBUG_ENTRY = no;
           DEBUG_MISC = no;
-          DEBUG_STACK_USAGE = no;
-          DEVTMPFS_MOUNT = no;
-          DMADEVICES = no;
-          DM_MIRROR = no;
-          DM_ZERO = no;
           DNOTIFY = no;
-          DRM_I915 = no;
           DRM_XE_PAGEMAP = no;
-          E100 = no;
-          E1000 = no;
-          E1000E = no;
           EARLY_PRINTK = no;
           EDAC_LEGACY_SYSFS = no;
-          EEEPC_LAPTOP = no;
           EFI_HANDOVER_PROTOCOL = no;
-          EFI_MIXED = no;
           EPROBE_EVENTS = no;
-          EXT4_FS = no;
           FB_DEVICE = no;
           FIRMWARE_MEMMAP = no; # kexec
           FW_LOADER_COMPRESS_XZ = no;
           GPIO_CDEV = no;
           HIBERNATION_SNAPSHOT_DEV = no;
-          HID_GYRATION = no;
-          HID_NTRIG = no;
-          HID_PANTHERLORD = no;
-          HID_PETALYNX = no;
-          HID_PID = no;
-          HID_SAMSUNG = no;
-          HID_SONY = no;
-          HID_SUNPLUS = no;
-          HID_TOPSEED = no;
-          HUGETLBFS = no;
+          HW_RANDOM_AMD = no;
+          HW_RANDOM_INTEL = no;
           HW_RANDOM_VIA = no;
-          HYPERVISOR_GUEST = no;
           I2C_HELPER_AUTO = no;
           IGB_HWMON = no;
-          INET6_AH = no;
-          INET6_ESP = no;
-          INPUT_TABLET = no;
-          INPUT_TOUCHSCREEN = no;
           INTEGRITY = no;
           INTEL_IOMMU_PERF_EVENTS = no;
           INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON = no;
           IP6_NF_IPTABLES = no;
           IPV6_SIT = no;
-          IP_MROUTE = no;
           IP_NF_IPTABLES = no;
-          IP_PNP = no;
-          IP_ROUTE_MULTIPATH = no;
           ISA_DMA_API = no;
-          ISO9660_FS = no;
           IWLWIFI_DEVICE_TRACING = no;
-          KALLSYMS_ALL = no;
-          KPROBES = no;
           KVM_HYPERV = no;
           KVM_SMM = no;
-          MACINTOSH_DRIVERS = no;
           MEDIA_SUBDRV_AUTOSELECT = no;
-          MODULE_FORCE_UNLOAD = no;
           MOUSE_PS2_ALPS = no;
           MOUSE_PS2_BYD = no;
           MOUSE_PS2_CYPRESS = no;
@@ -728,17 +706,11 @@ in
           MOUSE_PS2_SYNAPTICS_SMBUS = no;
           MOUSE_PS2_TRACKPOINT = no;
           MQ_IOSCHED_KYBER = no;
-          MSDOS_FS = no;
-          NETCONSOLE = no;
+          MTRR_SANITIZER = no;
           NETFILTER_EGRESS = no;
           NETFILTER_INGRESS = no;
           NETFILTER_XTABLES = no;
-          NETLABEL = no;
           NETWORK_FILESYSTEMS = no;
-          NET_9P = no;
-          NET_CLS_ACT = no;
-          NET_CLS_CGROUP = no;
-          NET_EMATCH = no;
           NET_FLOW_LIMIT = no;
           NET_VENDOR_3COM = no;
           NET_VENDOR_ADAPTEC = no;
@@ -808,25 +780,12 @@ in
           NET_VENDOR_WANGXUN = no;
           NET_VENDOR_WIZNET = no;
           NET_VENDOR_XILINX = no;
-          NF_CONNTRACK_FTP = no;
-          NF_CONNTRACK_IRC = no;
-          NF_CONNTRACK_SIP = no;
-          NF_CT_NETLINK = no;
           NF_CT_PROTO_SCTP = no;
           NF_CT_PROTO_UDPLITE = no;
-          NLS_ASCII = no;
-          NLS_UTF8 = no;
-          NUMA = no;
-          NVRAM = no;
-          PCCARD = no;
           PCSPKR_PLATFORM = no;
           PERF_EVENTS_AMD_UNCORE = no;
-          PM_DEBUG = no;
           PNP_DEBUG_MESSAGES = no;
-          PROFILING = no;
-          PROVIDE_OHCI1394_DMA_INIT = no;
           PTP_1588_CLOCK = no;
-          QUOTA = no;
           RAID6_PQ_BENCHMARK = no;
           RAS_FMPM = no;
           RCU_TRACE = no;
@@ -842,15 +801,11 @@ in
           RTC_SYSTOHC = no;
           RUNTIME_TESTING_MENU = no;
           SATA_PMP = no;
-          SCHEDSTATS = no;
           SCSI_LOWLEVEL = no;
           SCSI_PROC_FS = no;
-          SCSI_SPI_ATTRS = no;
           SECRETMEM = no;
           SECURITYFS = no;
           SECURITY_SELINUX = no;
-          SERIAL_8250 = no;
-          SERIAL_NONSTANDARD = no;
           SERIO_SERPORT = no;
           SGETMASK_SYSCALL = no;
           SND_DRIVERS = no;
@@ -867,10 +822,8 @@ in
           SND_HDA_CODEC_HDMI_NVIDIA_MCP = no;
           SND_HDA_CODEC_HDMI_SIMPLE = no;
           SND_HDA_CODEC_HDMI_TEGRA = no;
-          SND_HDA_HWDEP = no;
           SND_PCM_TIMER = no;
           SND_PROC_FS = no;
-          SND_SEQUENCER = no;
           SND_SOC_SOF_ALDERLAKE = no;
           SND_SOC_SOF_APOLLOLAKE = no;
           SND_SOC_SOF_CANNONLAKE = no;
@@ -890,21 +843,16 @@ in
           SND_SUPPORT_OLD_API = no;
           SND_X86 = no;
           SURFACE_PLATFORMS = no;
+          TCP_CONG_BIC = no;
           TCP_CONG_CUBIC = no;
-          TCP_MD5SIG = no;
+          TCP_CONG_HTCP = no;
+          TCP_CONG_WESTWOOD = no;
           TRACEFS_AUTOMOUNT_DEPRECATED = no;
-          USB_EHCI_HCD = no;
-          USB_MON = no;
-          USB_OHCI_HCD = no;
           USB_PCI_AMD = no;
-          USB_PRINTER = no;
-          USB_UHCI_HCD = no;
           VHOST_MENU = no;
           VIDEO_CAMERA_LENS = no;
           VIDEO_CAMERA_SENSOR = no;
-          VIRTIO_CONSOLE = no;
           VIRTIO_MENU = no;
-          WERROR = no;
           WLAN_VENDOR_ADMTEK = no;
           WLAN_VENDOR_ATH = no;
           WLAN_VENDOR_ATMEL = no;
@@ -923,16 +871,10 @@ in
           WLAN_VENDOR_TI = no;
           WLAN_VENDOR_ZYDAS = no;
           WMI_BMOF = no;
-          X86_ACPI_CPUFREQ = no;
-          X86_CHECK_BIOS_CORRUPTION = no;
-          X86_CPUID = no;
           X86_DEBUG_FPU = no;
           X86_EXTENDED_PLATFORM = no;
           X86_MPPARSE = no;
-          X86_MSR = no;
-          X86_REROUTE_FOR_BROKEN_BOOT_IRQS = no;
           X86_VSYSCALL_EMULATION = no;
-          XFRM_USER = no;
           ZONE_DMA = no;
         };
       });
