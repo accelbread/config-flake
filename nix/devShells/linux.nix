@@ -14,6 +14,6 @@ in
   inherit (kernel) stdenv;
   inputsFrom = [ kernel ];
   packages = with pkgs; [ b4 pkg-config ncurses ];
-} // lib.optionalAttrs kernel.stdenv.cc.isClang {
-  env.LLVM = "1";
+  env.MAKEFLAGS = lib.concatStringsSep " "
+    (kernel.configfile.makeFlags ++ [ "-j" ]);
 }
