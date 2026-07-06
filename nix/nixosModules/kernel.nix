@@ -1,21 +1,66 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 let
   use-ccache = false;
   stdenv = llvmStdenv pkgs.llvmPackages;
   base-kernel = pkgs.linux;
 
+  extraMakeFlags = [ "INSTALL_MOD_STRIP=1" ];
+
   llvmStdenv = llvmPackages:
     let inherit (llvmPackages) stdenv bintools; in
     pkgs.overrideCC stdenv (stdenv.cc.override { inherit bintools; });
+
+  baseConfig = (base-kernel.override (prev: {
+    inherit stdenv extraMakeFlags;
+    enableCommonConfig = false;
+    kernelPatches = prev.kernelPatches or [ ] ++ config.boot.kernelPatches;
+  })).configfile;
+
+  configFragment = pkgs.writeText "kconfig_settings"
+    (lib.concatStrings (lib.mapAttrsToList
+      (k: v:
+        if v.freeform != null then
+          if lib.match "-?[0-9]+|0x[0-9a-fA-F]+" v.freeform != null
+          then "CONFIG_${k}=${v.freeform}\n"
+          else "CONFIG_${k}=\"${v.freeform}\"\n"
+        else if v.tristate == null then ""
+        else if v.tristate == "n" then "# CONFIG_${k} is not set\n"
+        else "CONFIG_${k}=${v.tristate}\n")
+      baseConfig.structuredConfig));
+
+  requiredConfig = pkgs.writeText "required_kconfig"
+    (lib.concatStrings ([ "(" ] ++
+      (lib.mapAttrsToList
+        (k: v:
+          if v.freeform != null then "(${k} . \"${v.freeform}\")"
+          else if v.tristate != null then "(${k} . ${v.tristate})"
+          else "(${k} . unset)")
+        (lib.filterAttrs (_: v: !v.optional) baseConfig.structuredConfig))
+      ++ [ ")" ]));
+
+  configfile = stdenv.mkDerivation {
+    inherit (baseConfig) pname version depsBuildBuild nativeBuildInputs
+      makeFlags preUnpack src patches installPhase enableParallelBuilding;
+    inherit (base-kernel) postPatch;
+    buildPhase = ''
+      export buildRoot="''${buildRoot:-build}"
+      mkdir -p "$buildRoot"
+      export MAKEFLAGS="$makeFlags"
+      ./scripts/kconfig/merge_config.sh -O "$buildRoot" -Q \
+        arch/x86/configs/x86_64_defconfig ${configFragment}
+      ${pkgs.guile}/bin/guile -s ${./misc/check_kconfig.scm} \
+        ${requiredConfig} "$buildRoot/.config"
+    '';
+  };
 in
 {
   security.lsm = [ "lockdown" ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor (base-kernel.override (prev: {
-      enableCommonConfig = false;
-      extraMakeFlags = prev.extraMakeFlags or [ ] ++ [ "INSTALL_MOD_STRIP=1" ];
-      inherit stdenv;
+    kernelPackages = pkgs.linuxPackagesFor (pkgs.linuxManualConfig ({
+      inherit (base-kernel) version pname modDirVersion src kernelPatches;
+      inherit stdenv extraMakeFlags configfile;
+      config.CONFIG_MODULES = "y";
     } // lib.optionalAttrs use-ccache {
       stdenv = pkgs.ccacheStdenv.override { inherit stdenv; };
       buildPackages = pkgs.buildPackages // {
@@ -568,7 +613,6 @@ in
           "6LOWPAN" = no;
           "8139CP" = no;
           "8139TOO" = no;
-          # INPUT_SPARSEKMAP = no; # breaks nixos config script
           ABP060MG = no;
           ACERHDF = no;
           ACER_WIRELESS = no;
@@ -1441,6 +1485,7 @@ in
           INPUT_MOUSEDEV = no;
           INPUT_PCF8574 = no;
           INPUT_POWERMATE = no;
+          INPUT_SPARSEKMAP = no;
           INPUT_TABLET = no;
           INPUT_TOUCHSCREEN = no;
           INPUT_YEALINK = no;
@@ -1841,12 +1886,6 @@ in
           NETFILTER_NETLINK_OSF = no;
           NETFILTER_NETLINK_QUEUE = no;
           NETFILTER_XTABLES = no;
-          NETFILTER_XT_MATCH_CONNLABEL = option no;
-          NETFILTER_XT_MATCH_NFACCT = option no;
-          NETFILTER_XT_MATCH_OSF = option no;
-          NETFILTER_XT_TARGET_LOG = option no;
-          NETFILTER_XT_TARGET_NFLOG = option no;
-          NETFILTER_XT_TARGET_NFQUEUE = option no;
           NETLABEL = no;
           NETWORK_FILESYSTEMS = no;
           NETWORK_SECMARK = no;
@@ -3183,7 +3222,6 @@ in
           VIRTIO_CONSOLE = no;
           VIRTIO_FS = no;
           VIRTIO_MENU = no;
-          VIRTIO_NET = option no;
           VIRT_WIFI = no;
           VITESSE_PHY = no;
           VL53L0X_I2C = no;
