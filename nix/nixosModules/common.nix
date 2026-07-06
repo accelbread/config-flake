@@ -313,6 +313,7 @@ in
             "/var/log"
             "/var/lib/systemd/timesync"
             "/var/lib/systemd/timers"
+            "/var/lib/fwupd/metadata/lvfs"
           ];
           files = [{
             file = "/var/lib/systemd/random-seed";
