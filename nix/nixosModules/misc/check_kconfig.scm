@@ -6,7 +6,7 @@
                         (lambda () (read))))
 (define input-configfile (open-input-file (list-ref (command-line) 2)))
 
-(define config (make-hash-table))
+(define config (make-hash-table 10000))
 
 (define success #t)
 
@@ -16,23 +16,30 @@
          args)
   (set! success #f))
 
+(define cfg-rx-ym (make-regexp "^CONFIG_([A-Za-z0-9_]+)=(y|m)$"))
+(define cfg-rx-n (make-regexp "^# CONFIG_([A-Za-z0-9_]+) is not set$"))
+(define cfg-rx-str (make-regexp "^CONFIG_([A-Za-z0-9_]+)=\"(.*)\"$"))
+(define cfg-rx-num-hex (make-regexp
+                        "^CONFIG_([A-Za-z0-9_]+)=(-?[0-9]+|0x[0-9a-f]+)$"))
+(define cfg-rx-blank (make-regexp "^(#.*)?$"))
+
 (define (process-lines)
   (let ((line (read-line input-configfile)))
     (unless (eof-object? line)
       (cond
-       ((string-match "^CONFIG_([A-Za-z0-9_]+)=(y|m)$" line) =>
+       ((regexp-exec cfg-rx-ym line) =>
         (lambda (match) (hashq-set! config (string->symbol (match:substring match 1))
                                (string->symbol (match:substring match 2)))))
-       ((string-match "^# CONFIG_([A-Za-z0-9_]+) is not set$" line) =>
+       ((regexp-exec cfg-rx-n line) =>
         (lambda (match) (hashq-set! config (string->symbol (match:substring match 1))
                                'n)))
-       ((string-match "^CONFIG_([A-Za-z0-9_]+)=\"(.*)\"$" line) =>
+       ((regexp-exec cfg-rx-str line) =>
         (lambda (match) (hashq-set! config (string->symbol (match:substring match 1))
                                (match:substring match 2))))
-       ((string-match "^CONFIG_([A-Za-z0-9_]+)=(-?[0-9]+|0x[0-9a-f]+)$" line) =>
+       ((regexp-exec cfg-rx-num-hex line) =>
         (lambda (match) (hashq-set! config (string->symbol (match:substring match 1))
                                (match:substring match 2))))
-       ((string-match "^(#.*)?$" line))
+       ((regexp-exec cfg-rx-blank line))
        (else (error-cont "unhandled config line: ~a" line)))
       (process-lines))))
 
