@@ -312,6 +312,7 @@ in
           ]) ++ [
             "/var/log"
             "/var/lib/systemd/timesync"
+            "/var/lib/systemd/timers"
           ];
           files = [{
             file = "/var/lib/systemd/random-seed";
