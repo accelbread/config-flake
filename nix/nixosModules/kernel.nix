@@ -47,7 +47,10 @@ let
       mkdir -p "$buildRoot"
       export MAKEFLAGS="$makeFlags"
       ./scripts/kconfig/merge_config.sh -O "$buildRoot" -Q \
-        arch/x86/configs/x86_64_defconfig ${configFragment}
+        arch/x86/configs/x86_64_defconfig \
+        kernel/configs/hardening.config \
+        arch/x86/configs/hardening.config \
+        ${configFragment}
       ${pkgs.guile}/bin/guile --no-auto-compile -s ${./misc/check_kconfig.scm} \
         ${requiredConfig} "$buildRoot/.config"
     '';
