@@ -695,6 +695,7 @@ in
           IWLWIFI_DEVICE_TRACING = no;
           KVM_HYPERV = no;
           KVM_SMM = no;
+          LOCALVERSION_AUTO = no;
           MEDIA_SUBDRV_AUTOSELECT = no;
           MOUSE_PS2_ALPS = no;
           MOUSE_PS2_BYD = no;
