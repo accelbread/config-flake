@@ -736,6 +736,7 @@
                                             (cape-capf-buster
                                              (cape-capf-super #'cape-dabbrev
                                                               #'cape-dict)))
+        cape-dabbrev-buffer-function #'buffer-list
         cape-dabbrev-min-length 3
         cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
         corfu-auto t
