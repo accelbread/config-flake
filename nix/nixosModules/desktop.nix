@@ -65,6 +65,7 @@ in
       "quiet"
       "rd.udev.log_level=3"
     ];
+    kernelModules = [ "ntsync" ];
     consoleLogLevel = 3;
     plymouth = {
       enable = true;
