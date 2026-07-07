@@ -29,7 +29,7 @@ in
   config = lib.mkIf (cfg.devices != [ ]) {
     boot = {
       initrd = {
-        kernelModules = [ "dm_mod" ];
+        kernelModules = [ "dm_mod" "btrfs" ];
         luks = {
           devices = listToAttrs (eachDevice (n: d: {
             name = "${hostname}_disk${toString n}";
@@ -45,7 +45,12 @@ in
             "input_leds"
           ];
         };
-        systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
+        systemd = {
+          settings.Manager.DefaultDeviceTimeoutSec = "infinity";
+          initrdBin = [ pkgs.btrfs-progs ];
+        };
+        # btrfs nixos support pulls in modules not needed since kernel 7.0
+        supportedFilesystems.btrfs = lib.mkForce false;
       };
       swraid.enable = false;
       specialFileSystems = {

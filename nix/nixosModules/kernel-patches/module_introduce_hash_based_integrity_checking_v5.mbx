@@ -1,0 +1,2319 @@
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 1/14] kbuild: generate module BTF based on
+ vmlinux.unstripped
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:05 +0200
+Message-Id: <20260505-module-hashes-v5-1-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The upcoming module hashes functionality will build the modules in
+between the generation of the BTF data and the final link of vmlinux.
+At this point vmlinux is not yet built and therefore can't be used for
+module BTF generation. vmlinux.unstripped however is usable and
+sufficient for BTF generation.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+---
+ scripts/Makefile.modfinal | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index adcbcde16a07..b09040ccddd2 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -38,12 +38,14 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+ 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+ 		-T $(objtree)/scripts/module.lds -o $@ $(filter %.o, $^)
+ 
++btf-vmlinux := $(if $(KBUILD_EXTMOD),vmlinux,vmlinux.unstripped)
++
+ quiet_cmd_btf_ko = BTF [M] $@
+       cmd_btf_ko = 							\
+-	if [ ! -f $(objtree)/vmlinux ]; then				\
+-		printf "Skipping BTF generation for %s due to unavailability of vmlinux\n" $@ 1>&2; \
++	if [ ! -f $(objtree)/$(btf-vmlinux) ]; then				\
++		printf "Skipping BTF generation for %s due to unavailability of $(btf-vmlinux)\n" $@ 1>&2; \
+ 	else	\
+-		$(CONFIG_SHELL) $(srctree)/scripts/gen-btf.sh --btf_base $(objtree)/vmlinux $@; \
++		$(CONFIG_SHELL) $(srctree)/scripts/gen-btf.sh --btf_base $(objtree)/$(btf-vmlinux) $@; \
+ 	fi;
+ 
+ # Same as newer-prereqs, but allows to exclude specified extra dependencies
+@@ -55,8 +57,8 @@ if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
+ 	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
+ 
+ # Re-generate module BTFs if either module's .ko or vmlinux changed
+-%.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/vmlinux) FORCE
+-	+$(call if_changed_except,ld_ko_o,$(objtree)/vmlinux)
++%.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/$(btf-vmlinux)) FORCE
++	+$(call if_changed_except,ld_ko_o,$(objtree)/$(btf-vmlinux))
+ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
+ endif
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 2/14] lockdown: Make the relationship to MODULE_SIG a
+ dependency
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:06 +0200
+Message-Id: <20260505-module-hashes-v5-2-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The new hash-based module integrity checking will also be able to
+satisfy the requirements of lockdown.
+Such an alternative is not representable with "select", so use
+"depends on" instead.
+
+Acked-by: Paul Moore <paul@paul-moore.com>
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ security/lockdown/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/lockdown/Kconfig b/security/lockdown/Kconfig
+index e84ddf484010..155959205b8e 100644
+--- a/security/lockdown/Kconfig
++++ b/security/lockdown/Kconfig
+@@ -1,7 +1,7 @@
+ config SECURITY_LOCKDOWN_LSM
+ 	bool "Basic module for enforcing kernel lockdown"
+ 	depends on SECURITY
+-	select MODULE_SIG if MODULES
++	depends on !MODULES || MODULE_SIG
+ 	help
+ 	  Build support for an LSM that enforces a coarse kernel lockdown
+ 	  behaviour.
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 3/14] kbuild: rename the strip_relocs command
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:07 +0200
+Message-Id: <20260505-module-hashes-v5-3-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+This command is doing more than just stripping relocations.
+With the introduction of CONFIG_MODULE_HASHES it will do even more.
+
+Use a more generic name for the variable.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ scripts/Makefile.vmlinux | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index fcae1e432d9a..6cc661e5292b 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -91,13 +91,13 @@ remove-symbols := -w --strip-unneeded-symbol='__mod_device_table__*'
+ 
+ # To avoid warnings: "empty loadable segment detected at ..." from GNU objcopy,
+ # it is necessary to remove the PT_LOAD flag from the segment.
+-quiet_cmd_strip_relocs = OBJCOPY $@
+-      cmd_strip_relocs = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
+-                         $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
++quiet_cmd_objcopy_vmlinux = OBJCOPY $@
++      cmd_objcopy_vmlinux = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
++                            $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
+ 
+ targets += vmlinux
+ vmlinux: vmlinux.unstripped FORCE
+-	$(call if_changed,strip_relocs)
++	$(call if_changed,objcopy_vmlinux)
+ 
+ # modules.builtin.modinfo
+ # ---------------------------------------------------------------------------
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 4/14] module: Drop pointless debugging message
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:08 +0200
+Message-Id: <20260505-module-hashes-v5-4-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+This is the only instance of pr_devel() in the whole module subsystem
+and essentially useless.
+
+Drop it.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/signing.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 590ba29c85ab..4a5e4eef250d 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -46,8 +46,6 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+ 	size_t sig_len, modlen = info->len;
+ 	int ret;
+ 
+-	pr_devel("==>%s(,%zu)\n", __func__, modlen);
+-
+ 	if (modlen <= sizeof(ms))
+ 		return -EBADMSG;
+ 
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 5/14] module: Make mod_verify_sig() static
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:09 +0200
+Message-Id: <20260505-module-hashes-v5-5-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+It is not used outside of signing.c.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+---
+ kernel/module/internal.h | 1 -
+ kernel/module/signing.c  | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 061161cc79d9..071999743341 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -117,7 +117,6 @@ struct module_use {
+ 	struct module *source, *target;
+ };
+ 
+-int mod_verify_sig(const void *mod, struct load_info *info);
+ int try_to_force_load(struct module *mod, const char *reason);
+ bool find_symbol(struct find_symbol_arg *fsa);
+ struct module *find_module_all(const char *name, size_t len, bool even_unformed);
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 4a5e4eef250d..69d4b1758540 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -40,7 +40,7 @@ void set_module_sig_enforced(void)
+ /*
+  * Verify the signature on a module.
+  */
+-int mod_verify_sig(const void *mod, struct load_info *info)
++static int mod_verify_sig(const void *mod, struct load_info *info)
+ {
+ 	struct module_signature ms;
+ 	size_t sig_len, modlen = info->len;
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 6/14] module: Switch load_info::len to size_t
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:10 +0200
+Message-Id: <20260505-module-hashes-v5-6-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Switching the types will make some later changes cleaner.
+size_t is also the semantically correct type for this field.
+
+As both 'size_t' and 'unsigned long' are always the same size, this
+should be risk-free.
+
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+Acked-by: Nicolas Schier <nsc@kernel.org>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/module/internal.h | 2 +-
+ kernel/module/main.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 071999743341..006ada7d4e6e 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -64,7 +64,7 @@ struct load_info {
+ 	/* pointer to module in temporary copy, freed at end of load_module() */
+ 	struct module *mod;
+ 	Elf_Ehdr *hdr;
+-	unsigned long len;
++	size_t len;
+ 	Elf_Shdr *sechdrs;
+ 	char *secstrings, *strtab;
+ 	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 46dd8d25a605..17a352198016 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1898,7 +1898,7 @@ static int validate_section_offset(const struct load_info *info, Elf_Shdr *shdr)
+ static int elf_validity_ehdr(const struct load_info *info)
+ {
+ 	if (info->len < sizeof(*(info->hdr))) {
+-		pr_err("Invalid ELF header len %lu\n", info->len);
++		pr_err("Invalid ELF header len %zu\n", info->len);
+ 		return -ENOEXEC;
+ 	}
+ 	if (memcmp(info->hdr->e_ident, ELFMAG, SELFMAG) != 0) {
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 7/14] module: Make module authentication usable without
+ MODULE_SIG
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:11 +0200
+Message-Id: <20260505-module-hashes-v5-7-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The module authentication functionality will also be used by the
+hash-based module authentication. Split it out from CONFIG_MODULE_SIG
+so it is usable by both.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ crypto/algapi.c          |  4 ++--
+ include/linux/module.h   | 18 +++++++++---------
+ kernel/module/Kconfig    |  5 ++++-
+ kernel/module/Makefile   |  1 +
+ kernel/module/auth.c     | 32 ++++++++++++++++++++++++++++++++
+ kernel/module/internal.h |  2 +-
+ kernel/module/main.c     |  8 ++++----
+ kernel/module/signing.c  | 23 +----------------------
+ 8 files changed, 54 insertions(+), 39 deletions(-)
+
+diff --git a/crypto/algapi.c b/crypto/algapi.c
+index 37de377719ae..14252b780266 100644
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -24,8 +24,8 @@ static LIST_HEAD(crypto_template_list);
+ 
+ static inline void crypto_check_module_sig(struct module *mod)
+ {
+-	if (fips_enabled && mod && !module_sig_ok(mod))
+-		panic("Module %s signature verification failed in FIPS mode\n",
++	if (fips_enabled && mod && !module_auth_ok(mod))
++		panic("Module %s authentication failed in FIPS mode\n",
+ 		      module_name(mod));
+ }
+ 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 7566815fabbe..b4760777daad 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -437,9 +437,9 @@ struct module {
+ 	/* GPL-only exported symbols. */
+ 	bool using_gplonly_symbols;
+ 
+-#ifdef CONFIG_MODULE_SIG
+-	/* Signature was verified. */
+-	bool sig_ok;
++#ifdef CONFIG_MODULE_AUTH
++	/* Module was authenticated. */
++	bool auth_ok;
+ #endif
+ 
+ 	bool async_probe_requested;
+@@ -918,16 +918,16 @@ static inline bool retpoline_module_ok(bool has_retpoline)
+ }
+ #endif
+ 
+-#ifdef CONFIG_MODULE_SIG
++#ifdef CONFIG_MODULE_AUTH
+ bool is_module_sig_enforced(void);
+ 
+ void set_module_sig_enforced(void);
+ 
+-static inline bool module_sig_ok(struct module *module)
++static inline bool module_auth_ok(struct module *module)
+ {
+-	return module->sig_ok;
++	return module->auth_ok;
+ }
+-#else	/* !CONFIG_MODULE_SIG */
++#else	/* !CONFIG_MODULE_AUTH */
+ static inline bool is_module_sig_enforced(void)
+ {
+ 	return false;
+@@ -937,11 +937,11 @@ static inline void set_module_sig_enforced(void)
+ {
+ }
+ 
+-static inline bool module_sig_ok(struct module *module)
++static inline bool module_auth_ok(struct module *module)
+ {
+ 	return true;
+ }
+-#endif	/* CONFIG_MODULE_SIG */
++#endif	/* CONFIG_MODULE_AUTH */
+ 
+ #if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
+ int module_kallsyms_on_each_symbol(const char *modname,
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index f535181e0d98..84297da666ff 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -271,9 +271,12 @@ config MODULE_SIG
+ 	  debuginfo strip done by some packagers (such as rpmbuild) and
+ 	  inclusion into an initramfs that wants the module size reduced.
+ 
++config MODULE_AUTH
++	def_bool MODULE_SIG
++
+ config MODULE_SIG_FORCE
+ 	bool "Require modules to be validly signed"
+-	depends on MODULE_SIG
++	depends on MODULE_AUTH
+ 	help
+ 	  Reject unsigned modules or signed modules for which we don't have a
+ 	  key.  Without this, such modules will simply taint the kernel.
+diff --git a/kernel/module/Makefile b/kernel/module/Makefile
+index d9e8759a7b05..c7200e293d04 100644
+--- a/kernel/module/Makefile
++++ b/kernel/module/Makefile
+@@ -14,6 +14,7 @@ obj-y += strict_rwx.o
+ obj-y += kmod.o
+ obj-$(CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS) += dups.o
+ obj-$(CONFIG_MODULE_DECOMPRESS) += decompress.o
++obj-$(CONFIG_MODULE_AUTH) += auth.o
+ obj-$(CONFIG_MODULE_SIG) += signing.o
+ obj-$(CONFIG_LIVEPATCH) += livepatch.o
+ obj-$(CONFIG_MODULES_TREE_LOOKUP) += tree_lookup.o
+diff --git a/kernel/module/auth.c b/kernel/module/auth.c
+new file mode 100644
+index 000000000000..956ac63d9d33
+--- /dev/null
++++ b/kernel/module/auth.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Module authentication checker
++ *
++ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ */
++
++#include <linux/export.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/types.h>
++
++#undef MODULE_PARAM_PREFIX
++#define MODULE_PARAM_PREFIX "module."
++
++static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
++module_param(sig_enforce, bool_enable_only, 0644);
++
++/*
++ * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
++ * on that instead of directly to CONFIG_MODULE_SIG_FORCE config.
++ */
++bool is_module_sig_enforced(void)
++{
++	return sig_enforce;
++}
++EXPORT_SYMBOL(is_module_sig_enforced);
++
++void set_module_sig_enforced(void)
++{
++	sig_enforce = true;
++}
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 006ada7d4e6e..f8f425b167f1 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -68,7 +68,7 @@ struct load_info {
+ 	Elf_Shdr *sechdrs;
+ 	char *secstrings, *strtab;
+ 	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
+-	bool sig_ok;
++	bool auth_ok;
+ #ifdef CONFIG_KALLSYMS
+ 	unsigned long mod_kallsyms_init_off;
+ #endif
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 17a352198016..cd8a74df117e 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2601,10 +2601,10 @@ static void module_augment_kernel_taints(struct module *mod, struct load_info *i
+ 				mod->name);
+ 		add_taint_module(mod, TAINT_TEST, LOCKDEP_STILL_OK);
+ 	}
+-#ifdef CONFIG_MODULE_SIG
+-	mod->sig_ok = info->sig_ok;
+-	if (!mod->sig_ok) {
+-		pr_notice_once("%s: module verification failed: signature "
++#ifdef CONFIG_MODULE_AUTH
++	mod->auth_ok = info->auth_ok;
++	if (!mod->auth_ok) {
++		pr_notice_once("%s: module authentication failed: signature "
+ 			       "and/or required key missing - tainting "
+ 			       "kernel\n", mod->name);
+ 		add_taint_module(mod, TAINT_UNSIGNED_MODULE, LOCKDEP_STILL_OK);
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 69d4b1758540..07a786723221 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -16,27 +16,6 @@
+ #include <uapi/linux/module.h>
+ #include "internal.h"
+ 
+-#undef MODULE_PARAM_PREFIX
+-#define MODULE_PARAM_PREFIX "module."
+-
+-static bool sig_enforce = IS_ENABLED(CONFIG_MODULE_SIG_FORCE);
+-module_param(sig_enforce, bool_enable_only, 0644);
+-
+-/*
+- * Export sig_enforce kernel cmdline parameter to allow other subsystems rely
+- * on that instead of directly to CONFIG_MODULE_SIG_FORCE config.
+- */
+-bool is_module_sig_enforced(void)
+-{
+-	return sig_enforce;
+-}
+-EXPORT_SYMBOL(is_module_sig_enforced);
+-
+-void set_module_sig_enforced(void)
+-{
+-	sig_enforce = true;
+-}
+-
+ /*
+  * Verify the signature on a module.
+  */
+@@ -84,7 +63,7 @@ int module_sig_check(struct load_info *info, int flags)
+ 		info->len -= markerlen;
+ 		err = mod_verify_sig(mod, info);
+ 		if (!err) {
+-			info->sig_ok = true;
++			info->auth_ok = true;
+ 			return 0;
+ 		}
+ 	}
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 8/14] module: Move authentication logic into dedicated
+ new file
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:12 +0200
+Message-Id: <20260505-module-hashes-v5-8-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The module authentication functionality will also be used by the
+hash-based module authentication. To make it usable even if
+CONFIG_MODULE_SIG is disabled, move it to a new file.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+---
+ kernel/module/auth.c     | 85 +++++++++++++++++++++++++++++++++++++++++++++
+ kernel/module/internal.h | 14 ++++++--
+ kernel/module/main.c     |  6 ++--
+ kernel/module/signing.c  | 90 ++----------------------------------------------
+ 4 files changed, 103 insertions(+), 92 deletions(-)
+
+diff --git a/kernel/module/auth.c b/kernel/module/auth.c
+index 956ac63d9d33..831a13eb0c9b 100644
+--- a/kernel/module/auth.c
++++ b/kernel/module/auth.c
+@@ -5,10 +5,16 @@
+  * Written by David Howells (dhowells@redhat.com)
+  */
+ 
++#include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
++#include <linux/module_signature.h>
+ #include <linux/moduleparam.h>
++#include <linux/security.h>
++#include <linux/string.h>
+ #include <linux/types.h>
++#include <uapi/linux/module.h>
++#include "internal.h"
+ 
+ #undef MODULE_PARAM_PREFIX
+ #define MODULE_PARAM_PREFIX "module."
+@@ -30,3 +36,82 @@ void set_module_sig_enforced(void)
+ {
+ 	sig_enforce = true;
+ }
++
++static int mod_verify_sig(const void *mod, struct load_info *info)
++{
++	struct module_signature ms;
++	size_t sig_len, modlen = info->len;
++	int ret;
++
++	if (modlen <= sizeof(ms))
++		return -EBADMSG;
++
++	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
++
++	ret = mod_check_sig(&ms, modlen, "module");
++	if (ret)
++		return ret;
++
++	sig_len = be32_to_cpu(ms.sig_len);
++	modlen -= sig_len + sizeof(ms);
++	info->len = modlen;
++
++	return module_sig_check(mod, modlen, mod + modlen, sig_len);
++}
++
++int module_auth_check(struct load_info *info, int flags)
++{
++	int err = -ENODATA;
++	const unsigned long markerlen = sizeof(MODULE_SIGNATURE_MARKER) - 1;
++	const char *reason;
++	const void *mod = info->hdr;
++	bool mangled_module = flags & (MODULE_INIT_IGNORE_MODVERSIONS |
++				       MODULE_INIT_IGNORE_VERMAGIC);
++	/*
++	 * Do not allow mangled modules as a module with version information
++	 * removed is no longer the module that was signed.
++	 */
++	if (!mangled_module &&
++	    info->len > markerlen &&
++	    memcmp(mod + info->len - markerlen, MODULE_SIGNATURE_MARKER, markerlen) == 0) {
++		/* We truncate the module to discard the signature */
++		info->len -= markerlen;
++		err = mod_verify_sig(mod, info);
++		if (!err) {
++			info->auth_ok = true;
++			return 0;
++		}
++	}
++
++	/*
++	 * We don't permit modules to be loaded into the trusted kernels
++	 * without a valid signature on them, but if we're not enforcing,
++	 * certain errors are non-fatal.
++	 */
++	switch (err) {
++	case -ENODATA:
++		reason = "unsigned module";
++		break;
++	case -ENOPKG:
++		reason = "module with unsupported crypto";
++		break;
++	case -ENOKEY:
++		reason = "module with unavailable key";
++		break;
++
++	default:
++		/*
++		 * All other errors are fatal, including lack of memory,
++		 * unparseable signatures, and signature check failures --
++		 * even if signatures aren't required.
++		 */
++		return err;
++	}
++
++	if (is_module_sig_enforced()) {
++		pr_notice("Loading of %s is rejected\n", reason);
++		return -EKEYREJECTED;
++	}
++
++	return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++}
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index f8f425b167f1..d923e31a5d8e 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -336,14 +336,24 @@ void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 			       const char *secstrings);
+ 
+ #ifdef CONFIG_MODULE_SIG
+-int module_sig_check(struct load_info *info, int flags);
++int module_sig_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len);
+ #else /* !CONFIG_MODULE_SIG */
+-static inline int module_sig_check(struct load_info *info, int flags)
++static inline int module_sig_check(const void *mod, size_t mod_len,
++				   const void *sig, size_t sig_len)
+ {
+ 	return 0;
+ }
+ #endif /* !CONFIG_MODULE_SIG */
+ 
++#ifdef CONFIG_MODULE_AUTH
++int module_auth_check(struct load_info *info, int flags);
++#else /* !CONFIG_MODULE_AUTH */
++static inline int module_auth_check(struct load_info *info, int flags)
++{
++	return 0;
++}
++#endif /* !CONFIG_MODULE_AUTH */
++
+ #ifdef CONFIG_DEBUG_KMEMLEAK
+ void kmemleak_load_module(const struct module *mod, const struct load_info *info);
+ #else /* !CONFIG_DEBUG_KMEMLEAK */
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index cd8a74df117e..55a010383a8d 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3428,8 +3428,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	char *after_dashes;
+ 
+ 	/*
+-	 * Do the signature check (if any) first. All that
+-	 * the signature check needs is info->len, it does
++	 * Do the authentication checks (if any) first. All that
++	 * the authentication checks need is info->len, it does
+ 	 * not need any of the section info. That can be
+ 	 * set up later. This will minimize the chances
+ 	 * of a corrupt module causing problems before
+@@ -3439,7 +3439,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	 * off the sig length at the end of the module, making
+ 	 * checks against info->len more correct.
+ 	 */
+-	err = module_sig_check(info, flags);
++	err = module_auth_check(info, flags);
+ 	if (err)
+ 		goto free_copy;
+ 
+diff --git a/kernel/module/signing.c b/kernel/module/signing.c
+index 07a786723221..a49317e3c66f 100644
+--- a/kernel/module/signing.c
++++ b/kernel/module/signing.c
+@@ -5,98 +5,14 @@
+  * Written by David Howells (dhowells@redhat.com)
+  */
+ 
+-#include <linux/kernel.h>
+-#include <linux/errno.h>
+-#include <linux/module.h>
+-#include <linux/module_signature.h>
+-#include <linux/string.h>
++#include <linux/types.h>
+ #include <linux/verification.h>
+-#include <linux/security.h>
+-#include <crypto/public_key.h>
+-#include <uapi/linux/module.h>
+ #include "internal.h"
+ 
+-/*
+- * Verify the signature on a module.
+- */
+-static int mod_verify_sig(const void *mod, struct load_info *info)
++int module_sig_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len)
+ {
+-	struct module_signature ms;
+-	size_t sig_len, modlen = info->len;
+-	int ret;
+-
+-	if (modlen <= sizeof(ms))
+-		return -EBADMSG;
+-
+-	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
+-
+-	ret = mod_check_sig(&ms, modlen, "module");
+-	if (ret)
+-		return ret;
+-
+-	sig_len = be32_to_cpu(ms.sig_len);
+-	modlen -= sig_len + sizeof(ms);
+-	info->len = modlen;
+-
+-	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
++	return verify_pkcs7_signature(mod, mod_len, sig, sig_len,
+ 				      VERIFY_USE_SECONDARY_KEYRING,
+ 				      VERIFYING_MODULE_SIGNATURE,
+ 				      NULL, NULL);
+ }
+-
+-int module_sig_check(struct load_info *info, int flags)
+-{
+-	int err = -ENODATA;
+-	const unsigned long markerlen = sizeof(MODULE_SIGNATURE_MARKER) - 1;
+-	const char *reason;
+-	const void *mod = info->hdr;
+-	bool mangled_module = flags & (MODULE_INIT_IGNORE_MODVERSIONS |
+-				       MODULE_INIT_IGNORE_VERMAGIC);
+-	/*
+-	 * Do not allow mangled modules as a module with version information
+-	 * removed is no longer the module that was signed.
+-	 */
+-	if (!mangled_module &&
+-	    info->len > markerlen &&
+-	    memcmp(mod + info->len - markerlen, MODULE_SIGNATURE_MARKER, markerlen) == 0) {
+-		/* We truncate the module to discard the signature */
+-		info->len -= markerlen;
+-		err = mod_verify_sig(mod, info);
+-		if (!err) {
+-			info->auth_ok = true;
+-			return 0;
+-		}
+-	}
+-
+-	/*
+-	 * We don't permit modules to be loaded into the trusted kernels
+-	 * without a valid signature on them, but if we're not enforcing,
+-	 * certain errors are non-fatal.
+-	 */
+-	switch (err) {
+-	case -ENODATA:
+-		reason = "unsigned module";
+-		break;
+-	case -ENOPKG:
+-		reason = "module with unsupported crypto";
+-		break;
+-	case -ENOKEY:
+-		reason = "module with unavailable key";
+-		break;
+-
+-	default:
+-		/*
+-		 * All other errors are fatal, including lack of memory,
+-		 * unparseable signatures, and signature check failures --
+-		 * even if signatures aren't required.
+-		 */
+-		return err;
+-	}
+-
+-	if (is_module_sig_enforced()) {
+-		pr_notice("Loading of %s is rejected\n", reason);
+-		return -EKEYREJECTED;
+-	}
+-
+-	return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
+-}
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 9/14] module: Move signature type check out of
+ mod_check_sig()
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:13 +0200
+Message-Id: <20260505-module-hashes-v5-9-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Additional signature types are about to be added.
+As each caller of mod_check_sig() can have different support for these,
+move the type validation into the callers.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+---
+ kernel/module/auth.c                | 5 +++++
+ kernel/module_signature.c           | 8 +-------
+ security/integrity/ima/ima_modsig.c | 5 +++++
+ 3 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/module/auth.c b/kernel/module/auth.c
+index 831a13eb0c9b..21e49eb4967c 100644
+--- a/kernel/module/auth.c
++++ b/kernel/module/auth.c
+@@ -48,6 +48,11 @@ static int mod_verify_sig(const void *mod, struct load_info *info)
+ 
+ 	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
+ 
++	if (ms.id_type != MODULE_SIGNATURE_TYPE_PKCS7) {
++		pr_err("module: not signed with expected PKCS#7 message\n");
++		return -ENOPKG;
++	}
++
+ 	ret = mod_check_sig(&ms, modlen, "module");
+ 	if (ret)
+ 		return ret;
+diff --git a/kernel/module_signature.c b/kernel/module_signature.c
+index a0eee2fe4368..4d0476bcdb72 100644
+--- a/kernel/module_signature.c
++++ b/kernel/module_signature.c
+@@ -24,12 +24,6 @@ int mod_check_sig(const struct module_signature *ms, size_t file_len,
+ 	if (be32_to_cpu(ms->sig_len) >= file_len - sizeof(*ms))
+ 		return -EBADMSG;
+ 
+-	if (ms->id_type != MODULE_SIGNATURE_TYPE_PKCS7) {
+-		pr_err("%s: not signed with expected PKCS#7 message\n",
+-		       name);
+-		return -ENOPKG;
+-	}
+-
+ 	if (ms->algo != 0 ||
+ 	    ms->hash != 0 ||
+ 	    ms->signer_len != 0 ||
+@@ -37,7 +31,7 @@ int mod_check_sig(const struct module_signature *ms, size_t file_len,
+ 	    ms->__pad[0] != 0 ||
+ 	    ms->__pad[1] != 0 ||
+ 	    ms->__pad[2] != 0) {
+-		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
++		pr_err("%s: signature info has unexpected non-zero params\n",
+ 		       name);
+ 		return -EBADMSG;
+ 	}
+diff --git a/security/integrity/ima/ima_modsig.c b/security/integrity/ima/ima_modsig.c
+index 632c746fd81e..ebfcdd368a2a 100644
+--- a/security/integrity/ima/ima_modsig.c
++++ b/security/integrity/ima/ima_modsig.c
+@@ -57,6 +57,11 @@ int ima_read_modsig(enum ima_hooks func, const void *buf, loff_t buf_len,
+ 	buf_len -= marker_len;
+ 	sig = (const struct module_signature *)(p - sizeof(*sig));
+ 
++	if (sig->id_type != MODULE_SIGNATURE_TYPE_PKCS7) {
++		pr_err("%s: not signed with expected PKCS#7 message\n", func_tokens[func]);
++		return -ENOPKG;
++	}
++
+ 	rc = mod_check_sig(sig, buf_len, func_tokens[func]);
+ 	if (rc)
+ 		return rc;
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 10/14] module: Prepare for additional module
+ authentication mechanisms
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:14 +0200
+Message-Id: <20260505-module-hashes-v5-10-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Reorganize the code to make it easier to add the new hash-based module
+authentication.
+
+Also drop the now unnecessary stub for module_sig_check().
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+---
+ kernel/module/auth.c     | 17 ++++++++++++++---
+ kernel/module/internal.h |  8 --------
+ 2 files changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/module/auth.c b/kernel/module/auth.c
+index 21e49eb4967c..2ee512d26790 100644
+--- a/kernel/module/auth.c
++++ b/kernel/module/auth.c
+@@ -37,6 +37,14 @@ void set_module_sig_enforced(void)
+ 	sig_enforce = true;
+ }
+ 
++static __always_inline bool mod_sig_type_valid(enum module_signature_type id_type)
++{
++	if (id_type == MODULE_SIGNATURE_TYPE_PKCS7 && IS_ENABLED(CONFIG_MODULE_SIG))
++		return true;
++
++	return false;
++}
++
+ static int mod_verify_sig(const void *mod, struct load_info *info)
+ {
+ 	struct module_signature ms;
+@@ -48,8 +56,8 @@ static int mod_verify_sig(const void *mod, struct load_info *info)
+ 
+ 	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
+ 
+-	if (ms.id_type != MODULE_SIGNATURE_TYPE_PKCS7) {
+-		pr_err("module: not signed with expected PKCS#7 message\n");
++	if (!mod_sig_type_valid(ms.id_type)) {
++		pr_err("module: not signed with expected signature\n");
+ 		return -ENOPKG;
+ 	}
+ 
+@@ -61,7 +69,10 @@ static int mod_verify_sig(const void *mod, struct load_info *info)
+ 	modlen -= sig_len + sizeof(ms);
+ 	info->len = modlen;
+ 
+-	return module_sig_check(mod, modlen, mod + modlen, sig_len);
++	if (ms.id_type == MODULE_SIGNATURE_TYPE_PKCS7 && IS_ENABLED(CONFIG_MODULE_SIG))
++		return module_sig_check(mod, modlen, mod + modlen, sig_len);
++
++	return 0;
+ }
+ 
+ int module_auth_check(struct load_info *info, int flags)
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index d923e31a5d8e..aabe7f8e1af4 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -335,15 +335,7 @@ int module_enforce_rwx_sections(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
+ void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 			       const char *secstrings);
+ 
+-#ifdef CONFIG_MODULE_SIG
+ int module_sig_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len);
+-#else /* !CONFIG_MODULE_SIG */
+-static inline int module_sig_check(const void *mod, size_t mod_len,
+-				   const void *sig, size_t sig_len)
+-{
+-	return 0;
+-}
+-#endif /* !CONFIG_MODULE_SIG */
+ 
+ #ifdef CONFIG_MODULE_AUTH
+ int module_auth_check(struct load_info *info, int flags);
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 11/14] module: update timestamp of modules.order after
+ modules are built
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:15 +0200
+Message-Id: <20260505-module-hashes-v5-11-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Make sure that modules.order is always newer than the module .ko files.
+Other rules can then use modules.order as a prerequisite and rerun if
+any module is (re-)built.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ scripts/Makefile.modfinal | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index b09040ccddd2..44a382689a5a 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -66,6 +66,13 @@ endif
+ 
+ targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) .module-common.o
+ 
++# Update modules.order when a module is (re-)built.
++# Allow using it as target dependency.
++targets += modules.order
++__modfinal: modules.order
++modules.order: $(modules:%.o=%.ko)
++	@touch $@
++
+ # Add FORCE to the prerequisites of a target to force it to be always rebuilt.
+ # ---------------------------------------------------------------------------
+ 
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 12/14] module: Introduce hash-based integrity checking
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:16 +0200
+Message-Id: <20260505-module-hashes-v5-12-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The current signature-based module integrity checking has some drawbacks
+in combination with reproducible builds. Either the module signing key
+is generated at build time, which makes the build unreproducible, or a
+static signing key is used, which precludes rebuilds by third parties
+and makes the whole build and packaging process much more complicated.
+
+The goal is to reach bit-for-bit reproducibility. Excluding certain
+parts of the build output from the reproducibility analysis would be
+error-prone and force each downstream consumer to introduce new tooling.
+
+Introduce a new mechanism to ensure only well-known modules are loaded
+by embedding a merkle tree root of all modules built as part of the full
+kernel build into vmlinux.
+
+Out-of-tree modules can be validated as before through signatures.
+
+Normally the .ko module files depend on a fully built vmlinux to be
+available for modpost validation and BTF generation. With
+CONFIG_MODULE_HASHES, vmlinux now depends on the modules
+to build a merkle tree. This introduces a dependency cycle which is
+impossible to satisfy. Work around this by building the modules during
+link-vmlinux.sh, after vmlinux is complete enough for modpost and BTF
+but before the final module hashes are
+
+The PKCS7 format which is used for regular module signatures can not
+represent Merkle proofs, so a new kind of module signature is
+introduced. As this signature type is only ever used for builtin
+modules, no compatibility issues can arise.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ .gitignore                                   |   1 +
+ Documentation/kbuild/reproducible-builds.rst |   5 +-
+ Makefile                                     |   7 +-
+ include/asm-generic/vmlinux.lds.h            |  11 +
+ include/linux/module_hashes.h                |  29 ++
+ include/uapi/linux/module_signature.h        |   1 +
+ kernel/module/Kconfig                        |  21 +-
+ kernel/module/Makefile                       |   1 +
+ kernel/module/auth.c                         |   6 +
+ kernel/module/hashes.c                       |  95 ++++++
+ kernel/module/hashes_root.c                  |   6 +
+ kernel/module/internal.h                     |   1 +
+ scripts/.gitignore                           |   1 +
+ scripts/Makefile                             |   4 +
+ scripts/Makefile.modinst                     |  11 +
+ scripts/Makefile.vmlinux                     |  32 +++
+ scripts/include/xalloc.h                     |  29 ++
+ scripts/link-vmlinux.sh                      |   3 +-
+ scripts/modules-merkle-tree.c                | 416 +++++++++++++++++++++++++++
+ security/lockdown/Kconfig                    |   2 +-
+ tools/include/uapi/linux/module_signature.h  |   1 +
+ 21 files changed, 677 insertions(+), 6 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 3044b9590f05..78cf799401e6 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -36,6 +36,7 @@
+ *.lz4
+ *.lzma
+ *.lzo
++*.merkle
+ *.mod
+ *.mod.c
+ *.o
+diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
+index bc1eb82211df..b15019678aae 100644
+--- a/Documentation/kbuild/reproducible-builds.rst
++++ b/Documentation/kbuild/reproducible-builds.rst
+@@ -84,7 +84,10 @@ generate a different temporary key for each build, resulting in the
+ modules being unreproducible.  However, including a signing key with
+ your source would presumably defeat the purpose of signing modules.
+ 
+-One approach to this is to divide up the build process so that the
++Instead ``CONFIG_MODULE_HASHES`` can be used to embed a static list
++of valid modules to load.
++
++Another approach to this is to divide up the build process so that the
+ unreproducible parts can be treated as sources:
+ 
+ 1. Generate a persistent signing key.  Add the certificate for the key
+diff --git a/Makefile b/Makefile
+index e27c91ea56fc..def4a2413c43 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1650,7 +1650,9 @@ ifdef CONFIG_MODULES
+ 
+ # By default, build modules as well
+ 
++ifndef CONFIG_MODULE_HASHES
+ all: modules
++endif
+ 
+ # When we're building modules with modversions, we need to consider
+ # the built-in objects during the descend as well, in order to
+@@ -1666,8 +1668,10 @@ endif
+ # is an exception.
+ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ KBUILD_BUILTIN := y
++ifndef CONFIG_MODULE_HASHES
+ modules: vmlinux
+ endif
++endif
+ 
+ modules: modules_prepare
+ 
+@@ -2068,7 +2072,7 @@ modules.order: $(build-dir)
+ # KBUILD_MODPOST_NOFINAL can be set to skip the final link of modules.
+ # This is solely useful to speed up test compiles.
+ modules: modpost
+-ifneq ($(KBUILD_MODPOST_NOFINAL),1)
++ifneq ($(CONFIG_MODULE_HASHES)|$(KBUILD_MODPOST_NOFINAL),|1)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
+ endif
+ 
+@@ -2162,6 +2166,7 @@ clean: $(clean-dirs)
+ 		-o -name '*.c.[012]*.*' \
+ 		-o -name '*.ll' \
+ 		-o -name '*.gcno' \
++		-o -name '*.merkle' \
+ 		\) -type f -print \
+ 		-o -name '.tmp_*' -print \
+ 		| xargs rm -rf
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 60c8c22fd3e4..661881e5ef96 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -508,6 +508,8 @@
+ 									\
+ 	PRINTK_INDEX							\
+ 									\
++	MODULE_HASHES							\
++									\
+ 	/* Kernel symbol table */					\
+ 	__ksymtab         : AT(ADDR(__ksymtab) - LOAD_OFFSET) {		\
+ 		__start___ksymtab = .;					\
+@@ -913,6 +915,15 @@
+ #define PRINTK_INDEX
+ #endif
+ 
++#ifdef CONFIG_MODULE_HASHES
++#define MODULE_HASHES							\
++	.module_hashes : AT(ADDR(.module_hashes) - LOAD_OFFSET) {	\
++		KEEP(*(SORT(.module_hashes)))				\
++	}
++#else
++#define MODULE_HASHES
++#endif
++
+ /*
+  * Discard .note.GNU-stack, which is emitted as PROGBITS by the compiler.
+  * Otherwise, the type of .notes section would become PROGBITS instead of NOTES.
+diff --git a/include/linux/module_hashes.h b/include/linux/module_hashes.h
+new file mode 100644
+index 000000000000..53b34fa12f2d
+--- /dev/null
++++ b/include/linux/module_hashes.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _LINUX_MODULE_HASHES_H
++#define _LINUX_MODULE_HASHES_H
++
++#include <linux/compiler_attributes.h>
++#include <linux/types.h>
++#include <crypto/sha2.h>
++
++#define __module_hashes_section __section(".module_hashes")
++#define MODULE_HASHES_HASH_SIZE SHA256_DIGEST_SIZE
++
++struct module_hash {
++	u8 h[MODULE_HASHES_HASH_SIZE];
++};
++
++struct module_hashes_proof {
++	__be32 pos;
++	struct module_hash hash_sigs[];
++} __packed;
++
++struct module_hashes_root {
++	u32 levels;
++	struct module_hash hash;
++};
++
++extern const struct module_hashes_root module_hashes_root;
++
++#endif /* _LINUX_MODULE_HASHES_H */
+diff --git a/include/uapi/linux/module_signature.h b/include/uapi/linux/module_signature.h
+index 634c9f1c8fc2..78e206996eed 100644
+--- a/include/uapi/linux/module_signature.h
++++ b/include/uapi/linux/module_signature.h
+@@ -16,6 +16,7 @@
+ 
+ enum module_signature_type {
+ 	MODULE_SIGNATURE_TYPE_PKCS7 = 2,	/* Signature in PKCS#7 message */
++	MODULE_SIGNATURE_TYPE_MERKLE = 3,	/* Merkle proof for modules, opaque structure */
+ };
+ 
+ /*
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index 84297da666ff..acbbda58e7c8 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -272,7 +272,7 @@ config MODULE_SIG
+ 	  inclusion into an initramfs that wants the module size reduced.
+ 
+ config MODULE_AUTH
+-	def_bool MODULE_SIG
++	def_bool MODULE_SIG || MODULE_HASHES
+ 
+ config MODULE_SIG_FORCE
+ 	bool "Require modules to be validly signed"
+@@ -291,7 +291,7 @@ config MODULE_SIG_ALL
+ 	  modules must be signed manually, using the scripts/sign-file tool.
+ 
+ comment "Do not forget to sign required modules with scripts/sign-file"
+-	depends on MODULE_SIG_FORCE && !MODULE_SIG_ALL
++	depends on MODULE_SIG_FORCE && !MODULE_SIG_ALL && !MODULE_HASHES
+ 
+ choice
+ 	prompt "Hash algorithm to sign modules"
+@@ -406,6 +406,23 @@ config MODULE_DECOMPRESS
+ 
+ endif # MODULE_COMPRESS
+ 
++config MODULE_HASHES
++	bool "Hash-based module authentication"
++	depends on !MODULE_SIG_ALL
++	depends on !IMA_APPRAISE_MODSIG
++	select MODULE_SIG_FORMAT
++	select CRYPTO_LIB_SHA256
++	help
++	  Validate modules by their hashes.
++	  Only modules built together with the main kernel image can be
++	  validated that way.
++
++	  This is a reproducible-build compatible alternative to a build-time
++	  generated module keyring, as enabled by
++	  CONFIG_MODULE_SIG_KEY=certs/signing_key.pem.
++
++	  Also see the warning in MODULE_SIG about stripping modules.
++
+ config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+ 	bool "Allow loading of modules with missing namespace imports"
+ 	help
+diff --git a/kernel/module/Makefile b/kernel/module/Makefile
+index c7200e293d04..da9420f140e9 100644
+--- a/kernel/module/Makefile
++++ b/kernel/module/Makefile
+@@ -26,3 +26,4 @@ obj-$(CONFIG_KGDB_KDB) += kdb.o
+ obj-$(CONFIG_MODVERSIONS) += version.o
+ obj-$(CONFIG_MODULE_UNLOAD_TAINT_TRACKING) += tracking.o
+ obj-$(CONFIG_MODULE_STATS) += stats.o
++obj-$(CONFIG_MODULE_HASHES) += hashes.o hashes_root.o
+diff --git a/kernel/module/auth.c b/kernel/module/auth.c
+index 2ee512d26790..cf3fe3f8bd89 100644
+--- a/kernel/module/auth.c
++++ b/kernel/module/auth.c
+@@ -42,6 +42,9 @@ static __always_inline bool mod_sig_type_valid(enum module_signature_type id_typ
+ 	if (id_type == MODULE_SIGNATURE_TYPE_PKCS7 && IS_ENABLED(CONFIG_MODULE_SIG))
+ 		return true;
+ 
++	if (id_type == MODULE_SIGNATURE_TYPE_MERKLE && IS_ENABLED(CONFIG_MODULE_HASHES))
++		return true;
++
+ 	return false;
+ }
+ 
+@@ -72,6 +75,9 @@ static int mod_verify_sig(const void *mod, struct load_info *info)
+ 	if (ms.id_type == MODULE_SIGNATURE_TYPE_PKCS7 && IS_ENABLED(CONFIG_MODULE_SIG))
+ 		return module_sig_check(mod, modlen, mod + modlen, sig_len);
+ 
++	if (ms.id_type == MODULE_SIGNATURE_TYPE_MERKLE && IS_ENABLED(CONFIG_MODULE_HASHES))
++		return module_hash_check(mod, modlen, mod + modlen, sig_len);
++
+ 	return 0;
+ }
+ 
+diff --git a/kernel/module/hashes.c b/kernel/module/hashes.c
+new file mode 100644
+index 000000000000..3d3cf0366f75
+--- /dev/null
++++ b/kernel/module/hashes.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Module hash-based integrity checker
++ *
++ * Copyright (C) 2025 Thomas Weißschuh <linux@weissschuh.net>
++ * Copyright (C) 2025 Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
++ *
++ * The structure of the Merkle tree is documented in scripts/modules-merkle-tree.c.
++ */
++
++#define pr_fmt(fmt) "module/hash: " fmt
++
++#include <linux/module_hashes.h>
++#include <linux/module.h>
++#include <linux/unaligned.h>
++
++#include <crypto/sha2.h>
++
++#include "internal.h"
++
++static __init __maybe_unused int module_hashes_init(void)
++{
++	pr_debug("root: levels=%u hash=%*phN\n",
++		 module_hashes_root.levels,
++		 (int)sizeof(module_hashes_root.hash), &module_hashes_root.hash);
++
++	return 0;
++}
++
++#if IS_ENABLED(CONFIG_MODULE_DEBUG)
++early_initcall(module_hashes_init);
++#endif
++
++static void hash_entry(const struct module_hash *left, const struct module_hash *right,
++		       struct module_hash *out)
++{
++	struct sha256_ctx ctx;
++	u8 magic = 0x02;
++
++	sha256_init(&ctx);
++	sha256_update(&ctx, &magic, sizeof(magic));
++	sha256_update(&ctx, left->h, sizeof(left->h));
++	sha256_update(&ctx, right->h, sizeof(right->h));
++	sha256_final(&ctx, out->h);
++}
++
++static void hash_data(const u8 *d, size_t len, unsigned int pos, struct module_hash *out)
++{
++	struct sha256_ctx ctx;
++	u8 magic = 0x01;
++	__be32 pos_be;
++
++	pos_be = cpu_to_be32(pos);
++
++	sha256_init(&ctx);
++	sha256_update(&ctx, &magic, sizeof(magic));
++	sha256_update(&ctx, (const u8 *)&pos_be, sizeof(pos_be));
++	sha256_update(&ctx, d, len);
++	sha256_final(&ctx, out->h);
++}
++
++static bool module_hashes_verify_proof(u32 pos, const struct module_hash *hash_sigs,
++				       struct module_hash *cur)
++{
++	for (unsigned int i = 0; i < module_hashes_root.levels; i++, pos >>= 1) {
++		if ((pos & 1) == 0)
++			hash_entry(cur, &hash_sigs[i], cur);
++		else
++			hash_entry(&hash_sigs[i], cur, cur);
++	}
++
++	return !memcmp(cur, &module_hashes_root.hash, sizeof(module_hashes_root.hash));
++}
++
++int module_hash_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len)
++{
++	const struct module_hashes_proof *proof;
++	struct module_hash modhash;
++	size_t proof_size;
++	u32 pos;
++
++	proof_size = struct_size(proof, hash_sigs, module_hashes_root.levels);
++
++	if (sig_len != proof_size)
++		return -ENOPKG;
++
++	proof = (const struct module_hashes_proof *)sig;
++	pos = get_unaligned_be32(&proof->pos);
++
++	hash_data(mod, mod_len, pos, &modhash);
++
++	if (!module_hashes_verify_proof(pos, proof->hash_sigs, &modhash))
++		return -ENOKEY;
++
++	return 0;
++}
+diff --git a/kernel/module/hashes_root.c b/kernel/module/hashes_root.c
+new file mode 100644
+index 000000000000..ffb6adfc2193
+--- /dev/null
++++ b/kernel/module/hashes_root.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/module_hashes.h>
++
++/* Blank dummy data. Will be replaced by the read data during the build */
++const struct module_hashes_root module_hashes_root __module_hashes_section = {};
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index aabe7f8e1af4..259e8ca5cb25 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -336,6 +336,7 @@ void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 			       const char *secstrings);
+ 
+ int module_sig_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len);
++int module_hash_check(const void *mod, size_t mod_len, const void *sig, size_t sig_len);
+ 
+ #ifdef CONFIG_MODULE_AUTH
+ int module_auth_check(struct load_info *info, int flags);
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index 4215c2208f7e..8dad9b0d3b2d 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -5,6 +5,7 @@
+ /insert-sys-cert
+ /kallsyms
+ /module.lds
++/modules-merkle-tree
+ /recordmcount
+ /rustdoc_test_builder
+ /rustdoc_test_gen
+diff --git a/scripts/Makefile b/scripts/Makefile
+index c983e09be78c..b6291595d9e8 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -11,6 +11,7 @@ hostprogs-always-y					+= sign-file
+ hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
+ hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
+ hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
++hostprogs-always-$(CONFIG_MODULE_HASHES)		+= modules-merkle-tree
+ hostprogs-always-$(CONFIG_TRACEPOINTS)			+= tracepoint-update
+ 
+ sorttable-objs := sorttable.o elf-parse.o
+@@ -37,6 +38,9 @@ HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+ HOSTCFLAGS_sign-file.o = $(shell $(HOSTPKG_CONFIG) --cflags libcrypto 2> /dev/null)
+ HOSTCFLAGS_sign-file.o += -I$(srctree)/tools/include/uapi/
+ HOSTLDLIBS_sign-file = $(shell $(HOSTPKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
++HOSTCFLAGS_modules-merkle-tree.o = $(shell $(HOSTPKG_CONFIG) --cflags libcrypto 2> /dev/null)
++HOSTCFLAGS_modules-merkle-tree.o += -I$(srctree)/tools/include/uapi/
++HOSTLDLIBS_modules-merkle-tree = $(shell $(HOSTPKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
+ 
+ ifdef CONFIG_UNWINDER_ORC
+ ifeq ($(ARCH),x86_64)
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index 9ba45e5b32b1..68708a039a62 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -79,6 +79,12 @@ quiet_cmd_install = INSTALL $@
+ # as the options to the strip command.
+ ifdef INSTALL_MOD_STRIP
+ 
++ifdef CONFIG_MODULE_HASHES
++ifeq ($(KBUILD_EXTMOD),)
++$(error CONFIG_MODULE_HASHES and INSTALL_MOD_STRIP are mutually exclusive)
++endif
++endif
++
+ ifeq ($(INSTALL_MOD_STRIP),1)
+ strip-option := --strip-debug
+ else
+@@ -116,6 +122,11 @@ quiet_cmd_sign :=
+       cmd_sign := :
+ endif
+ 
++ifeq ($(KBUILD_EXTMOD)|$(CONFIG_MODULE_HASHES),|y)
++quiet_cmd_sign = MERKLE [M] $@
++      cmd_sign = cat $(objtree)/$*.merkle >> $@
++endif
++
+ # Create necessary directories
+ $(foreach dir, $(sort $(dir $(install-y))), $(shell mkdir -p $(dir)))
+ 
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index 6cc661e5292b..a0332c06bde1 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -78,6 +78,33 @@ ifdef CONFIG_BUILDTIME_TABLE_SORT
+ vmlinux.unstripped: scripts/sorttable
+ endif
+ 
++ifdef CONFIG_MODULE_HASHES
++targets += .tmp_module_hashes.c
++
++modules.order: vmlinux.unstripped FORCE
++	$(Q)echo "  MAKE    modules"
++	$(Q)$(MAKE) -f $(srctree)/Makefile modules
++
++quiet_cmd_modules_merkle_tree = MERKLE  $@
++      cmd_modules_merkle_tree = $< $@ .ko
++
++targets += .tmp_module_hashes.c
++.tmp_module_hashes.c: $(objtree)/scripts/modules-merkle-tree modules.order FORCE
++	$(call if_changed,modules_merkle_tree)
++
++targets += .tmp_module_hashes.o
++.tmp_module_hashes.o: .tmp_module_hashes.c FORCE
++
++quiet_cmd_modules_merkle_tree_root = GEN     $@
++      cmd_modules_merkle_tree_root = $(OBJCOPY) --dump-section .module_hashes=$@ $<
++
++targets += .tmp_module_hashes.bin
++.tmp_module_hashes.bin: .tmp_module_hashes.o FORCE
++	$(call if_changed,modules_merkle_tree_root)
++
++vmlinux: .tmp_module_hashes.bin
++endif
++
+ # vmlinux
+ # ---------------------------------------------------------------------------
+ 
+@@ -95,6 +122,11 @@ quiet_cmd_objcopy_vmlinux = OBJCOPY $@
+       cmd_objcopy_vmlinux = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
+                             $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
+ 
++ifdef CONFIG_MODULE_HASHES
++# Patch module hashes root into vmlinux after modules have been built.
++      cmd_objcopy_vmlinux += ; $(OBJCOPY) --update-section .module_hashes=.tmp_module_hashes.bin $@
++endif
++
+ targets += vmlinux
+ vmlinux: vmlinux.unstripped FORCE
+ 	$(call if_changed,objcopy_vmlinux)
+diff --git a/scripts/include/xalloc.h b/scripts/include/xalloc.h
+index cdadb07d0592..8294bc0b836f 100644
+--- a/scripts/include/xalloc.h
++++ b/scripts/include/xalloc.h
+@@ -3,6 +3,7 @@
+ #ifndef XALLOC_H
+ #define XALLOC_H
+ 
++#include <stdarg.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+@@ -50,4 +51,32 @@ static inline char *xstrndup(const char *s, size_t n)
+ 	return p;
+ }
+ 
++static inline void *xreallocarray(void *oldp, size_t n, size_t size)
++{
++	void *p;
++
++	p = reallocarray(oldp, n, size);
++	if (!p)
++		exit(1);
++
++	return p;
++}
++
++#ifdef _GNU_SOURCE
++static inline char *xasprintf(const char *fmt, ...)
++{
++	va_list ap;
++	char *strp;
++	int ret;
++
++	va_start(ap, fmt);
++	ret = vasprintf(&strp, fmt, ap);
++	va_end(ap);
++	if (ret == -1)
++		exit(1);
++
++	return strp;
++}
++#endif /* _GNU_SOURCE */
++
+ #endif /* XALLOC_H */
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index f99e196abeea..0edec5ee34dc 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -103,7 +103,7 @@ vmlinux_link()
+ 	${ld} ${ldflags} -o ${output}					\
+ 		${wl}--whole-archive ${objs} ${wl}--no-whole-archive	\
+ 		${wl}--start-group ${libs} ${wl}--end-group		\
+-		${kallsymso} ${btf_vmlinux_bin_o} ${arch_vmlinux_o} ${ldlibs}
++		${kallsymso} ${btf_vmlinux_bin_o} ${module_hashes_o} ${arch_vmlinux_o} ${ldlibs}
+ }
+ 
+ # Create ${2}.o file with all symbols from the ${1} object file
+@@ -183,6 +183,7 @@ fi
+ btf_vmlinux_bin_o=
+ btfids_vmlinux=
+ kallsymso=
++module_hashes_o=
+ strip_debug=
+ generate_map=
+ 
+diff --git a/scripts/modules-merkle-tree.c b/scripts/modules-merkle-tree.c
+new file mode 100644
+index 000000000000..10e3455d5d7a
+--- /dev/null
++++ b/scripts/modules-merkle-tree.c
+@@ -0,0 +1,416 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Compute hashes for modules files and build a merkle tree.
++ *
++ * Copyright (C) 2025 Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
++ * Copyright (C) 2025 Thomas Weißschuh <linux@weissschuh.net>
++ *
++ * Structure of the Merkle tree:
++ *
++ * The full built modules are leaf nodes. They are hashed pairwise in the order
++ * of modules.order to create internal nodes. These in turn are also hashed
++ * pairwise to create the next higher level of internal nodes. This is repeated
++ * up to a single root node. In case of an uneven amount of node on a level, the
++ * last node is paired with itself.
++ *
++ * The single root node can then be embedded into vmlinux to validate all modules.
++ */
++
++#define _GNU_SOURCE 1
++#include <endian.h>
++#include <err.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <limits.h>
++#include <stdarg.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdbool.h>
++#include <stdlib.h>
++
++#include <sys/stat.h>
++#include <sys/mman.h>
++
++#include <openssl/evp.h>
++#include <openssl/err.h>
++
++#include "ssl-common.h"
++
++#include <linux/module_signature.h>
++#include <xalloc.h>
++
++static int hash_size;
++static EVP_MD_CTX *ctx;
++
++struct hash {
++	uint8_t h[32]; /* For sha256 */
++};
++
++struct file_entry {
++	char *name;
++	unsigned int pos;
++	struct hash hash;
++};
++
++static struct file_entry *fh_list;
++static size_t num_files;
++
++struct mtree {
++	struct hash **level_hashes;
++	unsigned int *entries;
++	unsigned int num_levels;
++};
++
++static unsigned int log2_roundup(uint32_t val)
++{
++	if (val <= 1)
++		return 1;
++	return 32 - __builtin_clz(val - 1);
++}
++
++static void hash_data(unsigned int pos, unsigned char *data, size_t size, struct hash *ret_hash)
++{
++	uint8_t magic = 0x01; /* domain separation prefix */
++	uint32_t pos_be;
++
++	pos_be = htobe32(pos);
++
++	ERR(EVP_DigestInit_ex(ctx, NULL, NULL) != 1, "EVP_DigestInit_ex()");
++	ERR(EVP_DigestUpdate(ctx, &magic, sizeof(magic)) != 1, "EVP_DigestUpdate(magic)");
++	ERR(EVP_DigestUpdate(ctx, &pos_be, sizeof(pos_be)) != 1, "EVP_DigestUpdate(pos)");
++	ERR(EVP_DigestUpdate(ctx, data, size) != 1, "EVP_DigestUpdate(data)");
++	ERR(EVP_DigestFinal_ex(ctx, ret_hash->h, NULL) != 1, "EVP_DigestFinal_ex()");
++}
++
++static void hash_entry(const struct hash *left, const struct hash *right, struct hash *ret_hash)
++{
++	uint8_t magic = 0x02; /* domain separation prefix */
++
++	ERR(EVP_DigestInit_ex(ctx, NULL, NULL) != 1, "EVP_DigestInit_ex()");
++	ERR(EVP_DigestUpdate(ctx, &magic, sizeof(magic)) != 1, "EVP_DigestUpdate(magic)");
++	ERR(EVP_DigestUpdate(ctx, left, hash_size) != 1, "EVP_DigestUpdate(left)");
++	ERR(EVP_DigestUpdate(ctx, right, hash_size) != 1, "EVP_DigestUpdate(right)");
++	ERR(EVP_DigestFinal_ex(ctx, ret_hash->h, NULL) != 1, "EVP_DigestFinal_ex()");
++}
++
++static void hash_file(struct file_entry *fe)
++{
++	unsigned char *mem;
++	struct stat sb;
++	int fd, ret;
++
++	fd = open(fe->name, O_RDONLY);
++	if (fd < 0)
++		err(1, "Failed to open %s", fe->name);
++
++	ret = fstat(fd, &sb);
++	if (ret)
++		err(1, "Failed to stat %s", fe->name);
++
++	mem = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
++	if (mem == MAP_FAILED)
++		err(1, "Failed to mmap %s", fe->name);
++
++	hash_data(fe->pos, mem, sb.st_size, &fe->hash);
++
++	munmap(mem, sb.st_size);
++	close(fd);
++}
++
++static struct mtree *build_merkle(struct file_entry *files, size_t num_files)
++{
++	unsigned int num_cur_le, num_prev_le;
++	struct mtree *mt;
++
++	if (!num_files)
++		return NULL;
++
++	mt = xmalloc(sizeof(*mt));
++	mt->num_levels = log2_roundup(num_files);
++
++	mt->level_hashes = xcalloc(sizeof(*mt->level_hashes), mt->num_levels);
++
++	mt->entries = xcalloc(sizeof(*mt->entries), mt->num_levels);
++	num_cur_le = (num_files + 1) / 2;
++	mt->entries[0] = num_cur_le;
++	mt->level_hashes[0] = xcalloc(sizeof(**mt->level_hashes), num_cur_le);
++
++	/* First level of pairs */
++	for (size_t i = 0; i < num_files; i += 2) {
++		/* Hash the pair, or the last file with itself if it's odd. */
++		const struct hash *right = i + 1 < num_files ? &files[i + 1].hash : &files[i].hash;
++
++		hash_entry(&files[i].hash, right, &mt->level_hashes[0][i / 2]);
++	}
++
++	for (unsigned int i = 1; i < mt->num_levels; i++) {
++		num_prev_le = num_cur_le;
++
++		num_cur_le = (num_prev_le + 1) / 2;
++		mt->entries[i] = num_cur_le;
++		mt->level_hashes[i] = xcalloc(sizeof(**mt->level_hashes), num_cur_le);
++
++		for (unsigned int n = 0; n < num_prev_le; n += 2) {
++			/* Hash the pair, or the last with itself if it's odd. */
++			const struct hash *right = n + 1 < num_prev_le ?
++						   &mt->level_hashes[i - 1][n + 1] :
++						   &mt->level_hashes[i - 1][n];
++			hash_entry(&mt->level_hashes[i - 1][n], right,
++				   &mt->level_hashes[i][n / 2]);
++		}
++	}
++
++	/* FIXME assert single hash in root */
++
++	return mt;
++}
++
++static void free_mtree(struct mtree *mt)
++{
++	if (!mt)
++		return;
++
++	for (unsigned int i = 0; i < mt->num_levels; i++)
++		free(mt->level_hashes[i]);
++
++	free(mt->level_hashes);
++	free(mt->entries);
++	free(mt);
++}
++
++static void write_be_int(int fd, unsigned int v)
++{
++	unsigned int be_val = htobe32(v);
++
++	if (write(fd, &be_val, sizeof(be_val)) != sizeof(be_val))
++		err(1, "Failed writing to file");
++}
++
++static void write_hash(int fd, const struct hash *hash)
++{
++	if (write(fd, hash->h, hash_size) != hash_size)
++		err(1, "Failed writing to file");
++}
++
++static void build_proof(struct mtree *mt, unsigned int n, int fd)
++{
++	struct file_entry *fe, *fe_sib;
++
++	fe = &fh_list[n];
++
++	if ((n & 1) == 0) {
++		/* No pair, hash with itself */
++		if (n + 1 == num_files)
++			fe_sib = fe;
++		else
++			fe_sib = &fh_list[n + 1];
++	} else {
++		fe_sib = &fh_list[n - 1];
++	}
++	/* First comes the node position into the file */
++	write_be_int(fd, n);
++
++	/* Next is the sibling hash, followed by hashes in the tree */
++	write_hash(fd, &fe_sib->hash);
++
++	for (unsigned int i = 0; i < mt->num_levels - 1; i++) {
++		n >>= 1;
++		if ((n & 1) == 0) {
++			const struct hash *h;
++
++			/* No pair, hash with itself */
++			if (n + 1 == mt->entries[i])
++				h = &mt->level_hashes[i][n];
++			else
++				h = &mt->level_hashes[i][n + 1];
++
++			write_hash(fd, h);
++		} else {
++			write_hash(fd, &mt->level_hashes[i][n - 1]);
++		}
++	}
++}
++
++static void append_module_signature_magic(int fd, unsigned int sig_len)
++{
++	const struct module_signature sig_info = {
++		.id_type	= MODULE_SIGNATURE_TYPE_MERKLE,
++		.sig_len	= htobe32(sig_len),
++	};
++	const size_t sig_str_len = sizeof(MODULE_SIGNATURE_MARKER) - 1;
++	const char *sig_str = MODULE_SIGNATURE_MARKER;
++
++	if (write(fd, &sig_info, sizeof(sig_info)) != sizeof(sig_info))
++		err(1, "write(sig_info) failed");
++
++	if (write(fd, sig_str, sig_str_len) != sig_str_len)
++		err(1, "write(magic_number) failed");
++}
++
++static void write_merkle_root(struct mtree *mt, const char *filename)
++{
++	unsigned int num_levels;
++	struct hash *h;
++	FILE *f;
++
++	if (mt) {
++		num_levels = mt->num_levels;
++		h = &mt->level_hashes[mt->num_levels - 1][0];
++	} else {
++		num_levels = 0;
++		h = xcalloc(1, hash_size);
++	}
++
++	f = fopen(filename, "w");
++	if (!f)
++		err(1, "Failed to create %s", filename);
++
++	fprintf(f, "#include <linux/module_hashes.h>\n\n");
++	fprintf(f, "const struct\n");
++	fprintf(f, "module_hashes_root module_hashes_root __module_hashes_section = {\n");
++
++	fprintf(f, "\t.levels = %u,\n", num_levels);
++	fprintf(f, "\t.hash = {{");
++	for (unsigned int i = 0; i < hash_size; i++) {
++		char *space = "";
++
++		if (!(i % 8))
++			fprintf(f, "\n\t\t");
++
++		if ((i + 1) % 8)
++			space = " ";
++
++		fprintf(f, "0x%02x,%s", h->h[i], space);
++	}
++	fprintf(f, "\n\t}},");
++
++	fprintf(f, "\n};\n");
++
++	if (fclose(f))
++		err(1, "Failed to write %s", filename);
++
++	if (!mt)
++		free(h);
++}
++
++static char *xstrdup_replace_suffix(const char *str, const char *old_suffix, const char *new_suffix)
++{
++	size_t str_len, old_suffix_len, base_len;
++
++	str_len = strlen(str);
++	old_suffix_len = strlen(old_suffix);
++	base_len = str_len - old_suffix_len;
++
++	if (old_suffix_len > str_len || memcmp(str + base_len, old_suffix, old_suffix_len) != 0)
++		errx(1, "'%s' does not end in '%s'", str, old_suffix);
++
++	return xasprintf("%.*s%s", (int)base_len, str, new_suffix);
++}
++
++static void trim_newline(char *line)
++{
++	size_t len;
++
++	if (!line)
++		return;
++
++	len = strlen(line);
++	if (!len)
++		return;
++
++	if (line[len - 1] == '\n')
++		line[len - 1] = '\0';
++}
++
++static void read_modules_order(const char *fname, const char *suffix)
++{
++	char line[PATH_MAX];
++	FILE *in;
++
++	in = fopen(fname, "r");
++	if (!in)
++		err(1, "Failed to open %s", fname);
++
++	while (fgets(line, PATH_MAX, in)) {
++		struct file_entry *entry;
++
++		trim_newline(line);
++
++		fh_list = xreallocarray(fh_list, num_files + 1, sizeof(*fh_list));
++		entry = &fh_list[num_files];
++
++		entry->pos = num_files;
++		entry->name = xstrdup_replace_suffix(line, ".o", suffix);
++		hash_file(entry);
++
++		num_files++;
++	}
++
++	if (ferror(in))
++		errx(1, "Failed to read %s", fname);
++
++	fclose(in);
++}
++
++static __attribute__((noreturn))
++void usage(void)
++{
++	fprintf(stderr,
++		"Usage: scripts/modules-merkle-tree <kmod suffix> <root definition>\n");
++	exit(2);
++}
++
++int main(int argc, char *argv[])
++{
++	const char *kmod_suffix;
++	const EVP_MD *hash_evp;
++	struct mtree *mt;
++
++	if (argc != 3)
++		usage();
++
++	kmod_suffix = argv[2];
++
++	hash_evp = EVP_sha256();
++	ERR(!hash_evp, "EVP_sha256()");
++
++	ctx = EVP_MD_CTX_new();
++	ERR(!ctx, "EVP_MD_CTX_new()");
++
++	hash_size = EVP_MD_get_size(hash_evp);
++	ERR(hash_size <= 0, "EVP_get_digestbyname");
++
++	if (hash_size != sizeof(struct hash))
++		errx(1, "Invalid hash size");
++
++	if (EVP_DigestInit_ex(ctx, hash_evp, NULL) != 1)
++		ERR(1, "EVP_DigestInit_ex()");
++
++	read_modules_order("modules.order", kmod_suffix);
++
++	mt = build_merkle(fh_list, num_files);
++	write_merkle_root(mt, argv[1]);
++	for (size_t i = 0; i < num_files; i++) {
++		char *signame;
++		int fd;
++
++		signame = xstrdup_replace_suffix(fh_list[i].name, kmod_suffix, ".merkle");
++
++		fd = open(signame, O_WRONLY | O_CREAT | O_TRUNC, 0644);
++		if (fd < 0)
++			err(1, "Can't create %s", signame);
++
++		build_proof(mt, i, fd);
++		append_module_signature_magic(fd, lseek(fd, 0, SEEK_CUR));
++		if (close(fd))
++			err(1, "Can't write %s", signame);
++	}
++
++	free_mtree(mt);
++	for (size_t i = 0; i < num_files; i++)
++		free(fh_list[i].name);
++	free(fh_list);
++
++	EVP_MD_CTX_free(ctx);
++	return 0;
++}
+diff --git a/security/lockdown/Kconfig b/security/lockdown/Kconfig
+index 155959205b8e..60b240e3ef1f 100644
+--- a/security/lockdown/Kconfig
++++ b/security/lockdown/Kconfig
+@@ -1,7 +1,7 @@
+ config SECURITY_LOCKDOWN_LSM
+ 	bool "Basic module for enforcing kernel lockdown"
+ 	depends on SECURITY
+-	depends on !MODULES || MODULE_SIG
++	depends on !MODULES || MODULE_SIG || MODULE_HASHES
+ 	help
+ 	  Build support for an LSM that enforces a coarse kernel lockdown
+ 	  behaviour.
+diff --git a/tools/include/uapi/linux/module_signature.h b/tools/include/uapi/linux/module_signature.h
+index 634c9f1c8fc2..78e206996eed 100644
+--- a/tools/include/uapi/linux/module_signature.h
++++ b/tools/include/uapi/linux/module_signature.h
+@@ -16,6 +16,7 @@
+ 
+ enum module_signature_type {
+ 	MODULE_SIGNATURE_TYPE_PKCS7 = 2,	/* Signature in PKCS#7 message */
++	MODULE_SIGNATURE_TYPE_MERKLE = 3,	/* Merkle proof for modules, opaque structure */
+ };
+ 
+ /*
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 13/14] kbuild: move handling of module stripping to
+ Makefile.lib
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:17 +0200
+Message-Id: <20260505-module-hashes-v5-13-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+To allow CONFIG_MODULE_HASHES in combination with INSTALL_MOD_STRIP,
+this logc will also be used by Makefile.modfinal.
+
+Move it to a shared location to enable reuse.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ scripts/Makefile.lib     | 32 ++++++++++++++++++++++++++++++++
+ scripts/Makefile.modinst | 37 +++++--------------------------------
+ 2 files changed, 37 insertions(+), 32 deletions(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 0718e39cedda..bb713a1a11be 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -484,6 +484,38 @@ define sed-offsets
+ 	s:->::; p;}'
+ endef
+ 
++#
++# Module Installation
++#
++quiet_cmd_install_mod = INSTALL $@
++      cmd_install_mod = cp $< $@
++
++# Module Strip
++# ---------------------------------------------------------------------------
++#
++# INSTALL_MOD_STRIP, if defined, will cause modules to be stripped after they
++# are installed. If INSTALL_MOD_STRIP is '1', then the default option
++# --strip-debug will be used. Otherwise, INSTALL_MOD_STRIP value will be used
++# as the options to the strip command.
++ifeq ($(INSTALL_MOD_STRIP),1)
++mod-strip-option := --strip-debug
++else
++mod-strip-option := $(INSTALL_MOD_STRIP)
++endif
++
++# Strip
++ifdef INSTALL_MOD_STRIP
++
++quiet_cmd_strip_mod = STRIP   $@
++      cmd_strip_mod = $(STRIP) $(mod-strip-option) $@
++
++else
++
++quiet_cmd_strip_mod =
++      cmd_strip_mod = :
++
++endif
++
+ # Use filechk to avoid rebuilds when a header changes, but the resulting file
+ # does not
+ define filechk_offsets
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index 68708a039a62..b95f613e23c8 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -8,6 +8,7 @@ __modinst:
+ 
+ include $(objtree)/include/config/auto.conf
+ include $(srctree)/scripts/Kbuild.include
++include $(srctree)/scripts/Makefile.lib
+ 
+ install-y :=
+ 
+@@ -36,7 +37,7 @@ install-y += $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo)
+ install-$(CONFIG_BUILTIN_MODULE_RANGES) += $(MODLIB)/modules.builtin.ranges
+ 
+ $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.builtin.ranges): $(MODLIB)/%: % FORCE
+-	$(call cmd,install)
++	$(call cmd,install_mod)
+ 
+ endif
+ 
+@@ -65,40 +66,12 @@ install-$(CONFIG_MODULES) += $(modules)
+ __modinst: $(install-y)
+ 	@:
+ 
+-#
+-# Installation
+-#
+-quiet_cmd_install = INSTALL $@
+-      cmd_install = cp $< $@
+-
+-# Strip
+-#
+-# INSTALL_MOD_STRIP, if defined, will cause modules to be stripped after they
+-# are installed. If INSTALL_MOD_STRIP is '1', then the default option
+-# --strip-debug will be used. Otherwise, INSTALL_MOD_STRIP value will be used
+-# as the options to the strip command.
+-ifdef INSTALL_MOD_STRIP
+-
+ ifdef CONFIG_MODULE_HASHES
+ ifeq ($(KBUILD_EXTMOD),)
++ifdef INSTALL_MOD_STRIP
+ $(error CONFIG_MODULE_HASHES and INSTALL_MOD_STRIP are mutually exclusive)
+ endif
+ endif
+-
+-ifeq ($(INSTALL_MOD_STRIP),1)
+-strip-option := --strip-debug
+-else
+-strip-option := $(INSTALL_MOD_STRIP)
+-endif
+-
+-quiet_cmd_strip = STRIP   $@
+-      cmd_strip = $(STRIP) $(strip-option) $@
+-
+-else
+-
+-quiet_cmd_strip =
+-      cmd_strip = :
+-
+ endif
+ 
+ #
+@@ -131,8 +104,8 @@ endif
+ $(foreach dir, $(sort $(dir $(install-y))), $(shell mkdir -p $(dir)))
+ 
+ $(dst)/%.ko: %.ko FORCE
+-	$(call cmd,install)
+-	$(call cmd,strip)
++	$(call cmd,install_mod)
++	$(call cmd,strip_mod)
+ 	$(call cmd,sign)
+ 
+ ifdef CONFIG_MODULES
+
+-- 
+2.54.0
+
+From git@z Thu Jan  1 00:00:00 1970
+Subject: [PATCH v5 14/14] kbuild: make CONFIG_MODULE_HASHES compatible with
+ module stripping
+From: Thomas Weißschuh <linux@weissschuh.net>
+Date: Tue, 05 May 2026 11:05:18 +0200
+Message-Id: <20260505-module-hashes-v5-14-e174a5a49fce@weissschuh.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+CONFIG_MODULE_HASHES needs to process the modules at build time in the
+exact form they will be loaded at runtime. If the modules are stripped
+afterwards they will not be loadable anymore.
+
+Also evaluate INSTALL_MOD_STRIP at build time and build the hashes based
+on modules stripped this way.
+
+If users specify inconsistent values of INSTALL_MOD_STRIP between build
+and installation time, an error is reported.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ .gitignore                | 1 +
+ kernel/module/Kconfig     | 5 +++++
+ scripts/Makefile.modfinal | 9 +++++++++
+ scripts/Makefile.modinst  | 4 ++--
+ scripts/Makefile.vmlinux  | 2 +-
+ 5 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 78cf799401e6..6ce10623c5a3 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -30,6 +30,7 @@
+ *.gz
+ *.i
+ *.ko
++*.ko.stripped
+ *.lex.c
+ *.ll
+ *.lst
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index acbbda58e7c8..48be498a4452 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -423,6 +423,11 @@ config MODULE_HASHES
+ 
+ 	  Also see the warning in MODULE_SIG about stripping modules.
+ 
++# To validate the consistency of INSTALL_MOD_STRIP for MODULE_HASHES
++config MODULE_INSTALL_STRIP
++	string
++	default "$(INSTALL_MOD_STRIP)"
++
+ config MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+ 	bool "Allow loading of modules with missing namespace imports"
+ 	help
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 44a382689a5a..9924a7bb73c5 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -64,7 +64,16 @@ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ endif
+ 	+$(call cmd,check_tracepoint)
+ 
++%.ko.stripped: %.ko $(wildcard include/config/MODULE_INSTALL_STRIP)
++	$(call cmd,install_mod)
++	$(call cmd,strip_mod)
++
++ifneq ($(CONFIG_MODULE_INSTALL_STRIP),)
++modules.order: $(modules:%.o=%.ko.stripped)
++endif
++
+ targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) .module-common.o
++targets += $(modules:%.o=%.ko.stripped)
+ 
+ # Update modules.order when a module is (re-)built.
+ # Allow using it as target dependency.
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index b95f613e23c8..fd1fb89bb0bd 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -68,8 +68,8 @@ __modinst: $(install-y)
+ 
+ ifdef CONFIG_MODULE_HASHES
+ ifeq ($(KBUILD_EXTMOD),)
+-ifdef INSTALL_MOD_STRIP
+-$(error CONFIG_MODULE_HASHES and INSTALL_MOD_STRIP are mutually exclusive)
++ifneq ($(INSTALL_MOD_STRIP),$(CONFIG_MODULE_INSTALL_STRIP))
++$(error Inconsistent values for INSTALL_MOD_STRIP between build and installation)
+ endif
+ endif
+ endif
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index a0332c06bde1..a2d170241a2f 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -86,7 +86,7 @@ modules.order: vmlinux.unstripped FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile modules
+ 
+ quiet_cmd_modules_merkle_tree = MERKLE  $@
+-      cmd_modules_merkle_tree = $< $@ .ko
++      cmd_modules_merkle_tree = $< $@ $(if $(CONFIG_MODULE_INSTALL_STRIP),.ko.stripped,.ko)
+ 
+ targets += .tmp_module_hashes.c
+ .tmp_module_hashes.c: $(objtree)/scripts/modules-merkle-tree modules.order FORCE
+
+-- 
+2.54.0
+

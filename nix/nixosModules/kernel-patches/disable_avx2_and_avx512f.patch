@@ -1,8 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 6 Jul 2026 21:01:54 -0700
+Subject: [PATCH] Disable avx2 and avx512f
+
+Disable these to be safe. Clang has different handling logic than GCC
+for feature flags.
+---
+ arch/x86/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 1a27efcf3c20..9ba2973c17ee 100644
+index 1d526a5d2a83..08dc6474442a 100644
 --- a/arch/x86/Makefile
 +++ b/arch/x86/Makefile
-@@ -75,9 +75,9 @@ export BITS
+@@ -73,9 +73,9 @@ export BITS
  #
  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
  #
@@ -12,5 +23,5 @@ index 1a27efcf3c20..9ba2973c17ee 100644
 -KBUILD_RUSTFLAGS += -Ctarget-feature=-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2,-avx,-avx2
 +KBUILD_RUSTFLAGS += -Ctarget-feature=-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2,-avx,-avx2,-avx512f
  
- #
- # CFLAGS for compiling floating point code inside the kernel.
+ # The target.json file is not available when invoking rustc-option, so use the
+ # built-in target when checking whether flags are supported instead.

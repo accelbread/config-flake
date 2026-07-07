@@ -2,7 +2,7 @@
 let
   use-ccache = false;
   stdenv = llvmStdenv pkgs.llvmPackages;
-  base-kernel = pkgs.linux;
+  base-kernel = pkgs.linux_7_1;
 
   extraMakeFlags = [ "INSTALL_MOD_STRIP=1" ];
 
@@ -54,12 +54,15 @@ let
         ${requiredConfig} "$buildRoot/.config"
     '';
   };
+
+  onStable = lib.mkIf (lib.versionOlder base-kernel.version "6.19.0");
+  onLatest = lib.mkIf (lib.versionAtLeast base-kernel.version "6.19.0");
 in
 {
   security.lsm = [ "lockdown" ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor (pkgs.linuxManualConfig ({
+    kernelPackages = pkgs.linuxPackagesFor ((pkgs.linuxManualConfig ({
       inherit (base-kernel) version pname modDirVersion src kernelPatches;
       inherit stdenv extraMakeFlags configfile;
       config.CONFIG_MODULES = "y";
@@ -68,6 +71,10 @@ in
       buildPackages = pkgs.buildPackages // {
         stdenv = pkgs.buildPackages.ccacheStdenv;
       };
+    })).overrideAttrs (old: {
+      # Fix build issue due to nixpkgs using the modules make target and the
+      # module hashes patch not expecting that
+      buildFlags = lib.subtractLists [ "modules" ] old.buildFlags;
     }));
     kernelPatches = map
       (p: { name = baseNameOf p; patch = builtins.path { path = p; }; })
@@ -177,7 +184,7 @@ in
           ACPI_THERMAL = module;
           ACPI_TINY_POWER_BUTTON = module;
           CRYPTO_AES_NI_INTEL = yes;
-          CRYPTO_GHASH_CLMUL_NI_INTEL = module;
+          CRYPTO_GHASH_CLMUL_NI_INTEL = onStable module;
           HPET = no;
           IA32_EMULATION = yes;
           IRQ_REMAP = yes;
@@ -225,6 +232,8 @@ in
           TCP_CONG_BBR = yes;
           THERMAL_DEFAULT_GOV_STEP_WISE = yes;
           TRANSPARENT_HUGEPAGE_ALWAYS = yes;
+          TRANSPARENT_HUGEPAGE_SHMEM_HUGE_WITHIN_SIZE = onLatest yes;
+          TRANSPARENT_HUGEPAGE_TMPFS_HUGE_WITHIN_SIZE = onLatest yes;
           X86_64_VERSION = freeform "3";
           ZSWAP = yes;
           ZSWAP_COMPRESSOR_DEFAULT_ZSTD = yes;
@@ -341,7 +350,7 @@ in
         };
         "amdgpu" = {
           DEVICE_PRIVATE = yes;
-          DMABUF_MOVE_NOTIFY = yes;
+          DMABUF_MOVE_NOTIFY = onStable yes;
           DRM_AMDGPU = module;
           DRM_AMD_DC = yes;
           HSA_AMD = yes;
@@ -658,7 +667,6 @@ in
           BT_HCIBTUSB_BCM = no;
           BT_HCIBTUSB_RTL = no;
           CHARGER_CROS_PCHG = no;
-          CPU_ISOLATION = no;
           CPU_SUP_CENTAUR = no;
           CPU_SUP_HYGON = no;
           CPU_SUP_ZHAOXIN = no;
@@ -671,7 +679,7 @@ in
           DNOTIFY = no;
           DRM_XE_PAGEMAP = no;
           EARLY_PRINTK = no;
-          EDAC_LEGACY_SYSFS = no;
+          EDAC_LEGACY_SYSFS = onStable no;
           EFI_HANDOVER_PROTOCOL = no;
           EPROBE_EVENTS = no;
           FB_DEVICE = no;
@@ -712,7 +720,7 @@ in
           NETFILTER_XTABLES = no;
           NET_FLOW_LIMIT = no;
           NF_CT_PROTO_SCTP = no;
-          NF_CT_PROTO_UDPLITE = no;
+          NF_CT_PROTO_UDPLITE = onStable no;
           PCSPKR_PLATFORM = no;
           PERF_EVENTS_AMD_UNCORE = no;
           PNP_DEBUG_MESSAGES = no;
@@ -754,6 +762,7 @@ in
           SND_HDA_CODEC_HDMI_TEGRA = no;
           SND_PCM_TIMER = no;
           SND_PROC_FS = no;
+          SND_SOC_SDCA_FDL = onLatest no;
           SND_SOC_SOF_ALDERLAKE = no;
           SND_SOC_SOF_APOLLOLAKE = no;
           SND_SOC_SOF_CANNONLAKE = no;
@@ -767,6 +776,7 @@ in
           SND_SOC_SOF_LUNARLAKE = no;
           SND_SOC_SOF_MERRIFIELD = no;
           SND_SOC_SOF_METEORLAKE = no;
+          SND_SOC_SOF_NOVALAKE = onLatest no;
           SND_SOC_SOF_PANTHERLAKE = no;
           SND_SOC_SOF_SKYLAKE = no;
           SND_SST_ATOM_HIFI2_PLATFORM_ACPI = no;
