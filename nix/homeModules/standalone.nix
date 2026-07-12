@@ -14,8 +14,9 @@ in
   home = {
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
     packages = with pkgs; [
-      dejavu_fonts
+      adwaita-fonts
       liberation_ttf
+      gyre-fonts
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
@@ -29,6 +30,8 @@ in
       EDITOR = "zile";
     };
   };
+
+  fonts.fontconfig.enable = true;
 
   programs.home-manager.enable = true;
 }

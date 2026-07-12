@@ -146,6 +146,8 @@ in
     };
   };
 
+  fonts.fontconfig.enable = false;
+
   xdg = {
     configFile = {
       "gtk-3.0/gtk.css".text = "@define-color accent_bg_color #9141ac;";

@@ -49,8 +49,6 @@ in
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
     };
 
-    fonts.fontconfig.enable = true;
-
     xdg.configFile."direnv/direnvrc".text =
       let
         nix-direnv = pkgs.nix-direnv.override { nix = config.nix.package; };
