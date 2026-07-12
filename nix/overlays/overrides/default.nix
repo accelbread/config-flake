@@ -29,6 +29,10 @@ final: prev: {
       wrapProgram $out/bin/mount --add-flags "-o noatime"
     '';
   };
+  rnote = final.runCommand prev.rnote.name { } ''
+    cp --no-preserve=all -Lr ${prev.rnote} $out
+    rm -r $out/share/fonts
+  '';
 } // builtins.mapAttrs
   (p: _: prev.${p}.overrideAttrs (old: {
     patches = old.patches or [ ] ++
