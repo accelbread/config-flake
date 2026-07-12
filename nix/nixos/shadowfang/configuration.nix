@@ -1,4 +1,4 @@
-{ lib, pkgs, inputs, ... }: {
+{ lib, inputs, ... }: {
   imports = [
     inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
     inputs.self.nixosModules.common
@@ -47,7 +47,6 @@
     logind.settings.Login.IdleAction = "hibernate";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     thermald.enable = true;
-    xserver.videoDrivers = [ "modesetting" ];
     fprintd.enable = false;
   };
 
