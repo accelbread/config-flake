@@ -227,6 +227,7 @@ in
   fonts = {
     enableDefaultPackages = false;
     packages = with pkgs; [
+      dejavu_fonts
       liberation_ttf
       gyre-fonts
       noto-fonts
