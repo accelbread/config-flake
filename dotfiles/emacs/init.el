@@ -1337,7 +1337,7 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; Vale
 
 (setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
-                            message-mode))
+                            typst-ts-mode message-mode))
 
 (add-hook 'find-file-hook 'flymake-vale-maybe-load)
 
@@ -1656,6 +1656,11 @@ Returns the tree-sitter anchor for using the generated function."
 
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
 (add-hook 'markdown-mode-hook #'flymake-mode)
+
+
+;;; Typst
+
+(add-hook 'typst-ts-mode-hook #'setup-eglot)
 
 
 ;;; Nix
