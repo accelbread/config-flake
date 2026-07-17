@@ -66,6 +66,11 @@ in
       inherit (base-kernel) version pname modDirVersion src kernelPatches;
       inherit stdenv extraMakeFlags configfile;
       config.CONFIG_MODULES = "y";
+      features = {
+        efiBootStub = true;
+        netfilterRPFilter = true;
+        ia32Emulation = true;
+      };
     } // lib.optionalAttrs use-ccache {
       stdenv = pkgs.ccacheStdenv.override { inherit stdenv; };
       buildPackages = pkgs.buildPackages // {
