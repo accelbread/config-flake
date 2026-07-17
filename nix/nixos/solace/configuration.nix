@@ -46,7 +46,10 @@
 
   home-manager.sharedModules = [ ./home.nix ];
 
-  hardware.cpu.amd.updateMicrocode = true;
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    graphics.enable32Bit = false;
+  };
 
   sysconfig.dconf = {
     "org/gnome/desktop/peripherals/touchpad" = { speed = 0.6; };
