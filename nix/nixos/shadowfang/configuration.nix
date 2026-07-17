@@ -21,6 +21,7 @@
     kernelParams = [
       "rcu_nocbs=all"
       "workqueue.power_efficient=1"
+      "pcie_aspm.policy=powersupersave"
     ];
   };
 

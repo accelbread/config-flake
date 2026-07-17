@@ -219,7 +219,6 @@ in
           NET_SCH_FQ_CODEL = yes;
           NO_HZ = yes;
           NO_HZ_IDLE = yes;
-          PCIEASPM_POWER_SUPERSAVE = yes;
           PERSISTENT_HUGE_ZERO_FOLIO = yes;
           PREEMPT = yes;
           PREEMPT_DYNAMIC = no;
