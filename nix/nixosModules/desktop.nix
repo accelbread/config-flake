@@ -85,10 +85,7 @@ in
     pipewire = {
       enable = true;
       pulse.enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
+      alsa.enable = true;
     };
     desktopManager.gnome.enable = true;
     displayManager.gdm.enable = true;
