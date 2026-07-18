@@ -30,7 +30,8 @@ final: prev: {
     '';
   };
   rnote = final.runCommand prev.rnote.name { } ''
-    cp --no-preserve=all -Lr ${prev.rnote} $out
+    cp -Lr ${prev.rnote} $out
+    chmod -R u+w $out
     rm -r $out/share/fonts
   '';
 } // builtins.mapAttrs
