@@ -1410,6 +1410,16 @@ Returns the tree-sitter anchor for using the generated function."
   (remove-hook 'server-switch-hook #'magit-commit-diff)
   (remove-hook 'with-editor-filter-visit-hook #'magit-commit-diff))
 
+(with-eval-after-load 'magit-patch
+  (transient-append-suffix
+    'magit-patch-create
+    'magit-format-patch:--output-directory
+    '("C-m z" "Zero commit hashes" "--zero-commit"))
+  (transient-append-suffix
+    'magit-patch-create
+    "C-m z"
+    '("C-m s" "Omit signature" "--no-signature")))
+
 (defun configure-magit-mode ()
   "Set buffer-local configurations for `magit-mode'."
   (setq truncate-lines nil))
