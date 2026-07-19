@@ -1393,7 +1393,8 @@ Returns the tree-sitter anchor for using the generated function."
         magit-save-repository-buffers 'dontask
         magit-delete-by-moving-to-trash nil
         git-commit-summary-max-length 50
-        magit-no-message '("Turning on "))
+        magit-no-message '("Turning on ")
+        magit-process-apply-ansi-colors 'filter)
 
 (with-eval-after-load 'magit
   (magit-todos-mode))
@@ -1438,14 +1439,6 @@ Returns the tree-sitter anchor for using the generated function."
   (setq fill-column 72))
 
 (add-hook 'git-commit-mode-hook #'configure-git-commit-mode)
-
-(advice-add 'magit-process-filter :after
-            (lambda (proc &rest _)
-              "Apply ansi-color to output of Magit processes."
-              (with-current-buffer (process-buffer proc)
-                (let ((inhibit-read-only t))
-                  (ansi-color-apply-on-region (point-min) (point-max)))))
-            '((name . magit-process-apply-ansi-color)))
 
 (magit-wip-mode)
 
