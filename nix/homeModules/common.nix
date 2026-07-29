@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, config, flake, flakeResource, ... }:
+{ pkgs, lib, inputs, config, flake, ... }:
 let
   inherit (lib) mkOption types;
 in
@@ -11,8 +11,6 @@ in
   };
 
   config = {
-    _module.args.flakeResource = p: builtins.path { path = flake.src + p; };
-
     home = {
       packages = with pkgs; [
         (nixgl.nixGLCommon config.nixgl.package)
@@ -45,7 +43,7 @@ in
         bind.dnsutils
         bubblewrap
       ];
-      file.".fdignore".source = flakeResource /dotfiles/fdignore;
+      file.".fdignore".source = flake.src + /dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
     };
 
@@ -86,7 +84,7 @@ in
           status.submoduleSummary = true;
           init = {
             defaultBranch = "master";
-            templateDir = "${flakeResource /dotfiles/git-template}";
+            templateDir = "${flake.src + /dotfiles/git-template}";
           };
           remote.pushDefault = "origin";
           checkout.workers = 0;

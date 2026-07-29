@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, flake, flakeResource, ... }:
+{ config, pkgs, lib, inputs, flake, ... }:
 let
   desktopBackgrounds = pkgs.writeTextFile {
     name = "desktop-backgrounds";
@@ -8,7 +8,7 @@ let
       <wallpapers>
         <wallpaper>
           <name>Catbox</name>
-          <filename>${flakeResource /misc/desktop.svg}</filename>
+          <filename>${flake.src + /misc/desktop.svg}</filename>
           <options>scaled</options>
           <shade_type>solid</shade_type>
           <pcolor>#7767B2</pcolor>
@@ -76,7 +76,7 @@ in
         DeviceScale=2
       '';
       logo = pkgs.runCommand "boot_logo.png" { }
-        "${lib.getExe pkgs.resvg} ${flakeResource /misc/boot_logo.svg} $out";
+        "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -202,7 +202,7 @@ in
     };
     dconf.profiles.gdm.databases = [{
       settings."org/gnome/login-screen".logo =
-        "${flakeResource /misc/boot_logo.svg}";
+        "${flake.src + /misc/boot_logo.svg}";
     }];
   };
 

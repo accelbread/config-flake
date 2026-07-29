@@ -1,4 +1,4 @@
-{ pkgs, flakeResource, ... }: {
+{ pkgs, ... }: {
   home = {
     packages = with pkgs; [
       emacsAccelbread
@@ -7,7 +7,7 @@
       aspellDicts.en
     ];
     file.".config/emacs" = {
-      source = flakeResource /dotfiles/emacs;
+      source = ../../dotfiles/emacs;
       recursive = true;
     };
   };

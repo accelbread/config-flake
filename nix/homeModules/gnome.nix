@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, config, flakeResource, ... }: {
+{ inputs, lib, pkgs, config, flake, ... }: {
   imports = [ inputs.self.homeModules.gnome-extensions ];
 
   home = {
@@ -83,8 +83,8 @@
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
         picture-options = "scaled";
-        picture-uri = "file://${flakeResource /misc/desktop.svg}";
-        picture-uri-dark = "file://${flakeResource /misc/desktop.svg}";
+        picture-uri = "file://${flake.src + /misc/desktop.svg}";
+        picture-uri-dark = "file://${flake.src + /misc/desktop.svg}";
         primary-color = "#7767B2";
       };
       "org/gnome/desktop/input-sources" = {
