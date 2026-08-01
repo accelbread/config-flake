@@ -90,6 +90,8 @@
 
 (load-theme 'adwaita t)
 
+(load-face 'flyspell-incorrect)
+
 (custom-set-faces
  '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
  '(jinx-misspelled ((t (:inherit (flyspell-incorrect)))))
