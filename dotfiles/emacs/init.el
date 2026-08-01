@@ -12,64 +12,6 @@
 (setopt gc-cons-threshold most-positive-fixnum)
 
 
-;;; Hide UI elements
-
-(setopt menu-bar-mode nil
-        tool-bar-mode nil
-        scroll-bar-mode nil)
-
-
-;;; Theme
-
-(load-theme 'adwaita t)
-
-(custom-set-faces
- '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
- '(jinx-misspelled ((t (:inherit (flyspell-incorrect)))))
- '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#BF7FFF"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#7FBFFF"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#7FFFBF"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#BFFF7F"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#FFBF7F"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#FF7FBF"))))
- '(rainbow-delimiters-base-error-face ((t (:inherit (error))))))
-
-(setopt rainbow-delimiters-max-face-count 6)
-(setq orderless-match-faces [rainbow-delimiters-depth-1-face
-                             rainbow-delimiters-depth-2-face
-                             rainbow-delimiters-depth-3-face
-                             rainbow-delimiters-depth-4-face
-                             rainbow-delimiters-depth-5-face
-                             rainbow-delimiters-depth-6-face])
-
-
-;;; Networking
-
-(setopt network-security-level 'high
-        gnutls-verify-error t
-        gnutls-min-prime-bits 3072
-        gnutls-algorithm-priority "PFS:-VERS-TLS1.2:-VERS-TLS1.1:-VERS-TLS1.0"
-        auth-sources '("~/.authinfo.gpg"))
-
-
-;;; Configure packages
-
-(with-eval-after-load 'package
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-
-(setopt package-selected-packages
-        '( meow gcmh rainbow-delimiters jinx vundo envrc
-           corfu cape kind-icon vertico orderless marginalia consult yasnippet
-           magit magit-todos hl-todo virtual-comment flymake-vale
-           fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
-           markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
-           geiser-guile scad-mode haskell-mode toml-mode git-modes nael
-           typst-ts-mode pdf-tools)
-        package-native-compile t)
-
-
 ;;; Config utils
 
 (defun y-or-n-p-always-y-wrapper (orig-fun &rest args)
@@ -137,10 +79,68 @@
   (trusted-content-p))
 
 
+;;; Hide UI elements
+
+(setopt menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil)
+
+
+;;; Theme
+
+(load-theme 'adwaita t)
+
+(custom-set-faces
+ '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
+ '(jinx-misspelled ((t (:inherit (flyspell-incorrect)))))
+ '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#BF7FFF"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#7FBFFF"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#7FFFBF"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#BFFF7F"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#FFBF7F"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#FF7FBF"))))
+ '(rainbow-delimiters-base-error-face ((t (:inherit (error))))))
+
+(setopt rainbow-delimiters-max-face-count 6)
+(setq orderless-match-faces [rainbow-delimiters-depth-1-face
+                             rainbow-delimiters-depth-2-face
+                             rainbow-delimiters-depth-3-face
+                             rainbow-delimiters-depth-4-face
+                             rainbow-delimiters-depth-5-face
+                             rainbow-delimiters-depth-6-face])
+
+
 ;;; Maximize initial frame
 
 (after-frame
  (toggle-frame-maximized))
+
+
+;;; Networking
+
+(setopt network-security-level 'high
+        gnutls-verify-error t
+        gnutls-min-prime-bits 3072
+        gnutls-algorithm-priority "PFS:-VERS-TLS1.2:-VERS-TLS1.1:-VERS-TLS1.0"
+        auth-sources '("~/.authinfo.gpg"))
+
+
+;;; Configure packages
+
+(with-eval-after-load 'package
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+
+(setopt package-selected-packages
+        '( meow gcmh rainbow-delimiters jinx vundo envrc
+           corfu cape kind-icon vertico orderless marginalia consult yasnippet
+           magit magit-todos hl-todo virtual-comment flymake-vale
+           fish-completion eat meow-term vterm meow-vterm rg inheritenv
+           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
+           markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
+           geiser-guile scad-mode haskell-mode toml-mode git-modes nael
+           typst-ts-mode pdf-tools)
+        package-native-compile t)
 
 
 ;;; Hide welcome messages
