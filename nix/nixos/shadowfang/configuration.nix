@@ -1,4 +1,4 @@
-{ lib, inputs, ... }: {
+{ pkgs, lib, inputs, ... }: {
   imports = [
     inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
     inputs.self.nixosModules.common
@@ -49,6 +49,16 @@
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     thermald.enable = true;
     fprintd.enable = false;
+    udev.packages = [
+      (pkgs.writeTextFile {
+        name = "xreal-udev-rules";
+        destination = "/etc/udev/rules.d/70-xreal.rules";
+        text = ''
+          SUBSYSTEM=="usb", ATTR{idVendor}=="3318", MODE="0660", TAG+="uaccess"
+          SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3318", MODE="0660", TAG+="uaccess"
+        '';
+      })
+    ];
   };
 
   sysconfig.dconf = with lib.gvariant; {
