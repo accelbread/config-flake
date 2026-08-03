@@ -1842,10 +1842,15 @@ Returns the tree-sitter anchor for using the generated function."
 
 (defun c-flymake-containing-makefile-check-syntax ()
   "`flymake' command for checking with `make check-syntax'."
-  (let ((project (project-current))
-        (dir (file-name-directory buffer-file-name))
-        (filetype (cond ((derived-mode-p '(c++-ts-mode c++-mode)) "c++")
-                        (t "c"))))
+  (let* ((project (project-current))
+         (dir (file-name-directory buffer-file-name))
+         (header (equal (downcase (substring
+                                   (file-name-extension buffer-file-name)
+                                   0 1))
+                        "h"))
+         (filetype (cond ((derived-mode-p '(c++-ts-mode c++-mode))
+                          (if header "c++-header" "c++"))
+                         (t (if header "c-header" "c")))))
     `("make" ,@(if project `("-C" ,(project-root project)))
       "check-syntax"
       ,(format "CHK_SOURCES=-x %s -iquote %s -c -"
