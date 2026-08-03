@@ -4,7 +4,7 @@
       emacsAccelbread
       emacsAccelbread-terminfo
       emacs-eat-terminfo
-      aspellDicts.en
+      hunspellDicts.en_US
     ];
     file.".config/emacs" = {
       source = ../../dotfiles/emacs;
