@@ -43,6 +43,7 @@ in
     file = mapAttrs (_: v: { recursive = true; } // v) {
       ".face".source = flake.src + /misc/icon.png;
       ".config".source = flake.src + /dotfiles/config;
+      ".local".source = flake.src + /dotfiles/local;
       ".ssh".source = flake.src + /dotfiles/ssh;
       ".librewolf".source = flake.src + /dotfiles/librewolf;
       ".librewolf/native-messaging-hosts/passff.json".source =
