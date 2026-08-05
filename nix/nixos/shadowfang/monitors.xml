@@ -27,19 +27,79 @@
     <logicalmonitor>
       <x>0</x>
       <y>0</y>
-      <scale>1.3333333730697632</scale>
+      <scale>1</scale>
+      <monitor>
+        <monitorspec>
+          <connector>DP-1</connector>
+          <vendor>MRG</vendor>
+          <product>XREAL One</product>
+          <serial>0x00000000</serial>
+        </monitorspec>
+        <mode>
+          <width>1920</width>
+          <height>1080</height>
+          <rate>60.000</rate>
+        </mode>
+      </monitor>
+    </logicalmonitor>
+    <logicalmonitor>
+      <x>96</x>
+      <y>1080</y>
+      <scale>1.6666666269302368</scale>
       <primary>yes</primary>
       <monitor>
         <monitorspec>
-          <connector>None-1</connector>
-          <vendor>unknown</vendor>
-          <product>unknown</product>
-          <serial>unknown</serial>
+          <connector>eDP-1</connector>
+          <vendor>BOE</vendor>
+          <product>NE135A1M-NY1</product>
+          <serial>0x00000000</serial>
         </monitorspec>
         <mode>
-          <width>2256</width>
-          <height>1504</height>
+          <width>2880</width>
+          <height>1920</height>
+          <rate>60.001</rate>
+          <ratemode>variable</ratemode>
+        </mode>
+      </monitor>
+    </logicalmonitor>
+  </configuration>
+  <configuration>
+    <layoutmode>logical</layoutmode>
+    <logicalmonitor>
+      <x>0</x>
+      <y>0</y>
+      <scale>1</scale>
+      <monitor>
+        <monitorspec>
+          <connector>DP-4</connector>
+          <vendor>MRG</vendor>
+          <product>XREAL One</product>
+          <serial>0x00000000</serial>
+        </monitorspec>
+        <mode>
+          <width>1920</width>
+          <height>1080</height>
           <rate>60.000</rate>
+        </mode>
+      </monitor>
+    </logicalmonitor>
+    <logicalmonitor>
+      <x>96</x>
+      <y>1080</y>
+      <scale>1.6666666269302368</scale>
+      <primary>yes</primary>
+      <monitor>
+        <monitorspec>
+          <connector>eDP-1</connector>
+          <vendor>BOE</vendor>
+          <product>NE135A1M-NY1</product>
+          <serial>0x00000000</serial>
+        </monitorspec>
+        <mode>
+          <width>2880</width>
+          <height>1920</height>
+          <rate>60.001</rate>
+          <ratemode>variable</ratemode>
         </mode>
       </monitor>
     </logicalmonitor>
