@@ -86,6 +86,11 @@ in
             defaultBranch = "master";
             templateDir = "${flake.src + /dotfiles/git-template}";
           };
+          core.untrackedCache = true;
+          fetch = {
+            parallel = 0;
+            writeCommitGraph = true;
+          };
           remote.pushDefault = "origin";
           checkout.workers = 0;
           commit.verbose = true;
