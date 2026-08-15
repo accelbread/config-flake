@@ -63,6 +63,11 @@ in
         source = flake.src + /dotfiles/flatpak_overrides;
         force = true;
       };
+      ".config/pipewire/pipewire.conf.d/99-input-denoising.conf".source =
+        pkgs.replaceVarsWith {
+          src = ./files/99-input-denoising.conf;
+          replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
+        };
       ".config/celluloid/scripts" = {
         source =
           "${pkgs.buildEnv {
