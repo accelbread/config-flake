@@ -2067,6 +2067,16 @@ Returns the tree-sitter anchor for using the generated function."
     (goto-char prev-point)
     (set-window-start nil prev-window-start)))
 
+(defun dupe-file-buffer ()
+  "Edit current file, in a separate buffer in another window."
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Current buffer is not visiting a file"))
+  (let ((file buffer-file-name))
+    (cl-letf (((symbol-function #'get-file-buffer) #'ignore)
+              ((symbol-function #'find-buffer-visiting) #'ignore))
+      (find-file-other-window file))))
+
 (defun buffer-stats ()
   "Message info about buffer/point/region size/position/etc."
   (interactive)
