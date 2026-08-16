@@ -1,3 +1,5 @@
+; Copyright (C) Archit Gupta <archit@accelbread.com>
+; SPDX-License-Identifier: AGPL-3.0-or-later
 (use-modules (ice-9 rdelim)
              (ice-9 regex)
              (ice-9 hash-table))

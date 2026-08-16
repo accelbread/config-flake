@@ -1,5 +1,8 @@
 ;;; adwaita-theme.el --- Custom theme -*- lexical-binding: t; -*-
 
+;; Copyright (C) Archit Gupta <archit@accelbread.com>
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 ;;; Commentary:
 
 ;; Theme based off of Adwaita colors

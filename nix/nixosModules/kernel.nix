@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 { pkgs, lib, config, flake, ... }:
 let
   use-ccache = false;
@@ -83,7 +85,9 @@ in
     }));
     kernelPatches = map
       (p: { name = baseNameOf p; patch = builtins.path { path = p; }; })
-      (lib.filesystem.listFilesRecursive (flake.src + /kernel-patches)) ++
+      (builtins.filter
+        (p: builtins.any (e: lib.hasSuffix e p) [ ".patch" ".mbx" ])
+        (lib.filesystem.listFilesRecursive (flake.src + /kernel-patches))) ++
     lib.mapAttrsToList
       (k: v: { name = k; patch = null; structuredExtraConfig = v; })
       (with lib.kernel; {

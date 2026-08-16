@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 { lib, ... }: lib.fix (self: {
   default = self.shell;
 } // lib.mapAttrs (n: v: { path = ./${n}; description = v; }) {

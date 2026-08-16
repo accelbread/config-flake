@@ -1,0 +1,7 @@
+version = 1
+
+# Defaults for files without more specific metadata
+[[annotations]]
+path = "**"
+SPDX-License-Identifier = "FSFAP"
+SPDX-FileCopyrightText = "Archit Gupta <archit@accelbread.com>"

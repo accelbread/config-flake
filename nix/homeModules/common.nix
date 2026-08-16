@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 { pkgs, lib, inputs, config, flake, ... }:
 let
   inherit (lib) mkOption types;

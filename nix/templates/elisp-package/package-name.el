@@ -1,6 +1,7 @@
 ;;; package-name.el --- Elisp package template -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022 Archit Gupta
+;; Copyright (C) Archit Gupta <archit@accelbread.com>
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Version: 0.0.1
 ;; Author: Archit Gupta <archit@accelbread.com>

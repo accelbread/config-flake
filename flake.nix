@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
@@ -40,7 +42,10 @@
         inputs.emacs-overlay.overlays.package
         inputs.self.overlays.overrides
       ];
-      checks.statix = pkgs: "${pkgs.statix}/bin/statix check";
+      checks = pkgs: {
+        statix = "${pkgs.statix}/bin/statix check";
+        reuse = "${pkgs.reuse}/bin/reuse lint";
+      };
       legacyPackages = pkgs: pkgs;
       formatters = pkgs: {
         "*.js" = "${pkgs.prettier}/bin/prettier --write";

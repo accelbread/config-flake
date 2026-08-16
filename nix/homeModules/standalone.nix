@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 { config, pkgs, lib, inputs, ... }:
 let
   inherit (builtins) mapAttrs;

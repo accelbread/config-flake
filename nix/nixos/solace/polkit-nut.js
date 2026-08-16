@@ -1,3 +1,5 @@
+// Copyright (C) Archit Gupta <archit@accelbread.com>
+// SPDX-License-Identifier: AGPL-3.0-or-later
 polkit.addRule(function (action, subject) {
   if (subject.user == "nut") {
     if (action.id.startsWith("org.freedesktop.login1.power-off")) {

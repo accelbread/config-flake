@@ -1,3 +1,5 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
 final: prev: {
   ccacheWrapper = prev.ccacheWrapper.override {
     extraConfig = ''
@@ -35,9 +37,11 @@ final: prev: {
     rm -r $out/share/fonts
   '';
 } // builtins.mapAttrs
-  (p: _: prev.${p}.overrideAttrs (old: {
+  (pkg: _: prev.${pkg}.overrideAttrs (old: {
     patches = old.patches or [ ] ++
       (map (p: builtins.path { path = p; })
-        (final.lib.filesystem.listFilesRecursive (./patches + "/${p}")));
+        (builtins.filter
+          (p: builtins.any (e: final.lib.hasSuffix e p) [ ".patch" ".mbx" ])
+          (final.lib.filesystem.listFilesRecursive (./patches + "/${pkg}"))));
   }))
   (builtins.readDir ./patches)
