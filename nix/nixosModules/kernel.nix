@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, flake, ... }:
 let
   use-ccache = false;
   stdenv = llvmStdenv pkgs.llvmPackages;
@@ -83,7 +83,7 @@ in
     }));
     kernelPatches = map
       (p: { name = baseNameOf p; patch = builtins.path { path = p; }; })
-      (lib.filesystem.listFilesRecursive ./kernel-patches) ++
+      (lib.filesystem.listFilesRecursive (flake.src + /kernel-patches)) ++
     lib.mapAttrsToList
       (k: v: { name = k; patch = null; structuredExtraConfig = v; })
       (with lib.kernel; {
