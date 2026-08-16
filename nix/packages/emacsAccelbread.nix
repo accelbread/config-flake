@@ -26,6 +26,8 @@
 , noto-fonts-monochrome-emoji
 , runCommand
 , makeBinaryWrapper
+, fetchurl
+, jing-trang
 }:
 let
   inherit (lib) pipe attrVals;
@@ -63,6 +65,24 @@ let
     ];
   };
 
+  svgDtd = fetchurl {
+    url = "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11-flat-20110816.dtd";
+    hash = "sha256-fCImbWVlWn01np55oQfRVuZLKah0kTE74gkr1myrO5s=";
+  };
+
+  svgSchema = runCommand "svg-xml-schema" { } ''
+    mkdir $out
+    cat << EOF > $out/schemas.xml
+    <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+      <namespace ns="http://www.w3.org/2000/svg" typeId="SVG" />
+      <uri pattern="*.svg" typeId="SVG"/>
+      <documentElement localName="svg" typeId="SVG"/>
+      <typeId id="SVG" uri="svg.rnc"/>
+    </locatingRules>
+    EOF
+    ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
+  '';
+
   default-init = writeText "default.el" ''
     (setq magit-git-executable "${git}/bin/git"
           flymake-vale-program "${vale}/bin/vale"
@@ -77,6 +97,8 @@ let
           rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer"
           nael-eglot-contact '("${lean4}/bin/lake" "serve")
           tinymist-program "${tinymist}/bin/tinymist")
+    (with-eval-after-load 'rng-loc
+      (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
 
   baseEmacs = emacs30-pgtk;
