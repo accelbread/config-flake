@@ -44,6 +44,7 @@ let
     inherit (baseConfig) pname version depsBuildBuild nativeBuildInputs
       makeFlags preUnpack src patches installPhase enableParallelBuilding;
     inherit (base-kernel) postPatch;
+    __contentAddressed = true;
     buildPhase = ''
       export buildRoot="''${buildRoot:-build}"
       mkdir -p "$buildRoot"
