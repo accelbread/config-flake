@@ -187,6 +187,9 @@ in
       HandleLidSwitch = "hibernate";
       KillUserProcesses = true;
     };
+    journald.extraConfig = ''
+      MaxLevelStore=notice
+    '';
     usbguard = {
       enable = true;
       IPCAllowedGroups = [ "wheel" ];
