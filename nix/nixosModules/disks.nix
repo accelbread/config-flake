@@ -1,16 +1,16 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, options, pkgs, lib, hostname, ... }:
+{ config, pkgs, lib, hostname, ... }:
 let
   inherit (builtins) match mapAttrs listToAttrs head;
-  cfg = config.sysconfig.disks;
+  cfg = config.ab.disks;
   partHasP = disk: match "/dev/sd." disk == null;
   getPartPrefix = disk: disk + lib.optionalString (partHasP disk) "p";
   getPart = part: disk: getPartPrefix disk + toString part;
   eachDevice = f: lib.zipListsWith f (lib.range 1 100) cfg.devices;
 in
 {
-  options.sysconfig.disks = with lib; {
+  options.ab.disks = with lib; {
     devices = mkOption {
       type = types.listOf types.str;
       description = "List of devices to use for standard disk layout.";

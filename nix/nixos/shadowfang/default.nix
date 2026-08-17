@@ -4,7 +4,7 @@
   modules = [
     ./configuration.nix
     {
-      sysconfig.disks = {
+      ab.disks = {
         devices = [ "/dev/nvme0n1" ];
         size = "3500GiB";
         swap = "64g";

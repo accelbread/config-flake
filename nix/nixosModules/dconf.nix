@@ -5,14 +5,32 @@ let
   inherit (lib) mkOption types;
 in
 {
-  options.sysconfig.dconf = mkOption {
-    type = types.lazyAttrsOf types.attrs;
-    default = { };
-    description = "Global dconf configuration.";
+  options.ab.dconf = {
+    all = mkOption {
+      type = types.lazyAttrsOf types.attrs;
+      default = { };
+      description = "Global dconf configuration.";
+    };
+    user = mkOption {
+      type = types.lazyAttrsOf types.attrs;
+      default = { };
+      description = "User dconf configuration.";
+    };
+    gdm = mkOption {
+      type = types.lazyAttrsOf types.attrs;
+      default = { };
+      description = "GDM dconf configuration.";
+    };
   };
 
   config.programs.dconf.profiles = {
-    user.databases = [{ settings = config.sysconfig.dconf; }];
-    gdm.databases = [{ settings = config.sysconfig.dconf; }];
+    user.databases = [
+      { settings = config.ab.dconf.all; }
+      { settings = config.ab.dconf.user; }
+    ];
+    gdm.databases = [
+      { settings = config.ab.dconf.all; }
+      { settings = config.ab.dconf.gdm; }
+    ];
   };
 }

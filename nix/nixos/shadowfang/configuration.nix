@@ -42,7 +42,7 @@
 
   powerManagement.powertop.enable = true;
 
-  sysconfig.monitors = ./monitors.xml;
+  environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 
   home-manager.sharedModules = [ ./home.nix ];
 
@@ -63,7 +63,7 @@
     ];
   };
 
-  sysconfig.dconf = with lib.gvariant; {
+  ab.dconf.all = with lib.gvariant; {
     "org/gnome/desktop/peripherals/touchpad" = {
       speed = 0.4;
       tap-to-click = true;

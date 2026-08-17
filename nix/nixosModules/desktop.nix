@@ -25,7 +25,6 @@ in
     inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.syncthing
     inputs.self.nixosModules.dconf
-    inputs.self.nixosModules.monitors
   ];
 
   # Allow steam package for steam-hardware udev rules
@@ -202,10 +201,6 @@ in
       enable = true;
       unixSocket = false;
     };
-    dconf.profiles.gdm.databases = [{
-      settings."org/gnome/login-screen".logo =
-        "${flake.src + /misc/boot_logo.svg}";
-    }];
   };
 
   home-manager = {
@@ -259,35 +254,39 @@ in
     '';
   };
 
-  sysconfig.dconf = with lib.gvariant; {
-    "org/gnome/desktop/interface" = {
-      clock-format = "12h";
-      clock-show-weekday = true;
-      color-scheme = "prefer-dark";
-      gtk-theme = "adw-gtk3-dark";
-      locate-pointer = true;
-      accent-color = "purple";
-      icon-theme = "Adwaita-Purple";
-    };
-    "org/gnome/desktop/media-handling" = {
-      automount = false;
-      autorun-never = true;
-    };
-    "org/gnome/desktop/peripherals/mouse" = {
-      accel-profile = "flat";
-    };
-    "org/gnome/desktop/peripherals/touchpad" = {
-      natural-scroll = true;
-    };
-    "org/gnome/desktop/session" = {
-      idle-delay = mkUint32 180;
-    };
-    "org/gnome/settings-daemon/plugins/color" = {
-      night-light-enabled = true;
-      night-light-temperature = mkUint32 4226;
-      night-light-schedule-automatic = false;
-      night-light-schedule-from = 20.0;
-      night-light-schedule-to = 8.0;
+  ab.dconf = with lib.gvariant; {
+    gdm."org/gnome/login-screen".logo =
+      "${flake.src + /misc/boot_logo.svg}";
+    all = {
+      "org/gnome/desktop/interface" = {
+        clock-format = "12h";
+        clock-show-weekday = true;
+        color-scheme = "prefer-dark";
+        gtk-theme = "adw-gtk3-dark";
+        locate-pointer = true;
+        accent-color = "purple";
+        icon-theme = "Adwaita-Purple";
+      };
+      "org/gnome/desktop/media-handling" = {
+        automount = false;
+        autorun-never = true;
+      };
+      "org/gnome/desktop/peripherals/mouse" = {
+        accel-profile = "flat";
+      };
+      "org/gnome/desktop/peripherals/touchpad" = {
+        natural-scroll = true;
+      };
+      "org/gnome/desktop/session" = {
+        idle-delay = mkUint32 180;
+      };
+      "org/gnome/settings-daemon/plugins/color" = {
+        night-light-enabled = true;
+        night-light-temperature = mkUint32 4226;
+        night-light-schedule-automatic = false;
+        night-light-schedule-from = 20.0;
+        night-light-schedule-to = 8.0;
+      };
     };
   };
 

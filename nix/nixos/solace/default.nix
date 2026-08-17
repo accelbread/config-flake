@@ -5,7 +5,7 @@
     ./configuration.nix
     ./mqtt-broker.nix
     {
-      sysconfig.disks = {
+      ab.disks = {
         devices = [ "/dev/nvme0n1" "/dev/nvme1n1" ];
         size = "900GiB";
         swap = "64g";

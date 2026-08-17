@@ -37,7 +37,7 @@
 
   systemd.sleep.settings.Sleep.AllowSuspend = false;
 
-  sysconfig.monitors = ./monitors.xml;
+  environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 
   services = {
     logind.settings.Login.IdleAction = "lock";
@@ -53,7 +53,7 @@
     graphics.enable32Bit = false;
   };
 
-  sysconfig.dconf = {
+  ab.dconf.all = {
     "org/gnome/desktop/peripherals/touchpad" = { speed = 0.6; };
     "org/gnome/settings-daemon/plugins/power" = {
       power-button-action = "interactive";
