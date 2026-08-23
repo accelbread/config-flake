@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 { lib
 , writeText
-, emacs30-pgtk
+, emacs31-pgtk
 , emacsPackagesFor
 , git
 , vale
@@ -103,7 +103,7 @@ let
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
 
-  baseEmacs = emacs30-pgtk;
+  baseEmacs = emacs31-pgtk;
 
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 
