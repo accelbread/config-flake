@@ -1274,37 +1274,8 @@
 
 ;;; Tree-sitter
 
-(dolist (item '((zig-mode . zig-ts-mode)
-                (rust-mode . rust-ts-mode)
-                (python-mode . python-ts-mode)
-                (js-mode . js-ts-mode)
-                (js-json-mode . json-ts-mode)
-                (json-mode . json-ts-mode)
-                (jsonc-mode . json-ts-mode)
-                (html-mode . html-ts-mode)
-                (css-mode . css-ts-mode)
-                (toml-mode . toml-ts-mode)
-                (java-mode . java-ts-mode)
-                (ruby-mode . ruby-ts-mode)))
-  (add-to-list 'major-mode-remap-alist item))
-
-(add-to-list 'auto-mode-alist
-             `(,(rx (or (: ?/ (? ?.) (or (: (any "Cc") "ontainer")
-                                         (: (any "Dd") "ocker"))
-                           "file" (? ?. (* (not ?/))))
-                        (: ?. (or (: (any "Cc") "ontainer")
-                                  (: (any "Dd") "ocker"))
-                           "file"))
-                    eos)
-               . dockerfile-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx (or ".zig" ".zon") eos) . zig-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".rs" eos) . rust-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".tsx" eos) . tsx-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".jsx" eos) . js-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".lua" eos) . lua-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".go" eos) . go-ts-mode))
-(add-to-list 'auto-mode-alist `(,(rx "go.mod" eos) . go-mod-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".php" eos) . php-ts-mode))
+(setopt treesit-auto-install-grammar 'never
+        treesit-enabled-modes t)
 
 (defun enable-font-lock-clear-display ()
   "Add display to font-lock's managed properties."
@@ -1791,11 +1762,6 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; C/C++
-
-(dolist (item '((c-mode . c-ts-mode)
-                (c++-mode . c++-ts-mode)
-                (cmake-mode . cmake-ts-mode)))
-  (add-to-list 'major-mode-remap-alist item))
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
