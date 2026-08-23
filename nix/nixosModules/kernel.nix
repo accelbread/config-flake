@@ -4,7 +4,7 @@
 let
   use-ccache = false;
   stdenv = llvmStdenv pkgs.llvmPackages;
-  base-kernel = pkgs.linux_7_1;
+  base-kernel = pkgs.linux_7_2;
 
   extraMakeFlags = [ "INSTALL_MOD_STRIP=1" ];
 
@@ -235,7 +235,7 @@ in
           RCU_EXPERT = yes;
           RCU_LAZY = yes;
           RCU_NOCB_CPU = yes;
-          READ_ONLY_THP_FOR_FS = yes;
+          READ_ONLY_THP_FOR_FS = onStable yes;
           SCHED_AUTOGROUP = yes;
           TCP_CONG_ADVANCED = yes;
           TCP_CONG_BBR = yes;
@@ -462,6 +462,7 @@ in
           KEXEC = no;
           KEXEC_FILE = no;
           KFENCE = yes;
+          KMALLOC_PARTITION_CACHES = onLatest yes;
           KSTACK_ERASE = yes;
           LDISC_AUTOLOAD = no;
           LEGACY_PTYS = no;
@@ -488,7 +489,7 @@ in
           RANDOMIZE_BASE = yes;
           RANDOMIZE_KSTACK_OFFSET_DEFAULT = yes;
           RANDOMIZE_MEMORY = yes;
-          RANDOM_KMALLOC_CACHES = yes;
+          RANDOM_KMALLOC_CACHES = onStable yes;
           RESET_ATTACK_MITIGATION = yes;
           SCHED_STACK_END_CHECK = yes;
           SECURITY_DMESG_RESTRICT = yes;

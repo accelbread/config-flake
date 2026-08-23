@@ -1,11 +1,9 @@
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 1/14] kbuild: generate module BTF based on
- vmlinux.unstripped
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:05 +0200
-Message-Id: <20260505-module-hashes-v5-1-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:05 +0200
+Subject: [PATCH 01/14] kbuild: generate module BTF based on vmlinux.unstripped
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The upcoming module hashes functionality will build the modules in
@@ -17,14 +15,14 @@ sufficient for BTF generation.
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 Reviewed-by: Nicolas Schier <nsc@kernel.org>
 ---
- scripts/Makefile.modfinal | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ scripts/Makefile.modfinal | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index adcbcde16a07..b09040ccddd2 100644
+index 01a37ec872b9..f6d588d9829f 100644
 --- a/scripts/Makefile.modfinal
 +++ b/scripts/Makefile.modfinal
-@@ -38,12 +38,14 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+@@ -38,16 +38,18 @@ quiet_cmd_ld_ko_o = LD [M]  $@
  		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
  		-T $(objtree)/scripts/module.lds -o $@ $(filter %.o, $^)
  
@@ -41,30 +39,20 @@ index adcbcde16a07..b09040ccddd2 100644
 +		$(CONFIG_SHELL) $(srctree)/scripts/gen-btf.sh --btf_base $(objtree)/$(btf-vmlinux) $@; \
  	fi;
  
- # Same as newer-prereqs, but allows to exclude specified extra dependencies
-@@ -55,8 +57,8 @@ if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
- 	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
- 
  # Re-generate module BTFs if either module's .ko or vmlinux changed
 -%.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/vmlinux) FORCE
--	+$(call if_changed_except,ld_ko_o,$(objtree)/vmlinux)
 +%.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/$(btf-vmlinux)) FORCE
-+	+$(call if_changed_except,ld_ko_o,$(objtree)/$(btf-vmlinux))
+ 	+$(call if_changed,ld_ko_o)
  ifdef CONFIG_DEBUG_INFO_BTF_MODULES
  	+$(if $(newer-prereqs),$(call cmd,btf_ko))
- endif
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 2/14] lockdown: Make the relationship to MODULE_SIG a
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:06 +0200
+Subject: [PATCH 02/14] lockdown: Make the relationship to MODULE_SIG a
  dependency
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:06 +0200
-Message-Id: <20260505-module-hashes-v5-2-e174a5a49fce@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The new hash-based module integrity checking will also be able to
@@ -93,16 +81,12 @@ index e84ddf484010..155959205b8e 100644
  	  Build support for an LSM that enforces a coarse kernel lockdown
  	  behaviour.
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 3/14] kbuild: rename the strip_relocs command
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:07 +0200
-Message-Id: <20260505-module-hashes-v5-3-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:07 +0200
+Subject: [PATCH 03/14] kbuild: rename the strip_relocs command
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 This command is doing more than just stripping relocations.
@@ -138,16 +122,12 @@ index fcae1e432d9a..6cc661e5292b 100644
  # modules.builtin.modinfo
  # ---------------------------------------------------------------------------
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 4/14] module: Drop pointless debugging message
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:08 +0200
-Message-Id: <20260505-module-hashes-v5-4-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:08 +0200
+Subject: [PATCH 04/14] module: Drop pointless debugging message
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 This is the only instance of pr_devel() in the whole module subsystem
@@ -174,16 +154,12 @@ index 590ba29c85ab..4a5e4eef250d 100644
  		return -EBADMSG;
  
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 5/14] module: Make mod_verify_sig() static
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:09 +0200
-Message-Id: <20260505-module-hashes-v5-5-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:09 +0200
+Subject: [PATCH 05/14] module: Make mod_verify_sig() static
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 It is not used outside of signing.c.
@@ -223,16 +199,12 @@ index 4a5e4eef250d..69d4b1758540 100644
  	struct module_signature ms;
  	size_t sig_len, modlen = info->len;
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 6/14] module: Switch load_info::len to size_t
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:10 +0200
-Message-Id: <20260505-module-hashes-v5-6-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:10 +0200
+Subject: [PATCH 06/14] module: Switch load_info::len to size_t
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Switching the types will make some later changes cleaner.
@@ -276,17 +248,13 @@ index 46dd8d25a605..17a352198016 100644
  	}
  	if (memcmp(info->hdr->e_ident, ELFMAG, SELFMAG) != 0) {
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 7/14] module: Make module authentication usable without
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:11 +0200
+Subject: [PATCH 07/14] module: Make module authentication usable without
  MODULE_SIG
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:11 +0200
-Message-Id: <20260505-module-hashes-v5-7-e174a5a49fce@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The module authentication functionality will also be used by the
@@ -304,6 +272,7 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  kernel/module/main.c     |  8 ++++----
  kernel/module/signing.c  | 23 +----------------------
  8 files changed, 54 insertions(+), 39 deletions(-)
+ create mode 100644 kernel/module/auth.c
 
 diff --git a/crypto/algapi.c b/crypto/algapi.c
 index 37de377719ae..14252b780266 100644
@@ -373,7 +342,7 @@ index 7566815fabbe..b4760777daad 100644
  #if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
  int module_kallsyms_on_each_symbol(const char *modname,
 diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index f535181e0d98..84297da666ff 100644
+index 43b1bb01fd27..ddca9c96929b 100644
 --- a/kernel/module/Kconfig
 +++ b/kernel/module/Kconfig
 @@ -271,9 +271,12 @@ config MODULE_SIG
@@ -391,10 +360,10 @@ index f535181e0d98..84297da666ff 100644
  	  Reject unsigned modules or signed modules for which we don't have a
  	  key.  Without this, such modules will simply taint the kernel.
 diff --git a/kernel/module/Makefile b/kernel/module/Makefile
-index d9e8759a7b05..c7200e293d04 100644
+index 50ffcc413b54..11fc467d76c3 100644
 --- a/kernel/module/Makefile
 +++ b/kernel/module/Makefile
-@@ -14,6 +14,7 @@ obj-y += strict_rwx.o
+@@ -12,6 +12,7 @@ obj-y += strict_rwx.o
  obj-y += kmod.o
  obj-$(CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS) += dups.o
  obj-$(CONFIG_MODULE_DECOMPRESS) += decompress.o
@@ -514,17 +483,13 @@ index 69d4b1758540..07a786723221 100644
  		}
  	}
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 8/14] module: Move authentication logic into dedicated
- new file
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:12 +0200
-Message-Id: <20260505-module-hashes-v5-8-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:12 +0200
+Subject: [PATCH 08/14] module: Move authentication logic into dedicated new
+ file
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The module authentication functionality will also be used by the
@@ -534,10 +499,10 @@ CONFIG_MODULE_SIG is disabled, move it to a new file.
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
- kernel/module/auth.c     | 85 +++++++++++++++++++++++++++++++++++++++++++++
- kernel/module/internal.h | 14 ++++++--
- kernel/module/main.c     |  6 ++--
- kernel/module/signing.c  | 90 ++----------------------------------------------
+ kernel/module/auth.c     | 85 +++++++++++++++++++++++++++++++++++++
+ kernel/module/internal.h | 14 ++++++-
+ kernel/module/main.c     |  6 +--
+ kernel/module/signing.c  | 90 ++--------------------------------------
  4 files changed, 103 insertions(+), 92 deletions(-)
 
 diff --git a/kernel/module/auth.c b/kernel/module/auth.c
@@ -806,17 +771,13 @@ index 07a786723221..a49317e3c66f 100644
 -	return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
 -}
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 9/14] module: Move signature type check out of
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:13 +0200
+Subject: [PATCH 09/14] module: Move signature type check out of
  mod_check_sig()
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:13 +0200
-Message-Id: <20260505-module-hashes-v5-9-e174a5a49fce@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Additional signature types are about to be added.
@@ -890,17 +851,13 @@ index 632c746fd81e..ebfcdd368a2a 100644
  	if (rc)
  		return rc;
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 10/14] module: Prepare for additional module
- authentication mechanisms
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:14 +0200
-Message-Id: <20260505-module-hashes-v5-10-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:14 +0200
+Subject: [PATCH 10/14] module: Prepare for additional module authentication
+ mechanisms
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Reorganize the code to make it easier to add the new hash-based module
@@ -978,17 +935,13 @@ index d923e31a5d8e..aabe7f8e1af4 100644
  #ifdef CONFIG_MODULE_AUTH
  int module_auth_check(struct load_info *info, int flags);
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 11/14] module: update timestamp of modules.order after
- modules are built
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:15 +0200
-Message-Id: <20260505-module-hashes-v5-11-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:15 +0200
+Subject: [PATCH 11/14] module: update timestamp of modules.order after modules
+ are built
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Make sure that modules.order is always newer than the module .ko files.
@@ -1001,10 +954,10 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  1 file changed, 7 insertions(+)
 
 diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index b09040ccddd2..44a382689a5a 100644
+index f6d588d9829f..82a37cd1f4f1 100644
 --- a/scripts/Makefile.modfinal
 +++ b/scripts/Makefile.modfinal
-@@ -66,6 +66,13 @@ endif
+@@ -58,6 +58,13 @@ endif
  
  targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) .module-common.o
  
@@ -1019,16 +972,12 @@ index b09040ccddd2..44a382689a5a 100644
  # ---------------------------------------------------------------------------
  
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 12/14] module: Introduce hash-based integrity checking
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:16 +0200
-Message-Id: <20260505-module-hashes-v5-12-e174a5a49fce@weissschuh.net>
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:16 +0200
+Subject: [PATCH 12/14] module: Introduce hash-based integrity checking
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The current signature-based module integrity checking has some drawbacks
@@ -1071,22 +1020,26 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  kernel/module/Kconfig                        |  21 +-
  kernel/module/Makefile                       |   1 +
  kernel/module/auth.c                         |   6 +
- kernel/module/hashes.c                       |  95 ++++++
+ kernel/module/hashes.c                       |  95 +++++
  kernel/module/hashes_root.c                  |   6 +
  kernel/module/internal.h                     |   1 +
  scripts/.gitignore                           |   1 +
  scripts/Makefile                             |   4 +
  scripts/Makefile.modinst                     |  11 +
- scripts/Makefile.vmlinux                     |  32 +++
+ scripts/Makefile.vmlinux                     |  32 ++
  scripts/include/xalloc.h                     |  29 ++
  scripts/link-vmlinux.sh                      |   3 +-
- scripts/modules-merkle-tree.c                | 416 +++++++++++++++++++++++++++
+ scripts/modules-merkle-tree.c                | 416 +++++++++++++++++++
  security/lockdown/Kconfig                    |   2 +-
  tools/include/uapi/linux/module_signature.h  |   1 +
  21 files changed, 677 insertions(+), 6 deletions(-)
+ create mode 100644 include/linux/module_hashes.h
+ create mode 100644 kernel/module/hashes.c
+ create mode 100644 kernel/module/hashes_root.c
+ create mode 100644 scripts/modules-merkle-tree.c
 
 diff --git a/.gitignore b/.gitignore
-index 3044b9590f05..78cf799401e6 100644
+index 9875120ea7bd..bac9efc90b78 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -36,6 +36,7 @@
@@ -1114,10 +1067,10 @@ index bc1eb82211df..b15019678aae 100644
  
  1. Generate a persistent signing key.  Add the certificate for the key
 diff --git a/Makefile b/Makefile
-index e27c91ea56fc..def4a2413c43 100644
+index ddcc6dca1ece..4d249a0343e9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1650,7 +1650,9 @@ ifdef CONFIG_MODULES
+@@ -1689,7 +1689,9 @@ ifdef CONFIG_MODULES
  
  # By default, build modules as well
  
@@ -1127,7 +1080,7 @@ index e27c91ea56fc..def4a2413c43 100644
  
  # When we're building modules with modversions, we need to consider
  # the built-in objects during the descend as well, in order to
-@@ -1666,8 +1668,10 @@ endif
+@@ -1705,8 +1707,10 @@ endif
  # is an exception.
  ifdef CONFIG_DEBUG_INFO_BTF_MODULES
  KBUILD_BUILTIN := y
@@ -1138,7 +1091,7 @@ index e27c91ea56fc..def4a2413c43 100644
  
  modules: modules_prepare
  
-@@ -2068,7 +2072,7 @@ modules.order: $(build-dir)
+@@ -2114,7 +2118,7 @@ modules.order: $(build-dir)
  # KBUILD_MODPOST_NOFINAL can be set to skip the final link of modules.
  # This is solely useful to speed up test compiles.
  modules: modpost
@@ -1147,16 +1100,16 @@ index e27c91ea56fc..def4a2413c43 100644
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
  endif
  
-@@ -2162,6 +2166,7 @@ clean: $(clean-dirs)
+@@ -2208,6 +2212,7 @@ clean: $(clean-dirs)
  		-o -name '*.c.[012]*.*' \
  		-o -name '*.ll' \
  		-o -name '*.gcno' \
 +		-o -name '*.merkle' \
+ 		-o -name '*.long-type-*.txt' \
  		\) -type f -print \
  		-o -name '.tmp_*' -print \
- 		| xargs rm -rf
 diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 60c8c22fd3e4..661881e5ef96 100644
+index 5659f4b5a125..e157b6e92307 100644
 --- a/include/asm-generic/vmlinux.lds.h
 +++ b/include/asm-generic/vmlinux.lds.h
 @@ -508,6 +508,8 @@
@@ -1232,7 +1185,7 @@ index 634c9f1c8fc2..78e206996eed 100644
  
  /*
 diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index 84297da666ff..acbbda58e7c8 100644
+index ddca9c96929b..99482fac0701 100644
 --- a/kernel/module/Kconfig
 +++ b/kernel/module/Kconfig
 @@ -272,7 +272,7 @@ config MODULE_SIG
@@ -1278,10 +1231,10 @@ index 84297da666ff..acbbda58e7c8 100644
  	bool "Allow loading of modules with missing namespace imports"
  	help
 diff --git a/kernel/module/Makefile b/kernel/module/Makefile
-index c7200e293d04..da9420f140e9 100644
+index 11fc467d76c3..fb9ffc802633 100644
 --- a/kernel/module/Makefile
 +++ b/kernel/module/Makefile
-@@ -26,3 +26,4 @@ obj-$(CONFIG_KGDB_KDB) += kdb.o
+@@ -24,3 +24,4 @@ obj-$(CONFIG_KGDB_KDB) += kdb.o
  obj-$(CONFIG_MODVERSIONS) += version.o
  obj-$(CONFIG_MODULE_UNLOAD_TAINT_TRACKING) += tracking.o
  obj-$(CONFIG_MODULE_STATS) += stats.o
@@ -1448,10 +1401,10 @@ index 4215c2208f7e..8dad9b0d3b2d 100644
  /rustdoc_test_builder
  /rustdoc_test_gen
 diff --git a/scripts/Makefile b/scripts/Makefile
-index c983e09be78c..b6291595d9e8 100644
+index 3434a82a119f..a84c8673268a 100644
 --- a/scripts/Makefile
 +++ b/scripts/Makefile
-@@ -11,6 +11,7 @@ hostprogs-always-y					+= sign-file
+@@ -11,6 +11,7 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)		+= sign-file
  hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
@@ -1606,7 +1559,7 @@ index f99e196abeea..0edec5ee34dc 100755
  }
  
  # Create ${2}.o file with all symbols from the ${1} object file
-@@ -183,6 +183,7 @@ fi
+@@ -183,6 +183,7 @@ cleanup()
  btf_vmlinux_bin_o=
  btfids_vmlinux=
  kallsymso=
@@ -2062,17 +2015,13 @@ index 634c9f1c8fc2..78e206996eed 100644
  
  /*
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 13/14] kbuild: move handling of module stripping to
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:17 +0200
+Subject: [PATCH 13/14] kbuild: move handling of module stripping to
  Makefile.lib
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:17 +0200
-Message-Id: <20260505-module-hashes-v5-13-e174a5a49fce@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 To allow CONFIG_MODULE_HASHES in combination with INSTALL_MOD_STRIP,
@@ -2087,10 +2036,10 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  2 files changed, 37 insertions(+), 32 deletions(-)
 
 diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 0718e39cedda..bb713a1a11be 100644
+index 0a4fdd8bd975..1b74238cdb7f 100644
 --- a/scripts/Makefile.lib
 +++ b/scripts/Makefile.lib
-@@ -484,6 +484,38 @@ define sed-offsets
+@@ -498,6 +498,38 @@ define sed-offsets
  	s:->::; p;}'
  endef
  
@@ -2204,17 +2153,13 @@ index 68708a039a62..b95f613e23c8 100644
  
  ifdef CONFIG_MODULES
 
--- 
-2.54.0
-
-From git@z Thu Jan  1 00:00:00 1970
-Subject: [PATCH v5 14/14] kbuild: make CONFIG_MODULE_HASHES compatible with
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 5 May 2026 11:05:18 +0200
+Subject: [PATCH 14/14] kbuild: make CONFIG_MODULE_HASHES compatible with
  module stripping
-From: Thomas Weißschuh <linux@weissschuh.net>
-Date: Tue, 05 May 2026 11:05:18 +0200
-Message-Id: <20260505-module-hashes-v5-14-e174a5a49fce@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 CONFIG_MODULE_HASHES needs to process the modules at build time in the
@@ -2237,7 +2182,7 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  5 files changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/.gitignore b/.gitignore
-index 78cf799401e6..6ce10623c5a3 100644
+index bac9efc90b78..bb363ec15624 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -30,6 +30,7 @@
@@ -2249,7 +2194,7 @@ index 78cf799401e6..6ce10623c5a3 100644
  *.ll
  *.lst
 diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index acbbda58e7c8..48be498a4452 100644
+index 99482fac0701..a5b3807e2304 100644
 --- a/kernel/module/Kconfig
 +++ b/kernel/module/Kconfig
 @@ -423,6 +423,11 @@ config MODULE_HASHES
@@ -2265,10 +2210,10 @@ index acbbda58e7c8..48be498a4452 100644
  	bool "Allow loading of modules with missing namespace imports"
  	help
 diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 44a382689a5a..9924a7bb73c5 100644
+index 82a37cd1f4f1..1569cf00bcf9 100644
 --- a/scripts/Makefile.modfinal
 +++ b/scripts/Makefile.modfinal
-@@ -64,7 +64,16 @@ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+@@ -56,7 +56,16 @@ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
  endif
  	+$(call cmd,check_tracepoint)
  
@@ -2313,7 +2258,3 @@ index a0332c06bde1..a2d170241a2f 100644
  
  targets += .tmp_module_hashes.c
  .tmp_module_hashes.c: $(objtree)/scripts/modules-merkle-tree modules.order FORCE
-
--- 
-2.54.0
-
