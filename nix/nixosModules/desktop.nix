@@ -129,16 +129,23 @@ in
       wantedBy = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
     };
-    tmpfiles.settings.preservation = {
-      "/var/lib/colord".d =
-        { user = "colord"; group = "colord"; mode = "0755"; };
-      "/home/archit".d =
-        { user = "archit"; group = "users"; mode = "0755"; };
-    } // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
-      "/home/archit/.ssh"
-      "/home/archit/.librewolf"
-      "/home/archit/.thunderbird"
-    ]);
+    tmpfiles.settings = {
+      preservation = {
+        "/var/lib/colord".d =
+          { user = "colord"; group = "colord"; mode = "0755"; };
+        "/home/archit".d =
+          { user = "archit"; group = "users"; mode = "0755"; };
+      } // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
+        "/home/archit/.ssh"
+        "/home/archit/.librewolf"
+        "/home/archit/.thunderbird"
+      ]);
+      playground."/home/archit/Projects/Playground".v = {
+        mode = "0700";
+        user = "archit";
+        group = config.users.users.archit.group;
+      };
+    };
     # Remove when bluez removes AF_ALG use
     services.bluetooth-generate-irk = {
       description = "Generate missing Bluetooth IRKs";
@@ -335,7 +342,6 @@ in
       ];
       users.archit.directories = map (d: { directory = d; mode = "0700"; }) [
         "Downloads"
-        "playground"
         ".cache/fractal"
         ".local/share/flatpak"
       ];
