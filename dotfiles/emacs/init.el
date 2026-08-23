@@ -138,7 +138,7 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
 (setopt package-selected-packages
-        '( meow gcmh rainbow-delimiters jinx vundo envrc
+        '( meow gcmh rainbow-delimiters jinx vundo envrc trust-manager
            corfu cape kind-icon vertico orderless marginalia consult yasnippet
            magit magit-todos hl-todo virtual-comment flymake-vale
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
@@ -181,9 +181,43 @@
 (add-hook 'after-change-major-mode-hook #'autosave-git-buffer)
 
 
-;;; Trust personal projects
+;;; Handle trusting projects
 
-(setopt trusted-content '("~/Projects/"))
+(setopt trusted-content `(,user-emacs-directory)
+        trust-manager-secure-additional-features nil)
+
+(let ((remove-customize-save-variable
+       (lambda (orig-fun &rest args)
+         "Use set instead of customize-save-variable"
+         (cl-letf (((symbol-function #'customize-save-variable)
+                    (symbol-function #'set)))
+           (apply orig-fun args)))))
+  (dolist (fn '(trust-manager-set-file-trust
+                trust-manager--check-file
+                trust-manager--forget-project))
+    (advice-add fn :around remove-customize-save-variable
+                '((name . remove-customize-save-variable)))))
+
+(trust-manager-mode)
+
+(defun save-var-to-lisp-data-file (symbol new-value operation where)
+  "Saves NEW-VALUE to Emacs config dir file named SYMBOL."
+  (when (and (eq operation 'set) (not where))
+    (with-temp-file (file-name-concat user-emacs-directory
+                                      (symbol-name symbol))
+      (insert ";;; -*- lisp-data -*-\n")
+      (pp new-value (current-buffer)))))
+
+(when (daemonp)
+  (add-variable-watcher 'trust-manager-trust-alist
+                        #'save-var-to-lisp-data-file))
+
+(let ((filename (file-name-concat user-emacs-directory
+                                  "trust-manager-trust-alist")))
+  (when (file-exists-p filename)
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (setopt trust-manager-trust-alist (read (current-buffer))))))
 
 
 ;;; Disable use of dialog boxes
