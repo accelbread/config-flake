@@ -36,6 +36,13 @@ final: prev: {
     chmod -R u+w $out
     rm -r $out/share/fonts
   '';
+  nautilus = prev.nautilus.overrideAttrs (old: {
+    preFixup = old.preFixup or "" + ''
+      gappsWrapperArgs+=(
+        --prefix XDG_DATA_DIRS : "${final.glycin-loaders}/share"
+      )
+    '';
+  });
 } // builtins.mapAttrs
   (pkg: _: prev.${pkg}.overrideAttrs (old: {
     patches = old.patches or [ ] ++
