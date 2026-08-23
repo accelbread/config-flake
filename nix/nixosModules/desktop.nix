@@ -250,7 +250,7 @@ in
       ];
     };
     etc."nixos/flake.nix".source = pkgs.runCommandLocal "flake-symlink" { } ''
-      ln -s "/home/archit/projects/config-flake/flake.nix" $out
+      ln -s "/home/archit/Projects/config-flake/flake.nix" $out
     '';
   };
 
@@ -301,7 +301,7 @@ in
       ];
       users.archit = {
         directories = (map (d: { directory = d; mode = "0700"; }) [
-          "projects"
+          "Projects"
           ".ssh/config.d"
           ".config/emacs"
           ".librewolf/profile"

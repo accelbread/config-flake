@@ -182,7 +182,7 @@
 
 ;;; Trust personal projects
 
-(setopt trusted-content '("~/projects/"))
+(setopt trusted-content '("~/Projects/"))
 
 
 ;;; Disable use of dialog boxes
