@@ -95,7 +95,8 @@
 
 (load-face 'flyspell-incorrect)
 
-(custom-set-faces
+(custom-theme-set-faces
+ 'user
  '(vundo-highlight ((t (:inherit (minibuffer-prompt)))))
  '(jinx-misspelled ((t (:inherit (flyspell-incorrect)))))
  '(jinx-save ((t (:inherit (font-lock-builtin-face)))))
