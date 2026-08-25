@@ -336,12 +336,13 @@
 (fringe-mode 10)
 (global-whitespace-mode)
 (global-display-fill-column-indicator-mode)
+(global-visual-wrap-prefix-mode)
 (global-prettify-symbols-mode)
 (global-hl-todo-mode)
 (context-menu-mode)
+(mouse-shift-adjust-mode)
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
 
 (hide-minor-mode 'abbrev-mode)
 
@@ -1222,7 +1223,8 @@
 
 (setopt project-file-history-behavior 'relativize
         uniquify-dirname-transform #'project-uniquify-dirname-transform
-        save-some-buffers-default-predicate #'save-some-buffers-root)
+        save-some-buffers-default-predicate #'save-some-buffers-root
+        project-list-exclude '("^/nix/store/"))
 
 (defun project-nix-store (dir)
   "Return transient project if DIR is in the nix store."
@@ -1235,10 +1237,6 @@
 (with-eval-after-load 'project
   (require 'vc-git) ; project-find-file fails if vc-git is not loaded
   (add-hook 'project-find-functions #'project-nix-store 95)
-  (let ((inhibit-message t))
-    (project-forget-projects-under "/nix/store/")
-    (project-forget-zombie-projects))
-
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   (keymap-set project-prefix-map "R" #'rg-project)
@@ -1515,7 +1513,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 (setopt eldoc-documentation-strategy #'eldoc-documentation-compose
         eldoc-echo-area-prefer-doc-buffer t
-        eldoc-minor-mode-string " 📜")
+        eldoc-minor-mode-string " 📜"
+        eldoc-help-at-pt t)
 
 
 ;;; Flymake
@@ -1736,7 +1735,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Rust
 
-(setq rust-ts-mode-prettify-symbols-alist nil)
+(setq rust-ts-mode-prettify-symbols-alist nil
+      rust-ts-mode-fontify-number-suffix-as-type t)
 
 (with-eval-after-load 'eglot
   (push-default '(:rust-analyzer
