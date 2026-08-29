@@ -910,8 +910,7 @@
         eshell-ls-archive-regexp "\\`\\'"
         eshell-ls-backup-regexp "\\`\\'"
         eshell-ls-clutter-regexp "\\`\\'"
-        eshell-ls-product-regexp "\\`\\'"
-        eat-term-scrollback-size nil)
+        eshell-ls-product-regexp "\\`\\'")
 
 (with-eval-after-load 'eshell
   (eat-eshell-mode))
@@ -955,7 +954,8 @@
                                               cape-dabbrev)
               mode-line-process
               '(" " (:eval (abbreviate-file-name default-directory)))
-              completion-ignored-extensions nil)
+              completion-ignored-extensions nil
+              eat-term-scrollback-size nil)
   (abbrev-mode)
   (disable-nobreak-display)
   (buffer-disable-undo))
@@ -1172,6 +1172,11 @@
                              "38400" "57600"))))
                (if (string= speed "nil") nil (string-to-number speed)))
              (not current-prefix-arg))))
+
+
+;;; Eat
+
+(setopt eat-term-scrollback-size (* 2 1024 1024))
 
 
 ;;; Vterm
