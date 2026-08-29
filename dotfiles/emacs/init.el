@@ -1176,7 +1176,10 @@
 
 ;;; Eat
 
-(setopt eat-term-scrollback-size (* 2 1024 1024))
+(setopt eat-term-scrollback-size (* 2 1024 1024)
+        eat-very-visible-cursor-type '(t nil nil)
+        eat-very-visible-vertical-bar-cursor-type '(bar nil nil)
+        eat-very-visible-horizontal-bar-cursor-type '(hbar nil nil))
 
 
 ;;; Vterm
