@@ -356,6 +356,8 @@
 (with-eval-after-load 'hideshow
   (hide-minor-mode 'hs-minor-mode))
 
+(keymap-set key-translation-map "<Multi_key>" iso-transl-ctl-x-8-map)
+
 
 ;;; Window layout
 
