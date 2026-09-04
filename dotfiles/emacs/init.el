@@ -1271,7 +1271,10 @@
         eglot-semantic-token-types '("keyword")
         eglot-semantic-token-modifiers '("deprecated")
         eglot-autoshutdown t
-        eglot-extend-to-xref t)
+        eglot-extend-to-xref t
+        eglot-sync-connect nil
+        eglot-events-buffer-config '(:size 0 :format short))
+
 
 (push '(eglot (styles orderless)) completion-category-overrides)
 
