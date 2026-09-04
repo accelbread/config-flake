@@ -26,6 +26,7 @@
 , noto-fonts-cjk-serif
 , noto-fonts-color-emoji
 , noto-fonts-monochrome-emoji
+, hunspellDicts
 , runCommand
 , makeBinaryWrapper
 , fetchurl
@@ -148,7 +149,8 @@ let
       mkdir -p $out/bin
       for bin in ${emacs}/bin/*; do
         makeWrapper "$bin" $out/bin/$(basename "$bin") --inherit-argv0 \
-          --set FONTCONFIG_FILE ${fontConfig}
+          --set FONTCONFIG_FILE ${fontConfig} \
+          --set DICTDIR ${hunspellDicts.en_US}/share/hunspell
       done
       ln -s ${emacs}/share $out/share
     '';

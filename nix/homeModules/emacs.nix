@@ -6,7 +6,6 @@
       emacsAccelbread
       emacsAccelbread-terminfo
       emacs-eat-terminfo
-      hunspellDicts.en_US
     ];
     file.".config/emacs" = {
       source = ../../dotfiles/emacs;
