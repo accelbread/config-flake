@@ -818,9 +818,18 @@
   :doc "Custom keymap for spell checker errors."
   "TAB" #'jinx-correct)
 
+(defun my-jinx-context-menu (menu click)
+  "Add Jinx spelling corrections at CLICK to context MENU."
+  (when-let* ((last-input-event click)
+              (submenu (jinx--correct-menu)))
+    (define-key-after menu [jinx-separator] menu-bar-separator)
+    (define-key-after menu [jinx] `(menu-item "Spelling" ,submenu)))
+  menu)
+
 (with-eval-after-load 'jinx
   (hide-minor-mode 'jinx-mode)
-  (put 'jinx-overlay 'keymap my-jinx-overlay-map))
+  (put 'jinx-overlay 'keymap my-jinx-overlay-map)
+  (put 'jinx-overlay 'context-menu-functions '(my-jinx-context-menu)))
 
 (global-jinx-mode)
 
