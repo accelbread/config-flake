@@ -25,7 +25,7 @@ in
       lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     channel.enable = false;
     settings = {
-      experimental-features = "nix-command flakes ca-derivations";
+      experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
       flake-registry = "";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
@@ -189,9 +189,7 @@ in
       HandleLidSwitch = "hibernate";
       KillUserProcesses = true;
     };
-    journald.extraConfig = ''
-      MaxLevelStore=notice
-    '';
+    journald.settings.Journal.MaxLevelStore = "notice";
     usbguard = {
       enable = true;
       IPCAllowedGroups = [ "wheel" ];
