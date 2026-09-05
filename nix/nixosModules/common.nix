@@ -21,8 +21,6 @@ in
   nix = {
     package = pkgs.nixVersions.latest;
     registry = mapAttrs (_: v: { flake = v; }) inputs;
-    nixPath =
-      lib.mapAttrsToList (k: v: "${k}=${v.to.path}") config.nix.registry;
     channel.enable = false;
     settings = {
       experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
