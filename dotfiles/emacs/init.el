@@ -437,6 +437,7 @@
           (:eval (when envrc-mode
                    (pcase envrc--status
                      ('error "🚫")
+                     ('denied "🚫")
                      ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
           (server-buffer-clients "🚨")
           (:eval (when (buffer-narrowed-p) "🔎"))
@@ -1088,9 +1089,7 @@
 
 ;;; Direnv
 
-(setopt envrc-none-lighter nil
-        envrc-on-lighter ""
-        envrc-error-lighter "")
+(setopt envrc-lighter nil)
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
