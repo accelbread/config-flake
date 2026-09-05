@@ -1712,12 +1712,20 @@ Returns the tree-sitter anchor for using the generated function."
   :mode nil)
 
 (defun nix-formatter-configure ()
-  "Configure formatters for Nix files."
-  (when (zerop (process-file-shell-command
-                "nix eval .#formatter --apply 'x: assert x != {}; true'"))
-    (setq format-region-function #'indent-region
-          format-buffer-function #'nix-fmt-format-buffer)
-    (format-on-save-mode)))
+  "Configure formatters for Nix files asynchronously."
+  (let ((buffer (current-buffer)))
+    (make-process
+     :name "nix-formatter-configure" :buffer nil :noquery t
+     :command '("nix" "eval" ".#formatter" "--apply" "x: assert x != {}; true")
+     :sentinel
+     (lambda (process _)
+       (when (and (eq (process-status process) 'exit)
+                  (zerop (process-exit-status process))
+                  (buffer-live-p buffer))
+         (with-current-buffer buffer
+           (setq format-region-function #'indent-region
+                 format-buffer-function #'nix-fmt-format-buffer)
+           (format-on-save-mode)))))))
 
 (add-hook 'nix-mode-hook #'setup-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
