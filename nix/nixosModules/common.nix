@@ -41,7 +41,7 @@ in
       systemd-boot = {
         enable = !config.boot.lanzaboote.enable;
         editor = false;
-        configurationLimit = 120;
+        configurationLimit = 64;
       };
       efi.canTouchEfiVariables = true;
     };
