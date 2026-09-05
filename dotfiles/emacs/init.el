@@ -494,6 +494,17 @@
            face monochrome-emoji)))
 
 
+;;; Font lock
+
+(defun enable-font-lock-clear-display ()
+  "Add display to font-lock's managed properties."
+  (unless (memq 'display font-lock-extra-managed-props)
+    (setq-local font-lock-extra-managed-props
+                (cons 'display font-lock-extra-managed-props))))
+
+(add-hook 'font-lock-mode-hook #'enable-font-lock-clear-display)
+
+
 ;;; Display page breaks as lines
 
 (defun display-page-breaks-as-lines ()
@@ -504,14 +515,9 @@
        '(("^\f$"
           0
           (prog1 'shadow
-            (let ((line (make-overlay (match-beginning 0) (match-end 0))))
-              (overlay-put line 'display (make-string fill-column ?─))
-              (dolist (prop '(modification-hooks
-                              insert-in-front-hooks
-                              insert-behind-hooks))
-                (overlay-put line prop
-                             '((lambda (overlay &rest _)
-                                 (delete-overlay overlay)))))))
+            (with-silent-modifications
+              (put-text-property (match-beginning 0) (match-end 0)
+                                 'display (make-string fill-column ?─))))
           t)))))
 
 
@@ -1331,13 +1337,6 @@
 
 (setopt treesit-auto-install-grammar 'never
         treesit-enabled-modes t)
-
-(defun enable-font-lock-clear-display ()
-  "Add display to font-lock's managed properties."
-  (setq-local font-lock-extra-managed-props
-              (cons 'display font-lock-extra-managed-props)))
-
-(add-hook 'prog-mode-hook #'enable-font-lock-clear-display)
 
 (defun defun-ts-disp (name disp)
   "Define a function for displaying tree-sitter query as DISP.
