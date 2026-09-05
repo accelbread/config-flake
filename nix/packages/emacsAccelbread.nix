@@ -16,6 +16,8 @@
 , lean4
 , tinymist
 , openscad-unstable
+, yaml-language-server
+, tombi
 , symlinkJoin
 , vale-proselint
 , vale-write-good
@@ -99,7 +101,9 @@ let
           nixd-program "${nixd}/bin/nixd"
           rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer"
           nael-eglot-contact '("${lean4}/bin/lake" "serve")
-          tinymist-program "${tinymist}/bin/tinymist")
+          tinymist-program "${tinymist}/bin/tinymist"
+          yaml-lsp-program "${yaml-language-server}/bin/yaml-language-server"
+          tombi-program "${tombi}/bin/tombi")
     (with-eval-after-load 'rng-loc
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';

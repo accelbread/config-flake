@@ -1298,6 +1298,11 @@
   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
+(defvar yaml-lsp-program "yaml-language-server"
+  "Program to use for yaml-language-server.")
+(defvar tombi-program "tombi"
+  "Program to use for tombi.")
+
 (with-eval-after-load 'eglot
   (setq eglot-server-programs
         `(((c-ts-mode c++-ts-mode)
@@ -1326,7 +1331,9 @@
            . ("jdtls"
               :initializationOptions
               (:extendedClientCapabilities (:classFileContentsSupport t))))
-          (python-ts-mode "pylsp"))))
+          (python-ts-mode "pylsp")
+          (yaml-ts-mode ,yaml-lsp-program "--stdio")
+          (toml-ts-mode ,tombi-program "lsp"))))
 
 (with-eval-after-load 'eglot
   (require 'eglot-x)
@@ -2010,7 +2017,12 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Yaml
 
-(require 'yaml-ts-mode)
+(add-hook 'yaml-ts-mode-hook #'setup-eglot)
+
+
+;;; Toml
+
+(add-hook 'toml-ts-mode-hook #'setup-eglot)
 
 
 ;;; Sh
