@@ -20,7 +20,7 @@ in
 
   nix = {
     package = pkgs.nixVersions.latest;
-    registry = mapAttrs (_: v: { flake = v; }) inputs;
+    registry = lib.genAttrs [ "self" "nixpkgs" ] (n: { flake = inputs.${n}; });
     channel.enable = false;
     settings = {
       experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
