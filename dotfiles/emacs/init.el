@@ -1242,6 +1242,7 @@
 (setopt project-file-history-behavior 'relativize
         uniquify-dirname-transform #'project-uniquify-dirname-transform
         save-some-buffers-default-predicate #'save-some-buffers-root
+        project-vc-extra-root-markers '(".project")
         project-list-exclude '("^/nix/store/"))
 
 (defun project-nix-store (dir)
