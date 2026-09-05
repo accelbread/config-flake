@@ -144,7 +144,7 @@
            fish-completion eat meow-term vterm meow-vterm rg inheritenv
            rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
            markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
-           geiser-guile scad-mode haskell-mode toml-mode git-modes nael
+           geiser-guile scad-mode haskell-mode git-modes nael
            typst-ts-mode pdf-tools)
         package-native-compile t)
 
@@ -1821,7 +1821,7 @@ Returns the tree-sitter anchor for using the generated function."
 (add-hook 'rust-ts-mode-hook #'rust-ts-disable-flymake)
 (add-hook 'rust-ts-mode-hook #'hs-minor-mode)
 
-(add-hook 'toml-mode-hook #'cargo-minor-mode)
+(add-hook 'toml-ts-mode-hook #'cargo-minor-mode)
 
 (with-eval-after-load 'cargo
   (hide-minor-mode 'cargo-minor-mode))
