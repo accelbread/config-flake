@@ -10,4 +10,8 @@
 
 (require 'personal-config)
 
+;; Local Variables:
+;; flymake-diagnostic-functions: (elisp-flymake-checkdoc)
+;; End:
+
 (provide 'init)

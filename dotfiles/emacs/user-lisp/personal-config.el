@@ -12,6 +12,12 @@
 ;;; Code:
 
 
+;;; Error if this file is executed while byte-compiling
+
+(when (bound-and-true-p byte-compile-current-file)
+  (error "`personal-config' must not be loaded while byte-compiling"))
+
+
 ;;; Temporarily disable GC
 
 (setopt gc-cons-threshold most-positive-fixnum)
