@@ -817,7 +817,7 @@ returns nil."
         completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-in-region-function #'consult-completion-in-region
-        orderless-component-separator #'orderless-escapable-split-on-space
+        orderless-component-separator #'orderless-escapable-split
         completion-at-point-functions (list #'cape-file
                                             (cape-capf-super #'my-cape-dabbrev
                                                              #'cape-dict))
