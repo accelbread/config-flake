@@ -652,9 +652,17 @@ returns nil."
 (defvar-local meow-motion-prev-function #'meow-prev
   "Function to use for prev in motion mode.")
 
+(defalias 'meow-motion-next-command
+  (command-var 'meow-motion-next-function)
+  "Call the command stored in `meow-motion-next-function'.")
+
+(defalias 'meow-motion-prev-command
+  (command-var 'meow-motion-prev-function)
+  "Call the command stored in `meow-motion-prev-function'.")
+
 (meow-motion-define-key
- `("j" . ,(command-var 'meow-motion-next-function))
- `("k" . ,(command-var 'meow-motion-prev-function))
+ '("j" . meow-motion-next-command)
+ '("k" . meow-motion-prev-command)
  '("<escape>" . ignore))
 
 (meow-leader-define-key
