@@ -81,6 +81,17 @@
   "Return non-nil when current buffer is trusted."
   (trusted-content-p))
 
+;; This is set by Nix
+(defvar hermetic-executable-paths nil
+  "Alist mapping lsp program names to absolute paths.")
+
+(defun get-hermetic-executable (program &optional error)
+  "Get path to hermetic binary for PROGRAM.
+When no hermetic path is configured, if ERROR is nil, returns PROGRAM else
+returns nil."
+  (alist-get program hermetic-executable-paths
+             (unless error program) nil #'equal))
+
 
 ;;; Hide UI elements
 
@@ -928,7 +939,8 @@
         eshell-ls-archive-regexp "\\`\\'"
         eshell-ls-backup-regexp "\\`\\'"
         eshell-ls-clutter-regexp "\\`\\'"
-        eshell-ls-product-regexp "\\`\\'")
+        eshell-ls-product-regexp "\\`\\'"
+        fish-completion-command (get-hermetic-executable "fish"))
 
 (with-eval-after-load 'eshell
   (eat-eshell-mode))
@@ -1095,7 +1107,8 @@
 
 ;;; Direnv
 
-(setopt envrc-lighter nil)
+(setopt envrc-lighter nil
+        envrc-direnv-executable (get-hermetic-executable "direnv"))
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
@@ -1298,22 +1311,18 @@
   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
-(defvar hermetic-lsp-server-programs nil
-  "Alist mapping lsp program names to absolute paths.")
-
 (setq eglot-server-programs nil)
 
 (defun set-lsp-server (mode command &optional prefer-env options)
   "Set COMMAND to eglot lsp server for MODE.
-When `hermetic-lsp-server-programs' has an entry for COMMAND, if PREFER-ENV is
-nil, that path will be used instead, else that path will be used as a fallback.
+When `hermetic-executable-paths' has an entry for COMMAND, if PREFER-ENV is nil,
+that path will be used instead, else that path will be used as a fallback.
 OPTIONS sets server initialization options."
   (with-eval-after-load 'eglot
     (let* ((program (if (listp command) (car command) command))
            (tail `(,@(when (listp command) (cdr command))
                    ,@(when options `(:initializationOptions ,options))))
-           (hermetic-program
-            (alist-get program hermetic-lsp-server-programs nil nil #'equal))
+           (hermetic-program (get-hermetic-executable program t))
            (value (if hermetic-program
                       (if prefer-env
                           (eglot-alternatives `((,program ,@tail)
@@ -1362,8 +1371,10 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Vale
 
+;; `flymake-vale-modes' has incorrect option type
 (setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
-                            typst-ts-mode message-mode))
+                            typst-ts-mode message-mode)
+      flymake-vale-program (get-hermetic-executable "vale"))
 
 (add-hook 'find-file-hook 'flymake-vale-maybe-load)
 
@@ -1420,7 +1431,8 @@ Returns the tree-sitter anchor for using the generated function."
         magit-delete-by-moving-to-trash nil
         git-commit-summary-max-length 50
         magit-no-message '("Turning on ")
-        magit-process-apply-ansi-colors 'filter)
+        magit-process-apply-ansi-colors 'filter
+        magit-git-executable (get-hermetic-executable "git"))
 
 (with-eval-after-load 'magit
   (magit-todos-mode))
@@ -1756,7 +1768,8 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; Scheme
 
 (setopt geiser-repl-per-project-p t
-        geiser-mode-start-repl-p t)
+        geiser-mode-start-repl-p t
+        geiser-guile-binary (get-hermetic-executable "guile"))
 
 
 ;;; Rust
@@ -2010,10 +2023,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Lean
 
-(setopt nael-eglot-contact `(,(or (alist-get "lake" hermetic-lsp-server-programs
-                                             nil nil #'equal)
-                                  "lake")
-                             "serve"))
+(setopt nael-eglot-contact `(,(get-hermetic-executable "lake") "serve"))
 
 (add-hook 'nael-mode-hook #'abbrev-mode)
 (add-hook 'nael-mode-hook #'setup-eglot)
@@ -2033,6 +2043,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Sh
 
+(setopt sh-shellcheck-program (get-hermetic-executable "shellcheck"))
+
 (add-hook 'sh-mode-hook #'flymake-mode)
 
 
@@ -2042,6 +2054,11 @@ Returns the tree-sitter anchor for using the generated function."
 
 (add-hook 'pdf-view-mode-hook #'pdf-view-themed-minor-mode)
 (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
+
+
+;;; OpenSCAD
+
+(setopt scad-command (get-hermetic-executable "openscad"))
 
 
 ;;; Present

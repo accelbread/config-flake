@@ -37,6 +37,14 @@
 let
   inherit (lib) pipe attrVals;
 
+  binPkgMap = {
+    inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
+      yaml-language-server tombi;
+    clangd = llvmPackages_latest.clang-tools;
+    lake = lean4;
+    openscad = openscad-unstable;
+  };
+
   configPackages = pipe ../../dotfiles/emacs/init.el (with builtins; [
     readFile
     (match ".*\\(setopt package-selected-packages[[:space:]]+'\\(([^)]+).*")
@@ -88,24 +96,13 @@ let
     ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
   '';
 
+  execPaths = lib.concatStrings (lib.mapAttrsToList
+    (k: v: "(\"${k}\" . \"${v}/bin/${k}\")")
+    binPkgMap);
+
   early-default-init = writeText "early-default.el" ''
-    (setq magit-git-executable "${git}/bin/git"
-          flymake-vale-program "${vale}/bin/vale"
-          flymake-vale-program-args '("--config=${valeConfig}")
-          sh-shellcheck-program "${shellcheck}/bin/shellcheck"
-          envrc-direnv-executable "${direnv}/bin/direnv"
-          geiser-guile-binary "${guile}/bin/guile"
-          scad-command "${openscad-unstable}/bin/openscad"
-          fish-completion-command "${fish}/bin/fish"
-          hermetic-lsp-server-programs
-          '(("clangd" . "${llvmPackages_latest.clang-tools}/bin/clangd")
-            ("rust-analyzer" . "${rust-analyzer}/bin/rust-analyzer")
-            ("lake" . "${lean4}/bin/lake")
-            ("tinymist" . "${tinymist}/bin/tinymist")
-            ("nixd" . "${nixd}/bin/nixd")
-            ("yaml-language-server"
-             . "${yaml-language-server}/bin/yaml-language-server")
-            ("tombi" . "${tombi}/bin/tombi")))
+    (setq flymake-vale-program-args '("--config=${valeConfig}")
+          hermetic-executable-paths '(${execPaths}))
     (with-eval-after-load 'rng-loc
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
