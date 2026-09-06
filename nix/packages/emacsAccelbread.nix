@@ -35,7 +35,8 @@
 , jing-trang
 }:
 let
-  inherit (builtins) attrNames filter head match readDir readFile split;
+  inherit (builtins) attrNames filter head match readDir readFile
+    split;
   inherit (lib) attrVals concatMap flatten hasSuffix pipe removeSuffix
     splitString;
 
@@ -121,6 +122,31 @@ let
     ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
   '';
 
+  treeSitterLangs = [
+    "c"
+    "cmake"
+    "cpp"
+    "css"
+    "dockerfile"
+    "go"
+    "gomod"
+    "html"
+    "java"
+    "javascript"
+    "json"
+    "lua"
+    "php"
+    "python"
+    "ruby"
+    "rust"
+    "toml"
+    "tsx"
+    "typescript"
+    "typst"
+    "yaml"
+    "zig"
+  ];
+
   execPaths = lib.concatStrings (lib.mapAttrsToList
     (k: v: "(\"${k}\" . \"${v}/bin/${k}\")")
     binPkgMap);
@@ -137,30 +163,8 @@ let
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 
   emacsWPkgs = emacsWithPackages (epkgs: userLispPkgs epkgs ++ [
-    (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
-      tree-sitter-zig
-      tree-sitter-c
-      tree-sitter-cpp
-      tree-sitter-cmake
-      tree-sitter-rust
-      tree-sitter-python
-      tree-sitter-java
-      tree-sitter-json
-      tree-sitter-toml
-      tree-sitter-yaml
-      tree-sitter-html
-      tree-sitter-css
-      tree-sitter-javascript
-      tree-sitter-typescript
-      tree-sitter-tsx
-      tree-sitter-typst
-      tree-sitter-dockerfile
-      tree-sitter-go
-      tree-sitter-gomod
-      tree-sitter-lua
-      tree-sitter-php
-      tree-sitter-ruby
-    ]))
+    (epkgs.treesit-grammars.with-grammars
+      (attrVals (map (l: "tree-sitter-" + l) treeSitterLangs)))
     (epkgs.trivialBuild {
       pname = "emacs-early-default-init";
       version = "0";
