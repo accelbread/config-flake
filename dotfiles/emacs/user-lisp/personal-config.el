@@ -2034,11 +2034,13 @@ Returns the tree-sitter anchor for using the generated function."
                 '(:extendedClientCapabilities (:classFileContentsSupport t)))
 (add-hook 'java-ts-mode-hook #'setup-eglot)
 
-(cl-defmethod eglot-execute-command
-  (_server (_cmd (eql java.apply.workspaceEdit)) arguments)
-  ;; checkdoc-params: (arguments)
+(cl-defmethod eglot-execute :around (server action)
   "Eclipse JDT breaks spec and replies with edits as arguments."
-  (mapc #'eglot--apply-workspace-edit arguments))
+  (if (equal (plist-get action :command) "java.apply.workspaceEdit")
+      (mapc (lambda (edit)
+              (eglot--apply-workspace-edit server edit this-command))
+            (plist-get action :arguments))
+    (cl-call-next-method)))
 
 (defun jdt-file-name-handler (_ &rest args)
   ;; checkdoc-params: (args)
