@@ -2236,8 +2236,8 @@ the sort order."
 ;;; Garbage collect when idle
 
 (setopt gcmh-idle-delay 'auto
-        gcmh-auto-idle-delay-factor 10
-        gcmh-high-cons-threshold (* 32 1024 1024))
+        gcmh-low-cons-threshold (* 8 1024 1024)
+        gcmh-high-cons-threshold (* 64 1024 1024))
 
 (gcmh-mode)
 
