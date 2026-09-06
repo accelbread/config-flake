@@ -1,11 +1,13 @@
-;;; init.el --- emacs configuration file -*- lexical-binding: t; -*-
+;;; personal-config.el --- Personal Emacs config -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Version: 0
+;; Package-Requires: ((emacs "31.1"))
 
 ;;; Commentary:
 
-;; Personal Emacs config file.
+;; Personal Emacs config package.
 
 ;;; Code:
 
@@ -60,9 +62,9 @@
 
 (defmacro after-frame (&rest body)
   "Run BODY now if not daemon and after first frame if daemon."
-  (if (daemonp)
-      `(add-hook 'after-frame-hook (lambda () ,@body))
-    `(progn ,@body)))
+  `(if (daemonp)
+       (add-hook 'after-frame-hook (lambda () ,@body))
+     (progn ,@body)))
 
 (defun load-face (face)
   "Recursively define FACE so its theme attributes can be queried."
@@ -927,7 +929,7 @@ returns nil."
         (setq ls-colors (concat ls-colors entry "=38;2;" r ";" g ";" b ":"))))
     (setenv "LS_COLORS" ls-colors)))
 
-(set-ls-colors)
+(after-frame (set-ls-colors))
 
 (advice-add #'pcomplete-completions-at-point :around #'cape-wrap-silent)
 
@@ -2267,5 +2269,4 @@ the sort order."
 ;; byte-compile-warnings: (not free-vars unresolved)
 ;; End:
 
-(provide 'init)
-;;; init.el ends here
+(provide 'personal-config)

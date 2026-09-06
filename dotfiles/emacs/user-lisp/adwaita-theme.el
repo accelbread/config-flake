@@ -1,11 +1,12 @@
-;;; adwaita-theme.el --- Custom theme -*- lexical-binding: t; -*-
+;;; adwaita-theme.el --- Adwaita theme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Version: 0
 
 ;;; Commentary:
 
-;; Theme based off of Adwaita colors
+;; Theme based off of Adwaita colors.
 
 ;;; Code:
 
@@ -225,6 +226,11 @@
    '(ansi-color-bright-magenta ((t (:foreground "#c061cb" :background "#c061cb"))))
    '(ansi-color-bright-cyan ((t (:foreground "#4fd2fd" :background "#4fd2fd"))))
    '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4"))))))
+
+;;;###autoload
+(when load-file-name
+  (add-to-list 'custom-theme-load-path
+               (file-name-directory load-file-name)))
 
 (provide-theme 'adwaita)
 
