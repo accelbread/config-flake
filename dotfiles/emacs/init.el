@@ -1298,42 +1298,29 @@
   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
-(defvar yaml-lsp-program "yaml-language-server"
-  "Program to use for yaml-language-server.")
-(defvar tombi-program "tombi"
-  "Program to use for tombi.")
+(defvar hermetic-lsp-server-programs nil
+  "Alist mapping lsp program names to absolute paths.")
 
-(with-eval-after-load 'eglot
-  (setq eglot-server-programs
-        `(((c-ts-mode c++-ts-mode)
-           . ,(eglot-alternatives
-               `("clangd"
-                 ,@(and (boundp 'clangd-program)
-                        (list clangd-program)))))
-          (nix-mode
-           . ,(eglot-alternatives
-               `("nixd"
-                 ,@(and (boundp 'nixd-program)
-                        (list nixd-program)))))
-          (zig-ts-mode
-           . ("zls"))
-          (rust-ts-mode
-           . ,(eglot-alternatives
-               `("rust-analyzer"
-                 ,@(and (boundp 'rust-analyzer-program)
-                        (list rust-analyzer-program)))))
-          (typst-ts-mode
-           . ,(eglot-alternatives
-               `("tinymist"
-                 ,@(and (boundp 'tinymist-program)
-                        (list tinymist-program)))))
-          (java-ts-mode
-           . ("jdtls"
-              :initializationOptions
-              (:extendedClientCapabilities (:classFileContentsSupport t))))
-          (python-ts-mode "pylsp")
-          (yaml-ts-mode ,yaml-lsp-program "--stdio")
-          (toml-ts-mode ,tombi-program "lsp"))))
+(setq eglot-server-programs nil)
+
+(defun set-lsp-server (mode command &optional prefer-env options)
+  "Set COMMAND to eglot lsp server for MODE.
+When `hermetic-lsp-server-programs' has an entry for COMMAND, if PREFER-ENV is
+nil, that path will be used instead, else that path will be used as a fallback.
+OPTIONS sets server initialization options."
+  (with-eval-after-load 'eglot
+    (let* ((program (if (listp command) (car command) command))
+           (tail `(,@(when (listp command) (cdr command))
+                   ,@(when options `(:initializationOptions ,options))))
+           (hermetic-program
+            (alist-get program hermetic-lsp-server-programs nil nil #'equal))
+           (value (if hermetic-program
+                      (if prefer-env
+                          (eglot-alternatives `((,program ,@tail)
+                                                (,hermetic-program ,@tail)))
+                        `(,hermetic-program ,@tail))
+                    `(,program ,@tail))))
+      (push (cons mode value) eglot-server-programs))))
 
 (with-eval-after-load 'eglot
   (require 'eglot-x)
@@ -1705,10 +1692,13 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Typst
 
+(set-lsp-server 'typst-ts-mode "tinymist")
 (add-hook 'typst-ts-mode-hook #'setup-eglot)
 
 
 ;;; Nix
+
+(set-lsp-server 'nix-mode "nixd")
 
 (reformatter-define nix-fmt-format
   :program "nix"
@@ -1770,6 +1760,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Rust
+
+(set-lsp-server 'rust-ts-mode "rust-analyzer" t)
 
 (setq rust-ts-mode-prettify-symbols-alist nil
       rust-ts-mode-fontify-number-suffix-as-type t)
@@ -1835,6 +1827,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; C/C++
+
+(set-lsp-server '(c-ts-mode c++-ts-mode) "clangd" t)
 
 (defun c-formatter-configure ()
   "Configure formatters for C and C++ files."
@@ -1921,6 +1915,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Python
 
+(set-lsp-server 'python-ts-mode "pylsp" t)
 (add-hook 'python-ts-mode-hook #'setup-eglot)
 
 (defun ipython ()
@@ -1932,6 +1927,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Zig
+
+(set-lsp-server 'zig-ts-mode "zls" t)
 
 (reformatter-define zig-format
   :program "zig"
@@ -1976,6 +1973,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Java
 
+(set-lsp-server 'java-ts-mode "jdtls" t
+                '(:extendedClientCapabilities (:classFileContentsSupport t)))
 (add-hook 'java-ts-mode-hook #'setup-eglot)
 
 (cl-defmethod eglot-execute-command
@@ -2011,17 +2010,24 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Lean
 
+(setopt nael-eglot-contact `(,(or (alist-get "lake" hermetic-lsp-server-programs
+                                             nil nil #'equal)
+                                  "lake")
+                             "serve"))
+
 (add-hook 'nael-mode-hook #'abbrev-mode)
 (add-hook 'nael-mode-hook #'setup-eglot)
 
 
 ;;; Yaml
 
+(set-lsp-server 'yaml-ts-mode '("yaml-language-server" "--stdio"))
 (add-hook 'yaml-ts-mode-hook #'setup-eglot)
 
 
 ;;; Toml
 
+(set-lsp-server 'toml-ts-mode '("tombi" "lsp"))
 (add-hook 'toml-ts-mode-hook #'setup-eglot)
 
 

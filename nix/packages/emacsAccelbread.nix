@@ -88,7 +88,7 @@ let
     ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
   '';
 
-  default-init = writeText "default.el" ''
+  early-default-init = writeText "early-default.el" ''
     (setq magit-git-executable "${git}/bin/git"
           flymake-vale-program "${vale}/bin/vale"
           flymake-vale-program-args '("--config=${valeConfig}")
@@ -97,13 +97,15 @@ let
           geiser-guile-binary "${guile}/bin/guile"
           scad-command "${openscad-unstable}/bin/openscad"
           fish-completion-command "${fish}/bin/fish"
-          clangd-program "${llvmPackages_latest.clang-tools}/bin/clangd"
-          nixd-program "${nixd}/bin/nixd"
-          rust-analyzer-program "${rust-analyzer}/bin/rust-analyzer"
-          nael-eglot-contact '("${lean4}/bin/lake" "serve")
-          tinymist-program "${tinymist}/bin/tinymist"
-          yaml-lsp-program "${yaml-language-server}/bin/yaml-language-server"
-          tombi-program "${tombi}/bin/tombi")
+          hermetic-lsp-server-programs
+          '(("clangd" . "${llvmPackages_latest.clang-tools}/bin/clangd")
+            ("rust-analyzer" . "${rust-analyzer}/bin/rust-analyzer")
+            ("lake" . "${lean4}/bin/lake")
+            ("tinymist" . "${tinymist}/bin/tinymist")
+            ("nixd" . "${nixd}/bin/nixd")
+            ("yaml-language-server"
+             . "${yaml-language-server}/bin/yaml-language-server")
+            ("tombi" . "${tombi}/bin/tombi")))
     (with-eval-after-load 'rng-loc
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
@@ -138,9 +140,9 @@ let
       tree-sitter-ruby
     ]))
     (epkgs.trivialBuild {
-      pname = "emacs-default-init";
+      pname = "emacs-early-default-init";
       version = "0.0.1";
-      src = default-init;
+      src = early-default-init;
     })
   ]);
 
