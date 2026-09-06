@@ -2314,6 +2314,9 @@ the sort order."
 
 (hide-minor-mode 'gcmh-mode)
 
+(add-hook 'emacs-startup-hook #'garbage-collect 90)
+(add-hook 'emacs-startup-hook #'malloc-trim 91)
+
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not unresolved)
