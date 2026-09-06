@@ -788,17 +788,38 @@ returns nil."
 (require 'corfu)
 (require 'kind-icon)
 
+(defun my-cape-dabbrev-buffers ()
+  "Adapter for `cape-dabbrev-buffer-function' from dabbrev config."
+  (cons (current-buffer)
+        (funcall dabbrev-select-buffers-function)))
+
+(defun my-capf-min-prefix (capf length)
+  "Create capf from CAPF with empty table for under LENGTH prefix."
+  (lambda ()
+    (pcase (funcall capf)
+      (`(,beg ,end ,table . ,plist)
+       (let ((beg-marker (copy-marker beg))
+             (end-marker (copy-marker end t)))
+         `( ,beg ,end
+            ,(lambda (string predicate action)
+               (when (>= (- end-marker beg-marker) length)
+                 (complete-with-action action table string predicate)))
+            ,@plist))))))
+
+(defalias 'my-cape-dabbrev
+  (my-capf-min-prefix #'cape-dabbrev 3))
+
 (setopt read-extended-command-predicate #'command-completion-default-include-p
         completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-in-region-function #'consult-completion-in-region
         orderless-component-separator #'orderless-escapable-split-on-space
         completion-at-point-functions (list #'cape-file
-                                            (cape-capf-buster
-                                             (cape-capf-super #'cape-dabbrev
-                                                              #'cape-dict)))
-        cape-dabbrev-buffer-function #'buffer-list
-        cape-dabbrev-min-length 3
+                                            (cape-capf-super #'my-cape-dabbrev
+                                                             #'cape-dict))
+        dabbrev-ignored-buffer-regexps '("\\` ")
+        dabbrev-friend-buffer-function #'always
+        cape-dabbrev-buffer-function #'my-cape-dabbrev-buffers
         cape-dict-file (lambda () (or (getenv "WORDLIST") "/usr/share/dict/words"))
         corfu-auto t
         corfu-auto-prefix 1
@@ -981,7 +1002,7 @@ returns nil."
   (fish-completion-mode)
   (setq-local completion-at-point-functions '(cape-file
                                               pcomplete-completions-at-point
-                                              cape-dabbrev)
+                                              my-cape-dabbrev)
               mode-line-process
               '(" " (:eval (abbreviate-file-name default-directory)))
               completion-ignored-extensions nil
