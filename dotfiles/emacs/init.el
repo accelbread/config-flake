@@ -1356,6 +1356,25 @@ OPTIONS sets server initialization options."
   (require 'eglot-x)
   (eglot-x-setup))
 
+(defconst my-jsonrpc-stderr-max-size (* 1024 1024))
+
+(defun my-jsonrpc-truncate-stderr (&rest _)
+  "Truncate jsonrpc stderr buffer."
+  (when (> (buffer-size) my-jsonrpc-stderr-max-size)
+    (let ((inhibit-read-only t)
+          (inhibit-modification-hooks t))
+      (delete-region (point-min)
+                     (- (point-max) (/ my-jsonrpc-stderr-max-size 2))))))
+
+(defun my-jsonrpc-cap-stderr (connection &rest _)
+  "Set up truncation for jsonrpc CONNECTION's stderr buffer."
+  (when-let* ((buffer (ignore-errors (jsonrpc-stderr-buffer connection))))
+    (with-current-buffer buffer
+      (add-hook 'after-change-functions #'my-jsonrpc-truncate-stderr nil t))))
+
+(with-eval-after-load 'jsonrpc
+  (add-hook 'jsonrpc-event-hook #'my-jsonrpc-cap-stderr))
+
 
 ;;; Tree-sitter
 
@@ -1731,7 +1750,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Nix
 
-(set-lsp-server 'nix-mode "nixd")
+(set-lsp-server 'nix-mode '("nixd" "--log=error"))
 
 (reformatter-define nix-fmt-format
   :program "nix"
