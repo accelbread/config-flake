@@ -1,6 +1,10 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, ... }: {
+{ pkgs, lib, ... }:
+let
+  configDir = ../../dotfiles/emacs;
+in
+{
   home = {
     packages = with pkgs; [
       emacsAccelbread
@@ -8,7 +12,10 @@
       emacs-eat-terminfo
     ];
     file.".config/emacs" = {
-      source = ../../dotfiles/emacs;
+      source = lib.fileset.toSource {
+        root = configDir;
+        fileset = lib.fileset.difference configDir (configDir + "/user-lisp");
+      };
       recursive = true;
     };
   };

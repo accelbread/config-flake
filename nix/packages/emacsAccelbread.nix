@@ -35,7 +35,10 @@
 , jing-trang
 }:
 let
-  inherit (lib) pipe attrVals;
+  inherit (builtins) attrNames readDir;
+  inherit (lib) attrVals pipe removeSuffix;
+
+  userLispDir = ../../dotfiles/emacs/user-lisp;
 
   binPkgMap = {
     inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
@@ -45,7 +48,8 @@ let
     openscad = openscad-unstable;
   };
 
-  configPackages = pipe ../../dotfiles/emacs/init.el (with builtins; [
+  configFile = userLispDir + "/personal-config.el";
+  configPackages = pipe configFile (with builtins; [
     readFile
     (match ".*\\(setopt package-selected-packages[[:space:]]+'\\(([^)]+).*")
     head
@@ -111,37 +115,49 @@ let
 
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 
-  emacsWPkgs = emacsWithPackages (epkgs: attrVals configPackages epkgs ++ [
-    (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
-      tree-sitter-zig
-      tree-sitter-c
-      tree-sitter-cpp
-      tree-sitter-cmake
-      tree-sitter-rust
-      tree-sitter-python
-      tree-sitter-java
-      tree-sitter-json
-      tree-sitter-toml
-      tree-sitter-yaml
-      tree-sitter-html
-      tree-sitter-css
-      tree-sitter-javascript
-      tree-sitter-typescript
-      tree-sitter-tsx
-      tree-sitter-typst
-      tree-sitter-dockerfile
-      tree-sitter-go
-      tree-sitter-gomod
-      tree-sitter-lua
-      tree-sitter-php
-      tree-sitter-ruby
-    ]))
-    (epkgs.trivialBuild {
-      pname = "emacs-early-default-init";
-      version = "0.0.1";
-      src = early-default-init;
-    })
-  ]);
+  emacsWPkgs = emacsWithPackages (epkgs:
+    let
+      configPkgs = attrVals configPackages epkgs;
+      userLispPkgs = map
+        (pkgSrc: epkgs.elpaBuild {
+          pname = removeSuffix ".el" pkgSrc;
+          version = "0";
+          src = userLispDir + "/${pkgSrc}";
+          packageRequires = configPkgs;
+        })
+        (attrNames (readDir userLispDir));
+    in
+    configPkgs ++ userLispPkgs ++ [
+      (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
+        tree-sitter-zig
+        tree-sitter-c
+        tree-sitter-cpp
+        tree-sitter-cmake
+        tree-sitter-rust
+        tree-sitter-python
+        tree-sitter-java
+        tree-sitter-json
+        tree-sitter-toml
+        tree-sitter-yaml
+        tree-sitter-html
+        tree-sitter-css
+        tree-sitter-javascript
+        tree-sitter-typescript
+        tree-sitter-tsx
+        tree-sitter-typst
+        tree-sitter-dockerfile
+        tree-sitter-go
+        tree-sitter-gomod
+        tree-sitter-lua
+        tree-sitter-php
+        tree-sitter-ruby
+      ]))
+      (epkgs.trivialBuild {
+        pname = "emacs-early-default-init";
+        version = "0.0.1";
+        src = early-default-init;
+      })
+    ]);
 
   wrapEmacs = emacs: runCommand emacs.name
     {
