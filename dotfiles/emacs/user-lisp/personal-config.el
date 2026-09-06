@@ -2231,7 +2231,7 @@ REVERSE (non-nil means reverse order), BEG and END (region to sort).
 The variable ‘sort-fold-case’ determines whether alphabetic case affects
 the sort order."
   (interactive "*P\nr")
-  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+  (sort-regexp-fields reverse "\\(?:\\sw\\|\\s_\\)+" "\\&" beg end))
 
 
 ;;; Local configuration
