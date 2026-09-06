@@ -160,7 +160,20 @@ let
 
   baseEmacs = emacs31-pgtk;
 
-  inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
+  emacsPackages = (emacsPackagesFor baseEmacs).overrideScope (_: prev: {
+    typst-ts-mode = prev.typst-ts-mode.overrideAttrs (old: {
+      src = runCommand "typst-ts-mode-${old.version}.tar" { } ''
+        mkdir source
+        tar -xf ${old.src} -C source
+        patch -d source/typst-ts-mode-${old.version} -p1 \
+          < ${./misc/typst-ts-mode-autoload.patch}
+        tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -cf $out -C source typst-ts-mode-${old.version}
+      '';
+    });
+  });
+
+  inherit (emacsPackages) emacsWithPackages;
 
   emacsWPkgs = emacsWithPackages (epkgs: userLispPkgs epkgs ++ [
     (epkgs.treesit-grammars.with-grammars

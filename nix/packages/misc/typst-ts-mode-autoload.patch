@@ -1,0 +1,7 @@
+diff --git a/typst-ts-compile.el b/typst-ts-compile.el
+--- a/typst-ts-compile.el
++++ b/typst-ts-compile.el
+@@ -199,2 +199,2 @@
+-;;;###autoload
++;;;###autoload (autoload 'typst-ts-compilation-mode "typst-ts-compile" nil t)
+ (define-compilation-mode typst-ts-compilation-mode "Typst Compilation"
