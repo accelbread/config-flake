@@ -127,6 +127,8 @@ returns nil."
  '(rainbow-delimiters-depth-6-face ((t (:foreground "#FF7FBF"))))
  '(rainbow-delimiters-base-error-face ((t (:inherit (error))))))
 
+(eval-when-compile (require 'orderless))
+
 (setopt rainbow-delimiters-max-face-count 6)
 (setq orderless-match-faces [rainbow-delimiters-depth-1-face
                              rainbow-delimiters-depth-2-face
@@ -152,6 +154,8 @@ returns nil."
 
 
 ;;; Configure packages
+
+(eval-when-compile (require 'package))
 
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
@@ -281,6 +285,8 @@ returns nil."
 
 
 ;;; Undo
+
+(eval-when-compile (require 'vundo))
 
 (setopt undo-limit (* 4 1024 1024)
         undo-strong-limit (* 6 1024 1024)
@@ -791,6 +797,7 @@ returns nil."
 
 (require 'corfu)
 (require 'kind-icon)
+(eval-when-compile (require 'dabbrev))
 
 (defun my-cape-dabbrev-buffers ()
   "Adapter for `cape-dabbrev-buffer-function' from dabbrev config."
@@ -879,6 +886,8 @@ returns nil."
 
 ;;; Tramp
 
+(eval-when-compile (require 'tramp))
+
 (setopt remote-file-name-inhibit-locks t
         tramp-use-scp-direct-remote-copying t
         tramp-show-ad-hoc-proxies t
@@ -895,6 +904,8 @@ returns nil."
 
 
 ;;; Shell
+
+(eval-when-compile (require 'comint))
 
 (setopt comint-terminfo-terminal "dumb-emacs-ansi"
         comint-prompt-read-only t
@@ -944,6 +955,9 @@ returns nil."
 
 
 ;;; Eshell
+
+(eval-when-compile (require 'eat)
+                   (require 'em-hist))
 
 (setopt eshell-modules-list '( eshell-basic eshell-cmpl eshell-dirs eshell-glob
                                eshell-hist eshell-ls eshell-pred eshell-prompt
@@ -1132,6 +1146,8 @@ returns nil."
 
 ;;; Direnv
 
+(eval-when-compile (require 'envrc))
+
 (setopt envrc-lighter nil
         envrc-direnv-executable (get-hermetic-executable "direnv"))
 
@@ -1150,6 +1166,8 @@ returns nil."
 
 
 ;;; Term
+
+(eval-when-compile (require 'term))
 
 (with-eval-after-load 'term
   (set-keymap-parent term-raw-escape-map nil))
@@ -1283,6 +1301,8 @@ returns nil."
 
 ;;; Project
 
+(eval-when-compile (require 'project))
+
 (setopt project-file-history-behavior 'relativize
         uniquify-dirname-transform #'project-uniquify-dirname-transform
         save-some-buffers-default-predicate #'save-some-buffers-root
@@ -1308,6 +1328,8 @@ returns nil."
 
 ;;; Eglot
 
+(eval-when-compile (require 'eglot))
+
 (setopt eglot-stay-out-of '(eldoc-documentation-strategy
                             flymake-diagnostic-functions)
         eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider
@@ -1323,6 +1345,8 @@ returns nil."
 (push '(eglot (styles orderless)) completion-category-overrides)
 
 (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
+
+(eval-when-compile (require 'yasnippet))
 
 (with-eval-after-load 'yasnippet
   (hide-minor-mode 'yas-minor-mode)
@@ -1414,6 +1438,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Vale
+
+(eval-when-compile (require 'flymake-vale))
 
 ;; `flymake-vale-modes' has incorrect option type
 (setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
@@ -1562,6 +1588,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Proced
+
+(eval-when-compile (require 'proced))
 
 (setopt proced-auto-update-interval 3
         proced-auto-update-flag t
@@ -1724,6 +1752,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 ;;; Markdown
 
+(eval-when-compile (require 'markdown-mode))
+
 (setopt markdown-asymmetric-header t
         markdown-fontify-code-blocks-natively t
         markdown-ordered-list-enumeration nil
@@ -1753,6 +1783,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Nix
+
+(eval-when-compile (require 'reformatter))
 
 (set-lsp-server 'nix-mode '("nixd" "--log=error"))
 
@@ -1817,6 +1849,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Rust
+
+(eval-when-compile (require 'rust-ts-mode))
 
 (set-lsp-server 'rust-ts-mode "rust-analyzer" t)
 
@@ -1959,6 +1993,8 @@ Returns the tree-sitter anchor for using the generated function."
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
   (add-hook hook #'c-set-font-overrides))
+
+(eval-when-compile (require 'cmake-mode))
 
 (with-eval-after-load 'cmake-ts-mode
   (require 'cmake-mode))
@@ -2108,6 +2144,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 
 ;;; Present
+
+(eval-when-compile (require 'display-fill-column-indicator))
 
 (defun narrow-prior-page ()
   "Widen then narrow to the previous page."
@@ -2270,7 +2308,7 @@ the sort order."
 
 
 ;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
+;; byte-compile-warnings: (not unresolved)
 ;; End:
 
 (provide 'personal-config)
