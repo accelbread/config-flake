@@ -3,7 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
-;; Package-Requires: ((emacs "31.1"))
+;; Package-Requires: ((emacs "31.1") cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib trust-manager typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
 
 ;;; Commentary:
 
@@ -151,14 +151,10 @@ returns nil."
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
 (setopt package-selected-packages
-        '( meow gcmh rainbow-delimiters jinx vundo envrc trust-manager
-           corfu cape kind-icon vertico orderless marginalia consult yasnippet
-           magit magit-todos hl-todo virtual-comment flymake-vale
-           fish-completion eat meow-term vterm meow-vterm rg inheritenv
-           rainbow-mode rmsbolt svg-lib reformatter devdocs dape eglot eglot-x
-           markdown-mode clang-format cmake-mode cargo zig-ts-mode nix-mode
-           geiser-guile scad-mode haskell-mode git-modes nael
-           typst-ts-mode pdf-tools)
+        (eval-when-compile
+          (require 'lisp-mnt)
+          (delq 'emacs
+                (mapcar #'car (lm-package-requires (macroexp-file-name)))))
         package-native-compile t)
 
 

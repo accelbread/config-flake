@@ -35,10 +35,9 @@
 , jing-trang
 }:
 let
-  inherit (builtins) attrNames readDir;
-  inherit (lib) attrVals pipe removeSuffix;
-
-  userLispDir = ../../dotfiles/emacs/user-lisp;
+  inherit (builtins) attrNames filter head match readDir readFile split;
+  inherit (lib) attrVals concatMap flatten hasSuffix pipe removeSuffix
+    splitString;
 
   binPkgMap = {
     inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
@@ -48,15 +47,37 @@ let
     openscad = openscad-unstable;
   };
 
-  configFile = userLispDir + "/personal-config.el";
-  configPackages = pipe configFile (with builtins; [
+  packageRequiresFromFile = file: pipe file [
     readFile
-    (match ".*\\(setopt package-selected-packages[[:space:]]+'\\(([^)]+).*")
-    head
-    (split "([-a-z]+)")
-    (filter isList)
-    (map head)
-  ]);
+    (match ".*\n;; Package-Requires: \\(([^\n]*)\\)\n.*")
+    (requires:
+      if requires == null then [ ] else
+      pipe requires [
+        head
+        (split "\\(([-a-z]+) \"[^\"]+\"\\)")
+        flatten
+        (concatMap (splitString " "))
+        (filter (pkg: pkg != "" && pkg != "emacs"))
+      ])
+  ];
+
+  buildPkg = epkgs: src:
+    let
+      pname = removeSuffix ".el" (baseNameOf src);
+      file =
+        if hasSuffix ".el" (toString src) then src
+        else src + "/${baseNameOf src}.el";
+    in
+    epkgs.elpaBuild {
+      inherit pname src;
+      version = "0";
+      packageRequires = attrVals (packageRequiresFromFile file) epkgs;
+    };
+
+  userLispDir = ../../dotfiles/emacs/user-lisp;
+  userLispPkgsSrcs = (map (f: userLispDir + "/${f}")
+    (attrNames (readDir userLispDir)));
+  userLispPkgs = epkgs: map (buildPkg epkgs) userLispPkgsSrcs;
 
   valeStyles = symlinkJoin {
     name = "vale-styles";
@@ -115,49 +136,37 @@ let
 
   inherit (emacsPackagesFor baseEmacs) emacsWithPackages;
 
-  emacsWPkgs = emacsWithPackages (epkgs:
-    let
-      configPkgs = attrVals configPackages epkgs;
-      userLispPkgs = map
-        (pkgSrc: epkgs.elpaBuild {
-          pname = removeSuffix ".el" pkgSrc;
-          version = "0";
-          src = userLispDir + "/${pkgSrc}";
-          packageRequires = configPkgs;
-        })
-        (attrNames (readDir userLispDir));
-    in
-    configPkgs ++ userLispPkgs ++ [
-      (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
-        tree-sitter-zig
-        tree-sitter-c
-        tree-sitter-cpp
-        tree-sitter-cmake
-        tree-sitter-rust
-        tree-sitter-python
-        tree-sitter-java
-        tree-sitter-json
-        tree-sitter-toml
-        tree-sitter-yaml
-        tree-sitter-html
-        tree-sitter-css
-        tree-sitter-javascript
-        tree-sitter-typescript
-        tree-sitter-tsx
-        tree-sitter-typst
-        tree-sitter-dockerfile
-        tree-sitter-go
-        tree-sitter-gomod
-        tree-sitter-lua
-        tree-sitter-php
-        tree-sitter-ruby
-      ]))
-      (epkgs.trivialBuild {
-        pname = "emacs-early-default-init";
-        version = "0.0.1";
-        src = early-default-init;
-      })
-    ]);
+  emacsWPkgs = emacsWithPackages (epkgs: userLispPkgs epkgs ++ [
+    (epkgs.treesit-grammars.with-grammars (grammars: with grammars; [
+      tree-sitter-zig
+      tree-sitter-c
+      tree-sitter-cpp
+      tree-sitter-cmake
+      tree-sitter-rust
+      tree-sitter-python
+      tree-sitter-java
+      tree-sitter-json
+      tree-sitter-toml
+      tree-sitter-yaml
+      tree-sitter-html
+      tree-sitter-css
+      tree-sitter-javascript
+      tree-sitter-typescript
+      tree-sitter-tsx
+      tree-sitter-typst
+      tree-sitter-dockerfile
+      tree-sitter-go
+      tree-sitter-gomod
+      tree-sitter-lua
+      tree-sitter-php
+      tree-sitter-ruby
+    ]))
+    (epkgs.trivialBuild {
+      pname = "emacs-early-default-init";
+      version = "0";
+      src = early-default-init;
+    })
+  ]);
 
   wrapEmacs = emacs: runCommand emacs.name
     {
