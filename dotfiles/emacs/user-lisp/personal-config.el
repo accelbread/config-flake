@@ -1163,6 +1163,14 @@ returns nil."
 
 (add-hook 'after-init-hook #'envrc-global-mode)
 
+(defun envrc-refresh-dir-wrapper (orig-fun verb)
+  "Refresh the cached env directory before calling ORIG-FUN with VERB."
+  (unless envrc--env-dir
+    (setq-local envrc--env-dir (envrc--find-env-dir)))
+  (funcall orig-fun verb))
+
+(advice-add 'envrc--run-direnv :around #'envrc-refresh-dir-wrapper)
+
 (defun eshell-update-direnv ()
   "Update direnv state when switching eshell directory."
   (when envrc-mode (envrc-mode -1))
