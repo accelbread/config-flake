@@ -1,0 +1,28 @@
+From 8caf2b08ea91a7dca17fc47445b273e75a0a182c Mon Sep 17 00:00:00 2001
+From: hawnzug <hawnzug@gmail.com>
+Date: Mon, 25 Nov 2024 11:00:18 -0600
+Subject: [PATCH] Fix control sequences CNL and CPL
+
+* eat.el (eat--t-handle-output): Swap control sequences: E for
+next line, F for previous line.
+---
+ eat.el | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eat.el b/eat.el
+index d4469cd..0497098 100644
+--- a/eat.el
++++ b/eat.el
+@@ -3558,10 +3558,10 @@ If NULLIFY is non-nil, nullify flushed part of Sixel buffer.
+                   (eat--t-cur-left n))
+                  ;; CSI <n> E.
+                  (`((?E) nil ((,n)))
+-                  (eat--t-beg-of-prev-line n))
++                  (eat--t-beg-of-next-line n))
+                  ;; CSI <n> F.
+                  (`((?F) nil ((,n)))
+-                  (eat--t-beg-of-next-line n))
++                  (eat--t-beg-of-prev-line n))
+                  ;; CSI <n> G.
+                  ;; CSI <n> `.
+                  (`((,(or ?G ?`)) nil ((,n)))

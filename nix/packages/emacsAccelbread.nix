@@ -37,8 +37,8 @@
 let
   inherit (builtins) attrNames filter head match readDir readFile
     split;
-  inherit (lib) attrVals concatMap flatten hasSuffix pipe removeSuffix
-    splitString;
+  inherit (lib) attrVals concatMap concatMapStringsSep flatten hasSuffix pipe
+    removeSuffix splitString;
 
   binPkgMap = {
     inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
@@ -147,6 +147,24 @@ let
     "zig"
   ];
 
+  patchElpaPackage = package: patches: package.overrideAttrs (old:
+    let sourceDir = "${old.pname}-${old.version}"; in {
+      src = runCommand "${sourceDir}-patched.tar" { } ''
+        mkdir source
+        tar -xf ${old.src} -C source
+        ${concatMapStringsSep "\n" (patchFile: ''
+          patch -d source/${sourceDir} -p1 < ${patchFile}
+        '') patches}
+        tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -cf $out -C source ${sourceDir}
+      '';
+    });
+
+  elpaPatches = {
+    eat = [ ./misc/eat-cnl-cpl.patch ];
+    typst-ts-mode = [ ./misc/typst-ts-mode-autoload.patch ];
+  };
+
   execPaths = lib.concatStrings (lib.mapAttrsToList
     (k: v: "(\"${k}\" . \"${v}/bin/${k}\")")
     binPkgMap);
@@ -160,18 +178,8 @@ let
 
   baseEmacs = emacs31-pgtk;
 
-  emacsPackages = (emacsPackagesFor baseEmacs).overrideScope (_: prev: {
-    typst-ts-mode = prev.typst-ts-mode.overrideAttrs (old: {
-      src = runCommand "typst-ts-mode-${old.version}.tar" { } ''
-        mkdir source
-        tar -xf ${old.src} -C source
-        patch -d source/typst-ts-mode-${old.version} -p1 \
-          < ${./misc/typst-ts-mode-autoload.patch}
-        tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -cf $out -C source typst-ts-mode-${old.version}
-      '';
-    });
-  });
+  emacsPackages = (emacsPackagesFor baseEmacs).overrideScope
+    (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches);
 
   inherit (emacsPackages) emacsWithPackages;
 
