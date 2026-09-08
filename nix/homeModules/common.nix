@@ -44,6 +44,7 @@ in
         awscli2
         bind.dnsutils
         bubblewrap
+        libsecret
       ];
       file.".fdignore".source = flake.src + /dotfiles/fdignore;
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";

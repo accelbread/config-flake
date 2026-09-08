@@ -3,7 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
-;; Package-Requires: ((emacs "31.1") cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib trust-manager typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
+;; Package-Requires: ((emacs "31.1") agent-shell cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib trust-manager typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
 
 ;;; Commentary:
 
@@ -2157,6 +2157,31 @@ Returns the tree-sitter anchor for using the generated function."
 ;;; OpenSCAD
 
 (setopt scad-command (get-hermetic-executable "openscad"))
+
+
+;;; Agent Shell
+
+(setopt agent-shell-show-welcome-message nil
+        agent-shell-header-style 'text
+        agent-shell-show-busy-indicator nil
+        agent-shell-transcript-file-path-function nil
+        shell-maker-prompt-before-killing-buffer nil
+        agent-shell-inhibit-system-sleep nil
+        agent-shell-session-strategy 'new
+        agent-shell-preferred-agent-config 'codex
+        agent-shell-openai-default-session-mode-id "read-only")
+
+(defun my-shell-maker-should-auto-scroll-p ()
+  "Check auto-scroll without forcing redisplay/fontification."
+  (and (eobp)
+       (cl-every (lambda (window)
+                   (when-let* ((end (window-end window)))
+                     (>= (1+ end) (point-max))))
+                 (get-buffer-window-list nil 'no-mini))))
+
+(with-eval-after-load 'shell-maker
+  (advice-add #'shell-maker--should-auto-scroll-p :override
+              #'my-shell-maker-should-auto-scroll-p))
 
 
 ;;; Present
