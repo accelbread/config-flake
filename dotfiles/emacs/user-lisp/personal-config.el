@@ -207,6 +207,26 @@ returns nil."
 (setopt trusted-content `(,user-emacs-directory)
         trust-manager-secure-additional-features nil)
 
+;; trusted-content-p is slow as it performs file-equal-p on every
+;; trusted-content entry
+(advice-add
+ 'trusted-content-p :override
+ (lambda ()
+   "Return non-nil when the current buffer has a canonically trusted path."
+   (and (not untrusted-content)
+        (or
+         (eq trusted-content :all)
+         (and buffer-file-truename
+              (let ((file (abbreviate-file-name buffer-file-truename)))
+                (catch 'trusted
+                  (dolist (trusted-file trusted-content)
+                    (when (if (string-suffix-p "/" trusted-file)
+                              (string-prefix-p trusted-file file)
+                            (equal trusted-file file))
+                      (throw 'trusted t)))
+                  nil))))))
+ '((name . optimize-trusted-content-p)))
+
 (let ((remove-customize-save-variable
        (lambda (orig-fun &rest args)
          "Use set instead of customize-save-variable"
