@@ -1,0 +1,76 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 7 Sep 2026 17:47:33 -0700
+Subject: [PATCH] Make scrolling row table cleanup unwind-safe
+
+The scrolling row hash table is reusable global scratch state.  If
+redisplay exits nonlocally after the table has been populated, the
+normal cleanup at the end of scrolling_window is skipped.  A later
+invocation can then reuse row_entry_pool while row_table still points
+at its entries, allowing a bucket chain to become cyclic.
+
+Register the table cleanup on the specpdl before populating it, and run
+the same cleanup with unbind_to on normal exit.  Also reset the pool
+index in the cleanup function so that it is safe to run while unwinding.
+
+* src/dispnew.c (clear_scrolling_window_row_table): New function.
+(scrolling_window): Make row table cleanup unwind-safe.
+---
+ src/dispnew.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/src/dispnew.c b/src/dispnew.c
+index 23e309201d1..749229b6397 100644
+--- a/src/dispnew.c
++++ b/src/dispnew.c
+@@ -5220,6 +5220,19 @@ static ptrdiff_t runs_size;
+ 
+ static struct run **runs;
+ 
++/* Clear the scrolling row hash table after each use, including when
++   redisplay exits nonlocally.  */
++
++static void
++clear_scrolling_window_row_table (void)
++{
++  ptrdiff_t i;
++
++  for (i = 0; i < row_entry_idx; ++i)
++    row_table[row_entry_pool[i].bucket] = NULL;
++  row_entry_idx = 0;
++}
++
+ /* Add glyph row ROW to the scrolling hash table.  */
+ 
+ static struct row_entry *
+@@ -5281,8 +5294,9 @@ scrolling_window (struct window *w, int tab_line_p)
+   int yb = window_text_bottom_y (w);
+   ptrdiff_t i;
+   int j, first_old, first_new, last_old, last_new;
+   int nruns, run_idx;
+   ptrdiff_t n;
++  specpdl_ref count;
+   struct row_entry *entry;
+   struct redisplay_interface *rif = FRAME_RIF (XFRAME (WINDOW_FRAME (w)));
+ 
+@@ -5449,6 +5463,8 @@ scrolling_window (struct window *w, int tab_line_p)
+     }
+ 
+   nruns = run_idx = 0;
++  count = SPECPDL_INDEX ();
++  record_unwind_protect_void (clear_scrolling_window_row_table);
+   row_entry_idx = 0;
+ 
+   /* Add rows from the current and desired matrix to the hash table
+@@ -5654,10 +5670,7 @@ scrolling_window (struct window *w, int tab_line_p)
+ 	  }
+       }
+ 
+-  /* Clear the hash table, for the next time.  */
+-  for (i = 0; i < row_entry_idx; ++i)
+-    row_table[row_entry_pool[i].bucket] = NULL;
+-
+   /* Value is 1 to indicate that we scrolled the display.  */
++  unbind_to (count, Qnil);
+   return nruns > 0;
+ }
