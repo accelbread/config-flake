@@ -2317,13 +2317,6 @@ the sort order."
   (sort-regexp-fields reverse "\\(?:\\sw\\|\\s_\\)+" "\\&" beg end))
 
 
-;;; Local configuration
-
-(let ((file (file-name-concat user-emacs-directory "local-init.el")))
-  (if (file-exists-p file)
-      (load-file file)))
-
-
 ;;; Server
 
 (require 'server)
