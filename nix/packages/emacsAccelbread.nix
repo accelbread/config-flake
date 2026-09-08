@@ -76,8 +76,8 @@ let
     };
 
   userLispDir = ../../dotfiles/emacs/user-lisp;
-  userLispPkgsSrcs = (map (f: userLispDir + "/${f}")
-    (attrNames (readDir userLispDir)));
+  userLispPkgsSrcs = map (f: userLispDir + "/${f}")
+    (attrNames (readDir userLispDir));
   userLispPkgs = epkgs: map (buildPkg epkgs) userLispPkgsSrcs;
 
   valeStyles = symlinkJoin {
