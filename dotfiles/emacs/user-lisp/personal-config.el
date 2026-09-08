@@ -202,6 +202,8 @@ returns nil."
 
 ;;; Handle trusting projects
 
+(eval-when-compile (require 'trust-manager))
+
 (setopt trusted-content `(,user-emacs-directory)
         trust-manager-secure-additional-features nil)
 
@@ -216,6 +218,13 @@ returns nil."
                 trust-manager--forget-project))
     (advice-add fn :around remove-customize-save-variable
                 '((name . remove-customize-save-variable)))))
+
+(defun my-trust-manager-query-project (project)
+  "Skip asking if PROJECT is in nix store."
+  (if (string-prefix-p "/nix/store/" (expand-file-name project)) nil
+    (trust-manager--should-trust-p project)))
+
+(setq trust-manager--trust-query-function #'my-trust-manager-query-project)
 
 (trust-manager-mode)
 
