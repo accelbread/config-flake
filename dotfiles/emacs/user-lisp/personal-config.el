@@ -228,17 +228,25 @@ returns nil."
 
 (trust-manager-mode)
 
-(defun save-var-to-lisp-data-file (symbol new-value operation where)
-  "Saves NEW-VALUE to Emacs config dir file named SYMBOL."
+(defun save-trust-manager-trust-alist (_ new-value operation where)
+  "Save trust-manager project trust NEW-VALUE to Emacs config dir.
+This watcher takes action when OPERATION is `set' and WHERE is global."
   (when (and (eq operation 'set) (not where))
-    (with-temp-file (file-name-concat user-emacs-directory
-                                      (symbol-name symbol))
-      (insert ";;; -*- lisp-data -*-\n")
-      (pp new-value (current-buffer)))))
+    (let* ((project-roots (mapcar #'expand-file-name
+                                  (project-known-project-roots)))
+           (filtered-value (seq-filter
+                            (lambda (entry)
+                              (member (expand-file-name (car entry))
+                                      project-roots))
+                            new-value)))
+      (with-temp-file (file-name-concat user-emacs-directory
+                                        "trust-manager-trust-alist")
+        (insert ";;; -*- lisp-data -*-\n")
+        (pp filtered-value (current-buffer))))))
 
 (when (daemonp)
   (add-variable-watcher 'trust-manager-trust-alist
-                        #'save-var-to-lisp-data-file))
+                        #'save-trust-manager-trust-alist))
 
 (let ((filename (file-name-concat user-emacs-directory
                                   "trust-manager-trust-alist")))
