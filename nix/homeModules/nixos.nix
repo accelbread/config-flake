@@ -22,6 +22,13 @@ in
       yubico-piv-tool
       librewolf
       android-tools
+      (writeShellApplication {
+        name = "nomos-rebuild";
+        runtimeInputs = [ nixos-rebuild nix-output-monitor ];
+        text = ''
+          nixos-rebuild "$@" --log-format internal-json -v |& nom --json
+        '';
+      })
     ];
     gui-packages = with pkgs; [
       thunderbird
