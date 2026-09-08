@@ -3,6 +3,20 @@
 { pkgs, lib, inputs, config, flake, ... }:
 let
   inherit (lib) mkOption types;
+
+  manualPages = pkgs.buildEnv {
+    name = "man-paths";
+    paths = config.home.packages;
+    pathsToLink = [ "/share/man" ];
+    extraOutputsToInstall = [ "man" ];
+    ignoreCollisions = true;
+    derivationArgs.__contentAddressed = true;
+  };
+  manualCache = pkgs.runCommand "man-cache"
+    { nativeBuildInputs = [ config.programs.man.package ]; } ''
+    echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
+    mandb -C man.conf --no-straycats --create ${manualPages}/share/man
+  '';
 in
 {
   imports = with inputs.self.homeModules; [ emacs gui-only-programs ];
@@ -47,7 +61,12 @@ in
         bubblewrap
         libsecret
       ];
-      file.".fdignore".source = flake.src + /dotfiles/fdignore;
+      file = {
+        ".fdignore".source = flake.src + /dotfiles/fdignore;
+        ".manpath".text = ''
+          MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
+        '';
+      };
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
     };
 
@@ -58,7 +77,6 @@ in
       "source ${nix-direnv}/share/nix-direnv/direnvrc";
 
     programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
-      man.generateCaches = true;
       info.enable = true;
       bash.initExtra = ''
         if [[ -z "$LS_COLORS" ]]; then
