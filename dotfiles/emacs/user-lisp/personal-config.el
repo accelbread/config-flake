@@ -226,7 +226,26 @@ returns nil."
 
 (setq trust-manager--trust-query-function #'my-trust-manager-query-project)
 
-(trust-manager-mode)
+(defun my-minimal-trust-manager-load-path (paths)
+  "Remove absolute PATHS covered by another directory in PATHS."
+  (let ((absolute
+         (mapcar (lambda (path)
+                   (file-name-as-directory (expand-file-name path)))
+                 (seq-filter #'file-name-absolute-p paths))))
+    (seq-filter
+     (lambda (path)
+       (or (not (file-name-absolute-p path))
+           (let ((path (file-name-as-directory (expand-file-name path))))
+             (not (seq-some
+                   (lambda (parent)
+                     (and (< (length parent) (length path))
+                          (string-prefix-p parent path)))
+                   absolute)))))
+     paths)))
+
+(require 'trust-manager) ;; won't be on load-path
+(let ((load-path (my-minimal-trust-manager-load-path load-path)))
+  (trust-manager-mode))
 
 (defun save-trust-manager-trust-alist (_ new-value operation where)
   "Save trust-manager project trust NEW-VALUE to Emacs config dir.
