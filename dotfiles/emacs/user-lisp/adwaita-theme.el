@@ -234,5 +234,9 @@
 
 (provide-theme 'adwaita)
 
+;; Local Variables:
+;; byte-compile-warnings: (not lexical)
+;; End:
+
 (provide 'adwaita-theme)
 ;;; adwaita-theme.el ends here
