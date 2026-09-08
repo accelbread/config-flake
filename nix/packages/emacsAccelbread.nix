@@ -33,6 +33,7 @@
 , makeBinaryWrapper
 , fetchurl
 , jing-trang
+, codex-acp
 }:
 let
   inherit (builtins) attrNames filter head match readDir readFile
@@ -42,7 +43,7 @@ let
 
   binPkgMap = {
     inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
-      yaml-language-server tombi;
+      yaml-language-server tombi codex-acp;
     clangd = llvmPackages_latest.clang-tools;
     lake = lean4;
     openscad = openscad-unstable;

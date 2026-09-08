@@ -2226,7 +2226,9 @@ Returns the tree-sitter anchor for using the generated function."
         agent-shell-inhibit-system-sleep nil
         agent-shell-session-strategy 'new
         agent-shell-preferred-agent-config 'codex
-        agent-shell-openai-default-session-mode-id "read-only")
+        agent-shell-openai-default-session-mode-id "read-only"
+        agent-shell-openai-codex-acp-command
+        `(,(get-hermetic-executable "codex-acp")))
 
 (defun my-shell-maker-should-auto-scroll-p ()
   "Check auto-scroll without forcing redisplay/fontification."
