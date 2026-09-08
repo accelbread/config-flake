@@ -1771,7 +1771,8 @@ Returns the tree-sitter anchor for using the generated function."
 
 (setq elisp-flymake-byte-compile-load-path
       (append elisp-flymake-byte-compile-load-path load-path))
-(setopt elisp-fontify-semantically t)
+(setopt elisp-fontify-semantically t
+        rainbow-x-colors nil)
 
 (add-hook 'emacs-lisp-mode-hook #'display-page-breaks-as-lines)
 (add-hook 'emacs-lisp-mode-hook #'enable-flymake)
