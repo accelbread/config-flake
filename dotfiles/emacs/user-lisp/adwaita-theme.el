@@ -44,19 +44,19 @@
          (accent-slate "#6f8396")
          (accent-bg-color accent-purple)
          (accent-fg-color "#ffffff")
-         (accent-color "#fba7ff")
+         (accent-color (standalone accent-bg-color)) ; #fba7ff
          (destructive-bg-color "#c01c28")
          (destructive-fg-color "#ffffff")
-         (destructive-color "#ff938c")
+         (destructive-color (standalone destructive-bg-color)) ; #ff938b
          (success-bg-color "#26a269")
          (success-fg-color "#ffffff")
-         (success-color "#78e9ab")
+         (success-color (standalone success-bg-color)) ; #78e9ab
          (warning-bg-color "#cd9309")
          (warning-fg-color "#291d02")
-         (warning-color "#ffc252")
+         (warning-color (standalone warning-bg-color)) ; #ffc252
          (error-bg-color "#c01c28")
          (error-fg-color "#ffffff")
-         (error-color "#ff938c")
+         (error-color (standalone error-bg-color)) ; #ff938b
          (window-bg-color "#222226")
          (window-fg-color "#ffffff")
          (view-bg-color "#1d1d20")
@@ -67,9 +67,9 @@
          (sidebar-fg-color "#ffffff")
          (secondary-sidebar-bg-color "#28282c")
          (secondary-sidebar-fg-color "#ffffff")
-         (button-color "#343436")
-         (button-hover-color "#3f3f41")
-         (button-active-color "#616163")
+         (button-color (mix view-fg-color view-bg-color 0.1)) ; #343436
+         (button-hover-color (mix view-fg-color view-bg-color 0.15)) ; #3f3f41
+         (button-active-color (mix view-fg-color view-bg-color 0.3)) ; #616163
          (blue-1 "#99c1f1")
          (blue-2 "#62a0ea")
          (blue-3 "#3584e4")
