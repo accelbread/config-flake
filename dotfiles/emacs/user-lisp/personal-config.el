@@ -1684,7 +1684,7 @@ Returns the tree-sitter anchor for using the generated function."
 
 (setopt eldoc-documentation-strategy #'eldoc-documentation-compose
         eldoc-echo-area-prefer-doc-buffer t
-        eldoc-minor-mode-string " 📜"
+        eldoc-minor-mode-string ""
         eldoc-help-at-pt t)
 
 
