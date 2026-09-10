@@ -134,6 +134,7 @@ let
     "html"
     "java"
     "javascript"
+    "jsdoc"
     "json"
     "lua"
     "php"
