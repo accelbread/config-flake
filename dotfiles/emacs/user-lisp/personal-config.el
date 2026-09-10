@@ -2222,8 +2222,6 @@ Returns the tree-sitter anchor for using the generated function."
         agent-shell-header-style 'text
         agent-shell-show-busy-indicator nil
         agent-shell-dot-subdir-function #'agent-shell-cache-dir
-        agent-shell-transcript-file-path-function nil
-        shell-maker-prompt-before-killing-buffer nil
         agent-shell-inhibit-system-sleep nil
         agent-shell-session-strategy 'new
         agent-shell-show-config-icons nil
