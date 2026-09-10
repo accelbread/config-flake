@@ -46,6 +46,9 @@
        (sidebar-fg-color "#ffffff")
        (secondary-sidebar-bg-color "#28282c")
        (sidebar-fg-color "#ffffff")
+       (button-color "#343436")
+       (button-hover-color "#3f3f41")
+       (button-active-color "#616163")
        (blue-1 "#99c1f1")
        (blue-2 "#62a0ea")
        (blue-3 "#3584e4")
@@ -104,6 +107,15 @@
    '(escape-glyph ((t (:inherit (homoglyph)))))
    `(minibuffer-prompt ((t (:foreground ,accent-color))))
    '(highlight ((t (:background "#3b3b3d"))))
+   `(custom-button ((t ( :weight bold
+                         :foreground ,view-fg-color
+                         :background ,button-color
+                         :underline (:color ,view-bg-color :position t)
+                         :box (:line-width (4 . 2) :style flat-button)))))
+   `(custom-button-mouse ((t ( :inherit (custom-button)
+                               :background ,button-hover-color))))
+   `(custom-button-pressed ((t ( :inherit (custom-button)
+                                 :background ,button-active-color))))
    `(region ((t (:extend nil :background ,purple-5))))
    `(shadow ((t (:foreground ,dark-1))))
    `(warning ((t (:weight bold :foreground ,warning-color))))
