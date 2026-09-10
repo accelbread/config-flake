@@ -13,6 +13,20 @@
 (require 'cl-lib)
 (require 'color)
 
+(defvar adwaita-theme--system-accent-color
+  (let ((value (condition-case nil
+                   (car (process-lines
+                         "gsettings" "get" "org.gnome.desktop.interface"
+                         "accent-color"))
+                 (error nil))))
+    (if (and value
+             (string-match "\\`'\\([a-z]+\\)'\\'" value)
+             (member (match-string 1 value)
+                     '("blue" "teal" "green" "yellow" "orange"
+                       "red" "pink" "purple" "slate")))
+        (intern (match-string 1 value))
+      'blue)))
+
 (deftheme adwaita)
 
 (cl-labels
@@ -42,7 +56,16 @@
          (accent-pink "#d56199")
          (accent-purple "#9141ac")
          (accent-slate "#6f8396")
-         (accent-bg-color accent-purple)
+         (accent-bg-color (pcase adwaita-theme--system-accent-color
+                            ('blue accent-blue)
+                            ('teal accent-teal)
+                            ('green accent-green)
+                            ('yellow accent-yellow)
+                            ('orange accent-orange)
+                            ('red accent-red)
+                            ('pink accent-pink)
+                            ('purple accent-purple)
+                            ('slate accent-slate)))
          (accent-fg-color "#ffffff")
          (accent-color (standalone accent-bg-color)) ; #fba7ff
          (destructive-bg-color "#c01c28")
