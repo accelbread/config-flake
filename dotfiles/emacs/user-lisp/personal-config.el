@@ -2231,17 +2231,31 @@ Returns the tree-sitter anchor for using the generated function."
         agent-shell-openai-codex-acp-command
         `(,(get-hermetic-executable "codex-acp")))
 
-(defun my-shell-maker-should-auto-scroll-p ()
-  "Check auto-scroll without forcing redisplay/fontification."
-  (and (eobp)
-       (cl-every (lambda (window)
-                   (when-let* ((end (window-end window)))
-                     (>= (1+ end) (point-max))))
-                 (get-buffer-window-list nil 'no-mini))))
+(with-eval-after-load 'agent-shell
+  (advice-add
+   #'agent-shell--make-button :around
+   (lambda (orig-fun &rest args)
+     "Use `customize-button' faces for boxed buttons."
+     (let ((button (apply orig-fun args)))
+       (when (or (not (plist-member args :boxed))
+                 (plist-get args :boxed))
+         (add-text-properties 0 (length button)
+                              '( face custom-button
+                                 mouse-face custom-button-mouse)
+                              button))
+       button))
+   '((name . use-custom-button-face))))
 
 (with-eval-after-load 'shell-maker
-  (advice-add #'shell-maker--should-auto-scroll-p :override
-              #'my-shell-maker-should-auto-scroll-p))
+  (advice-add
+   #'shell-maker--should-auto-scroll-p :override
+   (lambda ()
+     "Check auto-scroll without forcing redisplay/fontification."
+     (and (eobp)
+          (cl-every (lambda (window)
+                      (when-let* ((end (window-end window)))
+                        (>= (1+ end) (point-max))))
+                    (get-buffer-window-list nil 'no-mini))))))
 
 
 ;;; Present
