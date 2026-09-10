@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 10 Sep 2026 04:37:47 -0700
+Subject: [PATCH] pgtk: Queue redraw after updating mouse highlight
+
+Mouse motion updates mouse-face in the Cairo backing surface, but PGTK
+does not queue a GTK draw to present the change.  The highlight therefore
+remains stale until unrelated redisplay, such as a cursor blink or click,
+queues a draw.
+
+Queue a draw after note_mouse_movement changes the highlighted glyph.
+This makes mouse-face enter and leave updates visible immediately
+(bug#80221).
+
+* src/pgtkterm.c (motion_notify_event): Queue a draw after mouse
+highlight changes.
+---
+ src/pgtkterm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/pgtkterm.c b/src/pgtkterm.c
+index 733c7d2..8931291 100644
+--- a/src/pgtkterm.c
++++ b/src/pgtkterm.c
+@@ -6027,7 +6027,12 @@ motion_notify_event (GtkWidget *widget, GdkEvent *event,
+ 	  last_mouse_window = window;
+ 	}
+ 
+-      if (!note_mouse_movement (f, &event->motion))
++      if (note_mouse_movement (f, &event->motion))
++	{
++	  if (!buffer_flipping_blocked_p ())
++	    gtk_widget_queue_draw (FRAME_GTK_WIDGET (f));
++	}
++      else
+ 	help_echo_string = previous_help_echo_string;
+     }
+   else
