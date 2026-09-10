@@ -414,6 +414,7 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
 (global-whitespace-mode)
 (global-display-fill-column-indicator-mode)
 (global-visual-wrap-prefix-mode)
+(global-word-wrap-whitespace-mode)
 (global-prettify-symbols-mode)
 (global-hl-todo-mode)
 (context-menu-mode)
