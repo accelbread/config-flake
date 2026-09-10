@@ -1573,6 +1573,7 @@ Returns the tree-sitter anchor for using the generated function."
         magit-delete-by-moving-to-trash nil
         git-commit-summary-max-length 50
         magit-no-message '("Turning on ")
+        magit-wip-mode-lighter ""
         magit-process-apply-ansi-colors 'filter
         magit-git-executable (get-hermetic-executable "git"))
 
