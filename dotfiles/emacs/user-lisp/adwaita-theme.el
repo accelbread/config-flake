@@ -63,6 +63,7 @@
          (view-fg-color "#ffffff")
          (headerbar-bg-color "#2e2e32")
          (headerbar-fg-color "#ffffff")
+         (headerbar-backdrop-color window-bg-color) ; #222226
          (sidebar-bg-color "#2e2e32")
          (sidebar-fg-color "#ffffff")
          (secondary-sidebar-bg-color "#28282c")
@@ -70,6 +71,10 @@
          (button-color (mix view-fg-color view-bg-color 0.1)) ; #343436
          (button-hover-color (mix view-fg-color view-bg-color 0.15)) ; #3f3f41
          (button-active-color (mix view-fg-color view-bg-color 0.3)) ; #616163
+         (selected-hover-color (mix view-fg-color view-bg-color 0.13)) ; #3a3a3d
+         (link-visited-color (mix accent-color view-fg-color 0.8)) ; #fcb9ff
+         (disabled-color (mix view-fg-color view-bg-color 0.5)) ; #8e8e90
+         (view-selected-color (mix accent-bg-color view-bg-color 0.25)) ; #3a2643
          (blue-1 "#99c1f1")
          (blue-2 "#62a0ea")
          (blue-3 "#3584e4")
@@ -114,7 +119,10 @@
          (dark-2 "#5e5c64")
          (dark-3 "#3d3846")
          (dark-4 "#241f31")
-         (dark-5 "#000000"))
+         (dark-5 "#000000")
+         ;; Colors from GtkSourceView's Adwaita style scheme.
+         (source-search-fg-color "#242424")
+         (search-match-color (mix yellow-3 view-bg-color 0.5))) ; #8a7827
     (custom-theme-set-faces
      'adwaita
      `(default ((t ( :background ,view-bg-color
@@ -125,10 +133,10 @@
      '(variable-pitch ((t (:family "Adwaita Sans"))))
      '(variable-pitch-text ((t (:inherit (variable-pitch)))))
      `(cursor ((t (:background ,view-fg-color))))
-     `(homoglyph ((t (:foreground ,warning-bg-color :inherit (bold)))))
+     `(homoglyph ((t (:foreground ,warning-color :inherit (bold)))))
      '(escape-glyph ((t (:inherit (homoglyph)))))
      `(minibuffer-prompt ((t (:foreground ,accent-color))))
-     '(highlight ((t (:background "#3b3b3d"))))
+     `(highlight ((t (:background ,selected-hover-color))))
      `(custom-button ((t ( :weight bold
                            :foreground ,view-fg-color
                            :background ,button-color
@@ -138,12 +146,15 @@
                                  :background ,button-hover-color))))
      `(custom-button-pressed ((t ( :inherit (custom-button)
                                    :background ,button-active-color))))
-     `(region ((t (:extend nil :background ,purple-5))))
-     `(shadow ((t (:foreground ,dark-1))))
+     `(region ((t ( :extend nil
+                    :background ,(mix accent-bg-color view-bg-color 0.3))))) ; #40284a
+     `(shadow ((t (:foreground ,disabled-color))))
      `(warning ((t (:weight bold :foreground ,warning-color))))
      `(success ((t (:weight bold :foreground ,success-color))))
      `(error ((t (:weight bold :foreground ,error-color))))
-     `(secondary-selection ((t (:extend nil :background ,dark-3))))
+     `(secondary-selection
+       ((t ( :extend nil
+             :background ,(mix view-fg-color view-bg-color 0.1))))) ; #343436
      `(trailing-whitespace ((t (:background ,dark-3))))
      `(font-lock-builtin-face ((t (:foreground ,yellow-1))))
      '(font-lock-comment-delimiter-face ((default (:inherit (font-lock-comment-face)))))
@@ -167,29 +178,33 @@
      `(link ((t ( :weight bold
                   :underline (:color foreground-color :style line)
                   :foreground ,accent-color))))
-     `(link-visited ((t (:foreground ,accent-color))))
-     `(fringe ((t (:foreground ,accent-bg-color))))
+     `(link-visited ((t (:foreground ,link-visited-color))))
+     `(fringe ((t (:foreground ,accent-color))))
      '(header-line ((t (:inherit (mode-line)))))
+     '(header-line-inactive ((t (:inherit (mode-line-inactive)))))
      `(mode-line ((t ( :box ( :line-width (8 . 4)
                               :color ,headerbar-bg-color
                               :style nil)
                        :background ,headerbar-bg-color
                        :foreground ,headerbar-fg-color
                        :inherit (variable-pitch)))))
-     '(mode-line-inactive ((t ( :box ( :line-width (8 . 4)
-                                       :color "#28282C"
+     `(mode-line-inactive ((t ( :box ( :line-width (8 . 4)
+                                       :color ,headerbar-backdrop-color
                                        :style nil)
-                                :background "#28282C"
-                                :foreground "#939395"
+                                :background ,headerbar-backdrop-color
+                                :foreground ,(mix headerbar-fg-color
+                                                  headerbar-backdrop-color
+                                                  0.5) ; #919193
                                 :inherit (mode-line)))))
      '(mode-line-buffer-id ((t (:weight bold))))
      `(mode-line-emphasis ((t (:foreground ,accent-color))))
-     '(mode-line-highlight ((t (:inherit (highlight)))))
+     `(mode-line-highlight
+       ((t (:background ,(mix headerbar-fg-color headerbar-bg-color 0.15))))) ; #4d4d50
      '(eglot-mode-line ((t (:inherit (fringe)))))
      '(tab-bar ((t (:inherit (mode-line)))))
      '(tab-bar-tab ((t (:inherit (mode-line)))))
      '(tab-bar-tab-inactive ((t (:inherit (mode-line-inactive)))))
-     '(window-divider ((t (:foreground "#28282C"))))
+     `(window-divider ((t (:foreground ,headerbar-backdrop-color))))
      '(window-divider-first-pixel ((t (:inherit (window-divider)))))
      '(window-divider-last-pixel ((t (:inherit (window-divider)))))
      '(transient-key-exit ((t (:inherit (font-lock-function-name-face)))))
@@ -199,7 +214,8 @@
      `(isearch-fail ((t ( :weight bold
                           :foreground ,error-fg-color
                           :background ,error-bg-color))))
-     '(lazy-highlight ((t (:inherit secondary-selection))))
+     `(lazy-highlight ((t ( :foreground ,source-search-fg-color
+                            :background ,search-match-color))))
      '(next-error ((t (:inherit (region)))))
      '(query-replace ((t (:inherit (isearch)))))
      '(whitespace-tab ((t (:inherit (shadow)))))
@@ -208,16 +224,17 @@
      '(page-break-lines ((t (:inherit (shadow)))))
      `(flyspell-incorrect ((t (:underline (:style wave :color ,error-bg-color)))))
      `(flyspell-duplicate ((t (:underline (:style wave :color ,warning-bg-color)))))
-     `(Man-overstrike ((t (:foreground ,accent-bg-color :inherit (bold fixed-pitch)))))
+     `(Man-overstrike ((t (:foreground ,accent-color :inherit (bold fixed-pitch)))))
      `(Man-underline ((t (:foreground ,accent-color :inherit (italic fixed-pitch)))))
      '(woman-bold ((t (:inherit (Man-overstrike)))))
      '(woman-italic ((t (:inherit (Man-underline)))))
      '(dired-broken-symlink ((t (:inherit (error)))))
      `(dired-directory ((t (:foreground ,blue-2))))
      '(dired-flagged ((t (:strike-through t :inherit (error)))))
-     `(dired-header ((t (:foreground ,accent-bg-color))))
-     `(dired-mark ((t (:foreground ,accent-bg-color))))
-     '(dired-marked ((t (:weight bold :inherit (font-lock-string-face)))))
+     `(dired-header ((t (:weight bold :foreground ,accent-color))))
+     `(dired-mark ((t (:foreground ,accent-color))))
+     `(dired-marked ((t ( :foreground ,view-fg-color
+                          :background ,view-selected-color))))
      '(dired-perm-write ((t (:inherit (font-lock-function-name-face)))))
      '(dired-special ((t (:inherit (font-lock-keyword-face)))))
      '(dired-symlink ((t (:inherit (font-lock-variable-name-face)))))
