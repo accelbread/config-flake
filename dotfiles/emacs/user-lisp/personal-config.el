@@ -1648,11 +1648,10 @@ Returns the tree-sitter anchor for using the generated function."
         which-key-unicode-correction 0
         which-key-side-window-max-height 0.5
         which-key-allow-imprecise-window-fit nil
-        which-key-show-transient-maps t)
+        which-key-show-transient-maps t
+        which-key-lighter "")
 
 (which-key-mode)
-
-(hide-minor-mode 'which-key-mode)
 
 
 ;;; Dired
