@@ -2225,6 +2225,7 @@ Returns the tree-sitter anchor for using the generated function."
         agent-shell-inhibit-system-sleep nil
         agent-shell-session-strategy 'new
         agent-shell-show-config-icons nil
+        agent-shell-confirm-interrupt nil
         agent-shell-preferred-agent-config 'codex
         agent-shell-openai-default-session-mode-id "read-only"
         agent-shell-openai-codex-acp-command
