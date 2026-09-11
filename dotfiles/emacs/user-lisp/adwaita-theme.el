@@ -358,6 +358,10 @@
        ((t (:extend t :background ,secondary-sidebar-bg-color))))
      `(ediff-odd-diff-Ancestor
        ((t (:extend t :background ,secondary-sidebar-bg-color))))
+     '(git-commit-summary ((t (:inherit (magit-section-heading)))))
+     '(git-commit-keyword ((t (:inherit (font-lock-type-face)))))
+     '(git-commit-trailer-value ((t (:inherit (font-lock-doc-face)))))
+     `(git-commit-comment-file ((t (:foreground ,source-diff-file-fg-color))))
      `(magit-section-highlight
        ((t (:extend t :background ,source-current-line-bg-color))))
      `(magit-section-heading
