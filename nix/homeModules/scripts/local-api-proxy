@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+set -euo pipefail
+
+kagi_token="$(secret-tool lookup api_token kagi)"
+
+exec caddy run --config - --adapter caddyfile <<EOF
+{
+  admin off
+  persist_config off
+}
+
+http://127.0.0.1:25619 {
+  bind 127.0.0.1
+  reverse_proxy https://mcp.kagi.com {
+    header_up Authorization "Bearer $kagi_token"
+  }
+}
+EOF

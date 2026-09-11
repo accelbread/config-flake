@@ -136,16 +136,33 @@ in
     };
   };
 
-  systemd.user.services.set-album-arts = {
-    Unit.Description = "Set album arts";
-    Install.WantedBy = [ "graphical-session.target" ];
-    Service.ExecStart = "${
-      lib.getExe (pkgs.writeShellApplication {
+  systemd.user.services = {
+    set-album-arts = {
+      Unit.Description = "Set album arts";
+      Install.WantedBy = [ "graphical-session.target" ];
+      Service.ExecStart = lib.getExe (pkgs.writeShellApplication {
         name = "set-album-arts";
         runtimeInputs = [ pkgs.glib pkgs.ffmpeg-headless ];
         text = builtins.readFile ./scripts/set-album-arts;
-      })
-    }";
+      });
+    };
+    local-api-proxy = {
+      Unit = {
+        Description = "Local proxy for authenticated APIs";
+        After = [ "graphical-session.target" "dbus.socket" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+      Service = {
+        ExecStart = lib.getExe (pkgs.writeShellApplication {
+          name = "local-api-proxy";
+          runtimeInputs = [ pkgs.caddy pkgs.libsecret ];
+          text = builtins.readFile ./scripts/local-api-proxy;
+        });
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+    };
   };
 
   programs = mapAttrs (_: v: v // { enable = true; }) {
