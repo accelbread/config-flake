@@ -60,6 +60,7 @@ in
         bind.dnsutils
         bubblewrap
         libsecret
+        wl-clipboard
       ];
       file = {
         ".fdignore".source = flake.src + /dotfiles/fdignore;
