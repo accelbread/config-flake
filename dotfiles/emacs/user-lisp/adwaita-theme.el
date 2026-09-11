@@ -368,7 +368,13 @@
      `(magit-hash ((t (:foreground ,dark-1))))
      `(magit-tag ((t (:foreground ,yellow-1))))
      `(magit-branch-local ((t (:foreground ,blue-2))))
+     `(magit-branch-current
+       ((t ( :inherit (magit-branch-local)
+             :underline (:color ,blue-2 :style line :position t)))))
      `(magit-branch-remote ((t (:foreground ,green-2))))
+     `(magit-branch-remote-head
+       ((t ( :inherit (magit-branch-remote)
+             :underline (:color ,green-2 :style line :position t)))))
      `(magit-refname ((t (:foreground ,light-4))))
      '(magit-signature-good ((t (:inherit (success)))))
      '(magit-signature-bad ((t (:inherit (error)))))
