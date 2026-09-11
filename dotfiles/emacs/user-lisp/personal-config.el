@@ -399,6 +399,34 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
         isearch-lazy-count t
         custom-raised-buttons t)
 
+(eval-when-compile (require 'display-fill-column-indicator))
+
+(setq-default display-fill-column-indicator-character ?\s)
+
+(defvar-local fill-column-indicator-stipple-cookie nil
+  "Cookie for the buffer-local fill-column indicator face remapping.")
+
+(defun set-fill-column-indicator-stipple ()
+  "Draw the `fill-column' indicator as a gapless one-pixel rule."
+  (when fill-column-indicator-stipple-cookie
+    (face-remap-remove-relative fill-column-indicator-stipple-cookie)
+    (setq fill-column-indicator-stipple-cookie nil))
+  (when-let* ((display-fill-column-indicator-mode)
+              (window (or (get-buffer-window nil t)
+                          (selected-window)))
+              ((display-graphic-p (window-frame window))))
+    (let* ((width (window-font-width window))
+           (bytes (make-list (ceiling width 8) 0)))
+      (setf (car (last bytes)) 1)
+      (setq fill-column-indicator-stipple-cookie
+            (face-remap-add-relative
+             'fill-column-indicator
+             `(:stipple (,width 1 ,(apply #'unibyte-string bytes))))))))
+
+(add-hook 'display-fill-column-indicator-mode-hook
+          #'set-fill-column-indicator-stipple)
+(add-hook 'text-scale-mode-hook #'set-fill-column-indicator-stipple)
+
 (blink-cursor-mode -1)
 (window-divider-mode)
 (fringe-mode 10)
@@ -2233,8 +2261,6 @@ OPTIONS sets server initialization options."
 
 
 ;;; Present
-
-(eval-when-compile (require 'display-fill-column-indicator))
 
 (defun narrow-prior-page ()
   "Widen then narrow to the previous page."
