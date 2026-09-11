@@ -160,6 +160,10 @@
      '(escape-glyph ((t (:inherit (homoglyph)))))
      `(minibuffer-prompt ((t (:foreground ,accent-color))))
      `(highlight ((t (:background ,selected-hover-color))))
+     `(widget-field ((t ( :foreground ,view-fg-color
+                          :background ,button-color
+                          :box (:line-width (4 . 2) :color ,button-color)
+                          :extend t))))
      `(custom-button ((t ( :weight bold
                            :foreground ,view-fg-color
                            :background ,button-color
@@ -169,6 +173,16 @@
                                  :background ,button-hover-color))))
      `(custom-button-pressed ((t ( :inherit (custom-button)
                                    :background ,button-active-color))))
+     '(custom-comment ((t (:extend nil :inherit (widget-field)))))
+     '(custom-comment-tag ((t (:inherit (default)))))
+     `(custom-state ((t (:foreground ,success-color))))
+     `(custom-variable-tag ((t ( :weight bold
+                                 :foreground ,accent-color))))
+     `(custom-variable-obsolete ((t (:foreground ,disabled-color))))
+     `(custom-group-tag ((t ( :weight bold
+                              :height 1.2
+                              :foreground ,accent-color
+                              :inherit (variable-pitch)))))
      `(region ((t ( :extend nil
                     :background ,(mix accent-bg-color view-bg-color 0.3))))) ; #40284a
      `(shadow ((t (:foreground ,disabled-color))))
