@@ -176,6 +176,7 @@
      '(escape-glyph ((t (:inherit (homoglyph)))))
      `(minibuffer-prompt ((t (:foreground ,accent-color))))
      `(highlight ((t (:background ,selected-hover-color))))
+     `(hl-line ((t (:extend t :background ,source-current-line-bg-color))))
      `(widget-field ((t ( :foreground ,view-fg-color
                           :background ,button-color
                           :box (:line-width (4 . 2) :color ,button-color)

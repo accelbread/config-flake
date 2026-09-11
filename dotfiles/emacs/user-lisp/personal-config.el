@@ -2214,6 +2214,23 @@ OPTIONS sets server initialization options."
                         (>= (1+ end) (point-max))))
                     (get-buffer-window-list nil 'no-mini))))))
 
+(custom-theme-set-faces
+ 'user
+ '(agent-shell-model ((t (:inherit (font-lock-function-name-face)))))
+ '(agent-shell-buffer-name ((t (:inherit (mode-line-buffer-id)))))
+ '(agent-shell-session-title ((t (:inherit (bold)))))
+ '(agent-shell-session-date ((t (:inherit (shadow)))))
+ '(agent-shell-section-heading ((t (:inherit (dired-header)))))
+ '(agent-shell-section-annotation ((t (:inherit (shadow)))))
+ '(agent-shell-thought-body ((t (:inherit (shadow)))))
+ '(agent-shell-secondary ((t (:inherit (shadow)))))
+ '(agent-shell-pending ((t (:inherit (shadow)))))
+ '(agent-shell-viewport-prompt ((t (:inherit (comint-highlight-input)))))
+ '(agent-shell-viewport-status-view ((t (:inherit (shadow)))))
+ '(agent-shell-markdown-table-border ((t (:inherit (shadow)))))
+ '(agent-shell-markdown-table-zebra ((t (:inherit (hl-line)))))
+ '(agent-shell-markdown-list-marker ((t (:inherit (shadow))))))
+
 
 ;;; Present
 
