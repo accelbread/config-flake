@@ -30,18 +30,9 @@
   (cl-letf (((symbol-function #'y-or-n-p) #'always))
     (apply orig-fun args)))
 
-(defun inhibit-redisplay-wrapper (orig-fun &rest args)
-  "Call ORIG-FUN with ARGS with display inhibited."
-  (let ((inhibit-redisplay t))
-    (apply orig-fun args)))
-
 (defmacro push-default (newelt var)
   "Add NEWELT to the list stored in the default value of VAR."
   `(setq-default ,var (cons ,newelt (default-value ,var))))
-
-(defun command-var (var)
-  "Return lambda for calling command in VAR."
-  (lambda () (interactive) (call-interactively (symbol-value var))))
 
 (defmacro completion-pred (&rest body)
   "Return completion-predicate with BODY in correct buffer."
@@ -423,10 +414,7 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 (hide-minor-mode 'abbrev-mode)
-
-(if (>= emacs-major-version 30)
-    (hide-minor-mode 'whitespace-mode)
-  (hide-minor-mode 'global-whitespace-mode))
+(hide-minor-mode 'whitespace-mode)
 
 (with-eval-after-load 'face-remap
   (hide-minor-mode 'buffer-face-mode))
@@ -695,27 +683,19 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
   (interactive)
   (set-transient-map window-traverse-map t))
 
-(defvar system-command-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "c" #'meow-clipboard-save)
-    (define-key map "x" #'meow-clipboard-kill)
-    (define-key map "v" #'meow-clipboard-yank)
-    map)
-  "Keymap for system clipboard access.")
-
 (defvar-local meow-motion-next-function #'meow-next
   "Function to use for next in motion mode.")
 
 (defvar-local meow-motion-prev-function #'meow-prev
   "Function to use for prev in motion mode.")
 
-(defalias 'meow-motion-next-command
-  (command-var 'meow-motion-next-function)
-  "Call the command stored in `meow-motion-next-function'.")
+(defun meow-motion-next-command ()
+  "Call the command stored in `meow-motion-next-function'."
+  (interactive) (call-interactively meow-motion-next-function))
 
-(defalias 'meow-motion-prev-command
-  (command-var 'meow-motion-prev-function)
-  "Call the command stored in `meow-motion-prev-function'.")
+(defun meow-motion-prev-command ()
+  "Call the command stored in `meow-motion-prev-function'."
+  (interactive) (call-interactively meow-motion-prev-function))
 
 (meow-motion-define-key
  '("j" . meow-motion-next-command)
@@ -813,6 +793,7 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
                                 (?\[ . square) (?\] . square)
                                 (?\{ . curly) (?\} . curly)
                                 (?x . line)
+                                (?v . visual-line)
                                 (?f . defun)
                                 (?\" . string)
                                 (?e . symbol)
@@ -1073,9 +1054,7 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
   (nconc eshell-variable-aliases-list
          `(("/" ,(lambda () (concat (file-remote-p default-directory) "/"))
             nil t)
-           ("TERM" ,(lambda () "dumb-emacs-ansi") t t)
-           ,@(when (< emacs-major-version 30)
-               `(("PAGER" ,(lambda () "cat") t t))))))
+           ("TERM" ,(lambda () "dumb-emacs-ansi") t t))))
 
 (add-hook 'eshell-before-prompt-hook #'eshell-begin-on-new-line)
 
@@ -1124,23 +1103,6 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
     (overlay-put ov 'face 'eshell-input)))
 
 (add-hook 'eshell-pre-command-hook #'my-eshell-highlight-last-input)
-
-(defun eshell/e (&rest args)
-  "Open files in ARGS."
-  (dolist (file (reverse
-                 (mapcar #'expand-file-name
-                         (flatten-tree
-                          (mapcar (lambda (s)
-                                    (if (stringp s) (split-string s "\n") s))
-                                  args)))))
-    (find-file file)))
-
-(put #'eshell/e 'eshell-no-numeric-conversions t)
-(put #'eshell/e 'eshell-filename-arguments t)
-
-(defalias #'eshell/v #'eshell-exec-visual)
-
-(put #'eshell/v 'eshell-no-numeric-conversions t)
 
 (with-eval-after-load 'abbrev
   (define-abbrev-table 'eshell-mode-abbrev-table
@@ -1482,32 +1444,28 @@ OPTIONS sets server initialization options."
 (setopt treesit-auto-install-grammar 'never
         treesit-enabled-modes t)
 
-(defun defun-ts-disp (name disp)
-  "Define a function for displaying tree-sitter query as DISP.
-NAME should be a symbol whose name is the function's name's suffix.
-Returns the tree-sitter anchor for using the generated function."
-  (let ((sym (concat "ts-disp-" (symbol-name name))))
-    (defalias (intern sym)
-      (lambda (node &rest _)
-        (with-silent-modifications
-          (put-text-property (treesit-node-start node) (treesit-node-end node)
-                             'display disp))))
-    (make-symbol (concat "@" sym))))
-
-(dolist (elem '((lteq . "≤")
-                (gteq . "≥")
-                (neq . "≠")
-                (lshift . "«")
-                (rshift . "»")
-                (lshifteq . "«=")
-                (rshifteq . "»=")
-                (arrow . "→")
-                (arrow2 . "⇒")
-                (ldquote . "“")
-                (rdquote . "”")
-                (lquote . "‘")
-                (rquote . "’")))
-  (defun-ts-disp (car elem) (cdr elem)))
+(cl-flet ((defun-ts-disp (name disp)
+            (let ((sym (concat "ts-disp-" (symbol-name name))))
+              (defalias (intern sym)
+                (lambda (node &rest _)
+                  (with-silent-modifications
+                    (put-text-property (treesit-node-start node)
+                                       (treesit-node-end node)
+                                       'display disp)))))))
+  (dolist (elem '((lteq . "≤")
+                  (gteq . "≥")
+                  (neq . "≠")
+                  (lshift . "«")
+                  (rshift . "»")
+                  (lshifteq . "«=")
+                  (rshifteq . "»=")
+                  (arrow . "→")
+                  (arrow2 . "⇒")
+                  (ldquote . "“")
+                  (rdquote . "”")
+                  (lquote . "‘")
+                  (rquote . "’")))
+    (defun-ts-disp (car elem) (cdr elem))))
 
 
 ;;; Vale
@@ -1705,7 +1663,6 @@ Returns the tree-sitter anchor for using the generated function."
             #'enable-flymake-after-locals
             nil t))
 
-;; TODO: Run flymake-cc in sandbox so just that value can be made safe
 (with-eval-after-load 'flymake
   (put 'flymake-diagnostic-functions
        'safe-local-variable #'local-var-safe-in-trusted))
@@ -1719,9 +1676,8 @@ Returns the tree-sitter anchor for using the generated function."
               (get-buffer-create "*Help*"))
             '((name . help-xref-dont-reuse-buffer)))
 
-(when (>= emacs-major-version 30)
-  (add-hook 'help-fns-describe-function-functions
-            #'shortdoc-help-fns-examples-function))
+(add-hook 'help-fns-describe-function-functions
+          #'shortdoc-help-fns-examples-function)
 
 
 ;;; Info
@@ -2377,7 +2333,6 @@ Returns the tree-sitter anchor for using the generated function."
   "Apply ansi color sequences in the current buffer."
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
-
 
 (defun sort-words (reverse beg end)
   "Sort words in region lexicographical.
