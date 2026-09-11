@@ -13,6 +13,7 @@ in
     sessionVariables = {
       BROWSER = "librewolf";
       DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
+      CODEX_HOME = "${config.xdg.stateHome}/codex";
     };
     packages = with pkgs; [
       hunspellDicts.en_US
@@ -90,6 +91,25 @@ in
           }}/share/mpv/scripts";
         recursive = false;
       };
+      ".local/state/codex/model_catalog.json".source =
+        pkgs.runCommand "codex-openrouter-model-catalog.json"
+          { nativeBuildInputs = [ pkgs.jq ]; } ''
+          jq '
+            def openrouter_models: ["gpt-5.6-sol", "gpt-5.6-luna"];
+            .models = [
+              .models[]
+              | .slug as $slug
+              | select(openrouter_models | index($slug))
+              | .slug = "openai/\($slug):floor"
+              | .supported_reasoning_levels |= map(select(.effort != "ultra"))
+              | .use_responses_lite = false
+              | .prefer_websockets = false
+              | .supports_search_tool = false
+              | .service_tiers = []
+              | del(.available_in_plans, .multi_agent_version, .tool_mode)
+            ]
+          ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
+        '';
     };
     activation = {
       passGitConfig =
