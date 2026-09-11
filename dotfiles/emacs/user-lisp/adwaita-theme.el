@@ -47,7 +47,8 @@
                            (rgb color))))
          (hex (apply #'color-oklab-to-srgb
                      (cons (max 0.85 (car oklab)) (cdr oklab)))))))
-  (let* ((accent-blue "#3584e4")
+  (let* (;; Colors from libadwaita
+         (accent-blue "#3584e4")
          (accent-teal "#2190a4")
          (accent-green "#3a944a")
          (accent-yellow "#c88800")
@@ -144,8 +145,23 @@
          (dark-4 "#241f31")
          (dark-5 "#000000")
          ;; Colors from GtkSourceView's Adwaita style scheme.
+         (teal-1 "#93ddc2")
+         (teal-2 "#5bc8af")
+         (teal-3 "#33b2a4")
+         (teal-4 "#26a1a2")
+         (teal-5 "#218787")
+         (violet-2 "#7d8ac7")
+         (violet-3 "#6362c8")
+         (violet-4 "#4e57ba")
+         (source-text-fg-color "#c0bfbc")
          (source-search-fg-color "#242424")
-         (search-match-color (mix yellow-3 view-bg-color 0.5))) ; #8a7827
+         (search-match-color (mix yellow-3 view-bg-color 0.5)) ; #8a7827
+         (source-current-line-bg-color "#242428")
+         (source-diff-added-line-fg-color teal-3)
+         (source-diff-changed-line-fg-color orange-3)
+         (source-diff-file-fg-color violet-2)
+         (source-diff-location-fg-color yellow-4)
+         (source-diff-removed-line-fg-color red-1))
     (custom-theme-set-faces
      'adwaita
      `(default ((t ( :background ,view-bg-color
@@ -275,6 +291,179 @@
      '(dired-perm-write ((t (:inherit (font-lock-function-name-face)))))
      '(dired-special ((t (:inherit (font-lock-keyword-face)))))
      '(dired-symlink ((t (:inherit (font-lock-variable-name-face)))))
+     `(diff-header ((t ( :extend t
+                         :foreground ,source-diff-location-fg-color
+                         :background ,button-color))))
+     `(diff-file-header ((t ( :extend t
+                              :weight bold
+                              :foreground ,source-diff-file-fg-color
+                              :background ,view-bg-color))))
+     `(diff-context ((t ( :extend t
+                          :foreground ,source-text-fg-color
+                          :background ,view-bg-color))))
+     `(diff-removed ((t ( :extend t
+                          :foreground ,source-diff-removed-line-fg-color
+                          :background ,view-bg-color))))
+     `(diff-added ((t ( :extend t
+                        :foreground ,source-diff-added-line-fg-color
+                        :background ,view-bg-color))))
+     `(diff-changed ((t ( :extend t
+                          :foreground ,source-diff-changed-line-fg-color
+                          :background ,view-bg-color))))
+     `(diff-changed-unspecified
+       ((t ( :extend t
+             :foreground ,source-diff-changed-line-fg-color
+             :background ,view-bg-color))))
+     `(diff-indicator-removed
+       ((t (:foreground ,source-diff-removed-line-fg-color))))
+     `(diff-indicator-added
+       ((t (:foreground ,source-diff-added-line-fg-color))))
+     `(diff-indicator-changed
+       ((t (:foreground ,source-diff-changed-line-fg-color))))
+     '(diff-error ((t (:inherit (error)))))
+     `(ediff-current-diff-A
+       ((t (:extend t :background ,(mix red-5 view-bg-color 0.25)))))
+     `(ediff-current-diff-B
+       ((t (:extend t :background ,(mix teal-5 view-bg-color 0.25)))))
+     `(ediff-current-diff-C
+       ((t (:extend t :background ,(mix orange-5 view-bg-color 0.25)))))
+     `(ediff-current-diff-Ancestor
+       ((t (:extend t :background ,(mix blue-5 view-bg-color 0.25)))))
+     `(ediff-fine-diff-A
+       ((t (:background ,(mix source-diff-removed-line-fg-color
+                              source-current-line-bg-color
+                              0.25)))))
+     `(ediff-fine-diff-B
+       ((t (:background ,(mix source-diff-added-line-fg-color
+                              source-current-line-bg-color
+                              0.25)))))
+     `(ediff-fine-diff-C
+       ((t (:background ,(mix source-diff-changed-line-fg-color
+                              source-current-line-bg-color
+                              0.25)))))
+     `(ediff-even-diff-A
+       ((t (:extend t :background ,source-current-line-bg-color))))
+     `(ediff-even-diff-B
+       ((t (:extend t :background ,source-current-line-bg-color))))
+     `(ediff-even-diff-C
+       ((t (:extend t :background ,source-current-line-bg-color))))
+     `(ediff-even-diff-Ancestor
+       ((t (:extend t :background ,source-current-line-bg-color))))
+     `(ediff-odd-diff-A
+       ((t (:extend t :background ,secondary-sidebar-bg-color))))
+     `(ediff-odd-diff-B
+       ((t (:extend t :background ,secondary-sidebar-bg-color))))
+     `(ediff-odd-diff-C
+       ((t (:extend t :background ,secondary-sidebar-bg-color))))
+     `(ediff-odd-diff-Ancestor
+       ((t (:extend t :background ,secondary-sidebar-bg-color))))
+     `(magit-section-highlight
+       ((t (:extend t :background ,source-current-line-bg-color))))
+     `(magit-section-heading
+       ((t (:extend t :weight bold :foreground ,accent-color))))
+     `(magit-section-heading-selection
+       ((t (:extend t :foreground ,warning-color))))
+     '(magit-dimmed ((t (:inherit (shadow)))))
+     `(magit-hash ((t (:foreground ,dark-1))))
+     `(magit-tag ((t (:foreground ,yellow-1))))
+     `(magit-branch-local ((t (:foreground ,blue-2))))
+     `(magit-branch-remote ((t (:foreground ,green-2))))
+     `(magit-refname ((t (:foreground ,light-4))))
+     '(magit-signature-good ((t (:inherit (success)))))
+     '(magit-signature-bad ((t (:inherit (error)))))
+     `(magit-signature-untrusted ((t (:foreground ,teal-2))))
+     '(magit-signature-expired ((t (:inherit (warning)))))
+     '(magit-signature-revoked ((t (:inherit (error)))))
+     `(magit-signature-error ((t (:foreground ,blue-1))))
+     `(magit-cherry-unmatched ((t (:foreground ,blue-2))))
+     `(magit-cherry-equivalent ((t (:foreground ,purple-2))))
+     `(magit-log-graph ((t (:foreground ,light-5))))
+     `(magit-log-author ((t (:foreground ,brown-1))))
+     '(magit-log-date ((t (:inherit (shadow)))))
+     '(magit-diff-file-heading ((t (:inherit (diff-file-header)))))
+     `(magit-diff-file-heading-selection
+       ((t (:extend t :inherit (region magit-diff-file-heading-highlight)))))
+     '(magit-diff-hunk-heading ((t (:inherit (diff-hunk-header)))))
+     `(magit-diff-hunk-heading-highlight
+       ((t ( :background ,button-hover-color
+             :inherit (magit-diff-hunk-heading)))))
+     `(magit-diff-hunk-heading-selection
+       ((t (:extend t :inherit (region magit-diff-hunk-heading-highlight)))))
+     `(magit-diff-lines-heading
+       ((t (:extend t :inherit (region magit-diff-hunk-heading-highlight)))))
+     '(magit-diff-hunk-region ((t (:extend t :inherit (region bold)))))
+     `(magit-diff-our-heading
+       ((t ( :extend t
+             :foreground ,red-1
+             :background ,(mix red-5 view-bg-color 0.25)))))
+     `(magit-diff-base-heading
+       ((t ( :extend t
+             :foreground ,yellow-1
+             :background ,(mix yellow-5 view-bg-color 0.25)))))
+     `(magit-diff-their-heading
+       ((t ( :extend t
+             :foreground ,green-1
+             :background ,(mix green-5 view-bg-color 0.25)))))
+     '(magit-diff-context ((t (:inherit (diff-context)))))
+     '(magit-diff-removed ((t (:inherit (diff-removed)))))
+     '(magit-diff-added ((t (:inherit (diff-added)))))
+     '(magit-diff-base ((t (:inherit (diff-changed)))))
+     `(magit-diff-context-highlight
+       ((t ( :background ,source-current-line-bg-color
+             :inherit (magit-diff-context)))))
+     `(magit-diff-removed-highlight
+       ((t ( :background ,source-current-line-bg-color
+             :inherit (magit-diff-removed)))))
+     `(magit-diff-added-highlight
+       ((t ( :background ,source-current-line-bg-color
+             :inherit (magit-diff-added)))))
+     `(magit-diff-base-highlight
+       ((t ( :background ,source-current-line-bg-color
+             :inherit (magit-diff-base)))))
+     '(magit-diff-removed-indicator ((t (:inherit (diff-indicator-removed)))))
+     '(magit-diff-added-indicator ((t (:inherit (diff-indicator-added)))))
+     '(magit-diff-base-indicator ((t (:inherit (diff-indicator-changed)))))
+     '(magit-diffstat-removed ((t (:inherit (diff-indicator-removed)))))
+     '(magit-diffstat-added ((t (:inherit (diff-indicator-added)))))
+     `(diff-refine-added
+       ((t ( :foreground ,source-diff-added-line-fg-color
+             :background ,(mix source-diff-added-line-fg-color
+                               source-current-line-bg-color
+                               0.25)))))
+     `(diff-refine-removed
+       ((t ( :foreground ,source-diff-removed-line-fg-color
+             :background ,(mix source-diff-removed-line-fg-color
+                               source-current-line-bg-color
+                               0.25)))))
+     `(diff-refine-changed
+       ((t ( :foreground ,source-diff-changed-line-fg-color
+             :background ,(mix source-diff-changed-line-fg-color
+                               source-current-line-bg-color
+                               0.25)))))
+     `(magit-blame-highlight
+       ((t ( :extend t
+             :foreground ,view-fg-color
+             :background ,headerbar-bg-color))))
+     `(magit-process-ok
+       ((t (:foreground ,success-color :inherit (magit-section-heading)))))
+     `(magit-process-ng
+       ((t (:foreground ,error-color :inherit (magit-section-heading)))))
+     `(magit-bisect-good ((t (:foreground ,success-color))))
+     `(magit-bisect-skip ((t (:foreground ,warning-color))))
+     `(magit-bisect-bad ((t (:foreground ,error-color))))
+     `(magit-sequence-stop ((t (:foreground ,blue-1))))
+     `(magit-sequence-part ((t (:foreground ,warning-color))))
+     `(magit-sequence-head ((t (:foreground ,success-color))))
+     `(magit-sequence-drop ((t (:foreground ,error-color))))
+     `(magit-reflog-commit ((t (:foreground ,success-color))))
+     `(magit-reflog-amend ((t (:foreground ,purple-2))))
+     `(magit-reflog-merge ((t (:foreground ,success-color))))
+     `(magit-reflog-checkout ((t (:foreground ,blue-2))))
+     `(magit-reflog-reset ((t (:foreground ,error-color))))
+     `(magit-reflog-rebase ((t (:foreground ,purple-2))))
+     `(magit-reflog-cherry-pick ((t (:foreground ,success-color))))
+     `(magit-reflog-remote ((t (:foreground ,blue-2))))
+     `(magit-reflog-other ((t (:foreground ,blue-2))))
      '(eshell-prompt ((t (:inherit (minibuffer-prompt)))))
      `(eshell-input ((t (:foreground ,accent-color))))
      '(eshell-ls-executable ((t (:inherit (font-lock-function-name-face)))))
@@ -303,6 +492,12 @@
      '(ansi-color-bright-magenta ((t (:foreground "#c061cb" :background "#c061cb"))))
      '(ansi-color-bright-cyan ((t (:foreground "#4fd2fd" :background "#4fd2fd"))))
      '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4")))))))
+
+(custom-theme-set-variables
+ 'adwaita
+ '(magit-diff-highlight-hunk-region-functions
+   '(magit-diff-highlight-hunk-region-dim-outside
+     magit-diff-highlight-hunk-region-using-face)))
 
 ;;;###autoload
 (when load-file-name
