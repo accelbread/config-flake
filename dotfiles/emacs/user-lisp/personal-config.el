@@ -189,8 +189,6 @@ returns nil."
 
 ;;; Handle trusting projects
 
-(setopt trusted-content `(,user-emacs-directory))
-
 (ag-trust-mode)
 
 
