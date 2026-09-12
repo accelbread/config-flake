@@ -220,11 +220,6 @@ returns nil."
 (setq print-circle t)
 
 
-;;; Disable overwriting of system clipboard with selection
-
-(setq select-enable-clipboard nil)
-
-
 ;;; Prevent accidental closing
 
 (global-unset-key (kbd "C-z"))
