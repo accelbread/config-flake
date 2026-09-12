@@ -76,10 +76,6 @@
   (interactive)
   (setq-local nobreak-char-display nil))
 
-(defun local-var-safe-in-trusted (_)
-  "Return non-nil when current buffer is trusted."
-  (trusted-content-p))
-
 ;; This is set by Nix
 (defvar hermetic-executable-paths nil
   "Alist mapping lsp program names to absolute paths.")
@@ -257,6 +253,24 @@ returns nil."
 (require 'trust-manager) ;; won't be on load-path
 (let ((load-path (my-minimal-trust-manager-load-path load-path)))
   (trust-manager-mode))
+
+(defun my-trust-manager-setup ()
+  "Configure project trust."
+  (when buffer-file-name
+    (trust-manager--check-file)
+    (when (trusted-content-p)
+      (setq-local enable-local-variables :all))))
+
+(add-hook 'change-major-mode-after-body-hook #'my-trust-manager-setup)
+
+(advice-add
+ 'normal-mode :around
+ (lambda (orig-fn &rest args)
+   "Use local variables for trusted files."
+   (my-trust-manager-setup)
+   (let ((enable-local-variables enable-local-variables))
+     (apply orig-fn args)))
+ '((name . use-locals-when-trusted)))
 
 (defun save-trust-manager-trust-alist (_ new-value operation where)
   "Save trust-manager project trust NEW-VALUE to Emacs config dir.
@@ -1696,10 +1710,6 @@ used instead. OPTIONS sets server initialization options."
   (add-hook 'hack-local-variables-hook
             #'enable-flymake-after-locals
             nil t))
-
-(with-eval-after-load 'flymake
-  (put 'flymake-diagnostic-functions
-       'safe-local-variable #'local-var-safe-in-trusted))
 
 
 ;;; Help
