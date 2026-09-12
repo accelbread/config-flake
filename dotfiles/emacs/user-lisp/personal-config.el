@@ -428,7 +428,7 @@ returns nil."
                        ((meow-keypad-mode-p) "😾")
                        ((meow-motion-mode-p) "😿")
                        (t "🙀")))
-          (:eval (pcase (list buffer-read-only (buffer-modified-p))
+          (:eval (pcase (list buffer-read-only (when (buffer-modified-p) t))
                    ('(nil nil) "✨")
                    ('(nil t) "🖋️")
                    ('(t nil) "🔒")
