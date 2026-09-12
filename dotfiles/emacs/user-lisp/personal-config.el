@@ -429,11 +429,10 @@ returns nil."
                     ('(t nil) "🔒")
                     ('(t t) "🔏"))))
           (:eval (when (file-remote-p default-directory) "✈️"))
-          (:eval (when envrc-mode
-                   (pcase envrc--status
-                     ('error "🚫")
-                     ('denied "🚫")
-                     ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
+          (envrc-mode (:eval (pcase envrc--status
+                               ('error "🔥")
+                               ('denied "🚫")
+                               ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
           (server-buffer-clients "🚨")
           (:eval (when (buffer-narrowed-p) "🔎"))
           " "
