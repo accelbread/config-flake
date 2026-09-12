@@ -3,7 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
-;; Package-Requires: ((emacs "31.1") agent-shell cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib trust-manager typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
+;; Package-Requires: ((emacs "31.1") agent-shell cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
 
 ;;; Commentary:
 
@@ -189,115 +189,9 @@ returns nil."
 
 ;;; Handle trusting projects
 
-(eval-when-compile (require 'trust-manager))
+(setopt trusted-content `(,user-emacs-directory))
 
-(setopt trusted-content `(,user-emacs-directory)
-        trust-manager-secure-additional-features nil)
-
-;; trusted-content-p is slow as it performs file-equal-p on every
-;; trusted-content entry
-(advice-add
- 'trusted-content-p :override
- (lambda ()
-   "Return non-nil when the current buffer has a canonically trusted path."
-   (and (not untrusted-content)
-        (or
-         (eq trusted-content :all)
-         (and buffer-file-truename
-              (let ((file (abbreviate-file-name buffer-file-truename)))
-                (catch 'trusted
-                  (dolist (trusted-file trusted-content)
-                    (when (if (string-suffix-p "/" trusted-file)
-                              (string-prefix-p trusted-file file)
-                            (equal trusted-file file))
-                      (throw 'trusted t)))
-                  nil))))))
- '((name . optimize-trusted-content-p)))
-
-(let ((remove-customize-save-variable
-       (lambda (orig-fun &rest args)
-         "Use set instead of customize-save-variable"
-         (cl-letf (((symbol-function #'customize-save-variable)
-                    (symbol-function #'set)))
-           (apply orig-fun args)))))
-  (dolist (fn '(trust-manager-set-file-trust
-                trust-manager--check-file
-                trust-manager--forget-project))
-    (advice-add fn :around remove-customize-save-variable
-                '((name . remove-customize-save-variable)))))
-
-(defun my-trust-manager-query-project (project)
-  "Skip asking if PROJECT is in nix store."
-  (if (string-prefix-p "/nix/store/" (expand-file-name project)) nil
-    (trust-manager--should-trust-p project)))
-
-(setq trust-manager--trust-query-function #'my-trust-manager-query-project)
-
-(defun my-minimal-trust-manager-load-path (paths)
-  "Remove absolute PATHS covered by another directory in PATHS."
-  (let ((absolute
-         (mapcar (lambda (path)
-                   (file-name-as-directory (expand-file-name path)))
-                 (seq-filter #'file-name-absolute-p paths))))
-    (seq-filter
-     (lambda (path)
-       (or (not (file-name-absolute-p path))
-           (let ((path (file-name-as-directory (expand-file-name path))))
-             (not (seq-some
-                   (lambda (parent)
-                     (and (< (length parent) (length path))
-                          (string-prefix-p parent path)))
-                   absolute)))))
-     paths)))
-
-(require 'trust-manager) ;; won't be on load-path
-(let ((load-path (my-minimal-trust-manager-load-path load-path)))
-  (trust-manager-mode))
-
-(defun my-trust-manager-setup ()
-  "Configure project trust."
-  (when buffer-file-name
-    (trust-manager--check-file)
-    (when (trusted-content-p)
-      (setq-local enable-local-variables :all))))
-
-(add-hook 'change-major-mode-after-body-hook #'my-trust-manager-setup)
-
-(advice-add
- 'normal-mode :around
- (lambda (orig-fn &rest args)
-   "Use local variables for trusted files."
-   (my-trust-manager-setup)
-   (let ((enable-local-variables enable-local-variables))
-     (apply orig-fn args)))
- '((name . use-locals-when-trusted)))
-
-(defun save-trust-manager-trust-alist (_ new-value operation where)
-  "Save trust-manager project trust NEW-VALUE to Emacs config dir.
-This watcher takes action when OPERATION is `set' and WHERE is global."
-  (when (and (eq operation 'set) (not where))
-    (let* ((project-roots (mapcar #'expand-file-name
-                                  (project-known-project-roots)))
-           (filtered-value (seq-filter
-                            (lambda (entry)
-                              (member (expand-file-name (car entry))
-                                      project-roots))
-                            new-value)))
-      (with-temp-file (file-name-concat user-emacs-directory
-                                        "trust-manager-trust-alist")
-        (insert ";;; -*- lisp-data -*-\n")
-        (pp filtered-value (current-buffer))))))
-
-(when (daemonp)
-  (add-variable-watcher 'trust-manager-trust-alist
-                        #'save-trust-manager-trust-alist))
-
-(let ((filename (file-name-concat user-emacs-directory
-                                  "trust-manager-trust-alist")))
-  (when (file-exists-p filename)
-    (with-temp-buffer
-      (insert-file-contents filename)
-      (setopt trust-manager-trust-alist (read (current-buffer))))))
+(ag-trust-mode)
 
 
 ;;; Disable use of dialog boxes
