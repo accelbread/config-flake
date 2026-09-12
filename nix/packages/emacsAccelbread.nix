@@ -34,6 +34,7 @@
 , fetchurl
 , jing-trang
 , codex-acp
+, emptyDirectory
 }:
 let
   inherit (builtins) attrNames filter head match readDir readFile
@@ -178,10 +179,15 @@ let
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
 
+  builtinLibs = [
+    "xref"
+  ];
+
   baseEmacs = emacs31-pgtk;
 
   emacsPackages = (emacsPackagesFor baseEmacs).overrideScope
-    (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches);
+    (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches
+      // lib.genAttrs builtinLibs (_: emptyDirectory));
 
   inherit (emacsPackages) emacsWithPackages;
 
