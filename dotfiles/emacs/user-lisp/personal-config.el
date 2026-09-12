@@ -298,7 +298,8 @@ returns nil."
         mouse-drag-and-drop-region t
         mouse-yank-at-point t
         isearch-lazy-count t
-        custom-raised-buttons t)
+        custom-raised-buttons t
+        view-read-only t)
 
 (eval-when-compile (require 'display-fill-column-indicator))
 
@@ -339,6 +340,9 @@ returns nil."
 (global-hl-todo-mode)
 (context-menu-mode)
 (mouse-shift-adjust-mode)
+(global-xref-mouse-mode)
+(repeat-mode)
+(delete-selection-mode)
 
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
@@ -1581,16 +1585,7 @@ used instead. OPTIONS sets server initialization options."
 (setopt flymake-mode-line-format nil
         flymake-suppress-zero-counters t)
 
-(defun enable-flymake-after-locals ()
-  "Hook function for `hack-local-variables-hook' to enable `flymake'."
-  (unless buffer-read-only
-    (flymake-mode)))
-
-(defun enable-flymake ()
-  "Enable `flymake-mode' if buffer is modifiable."
-  (add-hook 'hack-local-variables-hook
-            #'enable-flymake-after-locals
-            nil t))
+(add-hook 'prog-mode-hook 'flymake-mode)
 
 
 ;;; Help
@@ -1657,7 +1652,6 @@ used instead. OPTIONS sets server initialization options."
         rainbow-x-colors nil)
 
 (add-hook 'emacs-lisp-mode-hook #'display-page-breaks-as-lines)
-(add-hook 'emacs-lisp-mode-hook #'enable-flymake)
 (add-hook 'emacs-lisp-mode-hook #'format-on-save-mode)
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
 
@@ -1678,12 +1672,6 @@ used instead. OPTIONS sets server initialization options."
 
 (add-hook 'emacs-lisp-mode-hook #'theme-enable-rainbow-mode)
 
-(dir-locals-set-class-variables
- 'elpa-src '((nil . ((buffer-read-only . t)))))
-
-(dir-locals-set-directory-class
- (file-name-concat user-emacs-directory "elpa") 'elpa-src)
-
 
 ;;; Org
 
@@ -1701,8 +1689,6 @@ used instead. OPTIONS sets server initialization options."
       (ansi-color-apply-on-region (point) (org-babel-result-end)))))
 
 (add-hook 'org-babel-after-execute-hook #'org-babel-apply-ansi-color)
-
-(add-hook 'org-mode-hook #'flymake-mode)
 
 
 ;;; Markdown
@@ -1728,7 +1714,6 @@ used instead. OPTIONS sets server initialization options."
   (setq-local page-delimiter markdown-regex-hr))
 
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
-(add-hook 'markdown-mode-hook #'flymake-mode)
 
 
 ;;; Typst
@@ -2082,8 +2067,6 @@ used instead. OPTIONS sets server initialization options."
 ;;; Sh
 
 (setopt sh-shellcheck-program (get-hermetic-executable "shellcheck"))
-
-(add-hook 'sh-mode-hook #'flymake-mode)
 
 
 ;;; PDF
