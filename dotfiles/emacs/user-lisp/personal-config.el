@@ -422,11 +422,12 @@ returns nil."
 (setopt mode-line-format
         `("%e "
           (:eval (when (window-dedicated-p) "📌"))
-          (:eval (pcase (list buffer-read-only (when (buffer-modified-p) t))
-                   ('(nil nil) "✨")
-                   ('(nil t) "🖋️")
-                   ('(t nil) "🔒")
-                   ('(t t) "🔏")))
+          (buffer-file-name
+           (:eval (pcase (list buffer-read-only (when (buffer-modified-p) t))
+                    ('(nil nil) "✨")
+                    ('(nil t) "🖋️")
+                    ('(t nil) "🔒")
+                    ('(t t) "🔏"))))
           (:eval (when (file-remote-p default-directory) "✈️"))
           (:eval (when envrc-mode
                    (pcase envrc--status
