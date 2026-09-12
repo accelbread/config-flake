@@ -1404,7 +1404,6 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
         eglot-sync-connect nil
         eglot-events-buffer-config '(:size 0 :format short))
 
-
 (push '(eglot (styles orderless)) completion-category-overrides)
 
 (advice-add #'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
@@ -1417,15 +1416,22 @@ This watcher takes action when OPERATION is `set' and WHERE is global."
 
 (setopt yas-keymap-disable-hook (list (lambda () completion-in-region-mode)))
 
-(defun setup-eglot ()
-  "Enable eglot and its dependencies."
+(defun configure-eglot-mode ()
+  "Handle setup/teardown of custom eglot config."
+  (if (eglot-managed-p)
+      (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
+    (remove-hook 'flymake-diagnostic-functions #'eglot-flymake-backend t)))
+
+(add-hook 'eglot-managed-mode-hook #'configure-eglot-mode)
+
+(defun enable-eglot ()
+  "Enable eglot after local variables are loaded."
   (require 'eglot)
-  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
   (add-hook 'hack-local-variables-hook #'eglot-ensure nil t))
 
 (setq eglot-server-programs nil)
 
-(defun set-lsp-server (mode command &optional prefer-env options)
+(defun set-lsp-server (mode command &optional prefer-env  options)
   "Set COMMAND to eglot lsp server for MODE.
 When `hermetic-executable-paths' has an entry for COMMAND, if PREFER-ENV is nil,
 that path will be used instead, else that path will be used as a fallback.
@@ -1837,7 +1843,7 @@ OPTIONS sets server initialization options."
 ;;; Typst
 
 (set-lsp-server 'typst-ts-mode "tinymist")
-(add-hook 'typst-ts-mode-hook #'setup-eglot)
+(add-hook 'typst-ts-mode-hook #'enable-eglot)
 
 
 ;;; Nix
@@ -1870,7 +1876,7 @@ OPTIONS sets server initialization options."
                  format-buffer-function #'nix-fmt-format-buffer)
            (format-on-save-mode)))))))
 
-(add-hook 'nix-mode-hook #'setup-eglot)
+(add-hook 'nix-mode-hook #'enable-eglot)
 (add-hook 'nix-mode-hook #'nix-formatter-configure)
 
 (dolist (sym '(nix-mode-format nix-format-buffer))
@@ -1962,7 +1968,7 @@ OPTIONS sets server initialization options."
   "Disable `rust-ts-flymake'."
   (remove-hook 'flymake-diagnostic-functions #'rust-ts-flymake t))
 
-(add-hook 'rust-ts-mode-hook #'setup-eglot)
+(add-hook 'rust-ts-mode-hook #'enable-eglot)
 (add-hook 'rust-ts-mode-hook #'rust-formatter-configure)
 (add-hook 'rust-ts-mode-hook #'rust-ts-add-custom-rules)
 (add-hook 'rust-ts-mode-hook #'cargo-minor-mode)
@@ -2046,7 +2052,7 @@ OPTIONS sets server initialization options."
 (setopt flymake-cc-command #'c-flymake-containing-makefile-check-syntax)
 
 (dolist (hook '(c-ts-mode-hook c++-ts-mode-hook))
-  (add-hook hook #'setup-eglot)
+  (add-hook hook #'enable-eglot)
   (add-hook hook #'c-configure-semantic-tokens)
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
@@ -2067,7 +2073,7 @@ OPTIONS sets server initialization options."
 ;;; Python
 
 (set-lsp-server 'python-ts-mode "pylsp" t)
-(add-hook 'python-ts-mode-hook #'setup-eglot)
+(add-hook 'python-ts-mode-hook #'enable-eglot)
 
 (defun ipython ()
   "Run ipython in vterm."
@@ -2100,7 +2106,7 @@ OPTIONS sets server initialization options."
   "Enable zls autofixes automatically when saving."
   (add-hook 'before-save-hook #'zig-zls-autofix))
 
-(add-hook 'zig-ts-mode-hook #'setup-eglot)
+(add-hook 'zig-ts-mode-hook #'enable-eglot)
 (add-hook 'zig-ts-mode-hook #'zig-formatter-configure)
 (add-hook 'zig-ts-mode-hook #'zig-zls-autofix-on-save)
 
@@ -2118,7 +2124,7 @@ OPTIONS sets server initialization options."
   (format-on-save-mode))
 
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
-(add-hook 'haskell-mode-hook #'setup-eglot)
+(add-hook 'haskell-mode-hook #'enable-eglot)
 (add-hook 'haskell-mode-hook #'haskell-formatter-configure)
 
 
@@ -2126,7 +2132,7 @@ OPTIONS sets server initialization options."
 
 (set-lsp-server 'java-ts-mode "jdtls" t
                 '(:extendedClientCapabilities (:classFileContentsSupport t)))
-(add-hook 'java-ts-mode-hook #'setup-eglot)
+(add-hook 'java-ts-mode-hook #'enable-eglot)
 
 (cl-defmethod eglot-execute :around (server action)
   "Eclipse JDT breaks spec and replies with edits as arguments."
@@ -2166,19 +2172,19 @@ OPTIONS sets server initialization options."
 (setopt nael-eglot-contact `(,(get-hermetic-executable "lake") "serve"))
 
 (add-hook 'nael-mode-hook #'abbrev-mode)
-(add-hook 'nael-mode-hook #'setup-eglot)
+(add-hook 'nael-mode-hook #'enable-eglot)
 
 
 ;;; Yaml
 
 (set-lsp-server 'yaml-ts-mode '("yaml-language-server" "--stdio"))
-(add-hook 'yaml-ts-mode-hook #'setup-eglot)
+(add-hook 'yaml-ts-mode-hook #'enable-eglot)
 
 
 ;;; Toml
 
 (set-lsp-server 'toml-ts-mode '("tombi" "lsp"))
-(add-hook 'toml-ts-mode-hook #'setup-eglot)
+(add-hook 'toml-ts-mode-hook #'enable-eglot)
 
 
 ;;; Sh
