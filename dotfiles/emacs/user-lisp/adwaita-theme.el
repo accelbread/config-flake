@@ -13,6 +13,41 @@
 (require 'cl-lib)
 (require 'color)
 
+(defgroup adwaita-theme nil
+  "Adwaita theme settings."
+  :group 'faces)
+
+(defconst adwaita-theme--diff-keywords
+  '(("^diff .*\n" (0 'diff-file-header t))
+    ("^--- .*\n" (0 'diff-file-header t))
+    ("^\\+\\+\\+ .*\n" (0 'diff-file-header t))
+    ("^index .*\n" (0 'diff-index t))
+    ("^\\(?:new\\|deleted\\) file mode .*\n" (0 'diff-index t))
+    ("^@@.*\n" (0 'diff-header t))))
+
+(defun adwaita-theme--diff-set-face-overrides (&optional remove)
+  "Match diff syntax highlighting to GtkSourceView.
+REMOVE non-nil removes the customizations instead."
+  (font-lock-remove-keywords nil adwaita-theme--diff-keywords)
+  (unless remove
+    (font-lock-add-keywords nil adwaita-theme--diff-keywords 'append)))
+
+(define-minor-mode adwaita-theme-mode
+  "Minor mode for adwaita-theme customizations."
+  :global t :group 'adwaita-theme
+  (cl-letf (((symbol-function 'adwaita-theme-mode) #'ignore))
+    (if adwaita-theme-mode
+        (enable-theme 'adwaita)
+      (disable-theme 'adwaita)))
+  (if adwaita-theme-mode
+      (add-hook 'diff-mode-hook #'adwaita-theme--diff-set-face-overrides)
+    (remove-hook 'diff-mode-hook #'adwaita-theme--diff-set-face-overrides))
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (derived-mode-p 'diff-mode)
+        (adwaita-theme--diff-set-face-overrides (not adwaita-theme-mode))
+        (when font-lock-mode (font-lock-flush))))))
+
 (defvar adwaita-theme--system-accent-color
   (let ((value (condition-case nil
                    (car (process-lines
@@ -297,8 +332,8 @@
                          :background ,button-color))))
      `(diff-file-header ((t ( :extend t
                               :weight bold
-                              :foreground ,source-diff-file-fg-color
-                              :background ,view-bg-color))))
+                              :foreground ,source-diff-file-fg-color))))
+     `(diff-index ((t (:extend t :foreground ,dark-1))))
      `(diff-context ((t ( :extend t
                           :foreground ,source-text-fg-color
                           :background ,view-bg-color))))
@@ -506,6 +541,7 @@
 
 (custom-theme-set-variables
  'adwaita
+ '(adwaita-theme-mode t)
  '(magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
      magit-diff-highlight-hunk-region-using-face)))
