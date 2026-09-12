@@ -13,6 +13,7 @@
 , llvmPackages_latest
 , nixd
 , rust-analyzer
+, rustPackages
 , lean4
 , tinymist
 , openscad-unstable
@@ -40,11 +41,24 @@ let
   inherit (builtins) attrNames filter head match readDir readFile
     split;
   inherit (lib) attrVals concatMap concatMapStringsSep flatten hasSuffix pipe
-    removeSuffix splitString;
+    makeBinPath removeSuffix splitString;
+
+  rustAnalyzerWithToolchain =
+    let toolchain = makeBinPath (with rustPackages; [ cargo rustc clippy ]); in
+    symlinkJoin {
+      name = "rust-analyzer-with-toolchain";
+      paths = [ rust-analyzer ];
+      nativeBuildInputs = [ makeBinaryWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/rust-analyzer --prefix PATH : ${toolchain}
+      '';
+    };
 
   binPkgMap = {
-    inherit git vale shellcheck direnv guile fish rust-analyzer tinymist nixd
+    inherit git vale shellcheck direnv guile fish tinymist nixd
       yaml-language-server tombi codex-acp;
+    inherit (rustPackages) rustfmt;
+    rust-analyzer = rustAnalyzerWithToolchain;
     clangd = llvmPackages_latest.clang-tools;
     lake = lean4;
     openscad = openscad-unstable;

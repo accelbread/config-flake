@@ -1803,11 +1803,15 @@ used instead. OPTIONS sets server initialization options."
 
 (with-eval-after-load 'eglot
   (push-default '(:rust-analyzer
-                  (:diagnostics (:enable nil)))
+                  (:diagnostics (:enable nil)
+                                :check (:command "clippy")))
                 eglot-workspace-configuration))
 
+(defvar rustfmt-program (get-hermetic-executable "rustfmt")
+  "Program used to format Rust buffers.")
+
 (reformatter-define rust-format
-  :program "rustfmt"
+  :program rustfmt-program
   :mode nil)
 
 (defun rust-formatter-configure ()
