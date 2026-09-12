@@ -421,6 +421,7 @@ returns nil."
 
 (setopt mode-line-format
         `("%e "
+          (:propertize " " display (space :width (8)))
           (:eval (when (window-dedicated-p) "📌"))
           (buffer-file-name
            (:eval (pcase (list buffer-read-only (when (buffer-modified-p) t))
@@ -485,7 +486,9 @@ returns nil."
                            (when term-enable-local-echo " echo"))))
             " " minor-mode-alist
             "  " mode-line-misc-info)
-           face monochrome-emoji)))
+           face monochrome-emoji)
+          mode-line-format-right-align
+          (:propertize " " display (space :width (8)))))
 
 
 ;;; Font lock

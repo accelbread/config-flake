@@ -236,13 +236,13 @@
      `(fringe ((t (:foreground ,accent-color))))
      '(header-line ((t (:inherit (mode-line)))))
      '(header-line-inactive ((t (:inherit (mode-line-inactive)))))
-     `(mode-line ((t ( :box ( :line-width (8 . 4)
+     `(mode-line ((t ( :box ( :line-width (-1 . 4)
                               :color ,headerbar-bg-color
                               :style nil)
                        :background ,headerbar-bg-color
                        :foreground ,headerbar-fg-color
                        :inherit (variable-pitch)))))
-     `(mode-line-inactive ((t ( :box ( :line-width (8 . 4)
+     `(mode-line-inactive ((t ( :box ( :line-width (-1 . 4)
                                        :color ,headerbar-backdrop-color
                                        :style nil)
                                 :background ,headerbar-backdrop-color
