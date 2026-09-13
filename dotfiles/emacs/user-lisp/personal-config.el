@@ -1038,7 +1038,7 @@ returns nil."
     '(("gitcl" "git clone --filter=blob:none")
       ("gitsub" "git submodule update --init --recursive --filter=blob:none"))))
 
-(advice-add 'eat--eshell-local-mode :after
+(advice-add #'eat--eshell-local-mode :after
             (lambda (&rest _)
               "Remove eat-eshell's terminfo path override."
               (setq eshell-variable-aliases-list
@@ -1046,14 +1046,14 @@ returns nil."
                             eshell-variable-aliases-list)))
             '((name . eat-eshell-remove-terminfo-override)))
 
-(advice-add 'eat-eshell-emacs-mode :around
+(advice-add #'eat-eshell-emacs-mode :around
             (lambda (orig-fun &rest args)
               "Only run if eat terminal is active."
               (when eat-terminal
                 (apply orig-fun args)))
             '((name . eat-eshell-only-when-active)))
 
-(advice-add 'eat-eshell-emacs-mode :around
+(advice-add #'eat-eshell-emacs-mode :around
             (lambda (orig-fun &rest args)
               "Prevent setting buffer-read-only."
               (let ((buffer-read-only buffer-read-only))
@@ -1117,7 +1117,7 @@ returns nil."
     (setq-local envrc--env-dir (envrc--find-env-dir)))
   (funcall orig-fun verb))
 
-(advice-add 'envrc--run-direnv :around #'envrc-refresh-dir-wrapper)
+(advice-add #'envrc--run-direnv :around #'envrc-refresh-dir-wrapper)
 
 (defun eshell-update-direnv ()
   "Update direnv state when switching eshell directory."
@@ -1606,7 +1606,7 @@ used instead. OPTIONS sets server initialization options."
 
 ;;; Help
 
-(advice-add 'help-buffer :override
+(advice-add #'help-buffer :override
             (lambda ()
               "Return new buffer. Ignores `help-xref-following'."
               (get-buffer-create "*Help*"))
@@ -1671,7 +1671,7 @@ used instead. OPTIONS sets server initialization options."
 (add-hook 'emacs-lisp-mode-hook #'format-on-save-mode)
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
 
-(advice-add 'elisp--company-doc-buffer :around
+(advice-add #'elisp--company-doc-buffer :around
             (lambda (orig-fun &rest args)
               "Use different help buffer for completion docs."
               (cl-letf (((symbol-function #'help-buffer)
@@ -1717,7 +1717,7 @@ used instead. OPTIONS sets server initialization options."
         markdown-disable-tooltip-prompt t
         markdown-command '("pandoc" "--from=markdown" "--to=html5"))
 
-(advice-add 'markdown-fontify-hrs :around
+(advice-add #'markdown-fontify-hrs :around
             (lambda (orig-fun &rest args)
               "Use `fill-column' for hr width."
               (cl-letf (((symbol-function #'window-body-width)

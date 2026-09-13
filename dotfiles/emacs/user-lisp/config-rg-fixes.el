@@ -3,7 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
-;; Package-Requires: ((emacs "31.1"))
+;; Package-Requires: ((emacs "31.1") rg)
 
 ;;; Commentary:
 
@@ -15,8 +15,10 @@
 
 (eval-when-compile (require 'cl-lib))
 
+(require 'rg)
+
 (advice-add
- 'rg-header-mouse-action :filter-return
+ #'rg-header-mouse-action :filter-return
  (lambda (header)
    "Bind both primary mouse events in an rg HEADER action."
    (when-let* ((map (plist-get (cddr header) 'keymap))
@@ -28,7 +30,7 @@
  '((name . bind-both-mouse-1-and-2)))
 
 (advice-add
- 'rg-header-render-label :filter-return
+ #'rg-header-render-label :filter-return
  (lambda (header)
    "Let HEADER inherit the active or inactive header-line face."
    (cl-labels ((remove-header-line-face (tree)
