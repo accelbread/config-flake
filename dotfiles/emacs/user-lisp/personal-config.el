@@ -97,7 +97,7 @@ returns nil."
 
 ;;; Theme
 
-(load-theme 'adwaita t)
+(load-theme 'gnome t)
 
 (load-face 'flyspell-incorrect)
 

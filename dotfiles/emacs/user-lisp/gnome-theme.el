@@ -1,4 +1,4 @@
-;;; adwaita-theme.el --- Adwaita theme -*- lexical-binding: t; -*-
+;;; gnome-theme.el --- Emacs Gnome theme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,18 +7,19 @@
 
 ;;; Commentary:
 
-;; Theme based off of Adwaita colors.
+;; Emacs theme based off of Gnome's Adwaita theme.
+;; Also borrows from GtkSourceView and Gnome Console.
 
 ;;; Code:
 
 (require 'cl-lib)
 (require 'color)
 
-(defgroup adwaita-theme nil
-  "Adwaita theme settings."
+(defgroup gnome-theme nil
+  "Gnome theme settings."
   :group 'faces)
 
-(defconst adwaita-theme--diff-keywords
+(defconst gnome-theme--diff-keywords
   '(("^diff .*\n" (0 'diff-file-header t))
     ("^--- .*\n" (0 'diff-file-header t))
     ("^\\+\\+\\+ .*\n" (0 'diff-file-header t))
@@ -26,30 +27,30 @@
     ("^\\(?:new\\|deleted\\) file mode .*\n" (0 'diff-index t))
     ("^@@.*\n" (0 'diff-header t))))
 
-(defun adwaita-theme--diff-set-face-overrides (&optional remove)
+(defun gnome-theme--diff-set-face-overrides (&optional remove)
   "Match diff syntax highlighting to GtkSourceView.
 REMOVE non-nil removes the customizations instead."
-  (font-lock-remove-keywords nil adwaita-theme--diff-keywords)
+  (font-lock-remove-keywords nil gnome-theme--diff-keywords)
   (unless remove
-    (font-lock-add-keywords nil adwaita-theme--diff-keywords 'append)))
+    (font-lock-add-keywords nil gnome-theme--diff-keywords 'append)))
 
-(define-minor-mode adwaita-theme-mode
-  "Minor mode for adwaita-theme customizations."
-  :global t :group 'adwaita-theme
-  (cl-letf (((symbol-function 'adwaita-theme-mode) #'ignore))
-    (if adwaita-theme-mode
-        (enable-theme 'adwaita)
-      (disable-theme 'adwaita)))
-  (if adwaita-theme-mode
-      (add-hook 'diff-mode-hook #'adwaita-theme--diff-set-face-overrides)
-    (remove-hook 'diff-mode-hook #'adwaita-theme--diff-set-face-overrides))
+(define-minor-mode gnome-theme-mode
+  "Minor mode for gnome-theme customizations."
+  :global t :group 'gnome-theme
+  (cl-letf (((symbol-function 'gnome-theme-mode) #'ignore))
+    (if gnome-theme-mode
+        (enable-theme 'gnome)
+      (disable-theme 'gnome)))
+  (if gnome-theme-mode
+      (add-hook 'diff-mode-hook #'gnome-theme--diff-set-face-overrides)
+    (remove-hook 'diff-mode-hook #'gnome-theme--diff-set-face-overrides))
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
       (when (derived-mode-p 'diff-mode)
-        (adwaita-theme--diff-set-face-overrides (not adwaita-theme-mode))
+        (gnome-theme--diff-set-face-overrides (not gnome-theme-mode))
         (when font-lock-mode (font-lock-flush))))))
 
-(defvar adwaita-theme--system-accent-color
+(defvar gnome-theme--system-accent-color
   (let ((value (condition-case nil
                    (car (process-lines
                          "gsettings" "get" "org.gnome.desktop.interface"
@@ -63,8 +64,8 @@ REMOVE non-nil removes the customizations instead."
         (intern (match-string 1 value))
       'blue)))
 
-(deftheme adwaita
-  "Theme matching libadwaita styling."
+(deftheme gnome
+  "Theme matching Gnome styling."
   :background-mode 'dark
   :kind 'color-scheme)
 
@@ -96,7 +97,7 @@ REMOVE non-nil removes the customizations instead."
          (accent-pink "#d56199")
          (accent-purple "#9141ac")
          (accent-slate "#6f8396")
-         (accent-bg-color (pcase adwaita-theme--system-accent-color
+         (accent-bg-color (pcase gnome-theme--system-accent-color
                             ('blue accent-blue)
                             ('teal accent-teal)
                             ('green accent-green)
@@ -202,7 +203,7 @@ REMOVE non-nil removes the customizations instead."
          (source-diff-location-fg-color yellow-4)
          (source-diff-removed-line-fg-color red-1))
     (custom-theme-set-faces
-     'adwaita
+     'gnome
      `(default ((t ( :background ,view-bg-color
                      :foreground ,view-fg-color
                      :family "Adwaita Mono"))))
@@ -544,8 +545,8 @@ REMOVE non-nil removes the customizations instead."
      '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4")))))))
 
 (custom-theme-set-variables
- 'adwaita
- '(adwaita-theme-mode t)
+ 'gnome
+ '(gnome-theme-mode t)
  '(magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
      magit-diff-highlight-hunk-region-using-face)))
@@ -555,10 +556,10 @@ REMOVE non-nil removes the customizations instead."
   (add-to-list 'custom-theme-load-path
                (file-name-directory load-file-name)))
 
-(provide-theme 'adwaita)
+(provide-theme 'gnome)
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not lexical)
 ;; End:
 
-(provide 'adwaita-theme)
+(provide 'gnome-theme)
