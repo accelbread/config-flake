@@ -463,13 +463,13 @@ returns nil."
                       map)))
             "  " (:propertize "%12b" face mode-line-buffer-id)
             (:propertize
-             (:eval (unless (eq buffer-file-coding-system 'utf-8-unix)
+             (:eval (unless (memq buffer-file-coding-system
+                                  '(utf-8-unix prefer-utf-8-unix))
                       (let ((base (coding-system-base
                                    buffer-file-coding-system))
                             (eol (coding-system-eol-type
                                   buffer-file-coding-system)))
-                        (if (or (eq base 'utf-8)
-                                (eq base 'undecided))
+                        (if (memq base '(utf-8 prefer-utf-8 undecided))
                             (pcase eol (1 "  dos") (2 "  mac"))
                           `("  " ,(symbol-name
                                    (if (eq eol 0) base
