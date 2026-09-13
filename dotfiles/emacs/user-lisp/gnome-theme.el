@@ -50,20 +50,6 @@ REMOVE non-nil removes the customizations instead."
         (gt--diff-set-face-overrides (not gnome-theme-mode))
         (when font-lock-mode (font-lock-flush))))))
 
-(defvar gt--system-accent-color
-  (let ((value (condition-case nil
-                   (car (process-lines
-                         "gsettings" "get" "org.gnome.desktop.interface"
-                         "accent-color"))
-                 (error nil))))
-    (if (and value
-             (string-match "\\`'\\([a-z]+\\)'\\'" value)
-             (member (match-string 1 value)
-                     '("blue" "teal" "green" "yellow" "orange"
-                       "red" "pink" "purple" "slate")))
-        (intern (match-string 1 value))
-      'blue)))
-
 (deftheme gnome
   "Theme matching Gnome styling."
   :background-mode 'dark
@@ -104,18 +90,9 @@ REMOVE non-nil removes the customizations instead."
 (defconst gt-accent-pink "#d56199")
 (defconst gt-accent-purple "#9141ac")
 (defconst gt-accent-slate "#6f8396")
-(defvar gt-accent-bg-color (pcase gt--system-accent-color
-                             ('blue gt-accent-blue)
-                             ('teal gt-accent-teal)
-                             ('green gt-accent-green)
-                             ('yellow gt-accent-yellow)
-                             ('orange gt-accent-orange)
-                             ('red gt-accent-red)
-                             ('pink gt-accent-pink)
-                             ('purple gt-accent-purple)
-                             ('slate gt-accent-slate)))
+(defvar gt-accent-bg-color nil)
 (defconst gt-accent-fg-color "#ffffff")
-(defvar gt-accent-color (gt-standalone gt-accent-bg-color)) ; #fba7ff
+(defvar gt-accent-color nil)
 (defconst gt-destructive-bg-color "#c01c28")
 (defconst gt-destructive-fg-color "#ffffff")
 (defconst gt-destructive-color (gt-standalone gt-destructive-bg-color)) ; #ff938b
@@ -143,9 +120,9 @@ REMOVE non-nil removes the customizations instead."
 (defconst gt-button-hover-color (gt-mix gt-view-fg-color gt-view-bg-color 0.15)) ; #3f3f41
 (defconst gt-button-active-color (gt-mix gt-view-fg-color gt-view-bg-color 0.3)) ; #616163
 (defconst gt-selected-hover-color (gt-mix gt-view-fg-color gt-view-bg-color 0.13)) ; #3a3a3d
-(defvar gt-link-visited-color (gt-mix gt-accent-color gt-view-fg-color 0.8)) ; #fcb9ff
+(defvar gt-link-visited-color nil)
 (defconst gt-disabled-color (gt-mix gt-view-fg-color gt-view-bg-color 0.5)) ; #8e8e90
-(defvar gt-view-selected-color (gt-mix gt-accent-bg-color gt-view-bg-color 0.25)) ; #3a2643
+(defvar gt-view-selected-color nil)
 (defconst gt-blue-1 "#99c1f1")
 (defconst gt-blue-2 "#62a0ea")
 (defconst gt-blue-3 "#3584e4")
@@ -210,6 +187,22 @@ REMOVE non-nil removes the customizations instead."
 (defconst gt-source-diff-location-fg-color gt-yellow-4)
 (defconst gt-source-diff-removed-line-fg-color gt-red-1)
 
+(defun gt--update-accent-colors (color)
+  "Update accent-derived color variables to COLOR."
+  (setq gt-accent-bg-color (pcase color
+                             ('blue gt-accent-blue)
+                             ('teal gt-accent-teal)
+                             ('green gt-accent-green)
+                             ('yellow gt-accent-yellow)
+                             ('orange gt-accent-orange)
+                             ('red gt-accent-red)
+                             ('pink gt-accent-pink)
+                             ('purple gt-accent-purple)
+                             ('slate gt-accent-slate))
+        gt-accent-color (gt-standalone gt-accent-bg-color)
+        gt-link-visited-color (gt-mix gt-accent-color gt-view-fg-color 0.8)
+        gt-view-selected-color (gt-mix gt-accent-bg-color gt-view-bg-color 0.25)))
+
 (defun gt--set-faces ()
   "Update face configuration for Gnome theme."
   (custom-theme-set-faces
@@ -251,7 +244,7 @@ REMOVE non-nil removes the customizations instead."
                             :foreground ,gt-accent-color
                             :inherit (variable-pitch)))))
    `(region ((t ( :extend nil
-                  :background ,(gt-mix gt-accent-bg-color gt-view-bg-color 0.3))))) ; #40284a
+                  :background ,(gt-mix gt-accent-bg-color gt-view-bg-color 0.3)))))
    `(shadow ((t (:foreground ,gt-disabled-color))))
    `(warning ((t (:weight bold :foreground ,gt-warning-color))))
    `(success ((t (:weight bold :foreground ,gt-success-color))))
@@ -558,7 +551,37 @@ REMOVE non-nil removes the customizations instead."
    '(ansi-color-bright-cyan ((t (:foreground "#4fd2fd" :background "#4fd2fd"))))
    '(ansi-color-bright-white ((t (:foreground "#f6f5f4" :background "#f6f5f4"))))))
 
-(gt--set-faces)
+(defun gt--set-config-accent-color (symbol value)
+  "Set SYMBOL to VALUE and update accent-derived colors."
+  (set-default symbol value)
+  (gt--update-accent-colors value)
+  (gt--set-faces))
+
+(defcustom gt-config-accent-color
+  (let ((value (condition-case nil
+                   (car (process-lines
+                         "gsettings" "get" "org.gnome.desktop.interface"
+                         "accent-color"))
+                 (error nil))))
+    (if (and value
+             (string-match "\\`'\\([a-z]+\\)'\\'" value)
+             (member (match-string 1 value)
+                     '("blue" "teal" "green" "yellow" "orange"
+                       "red" "pink" "purple" "slate")))
+        (intern (match-string 1 value))
+      'blue))
+  "Accent color used by the Gnome theme."
+  :type '(choice (const blue)
+                 (const teal)
+                 (const green)
+                 (const yellow)
+                 (const orange)
+                 (const red)
+                 (const pink)
+                 (const purple)
+                 (const slate))
+  :set #'gt--set-config-accent-color
+  :group 'gnome-theme)
 
 (custom-theme-set-variables
  'gnome
