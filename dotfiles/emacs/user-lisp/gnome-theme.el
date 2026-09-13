@@ -8,7 +8,10 @@
 ;;; Commentary:
 
 ;; Emacs theme based off of Gnome's Adwaita theme.
-;; Also borrows from GtkSourceView and Gnome Console.
+;;
+;; Most colors are directly from the libadwaita stylesheet.
+;; Also uses colors GtkSourceView's Adwaita extensions and Gnome Console's
+;; terminal colors.
 
 ;;; Code:
 
