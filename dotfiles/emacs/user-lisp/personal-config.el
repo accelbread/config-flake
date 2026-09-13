@@ -1511,6 +1511,10 @@ used instead. OPTIONS sets server initialization options."
 
 (add-hook 'magit-mode-hook #'meow-magit-movement-configure)
 
+;; Magit needs keybindings early for command hints in git-rebase-todo buffers.
+(with-eval-after-load 'git-rebase
+  (add-hook 'git-rebase-mode-hook #'meow-motion-mode))
+
 (defun configure-git-commit-mode ()
   "Set buffer-local configurations for `git-commit-mode'."
   (setq fill-column 72))
