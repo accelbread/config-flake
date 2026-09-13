@@ -39,8 +39,8 @@
 , fetchFromGitHub
 }:
 let
-  inherit (builtins) attrNames filter head match readDir readFile
-    split;
+  inherit (builtins) attrNames filter head listToAttrs match readDir
+    readFile split;
   inherit (lib) attrVals concatMap concatMapStringsSep flatten hasSuffix pipe
     makeBinPath removeSuffix splitString;
 
@@ -79,9 +79,10 @@ let
       ])
   ];
 
+  pkgName = src: removeSuffix ".el" (baseNameOf src);
   buildPkg = epkgs: src:
     let
-      pname = removeSuffix ".el" (baseNameOf src);
+      pname = pkgName src;
       file =
         if hasSuffix ".el" (toString src) then src
         else src + "/${baseNameOf src}.el";
@@ -95,7 +96,10 @@ let
   userLispDir = ../../dotfiles/emacs/user-lisp;
   userLispPkgsSrcs = map (f: userLispDir + "/${f}")
     (attrNames (readDir userLispDir));
-  userLispPkgs = epkgs: map (buildPkg epkgs) userLispPkgsSrcs;
+  userLispOverlay = final: _: listToAttrs
+    (map (src: { name = pkgName src; value = buildPkg final src; })
+      userLispPkgsSrcs);
+  userLispPkgs = attrVals (map pkgName userLispPkgsSrcs);
 
   valeStyles = symlinkJoin {
     name = "vale-styles";
@@ -228,8 +232,11 @@ let
   baseEmacs = emacs31-pgtk;
 
   emacsPackages = (emacsPackagesFor baseEmacs).overrideScope
-    (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches
-      // lib.genAttrs builtinLibs (_: emptyDirectory));
+    (lib.composeManyExtensions [
+      (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches)
+      (_: _: lib.genAttrs builtinLibs (_: emptyDirectory))
+      userLispOverlay
+    ]);
 
   inherit (emacsPackages) emacsWithPackages;
 
