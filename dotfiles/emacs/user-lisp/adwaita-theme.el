@@ -3,6 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
+;; Package-Requires: ((emacs "31.1"))
 
 ;;; Commentary:
 
@@ -62,7 +63,10 @@ REMOVE non-nil removes the customizations instead."
         (intern (match-string 1 value))
       'blue)))
 
-(deftheme adwaita)
+(deftheme adwaita
+  "Theme matching libadwaita styling."
+  :background-mode 'dark
+  :kind 'color-scheme)
 
 (cl-labels
     ((rgb (color)
@@ -558,4 +562,3 @@ REMOVE non-nil removes the customizations instead."
 ;; End:
 
 (provide 'adwaita-theme)
-;;; adwaita-theme.el ends here
