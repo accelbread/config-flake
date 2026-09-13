@@ -2141,7 +2141,18 @@ used instead. OPTIONS sets server initialization options."
           (cl-every (lambda (window)
                       (when-let* ((end (window-end window)))
                         (>= (1+ end) (point-max))))
-                    (get-buffer-window-list nil 'no-mini))))))
+                    (get-buffer-window-list nil 'no-mini))))
+   '((name . avoid-forcing-redisplay-fontification)))
+
+  (advice-add #'shell-maker--write-input-ring-history :override #'ignore)
+  (advice-add
+   #'shell-maker--read-input-ring-history :override
+   (lambda (_config)
+     (setq-local comint-input-ring
+                 (make-ring (min 1500 comint-input-ring-size)))
+     (setq-local comint-input-ring-file-name nil)
+     (setq-local comint-input-ignoredups t))
+   '((name . skip-creating-config-dir))))
 
 (custom-theme-set-faces
  'user
