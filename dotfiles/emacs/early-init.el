@@ -2,6 +2,7 @@
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Package-Requires: ((emacs "31.1"))
 
 ;;; Commentary:
 
@@ -16,4 +17,3 @@
 
 
 (provide 'early-init)
-;;; early-init.el ends here
