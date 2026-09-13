@@ -1456,6 +1456,16 @@ used instead. OPTIONS sets server initialization options."
 
 (setopt transient-default-level 7)
 
+(advice-add #'transient-save-values :override #'ignore)
+
+(eval-when-compile (require 'transient))
+
+(with-eval-after-load 'transient
+  (setq transient-values
+        '((magit-rebase "--autosquash" "--autostash" "--update-refs")
+          (magit-fetch "--prune")
+          (magit-patch-create "--zero-commit" "--no-signature"))))
+
 
 ;;; Magit
 
