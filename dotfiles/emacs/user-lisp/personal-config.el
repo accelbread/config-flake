@@ -63,13 +63,11 @@
        (add-hook 'after-frame-hook (lambda () ,@body))
      (progn ,@body)))
 
-(defun load-face (face)
-  "Recursively define FACE so its theme attributes can be queried."
-  (unless (facep face)
-    (eval `(defface ,face nil nil))
-    (if-let* ((inherit (face-attribute face :inherit))
-              (_ (listp inherit)))
-        (mapc #'load-face inherit))))
+(defun ag-realize-face (face)
+  "Recursively initialize FACE and its inherited faces."
+  (face-spec-set face nil t)
+  (let ((inherit (face-attribute face :inherit)))
+    (when (listp inherit) (mapc #'ag-realize-face inherit))))
 
 (defun disable-nobreak-display ()
   "Turn off special display of non-ASCII space/hyphen characters."
@@ -99,7 +97,7 @@ returns nil."
 
 (load-theme 'gnome t)
 
-(load-face 'flyspell-incorrect)
+(ag-realize-face 'flyspell-incorrect)
 
 (custom-theme-set-faces
  'user
@@ -907,7 +905,7 @@ returns nil."
                      ("bd" eshell-ls-special)     ; Block device
                      ("cd" eshell-ls-special)     ; Char device
                      ("so" eshell-ls-special)))   ; Socket
-      (load-face face)
+      (ag-realize-face face)
       (let* ((face-color (face-attribute face :foreground nil t))
              (r (substring face-color 1 3))
              (g (substring face-color 3 5))
