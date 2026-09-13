@@ -133,7 +133,7 @@ in
       man-db.manualPages =
         let
           makeContentAddressed = drv: pkgs.runCommandLocal drv.name
-            { __contentAddressed = true; } "cp -r ${drv} $out";
+            { __contentAddressed = true; } "cp -rL ${drv} $out";
         in
         makeContentAddressed options.documentation.man.man-db.manualPages.default;
     };

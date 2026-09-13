@@ -4,14 +4,18 @@
 let
   inherit (lib) mkOption types;
 
-  manualPages = pkgs.buildEnv {
+  makeContentAddressed = drv: pkgs.runCommandLocal drv.name
+    { __contentAddressed = true; } "cp -rL ${drv} $out";
+
+  manualPages = makeContentAddressed (pkgs.buildEnv {
     name = "man-paths";
     paths = config.home.packages;
     pathsToLink = [ "/share/man" ];
     extraOutputsToInstall = [ "man" ];
     ignoreCollisions = true;
     derivationArgs.__contentAddressed = true;
-  };
+  });
+
   manualCache = pkgs.runCommand "man-cache"
     { nativeBuildInputs = [ config.programs.man.package ]; } ''
     echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
