@@ -2321,12 +2321,12 @@ the sort order."
         gcmh-low-cons-threshold (* 8 1024 1024)
         gcmh-high-cons-threshold (* 64 1024 1024))
 
-(gcmh-mode)
+(require 'gcmh)
 
 (hide-minor-mode 'gcmh-mode)
 
-(add-hook 'emacs-startup-hook #'garbage-collect 90)
-(add-hook 'emacs-startup-hook #'malloc-trim 91)
+(add-hook 'emacs-startup-hook
+          (lambda () (gcmh-mode) (garbage-collect) (malloc-trim)) 90)
 
 
 ;; Local Variables:
