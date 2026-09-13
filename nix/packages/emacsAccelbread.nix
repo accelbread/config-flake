@@ -36,6 +36,7 @@
 , jing-trang
 , codex-acp
 , emptyDirectory
+, fetchFromGitHub
 }:
 let
   inherit (builtins) attrNames filter head match readDir readFile
@@ -138,6 +139,31 @@ let
     ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
   '';
 
+  materialDesignIcons = fetchFromGitHub {
+    owner = "Templarian";
+    repo = "MaterialDesign";
+    rev = "2424e748e0cc63ab7b9c095a099b9fe239b737c0";
+    hash = "sha256-QMGl7soAhErrrnY3aKOZpt49yebkSNzy10p/v5OaqQ0=";
+  };
+
+  kindIconIconList = runCommand "kind-icon-icon-list" { } ''
+    set -o pipefail
+    ${emacsWithPackages (epkgs: [epkgs.kind-icon])}/bin/emacs --batch -Q \
+      --eval "(progn
+                (require 'kind-icon)
+                (dolist (entry kind-icon-mapping)
+                  (when-let ((icon (plist-get (cddr entry) :icon)))
+                    (princ (concat icon \"\n\")))))" \
+      | sort -u > "$out"
+  '';
+
+  svgLibIcons = runCommand "svg-lib-cache" { } ''
+    mkdir -p "$out"
+    while read -r icon; do
+      cp "${materialDesignIcons}/svg/$icon.svg" "$out/material_$icon.svg"
+    done < ${kindIconIconList}
+  '';
+
   treeSitterLangs = [
     "c"
     "cmake"
@@ -187,8 +213,10 @@ let
     binPkgMap);
 
   early-default-init = writeText "early-default.el" ''
-    (setq flymake-vale-program-args '("--config=${valeConfig}")
-          hermetic-executable-paths '(${execPaths}))
+    (setq hermetic-executable-paths '(${execPaths})
+          ;; flymake-vale has incorrect option types
+          flymake-vale-program-args '("--config=${valeConfig}"))
+    (setopt svg-lib-icons-dir "${svgLibIcons}/")
     (with-eval-after-load 'rng-loc
       (add-to-list 'rng-schema-locating-files "${svgSchema}/schemas.xml"))
   '';
