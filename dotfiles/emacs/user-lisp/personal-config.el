@@ -1607,6 +1607,8 @@ used instead. OPTIONS sets server initialization options."
 
 ;;; Diff
 
+(setopt diff-font-lock-syntax nil)
+
 ;; mbox files output by `b4 am' use mbx extension.
 (add-to-list 'auto-mode-alist `(,(rx ".mbx" eos) . diff-mode))
 
