@@ -1217,6 +1217,48 @@ returns nil."
         eat-very-visible-vertical-bar-cursor-type '(bar nil nil)
         eat-very-visible-horizontal-bar-cursor-type '(hbar nil nil))
 
+(defun ag--eat-pixel-synchronize-scroll (orig-fun windows)
+  "Support `pixel-scroll-precision-mode' for Eat scroll synchronization.
+Calls ORIG-FUN, then bottom-aligns the followed Eat WINDOWS."
+  (let ((inhibit-redisplay t))
+    (funcall orig-fun windows)
+    (dolist (window windows)
+      (when (and (windowp window) ; skip 'buffer symbol
+                 (window-live-p window)
+                 (bound-and-true-p pixel-scroll-precision-mode))
+        (with-selected-window window
+          (when-let* ((pixel-height (window-body-height nil t))
+                      (screen-lines (window-screen-lines))
+                      (_ (> screen-lines 0))
+                      (line-height (round (/ pixel-height screen-lines)))
+                      (_ (> line-height 0))
+                      (remainder (mod pixel-height line-height))
+                      (_ (> remainder 0))
+                      (previous-start
+                       (save-excursion
+                         (goto-char (window-start))
+                         (when (= (vertical-motion -1 window) -1) (point))))
+                      (logical-start
+                       (save-excursion
+                         (goto-char previous-start)
+                         (line-beginning-position)))
+                      (hidden-height
+                       (if (= logical-start previous-start) 0
+                         (cdr (window-text-pixel-size window logical-start
+                                                      previous-start))))
+                      (vscroll (+ hidden-height (- line-height remainder))))
+            ;; Place fractional row at the top. A continuation-line window start
+            ;; is unstable as output changes, so express hidden wrapped rows as
+            ;; additional pixel vscroll.
+            (set-window-start window logical-start t)
+            (set-window-vscroll window vscroll t t)
+            (set-window-point window (eat-term-display-cursor eat-terminal))))))))
+
+(advice-add #'eat--synchronize-scroll :around
+            #'ag--eat-pixel-synchronize-scroll)
+(advice-add #'eat--eshell-synchronize-scroll :around
+            #'ag--eat-pixel-synchronize-scroll)
+
 (defvar-local ag-eat-synchronized-output-active nil
   "Non-nil while Eat is within a DEC synchronized output update.")
 
