@@ -50,12 +50,10 @@ prev.lib.composeManyExtensions [
       chmod -R u+w $out
       rm -r $out/share/fonts
     '';
-    nautilus = prev.nautilus.overrideAttrs (old: {
-      preFixup = old.preFixup or "" + ''
-        gappsWrapperArgs+=(
-          --prefix XDG_DATA_DIRS : "${final.glycin-loaders}/share"
-        )
-      '';
+    lean4 = prev.lean4.overrideAttrs (old: {
+      cmakeFlags = old.cmakeFlags ++ [
+        "-DSTAGE1_CMAKE_INSTALL_PREFIX=${placeholder "out"}"
+      ];
     });
   })
 ]
