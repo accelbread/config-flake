@@ -2238,6 +2238,31 @@ used instead. OPTIONS sets server initialization options."
      (setq-local comint-input-ignoredups t))
    '((name . skip-creating-config-dir))))
 
+(advice-add
+ #'agent-shell--filter-buffer-substring :around
+ (lambda (orig-fun &rest args)
+   "Preserve face properties in copied text."
+   (let ((clean-substring
+          (lambda (string &optional from to)
+            (let* ((text (substring string from to))
+                   (len (length text))
+                   (pos 0))
+              (while (< pos len)
+                (let ((next (or (next-property-change pos text len) len))
+                      (face (get-text-property pos 'face text))
+                      (fl-face (get-text-property pos 'font-lock-face text)))
+                  (set-text-properties
+                   pos next
+                   `(,@(when face `(face ,face))
+                     ,@(when fl-face `(font-lock-face ,fl-face)))
+                   text)
+                  (setq pos next)))
+              text))))
+     (advice-add #'substring-no-properties :override clean-substring)
+     (unwind-protect (apply orig-fun args)
+       (advice-remove #'substring-no-properties clean-substring))))
+ '((name . preserve-face-properties)))
+
 (custom-theme-set-faces
  'user
  '(agent-shell-model ((t (:inherit (font-lock-function-name-face)))))
