@@ -1217,6 +1217,37 @@ returns nil."
         eat-very-visible-vertical-bar-cursor-type '(bar nil nil)
         eat-very-visible-horizontal-bar-cursor-type '(hbar nil nil))
 
+(defvar-local ag-eat-synchronized-output-active nil
+  "Non-nil while Eat is within a DEC synchronized output update.")
+
+(defvar-local ag-eat-synchronized-output-tail ""
+  "Eat output tail for handling split DEC synchronized output markers.")
+
+(defun ag-eat-synchronized-output (orig-fun process output)
+  "Handle DEC synchronized output in OUTPUT for PROCESS.
+Wraps ORIG-FUN."
+  (if-let* ((buffer (process-buffer process))
+            ((buffer-live-p buffer)))
+      (with-current-buffer buffer
+        (let ((text (concat ag-eat-synchronized-output-tail output))
+              (pos 0))
+          (while (string-match "\e\\[\\?2026\\([hl]\\)" text pos)
+            (setq ag-eat-synchronized-output-active
+                  (eq (aref (match-string 1 text) 0) ?h)
+                  pos (match-end 0)))
+          (setq ag-eat-synchronized-output-tail
+                ;; A marker is eight bytes; save last 7
+                (substring text (max (- (length text) 7) 0))))
+        (if ag-eat-synchronized-output-active
+            (let ((eat-minimum-latency 1.0)
+                  (eat-maximum-latency 1.0))
+              (funcall orig-fun process output))
+          (funcall orig-fun process output)))
+    (funcall orig-fun process output)))
+
+(advice-add #'eat--filter :around #'ag-eat-synchronized-output)
+(advice-add #'eat--eshell-filter :around #'ag-eat-synchronized-output)
+
 
 ;;; Vterm
 
