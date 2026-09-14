@@ -33,6 +33,10 @@
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-tarmac = {
+      url = "github:Mic92/nix-tarmac";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = { flakelight, ... }@inputs:
     flakelight ./. {

@@ -176,6 +176,26 @@
         "type": "github"
       }
     },
+    "nix-tarmac": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788984361,
+        "narHash": "sha256-85tPGR0yReYwwVDOaF5813Wzr0GJvPXdDHw3DVhYF8I=",
+        "owner": "Mic92",
+        "repo": "nix-tarmac",
+        "rev": "bc8348c23287ce960a53d8dafa06c022c91d106d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "nix-tarmac",
+        "type": "github"
+      }
+    },
     "nixgl": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -291,6 +311,7 @@
         "flakelight-elisp": "flakelight-elisp",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
+        "nix-tarmac": "nix-tarmac",
         "nixgl": "nixgl",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",

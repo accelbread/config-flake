@@ -11,6 +11,7 @@ in
   imports = [
     inputs.preservation.nixosModules.preservation
     inputs.lanzaboote.nixosModules.lanzaboote
+    inputs.nix-tarmac.nixosModules.default
     self.nixosModules.kernel
     self.nixosModules.disks
     self.nixosModules.tailscale
