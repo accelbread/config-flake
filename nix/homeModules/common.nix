@@ -83,15 +83,18 @@ in
 
     programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
       info.enable = true;
-      bash.initExtra = ''
-        if [[ -z "$LS_COLORS" ]]; then
-            eval "$(${pkgs.coreutils}/bin/dircolors -b)"
-        fi
+      bash = {
+        enableCompletion = false; # hm completion setup fails on minimal bash
+        initExtra = ''
+          if [[ -z "$LS_COLORS" ]]; then
+              eval "$(${pkgs.coreutils}/bin/dircolors -b)"
+          fi
 
-        HISTCONTROL=ignoreboth
+          HISTCONTROL=ignoreboth
 
-        unset HISTFILE
-      '';
+          unset HISTFILE
+        '';
+      };
       git = {
         settings = {
           user = {
