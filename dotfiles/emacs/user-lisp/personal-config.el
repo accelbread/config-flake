@@ -1217,78 +1217,78 @@ returns nil."
         eat-very-visible-vertical-bar-cursor-type '(bar nil nil)
         eat-very-visible-horizontal-bar-cursor-type '(hbar nil nil))
 
-(defun ag--eat-pixel-synchronize-scroll (orig-fun windows)
-  "Support `pixel-scroll-precision-mode' for Eat scroll synchronization.
+(cl-flet
+    ((eat-pixel-scroll-sync (orig-fun windows)
+       "Support `pixel-scroll-precision-mode' for Eat scroll synchronization.
 Calls ORIG-FUN, then bottom-aligns the followed Eat WINDOWS."
-  (let ((inhibit-redisplay t))
-    (funcall orig-fun windows)
-    (dolist (window windows)
-      (when (and (windowp window) ; skip 'buffer symbol
-                 (window-live-p window)
-                 (bound-and-true-p pixel-scroll-precision-mode))
-        (with-selected-window window
-          (when-let* ((pixel-height (window-body-height nil t))
-                      (screen-lines (window-screen-lines))
-                      (_ (> screen-lines 0))
-                      (line-height (round (/ pixel-height screen-lines)))
-                      (_ (> line-height 0))
-                      (remainder (mod pixel-height line-height))
-                      (_ (> remainder 0))
-                      (previous-start
-                       (save-excursion
-                         (goto-char (window-start))
-                         (when (= (vertical-motion -1 window) -1) (point))))
-                      (logical-start
-                       (save-excursion
-                         (goto-char previous-start)
-                         (line-beginning-position)))
-                      (hidden-height
-                       (if (= logical-start previous-start) 0
-                         (cdr (window-text-pixel-size window logical-start
-                                                      previous-start))))
-                      (vscroll (+ hidden-height (- line-height remainder))))
-            ;; Place fractional row at the top. A continuation-line window start
-            ;; is unstable as output changes, so express hidden wrapped rows as
-            ;; additional pixel vscroll.
-            (set-window-start window logical-start t)
-            (set-window-vscroll window vscroll t t)
-            (set-window-point window (eat-term-display-cursor eat-terminal))))))))
+       (let ((inhibit-redisplay t))
+         (funcall orig-fun windows)
+         (dolist (window windows)
+           (when (and (windowp window) ; skip 'buffer symbol
+                      (window-live-p window)
+                      (bound-and-true-p pixel-scroll-precision-mode))
+             (with-selected-window window
+               (when-let* ((pixel-height (window-body-height nil t))
+                           (screen-lines (window-screen-lines))
+                           (_ (> screen-lines 0))
+                           (line-height (round (/ pixel-height screen-lines)))
+                           (_ (> line-height 0))
+                           (remainder (mod pixel-height line-height))
+                           (_ (> remainder 0))
+                           (previous-start
+                            (save-excursion
+                              (goto-char (window-start))
+                              (when (= (vertical-motion -1 window) -1) (point))))
+                           (logical-start
+                            (save-excursion
+                              (goto-char previous-start)
+                              (line-beginning-position)))
+                           (hidden-height
+                            (if (= logical-start previous-start) 0
+                              (cdr (window-text-pixel-size window logical-start
+                                                           previous-start))))
+                           (vscroll (+ hidden-height (- line-height remainder))))
+                 ;; Place fractional row at the top. A continuation-line window
+                 ;; start is unstable as output changes, so express hidden
+                 ;; wrapped rows as additional pixel vscroll.
+                 (set-window-start window logical-start t)
+                 (set-window-vscroll window vscroll t t)
+                 (set-window-point window (eat-term-display-cursor eat-terminal)))))))))
+  (dolist (fn (list #'eat--synchronize-scroll #'eat--eshell-synchronize-scroll))
+    (advice-add fn :around #'eat-pixel-scroll-sync
+                '((name . support-pixel-scroll)))))
 
-(advice-add #'eat--synchronize-scroll :around
-            #'ag--eat-pixel-synchronize-scroll)
-(advice-add #'eat--eshell-synchronize-scroll :around
-            #'ag--eat-pixel-synchronize-scroll)
-
-(defvar-local ag-eat-synchronized-output-active nil
+(defvar-local ag--eat-synchronized-output-active nil
   "Non-nil while Eat is within a DEC synchronized output update.")
 
-(defvar-local ag-eat-synchronized-output-tail ""
+(defvar-local ag--eat-synchronized-output-tail ""
   "Eat output tail for handling split DEC synchronized output markers.")
 
-(defun ag-eat-synchronized-output (orig-fun process output)
-  "Handle DEC synchronized output in OUTPUT for PROCESS.
+(cl-flet
+    ((eat-dec-synchronized-output (orig-fun process output)
+       "Handle DEC synchronized output in OUTPUT for PROCESS.
 Wraps ORIG-FUN."
-  (if-let* ((buffer (process-buffer process))
-            ((buffer-live-p buffer)))
-      (with-current-buffer buffer
-        (let ((text (concat ag-eat-synchronized-output-tail output))
-              (pos 0))
-          (while (string-match "\e\\[\\?2026\\([hl]\\)" text pos)
-            (setq ag-eat-synchronized-output-active
-                  (eq (aref (match-string 1 text) 0) ?h)
-                  pos (match-end 0)))
-          (setq ag-eat-synchronized-output-tail
-                ;; A marker is eight bytes; save last 7
-                (substring text (max (- (length text) 7) 0))))
-        (if ag-eat-synchronized-output-active
-            (let ((eat-minimum-latency 1.0)
-                  (eat-maximum-latency 1.0))
-              (funcall orig-fun process output))
-          (funcall orig-fun process output)))
-    (funcall orig-fun process output)))
-
-(advice-add #'eat--filter :around #'ag-eat-synchronized-output)
-(advice-add #'eat--eshell-filter :around #'ag-eat-synchronized-output)
+       (if-let* ((buffer (process-buffer process))
+                 ((buffer-live-p buffer)))
+           (with-current-buffer buffer
+             (let ((text (concat ag--eat-synchronized-output-tail output))
+                   (pos 0))
+               (while (string-match "\e\\[\\?2026\\([hl]\\)" text pos)
+                 (setq ag--eat-synchronized-output-active
+                       (eq (aref (match-string 1 text) 0) ?h)
+                       pos (match-end 0)))
+               (setq ag--eat-synchronized-output-tail
+                     ;; A marker is eight bytes; save last 7
+                     (substring text (max (- (length text) 7) 0))))
+             (if ag--eat-synchronized-output-active
+                 (let ((eat-minimum-latency 1.0)
+                       (eat-maximum-latency 1.0))
+                   (funcall orig-fun process output))
+               (funcall orig-fun process output)))
+         (funcall orig-fun process output))))
+  (dolist (fn (list #'eat--filter #'eat--eshell-filter))
+    (advice-add fn :around #'eat-dec-synchronized-output
+                '((name . support-dec-synchronized-output)))))
 
 
 ;;; Vterm
