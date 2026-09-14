@@ -1573,7 +1573,16 @@ used instead. OPTIONS sets server initialization options."
   (transient-append-suffix
     'magit-patch-create
     'magit-format-patch:--output-directory
-    '("C-m z" "Zero commit hashes" "--zero-commit"))
+    '("C-m f" "Show full object names" "--full-index"))
+  (transient-append-suffix
+    'magit-patch-create
+    "C-m f"
+    '("C-m a" "Abbreviate object names" "--abbrev="
+      :reader transient-read-number-N+))
+  (transient-append-suffix
+    'magit-patch-create
+    "C-m s"
+    '("C-m a" "Zero commit hashes" "--zero-commit"))
   (transient-append-suffix
     'magit-patch-create
     "C-m z"

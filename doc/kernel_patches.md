@@ -30,8 +30,8 @@ Checkout linux repo with linux-hardened and stable upstreams.
 TAG=v6.18.31
 PATCHV=1
 HARDV=$TAG-hardened$PATCHV
-TERM=dumb git format-patch --stdout --zero-commit --no-signature $TAG..$HARDV^ \
-  > linux_hardened_$HARDV.mbx
+TERM=dumb git format-patch --stdout --abbrev=13 --zero-commit --no-signature \
+  $TAG..$HARDV^ > linux_hardened_$HARDV.mbx
 ```
 
 We're skipping last commit as that just sets EXTRAVERSION.
