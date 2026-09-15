@@ -2188,6 +2188,8 @@ used instead. OPTIONS sets server initialization options."
 
 ;;; Agent Shell
 
+(eval-when-compile (require 'agent-shell))
+
 (setopt agent-shell-show-welcome-message nil
         agent-shell-header-style 'text
         agent-shell-show-busy-indicator nil
@@ -2262,6 +2264,29 @@ used instead. OPTIONS sets server initialization options."
      (unwind-protect (apply orig-fun args)
        (advice-remove #'substring-no-properties clean-substring))))
  '((name . preserve-face-properties)))
+
+;; If an agent outputs Activity during active configuration requests at startup,
+;; it breaks the insertion of startup sections above the prompt, and leaves an
+;; unusable prompt in the middle of the startup sections.
+(advice-add
+ 'agent-shell--update-fragment :filter-args
+ (lambda (args)
+   "Prevent startup Activity from breaking prompt."
+   (when-let* ((state (plist-get args :state))
+               (_ (equal (plist-get args :group-label)
+                         agent-shell--activity-group-label))
+               (buffer (map-elt state :buffer))
+               (_ (buffer-live-p buffer))
+               (_ (with-current-buffer buffer
+                    (and comint-last-prompt
+                         (agent-shell--live-input-prompt-p comint-last-prompt)
+                         (not (seq-some (lambda (request)
+                                          (equal (map-elt request :method)
+                                                 "session/prompt"))
+                                        (map-elt state :active-requests)))))))
+     (setq args (plist-put args :above-last-prompt t)))
+   args)
+ '((name . keep-activity-above-prompt)))
 
 (custom-theme-set-faces
  'user
