@@ -15,6 +15,7 @@ in
     self.nixosModules.kernel
     self.nixosModules.disks
     self.nixosModules.tailscale
+    self.nixosModules.auto-nom
   ];
 
   system.configurationRevision = self.rev or null;
