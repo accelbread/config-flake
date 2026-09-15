@@ -111,12 +111,18 @@ argument, sets project as untrusted."
 
 (defun ag--trust-initial-scratch-buffer ()
   "Trust initial scratch buffer."
+  (remove-hook 'change-major-mode-after-body-hook
+               #'ag--trust-initial-scratch-buffer t)
+  (when (eq major-mode 'lisp-interaction-mode)
+    (setq-local trusted-content :all)))
+
+(put #'ag--trust-initial-scratch-buffer 'permanent-local-hook t)
+
+(unless after-init-time
   (when-let* ((buffer (get-buffer "*scratch*")))
     (with-current-buffer buffer
-      (when (eq major-mode 'lisp-interaction-mode)
-        (setq-local trusted-content :all)))))
-
-(add-hook 'emacs-startup-hook #'ag--trust-initial-scratch-buffer)
+      (add-hook 'change-major-mode-after-body-hook
+                #'ag--trust-initial-scratch-buffer nil t))))
 
 ;; trusted-content-p is slow as it performs file-equal-p on every
 ;; trusted-content entry
