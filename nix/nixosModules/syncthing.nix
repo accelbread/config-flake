@@ -105,12 +105,13 @@ in
       })
       dirs);
 
+  # syncthing starts up before syncthing-init which configures dirs with the
+  # API, so it ends up starting without dirs and considering the dirs new.
+  # Thus config.xml needs to be persisted in addition to key/cert.
+  # Persisting dir since syncthing doesnt handle empty file for config.xml.
   preservation.preserveAt.state.users.syncthing = {
     home = cfg.dataDir;
-    files = map (f: { file = f; mode = "0600"; }) [
-      ".config/syncthing/key.pem"
-      ".config/syncthing/cert.pem"
-    ];
+    directories = [{ directory = ".config/syncthing/"; mode = "0700"; }];
   };
 
   systemd.tmpfiles.settings.preservation = lib.flip lib.genAttrs
