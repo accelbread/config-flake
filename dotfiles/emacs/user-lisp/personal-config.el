@@ -1900,9 +1900,15 @@ used instead. OPTIONS sets server initialization options."
 
 ;;; Scheme
 
+(eval-when-compile (require 'geiser-mode))
+
 (setopt geiser-repl-per-project-p t
         geiser-mode-start-repl-p t
         geiser-guile-binary (get-hermetic-executable "guile"))
+
+(with-eval-after-load 'geiser-mode
+  (define-key geiser-mode-map [remap display-local-help]
+              #'geiser-doc-symbol-at-point))
 
 
 ;;; Rust
