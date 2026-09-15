@@ -3,7 +3,7 @@
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Version: 0
-;; Package-Requires: ((emacs "31.1") agent-shell cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term meow-vterm nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib typst-ts-mode vertico virtual-comment vterm vundo yasnippet zig-ts-mode)
+;; Package-Requires: ((emacs "31.1") agent-shell cape cargo clang-format cmake-mode consult corfu dape devdocs eat eglot eglot-x envrc fish-completion flymake-vale gcmh geiser-guile git-modes haskell-mode hl-todo inheritenv jinx kind-icon magit magit-todos marginalia markdown-mode meow meow-term nael nix-mode orderless pdf-tools rainbow-delimiters rainbow-mode reformatter rg rmsbolt scad-mode svg-lib typst-ts-mode vertico virtual-comment vundo yasnippet zig-ts-mode)
 
 ;;; Commentary:
 
@@ -1291,32 +1291,6 @@ Wraps ORIG-FUN."
                 '((name . support-dec-synchronized-output)))))
 
 
-;;; Vterm
-
-(defun set-mode-line-process-killed (buffer desc)
-  "Indicate process killed in buffer BUFFER with reason DESC."
-  (with-current-buffer buffer
-    (setq mode-line-process `(:propertize ("  " ,(string-trim desc))
-                                          face error))))
-
-(setopt vterm-max-scrollback 5000
-        vterm-timer-delay 0.01
-        vterm-kill-buffer-on-exit nil
-        vterm-clear-scrollback-when-clearing t
-        vterm-exit-functions '(set-mode-line-process-killed)
-        vterm-keymap-exceptions '("C-c"))
-
-(meow-vterm-enable)
-
-(advice-add #'vterm--set-title :override
-            (lambda (title)
-              "Have `vterm' set `mode-line-process' to TITLE."
-              (setq mode-line-process `("  " ,title)))
-            '((name . vterm-set-mode-line-process)))
-
-(add-hook 'vterm-mode-hook #'disable-nobreak-display)
-
-
 ;;; Compilation
 
 (setopt compilation-scroll-output 'first-error
@@ -2077,13 +2051,6 @@ used instead. OPTIONS sets server initialization options."
 
 (set-lsp-server 'python-ts-mode "pylsp")
 (add-hook 'python-ts-mode-hook #'enable-eglot-when-trusted)
-
-(defun ipython ()
-  "Run ipython in vterm."
-  (interactive)
-  (defvar vterm-shell)
-  (let ((vterm-shell "ipython"))
-    (vterm-other-window)))
 
 
 ;;; Zig

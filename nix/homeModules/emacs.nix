@@ -20,23 +20,7 @@ in
     };
   };
 
-  programs = {
-    bash.initExtra = ''
-      if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-          && [[ -n "$EMACS_VTERM_PATH" ]] \
-          && [[ -f "$EMACS_VTERM_PATH/etc/emacs-vterm-bash.sh" ]]; then
-          source "$EMACS_VTERM_PATH/etc/emacs-vterm-bash.sh"
-      fi
-    '';
-    zsh.initExtra = ''
-      if [[ "$INSIDE_EMACS" = 'vterm' ]] \
-          && [[ -n "$EMACS_VTERM_PATH" ]] \
-          && [[ -f "$EMACS_VTERM_PATH/etc/emacs-vterm-zsh.sh" ]]; then
-          source "$EMACS_VTERM_PATH/etc/emacs-vterm-zsh.sh"
-      fi
-    '';
-    git.ignores = [ "/.evc" ".direnv" ];
-  };
+  programs.git.ignores = [ "/.evc" ".direnv" ];
 
   xdg.desktopEntries = builtins.foldl'
     (a: v: a // {
