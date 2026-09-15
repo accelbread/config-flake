@@ -1676,8 +1676,17 @@ used instead. OPTIONS sets server initialization options."
 
 (setopt eldoc-documentation-strategy #'eldoc-documentation-compose
         eldoc-echo-area-prefer-doc-buffer t
-        eldoc-minor-mode-string ""
-        eldoc-help-at-pt t)
+        eldoc-minor-mode-string "")
+
+(defun ag--eldoc-help-at-pt-doc-buffer (callback &rest _)
+  "Send help at point to CALLBACK for displaying in doc buffer."
+  (when-let* ((help (help-at-pt-kbd-string)))
+    (funcall callback (substitute-command-keys help) :echo 'skip)))
+
+(defun ag-eldoc-doc-buffer-show-help-at-pt ()
+  "Add full help at point to the Eldoc doc buffer."
+  (add-hook 'eldoc-documentation-functions
+            #'ag--eldoc-help-at-pt-doc-buffer 90 t))
 
 
 ;;; Flymake
@@ -1751,9 +1760,17 @@ used instead. OPTIONS sets server initialization options."
 (setopt elisp-fontify-semantically t
         rainbow-x-colors nil)
 
+(define-key emacs-lisp-mode-map [remap display-local-help]
+            #'eldoc-doc-buffer)
+(define-key lisp-interaction-mode-map [remap display-local-help]
+            #'eldoc-doc-buffer)
+
 (add-hook 'emacs-lisp-mode-hook #'display-page-breaks-as-lines)
 (add-hook 'emacs-lisp-mode-hook #'format-on-save-mode)
 (add-hook 'emacs-lisp-mode-hook #'cursor-sensor-mode)
+
+(add-hook 'emacs-lisp-mode-hook #'ag-eldoc-doc-buffer-show-help-at-pt)
+(add-hook 'lisp-interaction-mode-hook #'ag-eldoc-doc-buffer-show-help-at-pt)
 
 (advice-add #'elisp--company-doc-buffer :around
             (lambda (orig-fun &rest args)
