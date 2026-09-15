@@ -88,7 +88,9 @@ argument, sets project as untrusted."
 (defun ag--buffer-init-trust ()
   "Initialize trust state for buffer."
   (when (ag--buffer-get-trust)
-    (setq-local enable-local-variables :all)))
+    (let ((inhibit-message t)
+          (message-log-max nil))
+      (setq-local enable-local-variables :all))))
 
 ;;;###autoload
 (define-minor-mode ag-trust-mode
