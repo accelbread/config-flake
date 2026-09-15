@@ -1,4 +1,4 @@
-;;; personal-config.el --- Personal Emacs config -*- lexical-binding: t; -*-
+;;; ag-config.el --- Personal Emacs config -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -2457,4 +2457,4 @@ the sort order."
 ;; byte-compile-warnings: (not unresolved)
 ;; End:
 
-(provide 'personal-config)
+(provide 'ag-config)

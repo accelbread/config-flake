@@ -1,4 +1,4 @@
-;;; config-rg-fixes.el --- Fixes for rg-mode -*- lexical-binding: t; -*-
+;;; ag-rg-fixes.el --- Fixes for rg-mode -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,7 +11,7 @@
 
 ;;; Code:
 
-;;;###autoload (with-eval-after-load 'rg (require 'config-rg-fixes))
+;;;###autoload (with-eval-after-load 'rg (require 'ag-rg-fixes))
 
 (eval-when-compile (require 'cl-lib))
 
@@ -42,4 +42,4 @@
      (remove-header-line-face header)))
  '((name . header-inherit-window-face)))
 
-(provide 'config-rg-fixes)
+(provide 'ag-rg-fixes)

@@ -8,7 +8,7 @@
 
 ;;; Code:
 
-(require 'personal-config)
+(require 'ag-config)
 
 ;; Local Variables:
 ;; flymake-diagnostic-functions: (elisp-flymake-checkdoc)

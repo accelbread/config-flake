@@ -1,4 +1,4 @@
-;;; config-trust.el --- Project trust config -*- lexical-binding: t; -*-
+;;; ag-trust.el --- Project trust config -*- lexical-binding: t; -*-
 
 ;; Copyright (C) Archit Gupta <archit@accelbread.com>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -142,4 +142,4 @@ argument, sets project as untrusted."
                    trusted-content)))))
  '((name . optimize-trusted-content-p)))
 
-(provide 'config-trust)
+(provide 'ag-trust)
