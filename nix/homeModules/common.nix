@@ -45,7 +45,6 @@ in
         binutils.info
         guile.info
         git
-        git-absorb
         git-lfs
         ripgrep
         fd

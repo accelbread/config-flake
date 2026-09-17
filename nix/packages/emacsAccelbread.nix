@@ -5,6 +5,9 @@
 , emacs31-pgtk
 , emacsPackagesFor
 , git
+, git-absorb
+, perl
+, ripgrep
 , vale
 , shellcheck
 , direnv
@@ -55,10 +58,22 @@ let
       '';
     };
 
+  gitWithAbsorb = symlinkJoin {
+    name = "git-with-absorb";
+    paths = [ git ];
+    nativeBuildInputs = [ makeBinaryWrapper ];
+    postBuild = ''
+      ln -s ${git-absorb}/bin/git-absorb $out/libexec/git-core/
+      wrapProgram $out/bin/git --set GIT_EXEC_PATH $out/libexec/git-core
+    '';
+  };
+
   binPkgMap = {
-    inherit git vale shellcheck direnv guile fish tinymist nixd
+    inherit perl vale shellcheck direnv guile fish tinymist nixd
       yaml-language-server tombi codex-acp;
     inherit (rustPackages) rustfmt;
+    git = gitWithAbsorb;
+    rg = ripgrep;
     rust-analyzer = rustAnalyzerWithToolchain;
     clangd = llvmPackages_latest.clang-tools;
     lake = lean4;

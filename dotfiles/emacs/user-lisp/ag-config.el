@@ -1450,6 +1450,11 @@ used instead. OPTIONS sets server initialization options."
     (defun-ts-disp (car elem) (cdr elem))))
 
 
+;;; Rg
+
+(setopt rg-executable (get-hermetic-executable "rg"))
+
+
 ;;; Vale
 
 (eval-when-compile (require 'flymake-vale))
@@ -1526,7 +1531,8 @@ used instead. OPTIONS sets server initialization options."
         magit-no-message '("Turning on ")
         magit-wip-mode-lighter ""
         magit-process-apply-ansi-colors 'filter
-        magit-git-executable (get-hermetic-executable "git"))
+        magit-git-executable (get-hermetic-executable "git")
+        magit-perl-executable (get-hermetic-executable "perl"))
 
 (with-eval-after-load 'magit
   (magit-todos-mode))
