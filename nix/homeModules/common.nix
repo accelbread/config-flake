@@ -33,7 +33,6 @@ in
   config = {
     home = {
       packages = with pkgs; [
-        nix-output-monitor
         (nixgl.nixGLCommon config.nixgl.package)
         man-pages
         man-pages-posix
