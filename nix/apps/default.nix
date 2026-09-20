@@ -1,13 +1,7 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ src, lib, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
+{ src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
 let
-  emacsDir = src + /dotfiles/emacs;
-  emacsConfig = lib.fileset.toSource {
-    root = emacsDir;
-    fileset = lib.fileset.difference emacsDir (emacsDir + /user-lisp);
-  };
-
   nix = ''nix --extra-experimental-features "nix-command flakes ca-derivations"'';
   mkBuildScript = script: writeShellScript script ''
     set -eu
@@ -24,7 +18,7 @@ rec {
     emacs_dir=$(mktemp -d)
     cleanup() { rm -rf "$emacs_dir"; }
     trap cleanup EXIT
-    cp --no-preserve=all -rT "${emacsConfig}" "$emacs_dir"
+    cp --no-preserve=all -rT "${src + /dotfiles/_config/emacs}" "$emacs_dir"
     ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
   '';
 

@@ -108,13 +108,13 @@ let
       packageRequires = attrVals (packageRequiresFromFile file) epkgs;
     };
 
-  userLispDir = ../../dotfiles/emacs/user-lisp;
-  userLispPkgsSrcs = map (f: userLispDir + "/${f}")
-    (attrNames (readDir userLispDir));
-  userLispOverlay = final: _: listToAttrs
+  configDir = ../../emacs-config;
+  configPkgsSrcs = map (f: configDir + "/${f}")
+    (attrNames (readDir configDir));
+  configOverlay = final: _: listToAttrs
     (map (src: { name = pkgName src; value = buildPkg final src; })
-      userLispPkgsSrcs);
-  userLispPkgs = attrVals (map pkgName userLispPkgsSrcs);
+      configPkgsSrcs);
+  configPkgs = attrVals (map pkgName configPkgsSrcs);
 
   valeStyles = symlinkJoin {
     name = "vale-styles";
@@ -250,12 +250,12 @@ let
     (lib.composeManyExtensions [
       (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches)
       (_: _: lib.genAttrs builtinLibs (_: emptyDirectory))
-      userLispOverlay
+      configOverlay
     ]);
 
   inherit (emacsPackages) emacsWithPackages;
 
-  emacsWPkgs = emacsWithPackages (epkgs: userLispPkgs epkgs ++ [
+  emacsWPkgs = emacsWithPackages (epkgs: configPkgs epkgs ++ [
     (epkgs.treesit-grammars.with-grammars
       (attrVals (map (l: "tree-sitter-" + l) treeSitterLangs)))
     (epkgs.trivialBuild {

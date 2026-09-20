@@ -111,7 +111,7 @@ in
           status.submoduleSummary = true;
           init = {
             defaultBranch = "master";
-            templateDir = "${flake.src + /dotfiles/git-template}";
+            templateDir = "${./files/git-template}";
           };
           core.untrackedCache = true;
           fetch = {

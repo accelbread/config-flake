@@ -43,37 +43,38 @@ in
       foliate
       warp
     ];
-    file = mapAttrs (_: v: { recursive = true; } // v) {
-      ".face".source = flake.src + /misc/icon.png;
-      ".config".source = flake.src + /dotfiles/config;
-      ".local".source = flake.src + /dotfiles/local;
-      ".ssh".source = flake.src + /dotfiles/ssh;
-      ".librewolf".source = flake.src + /dotfiles/librewolf;
-      ".librewolf/native-messaging-hosts/passff.json".source =
-        "${pkgs.passff-host.override {
-          pass = config.programs.password-store.package;
-        }}/lib/librewolf/native-messaging-hosts/passff.json";
-      ".librewolf/profile/chrome/firefox-gnome-theme" = {
-        source = pkgs.firefox-gnome-theme;
-        recursive = false;
-      };
-      ".thunderbird".source = flake.src + /dotfiles/thunderbird;
-      ".thunderbird/profile/chrome/thunderbird-gnome-theme" = {
-        source = pkgs.thunderbird-gnome-theme;
-        recursive = false;
-      };
-      ".local/share/flatpak/overrides" = {
-        source = flake.src + /dotfiles/flatpak_overrides;
-        force = true;
-      };
-      ".config/pipewire/pipewire.conf.d/99-input-denoising.conf".source =
-        pkgs.replaceVarsWith {
-          src = ./files/99-input-denoising.conf;
-          replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
+    file = let dotdir = flake.src + /dotfiles; in lib.mkMerge [
+      (lib.mapAttrs'
+        (k: v: lib.nameValuePair
+          (if lib.hasPrefix "_" k then "." + lib.removePrefix "_" k else k)
+          { source = dotdir + "/${k}"; recursive = true; })
+        (lib.readDir dotdir))
+
+      {
+        ".local/share/flatpak/overrides" = {
+          source = dotdir + "/_local/share/flatpak/overrides";
+          recursive = true;
+          force = true;
         };
-      ".config/celluloid/scripts" = {
-        source =
-          "${pkgs.buildEnv {
+      }
+
+      (mapAttrs (_: v: { source = v; }) {
+        ".face" = flake.src + /misc/icon.png;
+        ".librewolf/native-messaging-hosts/passff.json" =
+          (pkgs.passff-host.override
+            { pass = config.programs.password-store.package; })
+          + /lib/librewolf/native-messaging-hosts/passff.json;
+        ".librewolf/profile/chrome/firefox-gnome-theme" =
+          pkgs.firefox-gnome-theme;
+        ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
+          pkgs.thunderbird-gnome-theme;
+        ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
+          pkgs.replaceVarsWith {
+            src = ./files/99-input-denoising.conf;
+            replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
+          };
+        ".config/celluloid/scripts" =
+          (pkgs.buildEnv {
             name = "mpv-scripts";
             pathsToLink = [ "/share/mpv/scripts" ];
             paths = with pkgs.mpvScripts; [
@@ -81,29 +82,28 @@ in
               mpris
               sponsorblock-minimal
             ];
-          }}/share/mpv/scripts";
-        recursive = false;
-      };
-      ".local/state/codex/model_catalog.json".source =
-        pkgs.runCommand "codex-openrouter-model-catalog.json"
-          { nativeBuildInputs = [ pkgs.jq ]; } ''
-          jq '
-            def openrouter_models: ["gpt-5.6-sol", "gpt-5.6-luna"];
-            .models = [
-              .models[]
-              | .slug as $slug
-              | select(openrouter_models | index($slug))
-              | .slug = "openai/\($slug):floor"
-              | .supported_reasoning_levels |= map(select(.effort != "ultra"))
-              | .use_responses_lite = false
-              | .prefer_websockets = false
-              | .supports_search_tool = false
-              | .service_tiers = []
-              | del(.available_in_plans, .multi_agent_version, .tool_mode)
-            ]
-          ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
-        '';
-    };
+          }) + /share/mpv/scripts;
+        ".local/state/codex/model_catalog.json" =
+          pkgs.runCommand "codex-openrouter-model-catalog.json"
+            { nativeBuildInputs = [ pkgs.jq ]; } ''
+            jq '
+              def openrouter_models: ["gpt-5.6-sol", "gpt-5.6-luna"];
+              .models = [
+                .models[]
+                | .slug as $slug
+                | select(openrouter_models | index($slug))
+                | .slug = "openai/\($slug):floor"
+                | .supported_reasoning_levels |= map(select(.effort != "ultra"))
+                | .use_responses_lite = false
+                | .prefer_websockets = false
+                | .supports_search_tool = false
+                | .service_tiers = []
+                | del(.available_in_plans, .multi_agent_version, .tool_mode)
+              ]
+            ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
+          '';
+      })
+    ];
     activation = {
       passGitConfig =
         let
