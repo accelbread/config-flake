@@ -65,7 +65,6 @@ in
         wl-clipboard
       ];
       file = {
-        ".fdignore".source = flake.src + /dotfiles/fdignore;
         ".manpath".text = ''
           MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
         '';
