@@ -2010,16 +2010,16 @@ used instead. OPTIONS sets server initialization options."
                 ,@(when (eq mode 'cpp)
                     '((operator_name "->" @ts-disp-arrow)))))))))
 
-;; Hook is used to set keywords in current buffer instead of globally for mode
-;; to ensure highlighting is applied after rainbow delimiters.
-(defun c-set-font-overrides ()
-  "Enable rainbow paren overrides for C/C++."
-  (font-lock-add-keywords
-   nil
-   '(("\\(\\[\\[\\).*?\\(\\]\\]\\)"
-      (1 'font-lock-keyword-face t)
-      (2 'font-lock-keyword-face t)))
-   'append))
+(defun ag-c-rainbow-delimiters-pick-face (depth match loc)
+  "Stop rainbow-delimiters from coloring C23 attribute brackets.
+DEPTH, MATCH, and LOC are passed to `rainbow-delimiters-default-pick-face'."
+  (unless (member (treesit-node-type (treesit-node-at loc)) '("[[" "]]"))
+    (rainbow-delimiters-default-pick-face depth match loc)))
+
+(defun ag-c-configure-rainbow-delimiters ()
+  "Enable C rainbow-delimiters config."
+  (setq-local rainbow-delimiters-pick-face-function
+              #'ag-c-rainbow-delimiters-pick-face))
 
 (defun c-flymake-containing-makefile-check-syntax ()
   "`flymake' command for checking with `make check-syntax'."
@@ -2044,7 +2044,7 @@ used instead. OPTIONS sets server initialization options."
   (add-hook hook #'c-configure-semantic-tokens)
   (add-hook hook #'c-formatter-configure)
   (add-hook hook #'c-ts-add-custom-rules)
-  (add-hook hook #'c-set-font-overrides))
+  (add-hook hook #'ag-c-configure-rainbow-delimiters))
 
 (eval-when-compile (require 'cmake-mode))
 
