@@ -223,7 +223,10 @@ let
     });
 
   elpaPatches = {
-    eat = [ ./misc/eat-cnl-cpl.patch ];
+    eat = [
+      ./misc/eat-cnl-cpl.patch
+      ./misc/eat-handle-word-wrap.patch
+    ];
     typst-ts-mode = [ ./misc/typst-ts-mode-autoload.patch ];
   };
 

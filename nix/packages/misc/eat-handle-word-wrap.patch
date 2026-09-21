@@ -1,0 +1,110 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sun, 20 Sep 2026 16:50:00 -0700
+Subject: [PATCH] Make terminal backgrounds reflow with word wrapping
+
+Emacs leaves the remainder of a visual line unpainted when word wrapping
+after a space with a background face. Give background-colored spaces an
+extending face so terminal backgrounds fill the visual line without
+extending arbitrary ANSI background runs.
+
+Terminal erase operations also materialize background cells as spaces.
+Mark those emulator-created blank cells and remove only a trailing
+marked suffix while finalizing a terminal or filtering copied text. This
+prevents padding from producing extra visual rows or clipboard
+whitespace while preserving spaces explicitly emitted by the client.
+---
+ eat.el | 52 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 8 deletions(-)
+
+diff --git a/eat.el b/eat.el
+index 22d17a2..b497de9 100644
+--- a/eat.el
++++ b/eat.el
+@@ -999,16 +999,53 @@ (defun eat--t-goto-col
+   ;; Now the target column is N characters away.
+   (eat--t-col-motion n))
+ 
++(defun eat--t-add-face (str face)
++  "Add FACE to STR and extend its background through spaces."
++  (put-text-property 0 (length str) 'face face str)
++  (put-text-property 0 (length str) 'font-lock-face face str)
++  (when (plist-member face :background)
++    (let ((extended-face `(:extend t ,@face))
++          (beg 0))
++      (save-match-data
++        (while (string-match " +" str beg)
++          (put-text-property (match-beginning 0) (match-end 0)
++                             'face extended-face str)
++          (put-text-property (match-beginning 0) (match-end 0)
++                             'font-lock-face extended-face str)
++          (setq beg (match-end 0))))))
++  str)
++
+ (defun eat--t-repeated-insert (c n &optional face)
+   "Insert character C, N times, using face FACE, if given."
+   (insert (if face
+-              (let ((str (make-string n c)))
+-                (put-text-property 0 n 'face face str)
+-                (put-text-property 0 n 'font-lock-face face str)
++              (let ((str (eat--t-add-face (make-string n c) face)))
++                (when (= c ?\s)
++                  (put-text-property 0 n 'eat--t-blank-cell t str))
+                 str)
+             ;; Avoid the `let'.
+             (make-string n c))))
+ 
++(defun eat--t-remove-trailing-blank-cells ()
++  "Remove trailing terminal-created blank cells."
++  (cl-labels
++      ((trim-before
++        (end)
++        (save-excursion
++          (goto-char end)
++          (while (and (> (point) (point-min))
++                      (= (char-before) ?\s)
++                      (get-text-property (1- (point))
++                                         'eat--t-blank-cell))
++            (backward-char))
++          (delete-region (point) end))))
++    (save-excursion
++      (goto-char (point-min))
++      (while (search-forward "\n" nil t)
++        (trim-before (1- (point))))
++      (trim-before (point-max))))
++  (remove-text-properties (point-min) (point-max)
++                          '(eat--t-blank-cell nil)))
++
+ (defun eat--t-join-long-line (&optional limit)
+   "Join long line once, but don't try to go beyond LIMIT.
+ 
+@@ -1743,10 +1780,7 @@ (defun eat--t-write
+                                  eat--t-dec-line-drawing-chars)))
+                           (aset s i r)))))
+                    ;; Add face.
+-                   (put-text-property 0 (length s) 'face face s)
+-                   (put-text-property
+-                    0 (length s) 'font-lock-face face s)
+-                   (insert s))
++                   (insert (eat--t-add-face s face)))
+                  (setq inserted-till e)
+                  (if (or (null next-multi-col)
+                          (< (- end e) (cdr next-multi-col)))
+@@ -4016,7 +4050,8 @@ (defun eat-term-delete
+           (unless (bobp)
+             (backward-char))
+           (while (not (eobp))
+-            (eat--t-join-long-line)))))
++            (eat--t-join-long-line))
++          (eat--t-remove-trailing-blank-cells))))
+     (setf (eat--t-term-buffer eat--t-term) nil)))
+ 
+ (defun eat-term-reset (terminal)
+@@ -4797,6 +4832,7 @@ (defun eat-term-filter-string
+     (goto-char (point-min))
+     (while (not (eobp))
+       (eat--t-join-long-line))
++    (eat--t-remove-trailing-blank-cells)
+     ;; Remove the invisible spaces used with multi-column characters.
+     (goto-char (point-min))
+     (while (not (eobp))
