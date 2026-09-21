@@ -72,7 +72,9 @@ in
           ${coreutils}/bin/mkdir -p /mnt
           ${util-linux}/bin/mount -t btrfs -o noatime,compress=zstd \
             /dev/${hostname}_vg1/pool /mnt
-          ${lib.getExe btrfs-subvol-rm-r} /mnt/root
+          if [ -e /mnt/root ]; then
+            ${lib.getExe btrfs-subvol-rm-r} /mnt/root
+          fi
           ${btrfs-progs}/bin/btrfs subvolume create /mnt/root
           ${util-linux}/bin/umount /mnt
         '';
