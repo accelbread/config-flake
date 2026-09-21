@@ -91,7 +91,9 @@ argument, sets project as untrusted."
   (when (ag--buffer-get-trust)
     (let ((inhibit-message t)
           (message-log-max nil))
-      (setq-local enable-local-variables :all))))
+      (setq-local enable-local-variables :all))
+    ;; Cache buffer trust state
+    (setq-local trusted-content :all)))
 
 ;;;###autoload
 (define-minor-mode ag-trust-mode
