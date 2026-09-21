@@ -34,7 +34,6 @@ in
       fragments
       gnome-decoder
       eyedropper
-      errands
       d-spy
       firefox
       ungoogled-chromium
