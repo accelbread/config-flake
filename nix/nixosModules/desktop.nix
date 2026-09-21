@@ -219,6 +219,8 @@ in
 
   xdg.portal.xdgOpenUsePortal = true;
 
+  i18n.inputMethod.ibus.waylandFrontend = true;
+
   environment = {
     gnome.excludePackages = [
       pkgs.epiphany
