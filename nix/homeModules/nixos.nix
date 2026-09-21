@@ -87,7 +87,11 @@ in
           pkgs.runCommand "codex-openrouter-model-catalog.json"
             { nativeBuildInputs = [ pkgs.jq ]; } ''
             jq '
-              def openrouter_models: ["gpt-5.6-sol", "gpt-5.6-luna"];
+              def openrouter_models: [
+                "gpt-5.6-sol",
+                "gpt-5.6-luna",
+                "gpt-6-astra"
+              ];
               .models = [
                 .models[]
                 | .slug as $slug
