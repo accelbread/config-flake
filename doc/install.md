@@ -16,7 +16,7 @@ Format to LBA format #:
 
 - Add nixos config for system.
 - Get networking.hostId from `head -c4 /dev/urandom | od -A none -t x4`.
-- Set `services.usbguard.implictPolicyTarget = "keep"`.
+- Set `services.usbguard.implicitPolicyTarget = "keep"`.
 - On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
 ```sh
@@ -32,7 +32,7 @@ nix run .#nixosFullInstall -- ${SYSTEM}
 usbguard generate-policy > usbguard-rules.conf
 ```
 
-Replace `usbguard.implictPolicyTarget` with `usbguard.rules`.
+Replace `usbguard.implicitPolicyTarget` with `usbguard.rules`.
 
 ```sh
 run0 sbctl create-keys
