@@ -428,10 +428,6 @@ returns nil."
                     ('(t nil) "🔒")
                     ('(t t) "🔏"))))
           (:eval (when (file-remote-p default-directory) "✈️"))
-          (envrc-mode (:eval (pcase envrc--status
-                               ('error "🔥")
-                               ('denied "🚫")
-                               ('on (if (getenv "IN_NIX_SHELL") "❄️" "🌌")))))
           (server-buffer-clients "🚨")
           (:eval (when (buffer-narrowed-p) "🔎"))
           " "
@@ -1104,8 +1100,17 @@ returns nil."
 
 (eval-when-compile (require 'envrc))
 
-(setopt envrc-lighter nil
-        envrc-direnv-executable (get-hermetic-executable "direnv"))
+(setopt envrc-direnv-executable (get-hermetic-executable "direnv"))
+
+(defun ag--envrc-lighter ()
+  "Generate custom `envrc-mode' lighter."
+  (if envrc--running "🛠️"
+    (pcase envrc--status
+      ('error "🔥")
+      ('denied "⛔")
+      ('on "🏕️"))))
+
+(setopt envrc-lighter '(" " (:eval (ag--envrc-lighter))))
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
