@@ -20,10 +20,11 @@
 
 (defun ag--update-trusted-content (dir &optional remove)
   "Add or remove DIR from `trusted-content' based on REMOVE."
-  (if remove
-      (setq-default trusted-content
-                    (delete dir (default-value 'trusted-content)))
-    (add-to-list 'trusted-content dir)))
+  (let ((prev-val (default-value 'trusted-content)))
+    (if remove
+        (setq-default trusted-content (delete dir prev-val))
+      (unless (member dir prev-val)
+        (setq-default trusted-content (cons dir prev-val))))))
 
 (defun ag--record-trust (dir trust)
   "Record value of TRUST for DIR."
