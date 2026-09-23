@@ -87,8 +87,10 @@ in
             { nativeBuildInputs = [ pkgs.jq ]; } ''
             jq '
               def openrouter_models: [
-                "gpt-5.6-sol",
                 "gpt-5.6-luna",
+                "gpt-5.6-sol",
+                "gpt-6-luna",
+                "gpt-6-sol",
                 "gpt-6-astra"
               ];
               .models = [

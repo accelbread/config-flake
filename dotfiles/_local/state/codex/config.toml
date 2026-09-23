@@ -1,6 +1,6 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-model = "openai/gpt-5.6-luna:floor"
+model = "openai/gpt-6-luna:floor"
 model_reasoning_effort = "medium"
 model_provider = "openrouter"
 model_catalog_json = "model_catalog.json"
