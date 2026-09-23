@@ -862,7 +862,8 @@ returns nil."
 (setopt remote-file-name-inhibit-locks t
         tramp-use-scp-direct-remote-copying t
         tramp-show-ad-hoc-proxies t
-        tramp-propagate-emacsclient-tramp t)
+        tramp-propagate-emacsclient-tramp t
+        tramp-histfile-override t)
 
 (with-eval-after-load 'tramp
   (tramp-enable-method "run0")
