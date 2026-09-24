@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 24 Sep 2026 00:52:45 -0700
+Subject: [PATCH] Keep the first word on the first display line
+
+When a line begins with whitespace, word wrapping remembers the break
+after that whitespace. If the first word crosses the window edge, Emacs
+moves it to the next display line, leaving a line containing only
+indentation. Do not save a wrap point before the first non-whitespace
+character.
+
+---
+ src/xdisp.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/xdisp.c b/src/xdisp.c
+index 22d92ef49f..57a11b6e5b 100644
+--- a/src/xdisp.c
++++ b/src/xdisp.c
+@@ -616,7 +616,6 @@ char_can_wrap_after (struct it *it)
+ 	      && !it_char_has_category (it, not_at_eol)));
+ }
+ 
+-#undef IT_DISPLAYING_WHITESPACE
+ #undef NOT_AT_EOL
+ #undef NOT_AT_BOL
+ #undef LINE_BREAKABLE
+@@ -25835,6 +25834,7 @@ display_line (struct it *it, int cursor_vpos)
+   struct it wrap_it, prev_it;
+   void *wrap_data = NULL, *prev_data = NULL;
+   bool may_wrap = false;
++  bool only_whitespace_so_far = true;
+   int wrap_x UNINIT;
+   int wrap_row_used = -1;
+   int wrap_row_ascent UNINIT, wrap_row_height UNINIT;
+@@ -26096,8 +26096,10 @@ display_line (struct it *it, int cursor_vpos)
+ 		next_may_wrap = true;
+               else
+                 next_may_wrap = false;
+-	      /* Can we wrap here? */
+-	      if (may_wrap && char_can_wrap_before (it))
++	      /* Do not wrap after indentation alone: that would leave
++		 the first display line without any text.  */
++	      if (may_wrap && char_can_wrap_before (it)
++		  && !only_whitespace_so_far)
+ 		{
+ 		  SAVE_IT (wrap_it, *it, wrap_data);
+ 		  wrap_x = x;
+@@ -26122,6 +26124,8 @@ display_line (struct it *it, int cursor_vpos)
+ 		}
+ 	      else
+ 		prev_face_id = -1;
++	      if (!IT_DISPLAYING_WHITESPACE (it))
++		only_whitespace_so_far = false;
+ 	    }
+ 	}
+ 
+@@ -26873,6 +26877,8 @@ display_line (struct it *it, int cursor_vpos)
+ #undef RECORD_MAX_MIN_POS
+ }
+ 
++#undef IT_DISPLAYING_WHITESPACE
++
+ DEFUN ("current-bidi-paragraph-direction", Fcurrent_bidi_paragraph_direction,
+        Scurrent_bidi_paragraph_direction, 0, 1, 0,
+        doc: /* Return paragraph direction at point in BUFFER.
