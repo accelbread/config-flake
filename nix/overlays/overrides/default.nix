@@ -50,6 +50,16 @@ prev.lib.composeManyExtensions [
       chmod -R u+w $out
       rm -r $out/share/fonts
     '';
+    haskellPackages = prev.haskellPackages.override {
+      overrides = _: hprev: {
+        nix-derivation = final.haskell.lib.overrideCabal hprev.nix-derivation
+          (old: {
+            patches = (old.patches or [ ]) ++ [
+              ./haskellPatches/nix-derivation/support-ca-derivations.patch
+            ];
+          });
+      };
+    };
     lean4 = prev.lean4.overrideAttrs (old: {
       cmakeFlags = old.cmakeFlags ++ [
         "-DSTAGE1_CMAKE_INSTALL_PREFIX=${placeholder "out"}"

@@ -1,0 +1,54 @@
+diff --git a/lib/NOM/NixMessage/JSON.hs b/lib/NOM/NixMessage/JSON.hs
+index 4153fbb..3873dfd 100644
+--- a/lib/NOM/NixMessage/JSON.hs
++++ b/lib/NOM/NixMessage/JSON.hs
+@@ -57,6 +57,7 @@ data Activity where
+   QueryPathInfo :: StorePath -> Host WithContext -> Activity
+   PostBuildHook :: Derivation -> Activity
+   BuildWaiting :: Activity
++  ResolvedDerivation :: Derivation -> Derivation -> Activity
+   FetchTree :: Activity
+   deriving stock (Show, Eq, Ord)
+ 
+diff --git a/lib/NOM/Parser/JSON.hs b/lib/NOM/Parser/JSON.hs
+index 79e3a8b..9829488 100644
+--- a/lib/NOM/Parser/JSON.hs
++++ b/lib/NOM/Parser/JSON.hs
+@@ -3,6 +3,7 @@ module NOM.Parser.JSON (parseJSONLine) where
+ import Data.ByteString qualified as ByteString
+ import Data.Hermes qualified as JSON
+ import Data.Hermes.Decoder (listOfInt)
++import Data.Text qualified as Text
+ import NOM.Builds (parseDerivation, parseHost, parseStorePath)
+ import NOM.Error (NOMError (..))
+ import NOM.NixMessage.JSON (Activity (..), ActivityId (..), ActivityProgress (..), ActivityResult (..), ActivityType (..), MessageAction (..), NixJSONMessage (..), ResultAction (..), StartAction (..), StopAction (..), Verbosity (..))
+@@ -161,6 +162,10 @@ parseStartAction = do
+         path' <- parseStorePath path
+         pure $ QueryPathInfo path' (parseHost host)
+     PostBuildHookType -> PostBuildHook <$> (one txt >>= parseDerivation)
+-    BuildWaitingType -> pure BuildWaiting
++    BuildWaitingType
++      | Text.isPrefixOf "resolved derivation:" text -> do
++          (unresolved, resolved) <- two txt
++          ResolvedDerivation <$> parseDerivation unresolved <*> parseDerivation resolved
++      | otherwise -> pure BuildWaiting
+     FetchTreeType -> pure FetchTree
+   pure MkStartAction{id = MkId idField, text, activity, level}
+diff --git a/lib/NOM/Update.hs b/lib/NOM/Update.hs
+index b559429..38fb687 100644
+--- a/lib/NOM/Update.hs
++++ b/lib/NOM/Update.hs
+@@ -241,6 +241,13 @@ processJsonMessage = \case
+       JSON.Build drvName host -> withChange do
+         now <- getNow
+         building host drvName now (Just id')
++      JSON.ResolvedDerivation unresolved resolved -> withChange do
++        unresolvedId <- lookupDerivation unresolved
++        -- Nix gives the same build a new .drv path after resolving CA inputs.
++        -- Keep its original dependency tree and finish it on activity stop,
++        -- since the unresolved derivation's output path is no longer valid.
++        modifying' #derivationIds $ Map.insert resolved unresolvedId
++        modifying' #derivationInfos $ CMap.adjust (#outputs .~ mempty) unresolvedId
+       JSON.CopyPath path from Localhost -> withChange do
+         now <- getNow
+         pathId <- getStorePathId path

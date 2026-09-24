@@ -1,0 +1,49 @@
+diff --git a/src/Nix/Derivation/Parser.hs b/src/Nix/Derivation/Parser.hs
+index 3aac359..e347f4c 100644
+--- a/src/Nix/Derivation/Parser.hs
++++ b/src/Nix/Derivation/Parser.hs
+@@ -36,19 +36,22 @@ listOf element = do
+ 
+ -- | Parse a derivation
+ parseDerivation :: Parser (Derivation FilePath Text)
+-parseDerivation = parseDerivationWith filepathParser textParser
++parseDerivation = parseDerivationWithPaths (filepathParserWith True) filepathParser textParser
+ 
+ -- | Parse a derivation using custom
+ -- parsers for filepaths and text fields
+ parseDerivationWith :: (Ord fp, Ord txt) => Parser fp -> Parser txt -> Parser (Derivation fp txt)
+-parseDerivationWith filepath string = do
++parseDerivationWith filepath string = parseDerivationWithPaths filepath filepath string
++
++parseDerivationWithPaths :: (Ord fp, Ord txt) => Parser fp -> Parser fp -> Parser txt -> Parser (Derivation fp txt)
++parseDerivationWithPaths outputPath filepath string = do
+     "Derive("
+ 
+     let keyValue0 = do
+             "("
+             key <- string
+             ","
+-            path <- filepath
++            path <- outputPath
+             ","
+             hashAlgo <- string
+             ","
+@@ -132,12 +135,17 @@ textParser = do
+     return (Data.Text.concat textChunks)
+ 
+ filepathParser :: Parser FilePath
+-filepathParser = do
++filepathParser = filepathParserWith False
++
++filepathParserWith :: Bool -> Parser FilePath
++filepathParserWith allowEmpty = do
+     text <- textParser
+     let str = Data.Text.unpack text
+     case (Data.Text.uncons text, System.FilePath.isValid str) of
+         (Just ('/', _), True) -> do
+             return str
++        -- Floating content-addressed outputs have no path until they are built.
++        (Nothing, _) | allowEmpty -> return str
+         _ -> do
+             fail ("bad path ‘" <> Data.Text.unpack text <> "’ in derivation")
+ 
