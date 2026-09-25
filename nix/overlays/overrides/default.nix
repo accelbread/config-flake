@@ -60,28 +60,6 @@ prev.lib.composeManyExtensions [
           });
       };
     };
-    lean4 = prev.lean4.overrideAttrs (old: {
-      cmakeFlags = old.cmakeFlags ++ [
-        "-DSTAGE1_CMAKE_INSTALL_PREFIX=${placeholder "out"}"
-      ];
-    });
-    codex = prev.codex.overrideAttrs (old: rec {
-      version = "0.156.1";
-      src = final.fetchFromGitHub {
-        owner = "openai";
-        repo = "codex";
-        tag = "rust-v${version}";
-        hash = "sha256-H53f57hmnyCtn5yPxtBe/A92qyQyzQBeU/vK2qSBrvI=";
-      };
-      cargoDeps = final.rustPlatform.fetchCargoVendor {
-        inherit src;
-        sourceRoot = "${src.name}/codex-rs";
-        hash = "sha256-W87rX/W2J1pwqNrihX+Rj6DfagoZYuB6C+l/S4BhyJM=";
-      };
-      postPatch = (old.postPatch or "") + ''
-        sed -i '1i#![recursion_limit = "256"]' chatgpt/src/lib.rs
-      '';
-    });
   })
 ]
   final
