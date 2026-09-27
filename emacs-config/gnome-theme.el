@@ -214,6 +214,10 @@ Each element of FACES has the form (FACE ATTRIBUTE...)."
           (mapcar (lambda (spec) `(,(car spec) ((t ,(cdr spec)))))
                   ,faces)))
 
+;; Eshell ls faces are derived from dired faces
+(with-eval-after-load 'em-ls
+  (require 'dired))
+
 (defun gt--set-faces ()
   "Update face configuration for Gnome theme."
   (gt--custom-theme-set-faces 'gnome
@@ -501,23 +505,23 @@ Each element of FACES has the form (FACE ATTRIBUTE...)."
       (magit-reflog-cherry-pick :foreground ,gt-success-color)
       (magit-reflog-remote :foreground ,gt-blue-2)
       (magit-reflog-other :foreground ,gt-blue-2)
+      (dired-directory :foreground ,gt-blue-4)
+      (dired-special :foreground ,gt-yellow-4)
+      (dired-symlink :foreground ,gt-teal-3)
+      (dired-perm-write :foreground ,gt-yellow-2)
       (dired-broken-symlink :inherit (error))
-      (dired-directory :foreground ,gt-blue-2)
       (dired-flagged :strike-through t :inherit (error))
       (dired-header :weight bold :foreground ,gt-accent-color)
       (dired-mark :foreground ,gt-accent-color)
       (dired-marked :foreground ,gt-view-fg-color
                     :background ,gt-view-selected-color)
-      (dired-perm-write :inherit (font-lock-function-name-face))
-      (dired-special :inherit (font-lock-keyword-face))
-      (dired-symlink :inherit (font-lock-variable-name-face))
       (eshell-prompt :inherit (minibuffer-prompt))
       (eshell-input :foreground ,gt-accent-color)
-      (eshell-ls-executable :inherit (font-lock-function-name-face))
-      (eshell-ls-directory :foreground ,gt-blue-2)
-      (eshell-ls-special :inherit (font-lock-keyword-face))
-      (eshell-ls-symlink :inherit (font-lock-variable-name-face))
-      (eshell-ls-readonly :inherit (font-lock-constant-face))
+      (eshell-ls-directory :inherit (dired-directory))
+      (eshell-ls-special :inherit (dired-special))
+      (eshell-ls-symlink :inherit (dired-symlink))
+      (eshell-ls-executable :foreground ,gt-green-4)
+      (eshell-ls-readonly :foreground ,gt-orange-1)
       (eshell-ls-unreadable :inherit (shadow))
       (eshell-ls-missing :inherit (error))
       (org-block :inherit (fixed-pitch))
