@@ -14,7 +14,8 @@ in
   config = {
     home.packages = config.gnome.extensions;
 
-    dconf.settings."org/gnome/shell".enabled-extensions =
-      map (p: p.extensionUuid) config.gnome.extensions;
+    dconf.settings."org/gnome/shell".enabled-extensions = map (
+      p: p.extensionUuid
+    ) config.gnome.extensions;
   };
 }

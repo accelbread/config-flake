@@ -1,6 +1,12 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, lib, inputs, ... }: {
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
+{
   imports = [
     inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
     inputs.self.nixosModules.common
@@ -80,4 +86,3 @@
     };
   };
 }
-

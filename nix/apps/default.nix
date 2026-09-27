@@ -1,6 +1,14 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ lib, src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
+{
+  lib,
+  src,
+  writeShellScript,
+  emacsAccelbread,
+  bubblewrap,
+  firefox,
+  ...
+}:
 let
   experimentalFeatures = lib.concatStringsSep " " [
     "nix-command"
@@ -9,13 +17,15 @@ let
     "pipe-operators"
   ];
   nix = ''nix --extra-experimental-features "${experimentalFeatures}"'';
-  mkBuildScript = script: writeShellScript script ''
-    set -eu
-    ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
-    ${nix} build --no-link "$ref"
-    script=$(${nix} eval --raw "$ref")
-    run0 $script
-  '';
+  mkBuildScript =
+    script:
+    writeShellScript script ''
+      set -eu
+      ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
+      ${nix} build --no-link "$ref"
+      script=$(${nix} eval --raw "$ref")
+      run0 $script
+    '';
 in
 rec {
   default = emacs;

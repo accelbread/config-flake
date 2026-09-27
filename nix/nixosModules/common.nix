@@ -1,6 +1,15 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, options, pkgs, lib, inputs, hostname, flake, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  inputs,
+  hostname,
+  flake,
+  ...
+}:
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
@@ -21,7 +30,9 @@ in
 
   nix = {
     package = pkgs.nixVersions.latest;
-    registry = lib.genAttrs [ "self" "nixpkgs" ] (n: { flake = inputs.${n}; });
+    registry = lib.genAttrs [ "self" "nixpkgs" ] (n: {
+      flake = inputs.${n};
+    });
     channel.enable = false;
     settings = {
       experimental-features = [
@@ -67,9 +78,18 @@ in
       ];
       services.wipe-root-subvolume = {
         wantedBy = [ "initrd.target" ];
-        requires = [ "local-fs-pre.target" "initrd-root-device.target" ];
-        after = [ "local-fs-pre.target" "initrd-root-device.target" ];
-        before = [ "sysroot.mount" "create-needed-for-boot-dirs.service" ];
+        requires = [
+          "local-fs-pre.target"
+          "initrd-root-device.target"
+        ];
+        after = [
+          "local-fs-pre.target"
+          "initrd-root-device.target"
+        ];
+        before = [
+          "sysroot.mount"
+          "create-needed-for-boot-dirs.service"
+        ];
         unitConfig.DefaultDependencies = false;
         serviceConfig.Type = "oneshot";
         script = with pkgs; ''
@@ -125,7 +145,11 @@ in
           modulePath = "pam_umask.so";
         };
       });
-      mount.fuseMountOptions = [ "noatime" "nosuid" "nodev" ];
+      mount.fuseMountOptions = [
+        "noatime"
+        "nosuid"
+        "nodev"
+      ];
     };
   };
 
@@ -140,8 +164,11 @@ in
       cache.enable = true;
       man-db.manualPages =
         let
-          makeContentAddressed = drv: pkgs.runCommandLocal drv.name
-            { __contentAddressed = true; } "cp -rL ${drv} $out";
+          makeContentAddressed =
+            drv:
+            pkgs.runCommandLocal drv.name {
+              __contentAddressed = true;
+            } "cp -rL ${drv} $out";
         in
         makeContentAddressed options.documentation.man.man-db.manualPages.default;
     };
@@ -154,8 +181,10 @@ in
     tpm2.enable = false;
     services = {
       systemd-time-wait-sync.wantedBy = [ "sysinit.target" ];
-      NetworkManager-wait-online.serviceConfig.ExecStart =
-        [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
+      NetworkManager-wait-online.serviceConfig.ExecStart = [
+        ""
+        "${pkgs.networkmanager}/bin/nm-online -q"
+      ];
       sshd.serviceConfig = {
         IPAddressAllow = "localhost 100.64.0.0/10";
         IPAddressDeny = "any";
@@ -164,13 +193,30 @@ in
     };
     tmpfiles.settings.preservation =
       (lib.flip lib.genAttrs
-        (k: { d = { user = "root"; group = "root"; mode = "0700"; }; }) [
-        "/etc/NetworkManager"
-      ]) //
-      (lib.flip lib.genAttrs
-        (k: { d = { user = "root"; group = "root"; mode = "0755"; }; }) [
-        "/etc"
-      ]) // {
+        (k: {
+          d = {
+            user = "root";
+            group = "root";
+            mode = "0700";
+          };
+        })
+        [
+          "/etc/NetworkManager"
+        ]
+      )
+      // (lib.flip lib.genAttrs
+        (k: {
+          d = {
+            user = "root";
+            group = "root";
+            mode = "0755";
+          };
+        })
+        [
+          "/etc"
+        ]
+      )
+      // {
         "/var/log" = lib.mkForce { };
       };
   };
@@ -220,10 +266,8 @@ in
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
         TrustedUserCAKeys = "${flake.src + /misc/ssh_ca_user_key.pub}";
-        HostKey =
-          "/persist/state/sshd/ssh_host_ed25519_sk_key";
-        HostCertificate =
-          "/persist/state/sshd/ssh_host_ed25519_sk_key-cert.pub";
+        HostKey = "/persist/state/sshd/ssh_host_ed25519_sk_key";
+        HostCertificate = "/persist/state/sshd/ssh_host_ed25519_sk_key-cert.pub";
         ClientAliveInterval = 15;
       };
     };
@@ -258,7 +302,10 @@ in
     users.archit = {
       isNormalUser = true;
       description = "Archit Gupta";
-      extraGroups = [ "wheel" "networkmanager" ];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+      ];
       uid = 1000;
       hashedPasswordFile = "/persist/state/system/user_pass";
     };
@@ -266,7 +313,10 @@ in
 
   environment = {
     etc.machine-id.text = machine-id;
-    defaultPackages = with pkgs; [ zile git ];
+    defaultPackages = with pkgs; [
+      zile
+      git
+    ];
     systemPackages = with pkgs; [
       lkl
       (sbctl.override {
@@ -304,31 +354,49 @@ in
 
   preservation = {
     enable = true;
-    preserveAt = mapAttrs
-      (k: v: v // {
-        persistentStoragePath = "/persist/${k}";
-        commonMountOptions = [ "x-gvfs-hide" "x-gdu.hide" ];
-      })
-      {
-        state = { };
-        data = { };
-        cache = {
-          directories = (map (d: { directory = d; mode = "0700"; }) [
-            "/etc/NetworkManager/system-connections"
-            "/var/lib/bluetooth"
-            "/var/lib/private/tailscale"
-          ]) ++ [
-            "/var/log"
-            "/var/lib/systemd/timesync"
-            "/var/lib/systemd/timers"
-            "/var/lib/fwupd/metadata/lvfs"
-          ];
-          files = [{
-            file = "/var/lib/systemd/random-seed";
-            how = "symlink";
-            inInitrd = true;
-          }];
+    preserveAt =
+      mapAttrs
+        (
+          k: v:
+          v
+          // {
+            persistentStoragePath = "/persist/${k}";
+            commonMountOptions = [
+              "x-gvfs-hide"
+              "x-gdu.hide"
+            ];
+          }
+        )
+        {
+          state = { };
+          data = { };
+          cache = {
+            directories =
+              (map
+                (d: {
+                  directory = d;
+                  mode = "0700";
+                })
+                [
+                  "/etc/NetworkManager/system-connections"
+                  "/var/lib/bluetooth"
+                  "/var/lib/private/tailscale"
+                ]
+              )
+              ++ [
+                "/var/log"
+                "/var/lib/systemd/timesync"
+                "/var/lib/systemd/timers"
+                "/var/lib/fwupd/metadata/lvfs"
+              ];
+            files = [
+              {
+                file = "/var/lib/systemd/random-seed";
+                how = "symlink";
+                inInitrd = true;
+              }
+            ];
+          };
         };
-      };
   };
 }

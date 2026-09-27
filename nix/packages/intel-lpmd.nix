@@ -1,15 +1,16 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, autoreconfHook
-, pkg-config
-, gtk-doc
-, glib
-, libxml2
-, libnl
-, systemd
-, upower
-, coreutils
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  autoreconfHook,
+  pkg-config,
+  gtk-doc,
+  glib,
+  libxml2,
+  libnl,
+  systemd,
+  upower,
+  coreutils,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "intel-lpmd";

@@ -15,7 +15,11 @@ in
 {
   inherit (kernel) stdenv;
   inputsFrom = [ kernel ];
-  packages = with pkgs; [ b4 pkg-config ncurses ];
+  packages = with pkgs; [
+    b4
+    pkg-config
+    ncurses
+  ];
   env.MAKEFLAGS = lib.concatStringsSep " " kernel.configfile.makeFlags;
   shellHook = ''
     export MAKEFLAGS="$MAKEFLAGS -j$NIX_BUILD_CORES"

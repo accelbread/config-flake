@@ -22,7 +22,10 @@ in
       };
     };
     upsd = {
-      after = [ "network.target" "upsdrv.service" ];
+      after = [
+        "network.target"
+        "upsdrv.service"
+      ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "forking";
@@ -30,7 +33,10 @@ in
       };
     };
     upsmon = {
-      after = [ "network.target" "upsd.service" ];
+      after = [
+        "network.target"
+        "upsd.service"
+      ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "forking";
@@ -61,8 +67,7 @@ in
       driver = usbhid-ups
       port = auto
     '';
-    "nut/upsd.conf".source = pkgs.writeText "upsd.conf" ''
-    '';
+    "nut/upsd.conf".source = pkgs.writeText "upsd.conf" "";
     "nut/upsd.users".source = pkgs.writeText "upsd.users" ''
       [monuser]
       password = "upsmon_pass"
@@ -100,8 +105,8 @@ in
 
   security.polkit = {
     enable = true;
-    extraConfig = builtins.replaceStrings
-      [ "@notify_prog@" ] [ "${notify-send}" ]
-      (builtins.readFile ./polkit-nut.js);
+    extraConfig =
+      builtins.replaceStrings [ "@notify_prog@" ] [ "${notify-send}" ]
+        (builtins.readFile ./polkit-nut.js);
   };
 }

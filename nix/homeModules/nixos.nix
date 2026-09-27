@@ -1,12 +1,22 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, inputs, flake, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  flake,
+  ...
+}:
 let
   inherit (builtins) mapAttrs;
   inherit (inputs) self;
 in
 {
-  imports = with self.homeModules; [ common gnome ];
+  imports = with self.homeModules; [
+    common
+    gnome
+  ];
 
   home = {
     stateVersion = "25.11";
@@ -42,73 +52,82 @@ in
       foliate
       warp
     ];
-    file = let dotdir = flake.src + /dotfiles; in lib.mkMerge [
-      (lib.mapAttrs'
-        (k: v: lib.nameValuePair
-          (if lib.hasPrefix "_" k then "." + lib.removePrefix "_" k else k)
-          { source = dotdir + "/${k}"; recursive = true; })
-        (lib.readDir dotdir))
+    file =
+      let
+        dotdir = flake.src + /dotfiles;
+      in
+      lib.mkMerge [
+        (lib.mapAttrs' (
+          k: v:
+          lib.nameValuePair
+            (if lib.hasPrefix "_" k then "." + lib.removePrefix "_" k else k)
+            {
+              source = dotdir + "/${k}";
+              recursive = true;
+            }
+        ) (lib.readDir dotdir))
 
-      {
-        ".local/share/flatpak/overrides" = {
-          source = dotdir + "/_local/share/flatpak/overrides";
-          recursive = true;
-          force = true;
-        };
-      }
-
-      (mapAttrs (_: v: { source = v; }) {
-        ".face" = flake.src + /misc/icon.png;
-        ".librewolf/native-messaging-hosts/passff.json" =
-          (pkgs.passff-host.override
-            { pass = config.programs.password-store.package; })
-          + /lib/librewolf/native-messaging-hosts/passff.json;
-        ".librewolf/profile/chrome/firefox-gnome-theme" =
-          pkgs.firefox-gnome-theme;
-        ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
-          pkgs.thunderbird-gnome-theme;
-        ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
-          pkgs.replaceVarsWith {
-            src = ./files/99-input-denoising.conf;
-            replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
+        {
+          ".local/share/flatpak/overrides" = {
+            source = dotdir + "/_local/share/flatpak/overrides";
+            recursive = true;
+            force = true;
           };
-        ".config/celluloid/scripts" =
-          (pkgs.buildEnv {
-            name = "mpv-scripts";
-            pathsToLink = [ "/share/mpv/scripts" ];
-            paths = with pkgs.mpvScripts; [
-              autoload
-              mpris
-              sponsorblock-minimal
-            ];
-          }) + /share/mpv/scripts;
-        ".local/state/codex/model_catalog.json" =
-          pkgs.runCommand "codex-openrouter-model-catalog.json"
-            { nativeBuildInputs = [ pkgs.jq ]; } ''
-            jq '
-              def openrouter_models: [
-                "gpt-5.6-luna",
-                "gpt-5.6-sol",
-                "gpt-6-luna",
-                "gpt-6-sol",
-                "gpt-6-astra"
+        }
+
+        (mapAttrs (_: v: { source = v; }) {
+          ".face" = flake.src + /misc/icon.png;
+          ".librewolf/native-messaging-hosts/passff.json" =
+            (pkgs.passff-host.override { pass = config.programs.password-store.package; })
+            + /lib/librewolf/native-messaging-hosts/passff.json;
+          ".librewolf/profile/chrome/firefox-gnome-theme" = pkgs.firefox-gnome-theme;
+          ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
+            pkgs.thunderbird-gnome-theme;
+          ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
+            pkgs.replaceVarsWith
+              {
+                src = ./files/99-input-denoising.conf;
+                replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
+              };
+          ".config/celluloid/scripts" =
+            (pkgs.buildEnv {
+              name = "mpv-scripts";
+              pathsToLink = [ "/share/mpv/scripts" ];
+              paths = with pkgs.mpvScripts; [
+                autoload
+                mpris
+                sponsorblock-minimal
               ];
-              .models = [
-                .models[]
-                | .slug as $slug
-                | select(openrouter_models | index($slug))
-                | .slug = "openai/\($slug):floor"
-                | .supported_reasoning_levels |= map(select(.effort != "ultra"))
-                | .use_responses_lite = false
-                | .prefer_websockets = false
-                | .supports_search_tool = false
-                | .service_tiers = []
-                | del(.available_in_plans, .multi_agent_version, .tool_mode)
-              ]
-            ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
-          '';
-      })
-    ];
+            })
+            + /share/mpv/scripts;
+          ".local/state/codex/model_catalog.json" =
+            pkgs.runCommand "codex-openrouter-model-catalog.json"
+              { nativeBuildInputs = [ pkgs.jq ]; }
+              ''
+                jq '
+                  def openrouter_models: [
+                    "gpt-5.6-luna",
+                    "gpt-5.6-sol",
+                    "gpt-6-luna",
+                    "gpt-6-sol",
+                    "gpt-6-astra"
+                  ];
+                  .models = [
+                    .models[]
+                    | .slug as $slug
+                    | select(openrouter_models | index($slug))
+                    | .slug = "openai/\($slug):floor"
+                    | .supported_reasoning_levels |= map(select(.effort != "ultra"))
+                    | .use_responses_lite = false
+                    | .prefer_websockets = false
+                    | .supports_search_tool = false
+                    | .service_tiers = []
+                    | del(.available_in_plans, .multi_agent_version, .tool_mode)
+                  ]
+                ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
+              '';
+        })
+      ];
     activation = {
       passGitConfig =
         let
@@ -158,25 +177,38 @@ in
     set-album-arts = {
       Unit.Description = "Set album arts";
       Install.WantedBy = [ "graphical-session.target" ];
-      Service.ExecStart = lib.getExe (pkgs.writeShellApplication {
-        name = "set-album-arts";
-        runtimeInputs = [ pkgs.glib pkgs.ffmpeg-headless ];
-        text = builtins.readFile ./scripts/set-album-arts;
-      });
+      Service.ExecStart = lib.getExe (
+        pkgs.writeShellApplication {
+          name = "set-album-arts";
+          runtimeInputs = [
+            pkgs.glib
+            pkgs.ffmpeg-headless
+          ];
+          text = builtins.readFile ./scripts/set-album-arts;
+        }
+      );
     };
     local-api-proxy = {
       Unit = {
         Description = "Local proxy for authenticated APIs";
-        After = [ "graphical-session.target" "dbus.socket" ];
+        After = [
+          "graphical-session.target"
+          "dbus.socket"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
-        ExecStart = lib.getExe (pkgs.writeShellApplication {
-          name = "local-api-proxy";
-          runtimeInputs = [ pkgs.caddy pkgs.libsecret ];
-          text = builtins.readFile ./scripts/local-api-proxy;
-        });
+        ExecStart = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "local-api-proxy";
+            runtimeInputs = [
+              pkgs.caddy
+              pkgs.libsecret
+            ];
+            text = builtins.readFile ./scripts/local-api-proxy;
+          }
+        );
         Restart = "on-failure";
         RestartSec = 5;
       };
@@ -203,7 +235,10 @@ in
       "gtk-3.0/gtk.css".text = "@define-color accent_bg_color #9141ac;";
       "gtk-4.0/gtk.css".text = ":root { --accent-bg-color: var(--accent-purple); }";
     };
-    desktopEntries.cups =
-      { name = ""; exec = null; settings.Hidden = "true"; };
+    desktopEntries.cups = {
+      name = "";
+      exec = null;
+      settings.Hidden = "true";
+    };
   };
 }

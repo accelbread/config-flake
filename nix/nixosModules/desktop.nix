@@ -1,6 +1,13 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, inputs, flake, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  flake,
+  ...
+}:
 let
   desktopBackgrounds = pkgs.writeTextFile {
     name = "desktop-backgrounds";
@@ -28,14 +35,13 @@ in
   ];
 
   # Allow steam package for steam-hardware udev rules
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    (lib.getName pkg) == "steam-unwrapped";
+  nixpkgs.config.allowUnfreePredicate =
+    pkg: (lib.getName pkg) == "steam-unwrapped";
 
   nix = {
     settings = {
       keep-outputs = true;
-      extra-sandbox-paths = lib.optional config.programs.ccache.enable
-        config.programs.ccache.cacheDir;
+      extra-sandbox-paths = lib.optional config.programs.ccache.enable config.programs.ccache.cacheDir;
     };
     daemonCPUSchedPolicy = "idle";
   };
@@ -70,14 +76,14 @@ in
     consoleLogLevel = 3;
     plymouth = {
       enable = true;
-      font =
-        "${pkgs.adwaita-fonts}/share/fonts/Adwaita/AdwaitaSans-Regular.ttf";
+      font = "${pkgs.adwaita-fonts}/share/fonts/Adwaita/AdwaitaSans-Regular.ttf";
       extraConfig = ''
         UseSimpledrm=1
         DeviceScale=2
       '';
-      logo = pkgs.runCommand "boot_logo.png" { }
-        "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
+      logo =
+        pkgs.runCommand "boot_logo.png" { }
+          "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -93,7 +99,11 @@ in
     clight.settings = {
       backlight = {
         no_smooth_transition = true;
-        ac_timeouts = [ 10 10 10 ];
+        ac_timeouts = [
+          10
+          10
+          10
+        ];
       };
       keyboard.disabled = true;
       gamma.disabled = true;
@@ -103,13 +113,15 @@ in
     };
     flatpak.enable = true;
     # uaccess rules must come before 73-seat-late.rules
-    udev.packages = lib.singleton (pkgs.writeTextFile {
-      name = "usb-disk-udev-rules";
-      destination = "/etc/udev/rules.d/70-usb-disks.rules";
-      text = ''
-        SUBSYSTEMS=="usb", SUBSYSTEM=="block", TAG+="uaccess"
-      '';
-    });
+    udev.packages = lib.singleton (
+      pkgs.writeTextFile {
+        name = "usb-disk-udev-rules";
+        destination = "/etc/udev/rules.d/70-usb-disks.rules";
+        text = ''
+          SUBSYSTEMS=="usb", SUBSYSTEM=="block", TAG+="uaccess"
+        '';
+      }
+    );
     gnome = {
       gcr-ssh-agent.enable = false;
       tinysparql.enable = false;
@@ -131,11 +143,18 @@ in
     };
     tmpfiles.settings = {
       preservation = {
-        "/var/lib/colord".d =
-          { user = "colord"; group = "colord"; mode = "0755"; };
-        "/home/archit".d =
-          { user = "archit"; group = "users"; mode = "0755"; };
-      } // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
+        "/var/lib/colord".d = {
+          user = "colord";
+          group = "colord";
+          mode = "0755";
+        };
+        "/home/archit".d = {
+          user = "archit";
+          group = "users";
+          mode = "0755";
+        };
+      }
+      // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
         "/home/archit/.ssh"
         "/home/archit/.librewolf"
         "/home/archit/.thunderbird"
@@ -191,9 +210,24 @@ in
       capabilities = "cap_perfmon+p";
     };
     pam.loginLimits = [
-      { domain = "@audio"; item = "memlock"; type = "-"; value = "unlimited"; }
-      { domain = "@audio"; item = "rtprio"; type = "-"; value = "95"; }
-      { domain = "@audio"; item = "nice"; type = "-"; value = "-19"; }
+      {
+        domain = "@audio";
+        item = "memlock";
+        type = "-";
+        value = "unlimited";
+      }
+      {
+        domain = "@audio";
+        item = "rtprio";
+        type = "-";
+        value = "95";
+      }
+      {
+        domain = "@audio";
+        item = "nice";
+        type = "-";
+        value = "-19";
+      }
     ];
   };
 
@@ -233,11 +267,12 @@ in
     ];
     sessionVariables = {
       GST_PLUGIN_SYSTEM_PATH_1_0 =
-        lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
-          pkgs.gst_all_1.gst-plugins-base
-          pkgs.gst_all_1.gst-plugins-good
-          pkgs.gst_all_1.gst-libav
-        ];
+        lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0"
+          [
+            pkgs.gst_all_1.gst-plugins-base
+            pkgs.gst_all_1.gst-plugins-good
+            pkgs.gst_all_1.gst-libav
+          ];
       QT_QPA_PLATFORM = "wayland";
       QT_WAYLAND_DECORATION = "adwaita";
     };
@@ -264,8 +299,7 @@ in
   };
 
   ab.dconf = with lib.gvariant; {
-    gdm."org/gnome/login-screen".logo =
-      "${flake.src + /misc/boot_logo.svg}";
+    gdm."org/gnome/login-screen".logo = "${flake.src + /misc/boot_logo.svg}";
     all = {
       "org/gnome/desktop/interface" = {
         clock-format = "12h";
@@ -309,44 +343,79 @@ in
         }
       ];
       users.archit = {
-        directories = (map (d: { directory = d; mode = "0700"; }) [
-          "Projects"
-          ".ssh/config.d"
-          ".config/emacs"
-          ".librewolf/profile"
-          ".thunderbird/profile"
-          ".local/share/keyrings"
-          ".local/share/vault"
-          ".local/share/gnupg"
-          ".local/share/pass"
-          ".local/share/fractal"
-          ".var/app/com.valvesoftware.Steam"
-        ]) ++ (map (d: { directory = d; mode = "0755"; }) [
-          ".local/share/icc"
-        ]);
-        files = map (f: { file = f; mode = "0600"; }) [
-          ".ssh/id_ed25519_sk"
-          ".ssh/id_ed25519_sk-cert.pub"
-        ];
+        directories =
+          (map
+            (d: {
+              directory = d;
+              mode = "0700";
+            })
+            [
+              "Projects"
+              ".ssh/config.d"
+              ".config/emacs"
+              ".librewolf/profile"
+              ".thunderbird/profile"
+              ".local/share/keyrings"
+              ".local/share/vault"
+              ".local/share/gnupg"
+              ".local/share/pass"
+              ".local/share/fractal"
+              ".var/app/com.valvesoftware.Steam"
+            ]
+          )
+          ++ (map
+            (d: {
+              directory = d;
+              mode = "0755";
+            })
+            [
+              ".local/share/icc"
+            ]
+          );
+        files =
+          map
+            (f: {
+              file = f;
+              mode = "0600";
+            })
+            [
+              ".ssh/id_ed25519_sk"
+              ".ssh/id_ed25519_sk-cert.pub"
+            ];
       };
     };
     data.users.archit.directories =
-      map (d: { directory = d; mode = "0700"; }) [
-        "Documents"
-        "Music"
-        "Pictures"
-        "Videos"
-        "Library"
-      ];
+      map
+        (d: {
+          directory = d;
+          mode = "0700";
+        })
+        [
+          "Documents"
+          "Music"
+          "Pictures"
+          "Videos"
+          "Library"
+        ];
     cache = {
       directories = [
-        { directory = "/var/cache/ccache"; mode = "0770"; group = "nixbld"; }
+        {
+          directory = "/var/cache/ccache";
+          mode = "0770";
+          group = "nixbld";
+        }
       ];
-      users.archit.directories = map (d: { directory = d; mode = "0700"; }) [
-        "Downloads"
-        ".cache/fractal"
-        ".local/share/flatpak"
-      ];
+      users.archit.directories =
+        map
+          (d: {
+            directory = d;
+            mode = "0700";
+          })
+          [
+            "Downloads"
+            ".cache/fractal"
+            ".local/share/flatpak"
+          ];
     };
   };
 }

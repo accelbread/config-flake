@@ -13,26 +13,45 @@
     };
   };
 
-  programs.git.ignores = [ "/.evc" ".direnv" ];
+  programs.git.ignores = [
+    "/.evc"
+    ".direnv"
+  ];
 
-  xdg.desktopEntries = builtins.foldl'
-    (a: v: a // {
-      ${v} = { name = ""; exec = null; settings.Hidden = "true"; };
-    })
-    { }
-    [ "emacsclient" "emacs-mail" "emacsclient-mail" ]
-  // {
-    emacs = {
-      name = "Emacs";
-      mimeType = [ "text/english" "text/plain" ];
-      exec = "emacsclient -ca \"\" %F";
-      icon = "emacs";
-      startupNotify = true;
-      settings.StartupWMClass = "Emacs";
-      actions.new-instance = {
-        name = "New Instance";
-        exec = "emacs %F";
+  xdg.desktopEntries =
+    builtins.foldl'
+      (
+        a: v:
+        a
+        // {
+          ${v} = {
+            name = "";
+            exec = null;
+            settings.Hidden = "true";
+          };
+        }
+      )
+      { }
+      [
+        "emacsclient"
+        "emacs-mail"
+        "emacsclient-mail"
+      ]
+    // {
+      emacs = {
+        name = "Emacs";
+        mimeType = [
+          "text/english"
+          "text/plain"
+        ];
+        exec = "emacsclient -ca \"\" %F";
+        icon = "emacs";
+        startupNotify = true;
+        settings.StartupWMClass = "Emacs";
+        actions.new-instance = {
+          name = "New Instance";
+          exec = "emacs %F";
+        };
       };
     };
-  };
 }

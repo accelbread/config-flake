@@ -2,5 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 pkgs: with pkgs; {
   stdenv = pkgs.stdenvNoCC;
-  packages = [ mqttui b4 ];
+  packages = [
+    mqttui
+    b4
+  ];
 }

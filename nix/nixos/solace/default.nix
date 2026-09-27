@@ -6,7 +6,10 @@
     ./mqtt-broker.nix
     {
       ab.disks = {
-        devices = [ "/dev/nvme0n1" "/dev/nvme1n1" ];
+        devices = [
+          "/dev/nvme0n1"
+          "/dev/nvme1n1"
+        ];
         size = "900GiB";
         swap = "64g";
       };

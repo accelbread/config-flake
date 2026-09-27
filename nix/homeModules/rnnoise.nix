@@ -1,13 +1,23 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mkOption mkEnableOption mkPackageOption types mkIf;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    mkPackageOption
+    types
+    mkIf
+    ;
   cfg = config.services.rnnoise;
   label = "noise_suppressor_" + (if cfg.stereo then "stereo" else "mono");
   targetStr =
-    if cfg.target != null then ''node.target = "${cfg.target}"''
-    else "";
+    if cfg.target != null then ''node.target = "${cfg.target}"'' else "";
 in
 {
   options.services.rnnoise = {
@@ -56,8 +66,7 @@ in
               control = {
                 "VAD Threshold (%)" = ${toString cfg.vadThreshold}
                 "VAD Grace Period (ms)" = ${toString cfg.vadGracePeriod}
-                "Retroactive VAD Grace (ms)" = ${toString
-                  cfg.retroactiveVadGracePeriod}
+                "Retroactive VAD Grace (ms)" = ${toString cfg.retroactiveVadGracePeriod}
               }
             }]
           }

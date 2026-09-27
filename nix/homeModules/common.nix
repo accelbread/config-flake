@@ -1,29 +1,46 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, lib, inputs, config, flake, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  config,
+  flake,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
-  makeContentAddressed = drv: pkgs.runCommandLocal drv.name
-    { __contentAddressed = true; } "cp -rL ${drv} $out";
+  makeContentAddressed =
+    drv:
+    pkgs.runCommandLocal drv.name {
+      __contentAddressed = true;
+    } "cp -rL ${drv} $out";
 
-  manualPages = makeContentAddressed (pkgs.buildEnv {
-    name = "man-paths";
-    paths = config.home.packages;
-    pathsToLink = [ "/share/man" ];
-    extraOutputsToInstall = [ "man" ];
-    ignoreCollisions = true;
-    derivationArgs.__contentAddressed = true;
-  });
+  manualPages = makeContentAddressed (
+    pkgs.buildEnv {
+      name = "man-paths";
+      paths = config.home.packages;
+      pathsToLink = [ "/share/man" ];
+      extraOutputsToInstall = [ "man" ];
+      ignoreCollisions = true;
+      derivationArgs.__contentAddressed = true;
+    }
+  );
 
-  manualCache = pkgs.runCommand "man-cache"
-    { nativeBuildInputs = [ config.programs.man.package ]; } ''
-    echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
-    mandb -C man.conf --no-straycats --create ${manualPages}/share/man
-  '';
+  manualCache =
+    pkgs.runCommand "man-cache"
+      { nativeBuildInputs = [ config.programs.man.package ]; }
+      ''
+        echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
+        mandb -C man.conf --no-straycats --create ${manualPages}/share/man
+      '';
 in
 {
-  imports = with inputs.self.homeModules; [ emacs gui-only-programs ];
+  imports = with inputs.self.homeModules; [
+    emacs
+    gui-only-programs
+  ];
 
   options.nixgl.package = mkOption {
     type = types.package;

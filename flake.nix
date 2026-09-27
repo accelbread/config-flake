@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 {
   inputs = {
-    nixpkgs.url =
-      "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
     flakelight = {
       url = "github:nix-community/flakelight";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,7 +33,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { flakelight, ... }@inputs:
+  outputs =
+    { flakelight, ... }@inputs:
     flakelight ./. {
       imports = [ inputs.flakelight-elisp.flakelightModules.default ];
       inherit inputs;
@@ -48,8 +48,14 @@
         reuse = "${pkgs.reuse}/bin/reuse lint";
       };
       legacyPackages = pkgs: pkgs;
-      formatters = pkgs: {
-        "*.js" = "${pkgs.prettier}/bin/prettier --write";
+      formatters = { pkgs, lib, ... }: {
+        "*.nix" = "${lib.getExe pkgs.nixfmt} -w78";
+        "*.md" = "${lib.getExe pkgs.mdformat} --wrap 80 --number";
+        "*.json" = "${pkgs.writeShellScript "jq-fmt" ''
+          ${pkgs.jq}/bin/jq . $1 | ${pkgs.moreutils}/bin/sponge $1
+        ''}";
+        "*.yaml" = lib.getExe pkgs.yamlfmt;
+        "*.js" = "${lib.getExe pkgs.prettier} --write";
       };
     };
   nixConfig.commit-lockfile-summary = "flake: Update inputs";

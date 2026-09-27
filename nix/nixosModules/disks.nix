@@ -1,8 +1,19 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, hostname, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  hostname,
+  ...
+}:
 let
-  inherit (builtins) match mapAttrs listToAttrs head;
+  inherit (builtins)
+    match
+    mapAttrs
+    listToAttrs
+    head
+    ;
   cfg = config.ab.disks;
   partHasP = disk: match "/dev/sd." disk == null;
   getPartPrefix = disk: disk + lib.optionalString (partHasP disk) "p";
@@ -33,13 +44,17 @@ in
       initrd = {
         kernelModules = [ "dm_mod" ];
         luks = {
-          devices = listToAttrs (eachDevice (n: d: {
-            name = "${hostname}_disk${toString n}";
-            value = {
-              device = getPart 2 d;
-              bypassWorkqueues = true;
-            };
-          }));
+          devices = listToAttrs (
+            eachDevice (
+              n: d: {
+                name = "${hostname}_disk${toString n}";
+                value = {
+                  device = getPart 2 d;
+                  bypassWorkqueues = true;
+                };
+              }
+            )
+          );
           cryptoModules = [
             "aes"
             "xts"
@@ -57,43 +72,64 @@ in
       };
     };
 
-    swapDevices = eachDevice
-      (n: _: { device = "/dev/${hostname}_vg${toString n}/swap"; });
+    swapDevices = eachDevice (
+      n: _: { device = "/dev/${hostname}_vg${toString n}/swap"; }
+    );
 
     fileSystems =
       let
-        setSharedOpts = v: v // {
-          options = v.options or [ ] ++ [ "noatime" "nosuid" "nodev" ];
-        };
-        mkBtrfs = v: v // {
-          device = "/dev/${hostname}_vg1/pool";
-          fsType = "btrfs";
-          options = v.options or [ ] ++ [
-            "subvol=${v.device}"
-            "compress=zstd"
-            "user_subvol_rm_allowed"
-          ];
-        };
+        setSharedOpts =
+          v:
+          v
+          // {
+            options = v.options or [ ] ++ [
+              "noatime"
+              "nosuid"
+              "nodev"
+            ];
+          };
+        mkBtrfs =
+          v:
+          v
+          // {
+            device = "/dev/${hostname}_vg1/pool";
+            fsType = "btrfs";
+            options = v.options or [ ] ++ [
+              "subvol=${v.device}"
+              "compress=zstd"
+              "user_subvol_rm_allowed"
+            ];
+          };
       in
-      mapAttrs (_: setSharedOpts) ({
-        "/boot" = {
-          device = getPart 1 (head cfg.devices);
-          fsType = "vfat";
-          options = [ "noexec" "umask=0077" ];
-        };
-        "/var/pool_root" = {
-          device = "/dev/${hostname}_vg1/pool";
-          fsType = "btrfs";
-          options = [ "noauto" "compress=zstd" "user_subvol_rm_allowed" ];
-        };
-      } // mapAttrs (_: mkBtrfs) {
-        "/".device = "root";
-        "/nix".device = "nix";
-        "/persist" = {
-          device = "persist";
-          neededForBoot = true;
-        };
-      });
+      mapAttrs (_: setSharedOpts) (
+        {
+          "/boot" = {
+            device = getPart 1 (head cfg.devices);
+            fsType = "vfat";
+            options = [
+              "noexec"
+              "umask=0077"
+            ];
+          };
+          "/var/pool_root" = {
+            device = "/dev/${hostname}_vg1/pool";
+            fsType = "btrfs";
+            options = [
+              "noauto"
+              "compress=zstd"
+              "user_subvol_rm_allowed"
+            ];
+          };
+        }
+        // mapAttrs (_: mkBtrfs) {
+          "/".device = "root";
+          "/nix".device = "nix";
+          "/persist" = {
+            device = "persist";
+            neededForBoot = true;
+          };
+        }
+      );
 
     services = {
       btrfs.autoScrub = {
@@ -126,16 +162,19 @@ in
           inherit hostname;
           inherit (cfg) devices size swap;
           devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (with pkgs; [
-            coreutils
-            util-linux
-            parted
-            dosfstools
-            cryptsetup
-            lvm2
-            btrfs-progs
-            mkpasswd
-          ]);
+          path = lib.makeBinPath (
+            with pkgs;
+            [
+              coreutils
+              util-linux
+              parted
+              dosfstools
+              cryptsetup
+              lvm2
+              btrfs-progs
+              mkpasswd
+            ]
+          );
         };
       };
 
@@ -145,11 +184,14 @@ in
         replacements = {
           inherit hostname;
           devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (with pkgs; [
-            coreutils
-            util-linux
-            cryptsetup
-          ]);
+          path = lib.makeBinPath (
+            with pkgs;
+            [
+              coreutils
+              util-linux
+              cryptsetup
+            ]
+          );
         };
       };
 
@@ -159,12 +201,15 @@ in
         replacements = {
           inherit hostname;
           devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (with pkgs; [
-            coreutils
-            util-linux
-            lvm2
-            cryptsetup
-          ]);
+          path = lib.makeBinPath (
+            with pkgs;
+            [
+              coreutils
+              util-linux
+              lvm2
+              cryptsetup
+            ]
+          );
         };
       };
     };

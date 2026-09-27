@@ -1,5 +1,6 @@
-{ stdenv
-, fetchFromGitHub
+{
+  stdenv,
+  fetchFromGitHub,
 }:
 stdenv.mkDerivation {
   pname = "vale-proselint";

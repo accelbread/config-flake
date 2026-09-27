@@ -2,18 +2,34 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 final: prev:
 let
-  inherit (builtins) any filter mapAttrs path;
+  inherit (builtins)
+    any
+    filter
+    mapAttrs
+    path
+    ;
   inherit (final.lib) filesystem hasSuffix;
 in
 prev.lib.composeManyExtensions [
-  (final: prev: mapAttrs
-    (pkg: _: prev.${pkg}.overrideAttrs (old: {
-      patches = old.patches or [ ] ++
-        (map (p: path { path = p; })
-          (filter (p: any (e: hasSuffix e p) [ ".patch" ".mbx" ])
-            (filesystem.listFilesRecursive (./patches + "/${pkg}"))));
-    }))
-    (builtins.readDir ./patches))
+  (
+    final: prev:
+    mapAttrs (
+      pkg: _:
+      prev.${pkg}.overrideAttrs (old: {
+        patches =
+          old.patches or [ ]
+          ++ (map (p: path { path = p; }) (
+            filter (
+              p:
+              any (e: hasSuffix e p) [
+                ".patch"
+                ".mbx"
+              ]
+            ) (filesystem.listFilesRecursive (./patches + "/${pkg}"))
+          ));
+      })
+    ) (builtins.readDir ./patches)
+  )
   (final: prev: {
     ccacheWrapper = prev.ccacheWrapper.override {
       extraConfig = ''
@@ -35,15 +51,17 @@ prev.lib.composeManyExtensions [
       ];
     });
     bees = prev.bees.overrideAttrs {
-      utillinux = final.runCommand final.util-linux.name
-        {
-          inherit (final.util-linux) meta pname version;
-          nativeBuildInputs = [ final.makeBinaryWrapper ];
-        } ''
-        cp -r ${final.util-linux} $out
-        chmod -R u+w $out
-        wrapProgram $out/bin/mount --add-flags "-o noatime"
-      '';
+      utillinux =
+        final.runCommand final.util-linux.name
+          {
+            inherit (final.util-linux) meta pname version;
+            nativeBuildInputs = [ final.makeBinaryWrapper ];
+          }
+          ''
+            cp -r ${final.util-linux} $out
+            chmod -R u+w $out
+            wrapProgram $out/bin/mount --add-flags "-o noatime"
+          '';
     };
     rnote = final.runCommand prev.rnote.name { } ''
       cp -Lr ${prev.rnote} $out
@@ -52,15 +70,12 @@ prev.lib.composeManyExtensions [
     '';
     haskellPackages = prev.haskellPackages.override {
       overrides = _: hprev: {
-        nix-derivation = final.haskell.lib.overrideCabal hprev.nix-derivation
-          (old: {
-            patches = (old.patches or [ ]) ++ [
-              ./haskellPatches/nix-derivation/support-ca-derivations.patch
-            ];
-          });
+        nix-derivation = final.haskell.lib.overrideCabal hprev.nix-derivation (old: {
+          patches = (old.patches or [ ]) ++ [
+            ./haskellPatches/nix-derivation/support-ca-derivations.patch
+          ];
+        });
       };
     };
   })
-]
-  final
-  prev
+] final prev

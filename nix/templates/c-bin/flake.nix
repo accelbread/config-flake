@@ -19,28 +19,44 @@
 {
   description = "Template C application.";
   inputs.flakelight.url = "github:accelbread/flakelight";
-  outputs = { flakelight, ... }: flakelight ./. {
-    pname = "hello-world";
-    license = "AGPL-3.0-or-later";
+  outputs =
+    { flakelight, ... }:
+    flakelight ./. {
+      pname = "hello-world";
+      license = "AGPL-3.0-or-later";
 
-    package = { lib, stdenv, defaultMeta }:
-      stdenv.mkDerivation {
-        name = "hello-world";
-        src = lib.fileset.toSource {
-          root = ./.;
-          fileset = lib.fileset.fileFilter
-            (file: file.name == "GNUmakefile"
-              || lib.any file.hasExt [ "c" "h" ]) ./.;
+      package =
+        {
+          lib,
+          stdenv,
+          defaultMeta,
+        }:
+        stdenv.mkDerivation {
+          name = "hello-world";
+          src = lib.fileset.toSource {
+            root = ./.;
+            fileset = lib.fileset.fileFilter (
+              file:
+              file.name == "GNUmakefile"
+              || lib.any file.hasExt [
+                "c"
+                "h"
+              ]
+            ) ./.;
+          };
+          installFlags = [ "DESTDIR=$(out)" ];
+          meta = defaultMeta;
         };
-        installFlags = [ "DESTDIR=$(out)" ];
-        meta = defaultMeta;
+
+      devShell.packages =
+        pkgs: with pkgs; [
+          clang-tools
+          coreutils
+        ];
+
+      formatters = {
+        "*.c" = "clang-format -i";
+        "*.h" = "clang-format -i";
       };
-
-    devShell.packages = pkgs: with pkgs; [ clang-tools coreutils ];
-
-    formatters = {
-      "*.c" = "clang-format -i";
-      "*.h" = "clang-format -i";
     };
-  };
 }

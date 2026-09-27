@@ -1,12 +1,28 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (builtins) attrNames concatStringsSep;
-  inherit (lib) foldl genAttrs mapAttrs mergeAttrs;
+  inherit (lib)
+    foldl
+    genAttrs
+    mapAttrs
+    mergeAttrs
+    ;
 
   cfg = config.services.syncthing;
-  dirs = [ "Documents" "Music" "Pictures" "Videos" "Library" ];
+  dirs = [
+    "Documents"
+    "Music"
+    "Pictures"
+    "Videos"
+    "Library"
+  ];
   deviceIds = {
     solace = "GFGS44Z-7J5HL34-WHN7T66-W5FDFQR-6QCTTFP-4DKACXB-ANSRE2I-BTC6RAW";
     shadowfang = "SQVQEQJ-WYREPRO-Q5IOX3S-V2BG2LE-J5XSEKB-G6GYXDH-RPYGWV2-FETQEAF";
@@ -29,17 +45,20 @@ in
         path = "~/${k}";
         devices = attrNames deviceIds;
       });
-      devices = mapAttrs
-        (k: v: { id = v; addresses = [ "tcp://${k}.fluffy-bebop.ts.net" ]; })
-        deviceIds;
+      devices = mapAttrs (k: v: {
+        id = v;
+        addresses = [ "tcp://${k}.fluffy-bebop.ts.net" ];
+      }) deviceIds;
     };
   };
 
   systemd.services = {
     syncthing.serviceConfig = {
-      ExecStartPre = "+" + pkgs.writers.writeBash "syncthing-make-data-dir" ''
-        install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
-      '';
+      ExecStartPre =
+        "+"
+        + pkgs.writers.writeBash "syncthing-make-data-dir" ''
+          install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
+        '';
       UMask = config.security.loginDefs.settings.UMASK;
 
       CapabilityBoundingSet = lib.mkForce "";
@@ -62,14 +81,20 @@ in
       ProtectKernelTunables = true;
       ProtectProc = "invisible";
       ProtectSystem = "strict";
-      ReadWritePaths = [ cfg.dataDir cfg.databaseDir ];
+      ReadWritePaths = [
+        cfg.dataDir
+        cfg.databaseDir
+      ];
       RemoveIPC = true;
       RestrictAddressFamilies = [ "AF_INET" ];
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
       SystemCallArchitectures = "native";
-      SystemCallFilter = [ "@system-service" "~@privileged" ];
+      SystemCallFilter = [
+        "@system-service"
+        "~@privileged"
+      ];
     };
   };
 
@@ -95,15 +120,15 @@ in
         "noexec"
       ];
     in
-    foldl mergeAttrs { } (map
-      (dir: {
+    foldl mergeAttrs { } (
+      map (dir: {
         "${cfg.dataDir}/${dir}" = {
           device = "/persist/data/home/archit/${dir}";
           fsType = "none";
           inherit options;
         };
-      })
-      dirs);
+      }) dirs
+    );
 
   # syncthing starts up before syncthing-init which configures dirs with the
   # API, so it ends up starting without dirs and considering the dirs new.
@@ -111,12 +136,18 @@ in
   # Persisting dir since syncthing doesnt handle empty file for config.xml.
   preservation.preserveAt.state.users.syncthing = {
     home = cfg.dataDir;
-    directories = [{ directory = ".config/syncthing/"; mode = "0700"; }];
+    directories = [
+      {
+        directory = ".config/syncthing/";
+        mode = "0700";
+      }
+    ];
   };
 
-  systemd.tmpfiles.settings.preservation = lib.flip lib.genAttrs
-    (_: { d.mode = lib.mkForce "0700"; }) [
-    "${cfg.dataDir}/.config"
-    "${cfg.dataDir}/.config/syncthing"
-  ];
+  systemd.tmpfiles.settings.preservation =
+    lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; })
+      [
+        "${cfg.dataDir}/.config"
+        "${cfg.dataDir}/.config/syncthing"
+      ];
 }

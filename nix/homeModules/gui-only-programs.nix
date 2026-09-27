@@ -1,23 +1,35 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   prefix = config.home.gui-package-prefix;
 
-  fixedDesktopDrv = drv: pkgs.runCommand (drv.name + "-desktop") { } ''
-    mkdir -p $out/share
-    cp -Lr ${drv}/share/applications $out/share
-    chmod -R +w $out/share
-    sed -i 's|Exec=|Exec=${prefix}${drv}/bin/|' $out/share/applications/*
-  '';
+  fixedDesktopDrv =
+    drv:
+    pkgs.runCommand (drv.name + "-desktop") { } ''
+      mkdir -p $out/share
+      cp -Lr ${drv}/share/applications $out/share
+      chmod -R +w $out/share
+      sed -i 's|Exec=|Exec=${prefix}${drv}/bin/|' $out/share/applications/*
+    '';
 
-  guiOnlyWrapDrv = drv: pkgs.symlinkJoin {
-    name = drv.name + "-guiOnly";
-    paths = [ (fixedDesktopDrv drv) drv ];
-    postBuild = "rm -rf $out/bin $out/sbin";
-  };
+  guiOnlyWrapDrv =
+    drv:
+    pkgs.symlinkJoin {
+      name = drv.name + "-guiOnly";
+      paths = [
+        (fixedDesktopDrv drv)
+        drv
+      ];
+      postBuild = "rm -rf $out/bin $out/sbin";
+    };
 in
 {
   options.home = {

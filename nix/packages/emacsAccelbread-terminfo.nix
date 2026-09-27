@@ -1,5 +1,6 @@
-{ stdenv
-, ncurses
+{
+  stdenv,
+  ncurses,
 }:
 stdenv.mkDerivation {
   name = "emacsAccelbread-terminfo";

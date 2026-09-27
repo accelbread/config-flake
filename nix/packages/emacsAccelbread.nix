@@ -1,54 +1,81 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ lib
-, writeText
-, emacs31-pgtk
-, emacsPackagesFor
-, git
-, git-absorb
-, perl
-, ripgrep
-, vale
-, shellcheck
-, direnv
-, fish
-, guile
-, llvmPackages_latest
-, nixd
-, rust-analyzer
-, rustPackages
-, lean4
-, tinymist
-, openscad-unstable
-, yaml-language-server
-, tombi
-, symlinkJoin
-, vale-proselint
-, vale-write-good
-, makeFontsConf
-, adwaita-fonts
-, noto-fonts
-, noto-fonts-cjk-sans
-, noto-fonts-cjk-serif
-, noto-fonts-color-emoji
-, noto-fonts-monochrome-emoji
-, hunspellDicts
-, runCommand
-, makeBinaryWrapper
-, fetchurl
-, jing-trang
-, codex-acp
-, emptyDirectory
-, fetchFromGitHub
+{
+  lib,
+  writeText,
+  emacs31-pgtk,
+  emacsPackagesFor,
+  git,
+  git-absorb,
+  perl,
+  ripgrep,
+  vale,
+  shellcheck,
+  direnv,
+  fish,
+  guile,
+  llvmPackages_latest,
+  nixd,
+  rust-analyzer,
+  rustPackages,
+  lean4,
+  tinymist,
+  openscad-unstable,
+  yaml-language-server,
+  tombi,
+  symlinkJoin,
+  vale-proselint,
+  vale-write-good,
+  makeFontsConf,
+  adwaita-fonts,
+  noto-fonts,
+  noto-fonts-cjk-sans,
+  noto-fonts-cjk-serif,
+  noto-fonts-color-emoji,
+  noto-fonts-monochrome-emoji,
+  hunspellDicts,
+  runCommand,
+  makeBinaryWrapper,
+  fetchurl,
+  jing-trang,
+  codex-acp,
+  emptyDirectory,
+  fetchFromGitHub,
 }:
 let
-  inherit (builtins) attrNames filter head listToAttrs match readDir
-    readFile split;
-  inherit (lib) attrVals concatMap concatMapStringsSep flatten hasSuffix pipe
-    makeBinPath removeSuffix splitString;
+  inherit (builtins)
+    attrNames
+    filter
+    head
+    listToAttrs
+    match
+    readDir
+    readFile
+    split
+    ;
+  inherit (lib)
+    attrVals
+    concatMap
+    concatMapStringsSep
+    flatten
+    hasSuffix
+    pipe
+    makeBinPath
+    removeSuffix
+    splitString
+    ;
 
   rustAnalyzerWithToolchain =
-    let toolchain = makeBinPath (with rustPackages; [ cargo rustc clippy ]); in
+    let
+      toolchain = makeBinPath (
+        with rustPackages;
+        [
+          cargo
+          rustc
+          clippy
+        ]
+      );
+    in
     symlinkJoin {
       name = "rust-analyzer-with-toolchain";
       paths = [ rust-analyzer ];
@@ -69,8 +96,19 @@ let
   };
 
   binPkgMap = {
-    inherit perl vale shellcheck direnv guile fish tinymist nixd
-      yaml-language-server tombi codex-acp;
+    inherit
+      perl
+      vale
+      shellcheck
+      direnv
+      guile
+      fish
+      tinymist
+      nixd
+      yaml-language-server
+      tombi
+      codex-acp
+      ;
     inherit (rustPackages) rustfmt;
     git = gitWithAbsorb;
     rg = ripgrep;
@@ -80,27 +118,33 @@ let
     openscad = openscad-unstable;
   };
 
-  packageRequiresFromFile = file: pipe file [
-    readFile
-    (match ".*\n;; Package-Requires: \\(([^\n]*)\\)\n.*")
-    (requires:
-      if requires == null then [ ] else
-      pipe requires [
-        head
-        (split "\\(([-a-z]+) \"[^\"]+\"\\)")
-        flatten
-        (concatMap (splitString " "))
-        (filter (pkg: pkg != "" && pkg != "emacs"))
-      ])
-  ];
+  packageRequiresFromFile =
+    file:
+    pipe file [
+      readFile
+      (match ".*\n;; Package-Requires: \\(([^\n]*)\\)\n.*")
+      (
+        requires:
+        if requires == null then
+          [ ]
+        else
+          pipe requires [
+            head
+            (split "\\(([-a-z]+) \"[^\"]+\"\\)")
+            flatten
+            (concatMap (splitString " "))
+            (filter (pkg: pkg != "" && pkg != "emacs"))
+          ]
+      )
+    ];
 
   pkgName = src: removeSuffix ".el" (baseNameOf src);
-  buildPkg = epkgs: src:
+  buildPkg =
+    epkgs: src:
     let
       pname = pkgName src;
       file =
-        if hasSuffix ".el" (toString src) then src
-        else src + "/${baseNameOf src}.el";
+        if hasSuffix ".el" (toString src) then src else src + "/${baseNameOf src}.el";
     in
     epkgs.elpaBuild {
       inherit pname src;
@@ -109,16 +153,23 @@ let
     };
 
   configDir = ../../emacs-config;
-  configPkgsSrcs = map (f: configDir + "/${f}")
-    (attrNames (readDir configDir));
-  configOverlay = final: _: listToAttrs
-    (map (src: { name = pkgName src; value = buildPkg final src; })
-      configPkgsSrcs);
+  configPkgsSrcs = map (f: configDir + "/${f}") (attrNames (readDir configDir));
+  configOverlay =
+    final: _:
+    listToAttrs (
+      map (src: {
+        name = pkgName src;
+        value = buildPkg final src;
+      }) configPkgsSrcs
+    );
   configPkgs = attrVals (map pkgName configPkgsSrcs);
 
   valeStyles = symlinkJoin {
     name = "vale-styles";
-    paths = [ vale-proselint vale-write-good ];
+    paths = [
+      vale-proselint
+      vale-write-good
+    ];
   };
 
   valeConfig = writeText "vale-config" ''
@@ -167,7 +218,7 @@ let
 
   kindIconIconList = runCommand "kind-icon-icon-list" { } ''
     set -o pipefail
-    ${emacsWithPackages (epkgs: [epkgs.kind-icon])}/bin/emacs --batch -Q \
+    ${emacsWithPackages (epkgs: [ epkgs.kind-icon ])}/bin/emacs --batch -Q \
       --eval "(progn
                 (require 'kind-icon)
                 (dolist (entry kind-icon-mapping)
@@ -209,18 +260,25 @@ let
     "zig"
   ];
 
-  patchElpaPackage = package: patches: package.overrideAttrs (old:
-    let sourceDir = "${old.pname}-${old.version}"; in {
-      src = runCommand "${sourceDir}-patched.tar" { } ''
-        mkdir source
-        tar -xf ${old.src} -C source
-        ${concatMapStringsSep "\n" (patchFile: ''
-          patch -d source/${sourceDir} -p1 < ${patchFile}
-        '') patches}
-        tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -cf $out -C source ${sourceDir}
-      '';
-    });
+  patchElpaPackage =
+    package: patches:
+    package.overrideAttrs (
+      old:
+      let
+        sourceDir = "${old.pname}-${old.version}";
+      in
+      {
+        src = runCommand "${sourceDir}-patched.tar" { } ''
+          mkdir source
+          tar -xf ${old.src} -C source
+          ${concatMapStringsSep "\n" (patchFile: ''
+            patch -d source/${sourceDir} -p1 < ${patchFile}
+          '') patches}
+          tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+            -cf $out -C source ${sourceDir}
+        '';
+      }
+    );
 
   elpaPatches = {
     eat = [
@@ -230,9 +288,9 @@ let
     typst-ts-mode = [ ./misc/typst-ts-mode-autoload.patch ];
   };
 
-  execPaths = lib.concatStrings (lib.mapAttrsToList
-    (k: v: "(\"${k}\" . \"${v}/bin/${k}\")")
-    binPkgMap);
+  execPaths = lib.concatStrings (
+    lib.mapAttrsToList (k: v: "(\"${k}\" . \"${v}/bin/${k}\")") binPkgMap
+  );
 
   early-default-init = writeText "early-default.el" ''
     (setq hermetic-executable-paths '(${execPaths})
@@ -249,38 +307,46 @@ let
 
   baseEmacs = emacs31-pgtk;
 
-  emacsPackages = (emacsPackagesFor baseEmacs).overrideScope
-    (lib.composeManyExtensions [
+  emacsPackages = (emacsPackagesFor baseEmacs).overrideScope (
+    lib.composeManyExtensions [
       (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches)
       (_: _: lib.genAttrs builtinLibs (_: emptyDirectory))
       configOverlay
-    ]);
+    ]
+  );
 
   inherit (emacsPackages) emacsWithPackages;
 
-  emacsWPkgs = emacsWithPackages (epkgs: configPkgs epkgs ++ [
-    (epkgs.treesit-grammars.with-grammars
-      (attrVals (map (l: "tree-sitter-" + l) treeSitterLangs)))
-    (epkgs.trivialBuild {
-      pname = "emacs-early-default-init";
-      version = "0";
-      src = early-default-init;
-    })
-  ]);
+  emacsWPkgs = emacsWithPackages (
+    epkgs:
+    configPkgs epkgs
+    ++ [
+      (epkgs.treesit-grammars.with-grammars (
+        attrVals (map (l: "tree-sitter-" + l) treeSitterLangs)
+      ))
+      (epkgs.trivialBuild {
+        pname = "emacs-early-default-init";
+        version = "0";
+        src = early-default-init;
+      })
+    ]
+  );
 
-  wrapEmacs = emacs: runCommand emacs.name
-    {
-      nativeBuildInputs = [ makeBinaryWrapper ];
-      inherit (emacs) meta;
-    }
-    ''
-      mkdir -p $out/bin
-      for bin in ${emacs}/bin/*; do
-        makeWrapper "$bin" $out/bin/$(basename "$bin") --inherit-argv0 \
-          --set FONTCONFIG_FILE ${fontConfig} \
-          --set DICTDIR ${hunspellDicts.en_US}/share/hunspell
-      done
-      ln -s ${emacs}/share $out/share
-    '';
+  wrapEmacs =
+    emacs:
+    runCommand emacs.name
+      {
+        nativeBuildInputs = [ makeBinaryWrapper ];
+        inherit (emacs) meta;
+      }
+      ''
+        mkdir -p $out/bin
+        for bin in ${emacs}/bin/*; do
+          makeWrapper "$bin" $out/bin/$(basename "$bin") --inherit-argv0 \
+            --set FONTCONFIG_FILE ${fontConfig} \
+            --set DICTDIR ${hunspellDicts.en_US}/share/hunspell
+        done
+        ln -s ${emacs}/share $out/share
+      '';
 in
 wrapEmacs emacsWPkgs

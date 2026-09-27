@@ -14,8 +14,7 @@
     config.rocmSupport = true;
   };
 
-  networking.networkmanager.ethernet.macAddress =
-    lib.mkForce "5E:34:87:DE:A3:7A";
+  networking.networkmanager.ethernet.macAddress = lib.mkForce "5E:34:87:DE:A3:7A";
 
   boot = {
     initrd.availableKernelModules = [
@@ -24,7 +23,10 @@
       "usbhid"
       "hid_generic"
     ];
-    kernelModules = [ "k10temp" "it87" ];
+    kernelModules = [
+      "k10temp"
+      "it87"
+    ];
     kernelParams = [
       "efi=no_disable_early_pci_dma"
       "amdgpu.seamless=1"
@@ -54,7 +56,9 @@
   };
 
   ab.dconf.all = {
-    "org/gnome/desktop/peripherals/touchpad" = { speed = 0.6; };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      speed = 0.6;
+    };
     "org/gnome/settings-daemon/plugins/power" = {
       power-button-action = "interactive";
       sleep-inactive-ac-type = "nothing";

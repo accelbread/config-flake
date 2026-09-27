@@ -1,7 +1,8 @@
-{ stdenv
-, ncurses
-, emacsPackagesFor
-, emacs
+{
+  stdenv,
+  ncurses,
+  emacsPackagesFor,
+  emacs,
 }:
 stdenv.mkDerivation {
   name = "emacs-eat-terminfo";

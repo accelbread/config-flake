@@ -13,8 +13,14 @@
       User = "tailscaled";
       Group = "tailscaled";
       DynamicUser = true;
-      AmbientCapabilities = [ "CAP_NET_RAW" "CAP_NET_ADMIN" ];
-      CapabilityBoundingSet = [ "CAP_NET_RAW" "CAP_NET_ADMIN" ];
+      AmbientCapabilities = [
+        "CAP_NET_RAW"
+        "CAP_NET_ADMIN"
+      ];
+      CapabilityBoundingSet = [
+        "CAP_NET_RAW"
+        "CAP_NET_ADMIN"
+      ];
       DeviceAllow = "/dev/net/tun rw";
       DevicePolicy = "closed";
       LockPersonality = true;
@@ -33,7 +39,12 @@
       RemoveIPC = true;
       ProtectProc = "invisible";
       ProtectSystem = "strict";
-      RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" "AF_NETLINK" ];
+      RestrictAddressFamilies = [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+        "AF_NETLINK"
+      ];
       RestrictNamespaces = true;
       RestrictRealtime = true;
       RestrictSUIDSGID = true;

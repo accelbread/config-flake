@@ -1,6 +1,14 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ inputs, lib, pkgs, config, flake, ... }: {
+{
+  inputs,
+  lib,
+  pkgs,
+  config,
+  flake,
+  ...
+}:
+{
   imports = [ inputs.self.homeModules.gnome-extensions ];
 
   home = {
@@ -50,7 +58,8 @@
   };
 
   dconf.settings =
-    with lib.hm.gvariant; let
+    with lib.hm.gvariant;
+    let
       utc = mkVariant (mkTuple [
         (mkUint32 2)
         (mkVariant (mkTuple [
@@ -80,7 +89,14 @@
         visual-bell = false;
       };
       "org/gnome/clocks" = {
-        world-clocks = [ [ (mkDictionaryEntry [ "location" utc ]) ] ];
+        world-clocks = [
+          [
+            (mkDictionaryEntry [
+              "location"
+              utc
+            ])
+          ]
+        ];
       };
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
@@ -90,7 +106,10 @@
         primary-color = "#7767B2";
       };
       "org/gnome/desktop/input-sources" = {
-        xkb-options = [ "terminate:ctrl_alt_bksp" "compose:caps" ];
+        xkb-options = [
+          "terminate:ctrl_alt_bksp"
+          "compose:caps"
+        ];
       };
       "org/gnome/desktop/interface" = {
         gtk-enable-primary-paste = true;
@@ -103,7 +122,10 @@
         remove-old-trash-files = true;
       };
       "org/gnome/desktop/search-providers" = {
-        disabled = [ "org.gnome.Software.desktop" "org.gnome.Epiphany.desktop" ];
+        disabled = [
+          "org.gnome.Software.desktop"
+          "org.gnome.Epiphany.desktop"
+        ];
       };
       "org/gnome/desktop/screensaver" = {
         lock-delay = mkUint32 30;

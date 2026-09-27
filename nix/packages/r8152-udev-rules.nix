@@ -1,5 +1,6 @@
-{ stdenv
-, fetchFromGitHub
+{
+  stdenv,
+  fetchFromGitHub,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "r8152-udev-rules";

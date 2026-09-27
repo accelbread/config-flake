@@ -1,5 +1,6 @@
-{ stdenvNoCC
-, fetchFromGitHub
+{
+  stdenvNoCC,
+  fetchFromGitHub,
 }:
 stdenvNoCC.mkDerivation (final: {
   pname = "gnome-accent-directories";
