@@ -12,7 +12,6 @@ in
   home = {
     packages = with pkgs; [
       emacsAccelbread
-      emacs-eat-terminfo
     ];
     file.".config/emacs" = {
       source = ../../dotfiles/_config/emacs;

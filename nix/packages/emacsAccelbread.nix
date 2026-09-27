@@ -42,6 +42,7 @@
   emptyDirectory,
   fetchFromGitHub,
   ncurses,
+  stdenvNoCC,
 }:
 let
   inherit (builtins)
@@ -252,6 +253,26 @@ let
     "zig"
   ];
 
+  emacsTerminfo =
+    runCommand "dumb-emacs-ansi-terminfo"
+      {
+        nativeBuildInputs = [ ncurses ];
+      }
+      ''
+        mkdir -p $out/share/terminfo
+        tic -x -o $out/share/terminfo ${../../misc/dumb-emacs-ansi.ti}
+      '';
+
+  eatTerminfo = stdenvNoCC.mkDerivation {
+    name = "eat-terminfo";
+    inherit (emacsPackages.eat) src;
+    nativeBuildInputs = [ ncurses ];
+    installPhase = ''
+      mkdir -p $out/share/terminfo
+      tic -x -o $out/share/terminfo eat.ti
+    '';
+  };
+
   patchElpaPackage =
     package: patches:
     package.overrideAttrs (
@@ -330,15 +351,17 @@ let
     emacs:
     symlinkJoin {
       name = emacs.name;
-      paths = [ emacs ];
+      paths = [
+        emacs
+        emacsTerminfo
+        eatTerminfo
+      ];
       nativeBuildInputs = [
         ncurses
       ];
       inherit (emacs) meta;
       postBuild = ''
         rm $out/bin/.*
-        mkdir -p $out/share/terminfo
-        tic -x -o $out/share/terminfo ${../../misc/dumb-emacs-ansi.ti}
       '';
     };
 in
