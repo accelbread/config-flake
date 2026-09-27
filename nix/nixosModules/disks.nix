@@ -14,6 +14,8 @@ let
     listToAttrs
     head
     ;
+  inherit (lib) nameValuePair mergeAttrs;
+
   cfg = config.ab.disks;
   partHasP = disk: match "/dev/sd." disk == null;
   getPartPrefix = disk: disk + lib.optionalString (partHasP disk) "p";
@@ -46,12 +48,10 @@ in
         luks = {
           devices = listToAttrs (
             eachDevice (
-              n: d: {
-                name = "${hostname}_disk${toString n}";
-                value = {
-                  device = getPart 2 d;
-                  bypassWorkqueues = true;
-                };
+              n: d:
+              nameValuePair "${hostname}_disk${toString n}" {
+                device = getPart 2 d;
+                bypassWorkqueues = true;
               }
             )
           );
@@ -80,8 +80,7 @@ in
       let
         setSharedOpts =
           v:
-          v
-          // {
+          mergeAttrs v {
             options = v.options or [ ] ++ [
               "noatime"
               "nosuid"
@@ -90,8 +89,7 @@ in
           };
         mkBtrfs =
           v:
-          v
-          // {
+          mergeAttrs v {
             device = "/dev/${hostname}_vg1/pool";
             fsType = "btrfs";
             options = v.options or [ ] ++ [

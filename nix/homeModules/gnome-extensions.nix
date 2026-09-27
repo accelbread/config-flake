@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 { config, lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) catAttrs mkOption types;
 in
 {
   options.gnome.extensions = mkOption {
@@ -14,8 +14,7 @@ in
   config = {
     home.packages = config.gnome.extensions;
 
-    dconf.settings."org/gnome/shell".enabled-extensions = map (
-      p: p.extensionUuid
-    ) config.gnome.extensions;
+    dconf.settings."org/gnome/shell".enabled-extensions =
+      catAttrs "extensionUuid" config.gnome.extensions;
   };
 }

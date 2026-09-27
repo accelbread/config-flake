@@ -5,10 +5,10 @@
   lib,
   inputs,
   config,
-  flake,
   ...
 }:
 let
+  inherit (builtins) mapAttrs;
   inherit (lib) mkOption types;
 
   makeContentAddressed =
@@ -89,13 +89,11 @@ in
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
     };
 
-    xdg.configFile."direnv/direnvrc".text =
-      let
-        nix-direnv = pkgs.nix-direnv.override { nix = config.nix.package; };
-      in
-      "source ${nix-direnv}/share/nix-direnv/direnvrc";
+    xdg.configFile."direnv/direnvrc".text = "source ${
+      pkgs.nix-direnv.override { nix = config.nix.package; }
+    }/share/nix-direnv/direnvrc";
 
-    programs = builtins.mapAttrs (_: v: { enable = true; } // v) {
+    programs = mapAttrs (_: v: { enable = true; } // v) {
       info.enable = true;
       bash = {
         enableCompletion = false; # hm completion setup fails on minimal bash

@@ -2,12 +2,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 { pkgs, ... }:
 let
-  notify-send = pkgs.writeShellScript "notify-send-wrapper" ''
+  inherit (builtins) readFile replaceStrings;
+  inherit (pkgs) writeShellScript;
+  notify-send = writeShellScript "notify-send-wrapper" ''
     DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
       ${pkgs.libnotify}/bin/notify-send "$@"
-  '';
-  notifycmd = pkgs.writeShellScript "nut-notifycmd" ''
-    /run/wrappers/bin/pkexec --user archit ${notify-send} -u critical "$1"
   '';
 in
 {
@@ -78,7 +77,9 @@ in
       POWERDOWNFLAG /run/killpower
       MONITOR desk 1 monuser "upsmon_pass" primary
       SHUTDOWNCMD /run/current-system/sw/bin/poweroff
-      NOTIFYCMD ${notifycmd}
+      NOTIFYCMD ${writeShellScript "nut-notifycmd" ''
+        /run/wrappers/bin/pkexec --user archit ${notify-send} -u critical "$1"
+      ''}
       NOTIFYFLAG ONLINE SYSLOG+EXEC
       NOTIFYFLAG ONBATT SYSLOG+EXEC
       NOTIFYFLAG FSD SYSLOG+EXEC
@@ -106,7 +107,7 @@ in
   security.polkit = {
     enable = true;
     extraConfig =
-      builtins.replaceStrings [ "@notify_prog@" ] [ "${notify-send}" ]
-        (builtins.readFile ./polkit-nut.js);
+      readFile ./polkit-nut.js
+      |> replaceStrings [ "@notify_prog@" ] [ "${notify-send}" ];
   };
 }

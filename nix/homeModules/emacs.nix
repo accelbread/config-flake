@@ -1,6 +1,14 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, ... }: {
+{ pkgs, lib, ... }:
+let
+  inertDesktopEntry = {
+    name = "";
+    exec = null;
+    settings.Hidden = "true";
+  };
+in
+{
   home = {
     packages = with pkgs; [
       emacsAccelbread
@@ -19,24 +27,11 @@
   ];
 
   xdg.desktopEntries =
-    builtins.foldl'
-      (
-        a: v:
-        a
-        // {
-          ${v} = {
-            name = "";
-            exec = null;
-            settings.Hidden = "true";
-          };
-        }
-      )
-      { }
-      [
-        "emacsclient"
-        "emacs-mail"
-        "emacsclient-mail"
-      ]
+    lib.genAttrs [
+      "emacsclient"
+      "emacs-mail"
+      "emacsclient-mail"
+    ] (_: inertDesktopEntry)
     // {
       emacs = {
         name = "Emacs";

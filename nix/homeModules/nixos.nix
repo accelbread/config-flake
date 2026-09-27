@@ -9,8 +9,19 @@
   ...
 }:
 let
-  inherit (builtins) mapAttrs;
+  inherit (builtins) mapAttrs readFile;
+  inherit (lib)
+    flip
+    getExe
+    hasPrefix
+    mapAttrs'
+    nameValuePair
+    readDir
+    removePrefix
+    ;
   inherit (inputs) self;
+
+  dotdir = flake.src + /dotfiles;
 in
 {
   imports = with self.homeModules; [
@@ -53,81 +64,69 @@ in
       warp
     ];
     file =
-      let
-        dotdir = flake.src + /dotfiles;
-      in
-      lib.mkMerge [
-        (lib.mapAttrs' (
-          k: v:
-          lib.nameValuePair
-            (if lib.hasPrefix "_" k then "." + lib.removePrefix "_" k else k)
-            {
-              source = dotdir + "/${k}";
-              recursive = true;
-            }
-        ) (lib.readDir dotdir))
-
-        {
-          ".local/share/flatpak/overrides" = {
-            source = dotdir + "/_local/share/flatpak/overrides";
-            recursive = true;
-            force = true;
-          };
+      flip mapAttrs' (readDir dotdir) (
+        k: _:
+        nameValuePair (if hasPrefix "_" k then "." + removePrefix "_" k else k) {
+          source = dotdir + "/${k}";
+          recursive = true;
         }
-
-        (mapAttrs (_: v: { source = v; }) {
-          ".face" = flake.src + /misc/icon.png;
-          ".librewolf/native-messaging-hosts/passff.json" =
-            (pkgs.passff-host.override { pass = config.programs.password-store.package; })
-            + /lib/librewolf/native-messaging-hosts/passff.json;
-          ".librewolf/profile/chrome/firefox-gnome-theme" = pkgs.firefox-gnome-theme;
-          ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
-            pkgs.thunderbird-gnome-theme;
-          ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
-            pkgs.replaceVarsWith
-              {
-                src = ./files/99-input-denoising.conf;
-                replacements.rnnoisePath = pkgs.rnnoise-plugin.ladspa;
-              };
-          ".config/celluloid/scripts" =
-            (pkgs.buildEnv {
-              name = "mpv-scripts";
-              pathsToLink = [ "/share/mpv/scripts" ];
-              paths = with pkgs.mpvScripts; [
-                autoload
-                mpris
-                sponsorblock-minimal
-              ];
-            })
-            + /share/mpv/scripts;
-          ".local/state/codex/model_catalog.json" =
-            pkgs.runCommand "codex-openrouter-model-catalog.json"
-              { nativeBuildInputs = [ pkgs.jq ]; }
-              ''
-                jq '
-                  def openrouter_models: [
-                    "gpt-5.6-luna",
-                    "gpt-5.6-sol",
-                    "gpt-6-luna",
-                    "gpt-6-sol",
-                    "gpt-6-astra"
-                  ];
-                  .models = [
-                    .models[]
-                    | .slug as $slug
-                    | select(openrouter_models | index($slug))
-                    | .slug = "openai/\($slug):floor"
-                    | .supported_reasoning_levels |= map(select(.effort != "ultra"))
-                    | .use_responses_lite = false
-                    | .prefer_websockets = false
-                    | .supports_search_tool = false
-                    | .service_tiers = []
-                    | del(.available_in_plans, .multi_agent_version, .tool_mode)
-                  ]
-                ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
-              '';
-        })
-      ];
+      )
+      // {
+        ".local/share/flatpak/overrides" = {
+          source = dotdir + "/_local/share/flatpak/overrides";
+          recursive = true;
+          force = true;
+        };
+      }
+      // mapAttrs (_: v: { source = v; }) {
+        ".face" = flake.src + /misc/icon.png;
+        ".librewolf/native-messaging-hosts/passff.json" =
+          (pkgs.passff-host.override { pass = config.programs.password-store.package; })
+          + /lib/librewolf/native-messaging-hosts/passff.json;
+        ".librewolf/profile/chrome/firefox-gnome-theme" = pkgs.firefox-gnome-theme;
+        ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
+          pkgs.thunderbird-gnome-theme;
+        ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
+          pkgs.replaceVars ./files/99-input-denoising.conf
+            { rnnoisePath = pkgs.rnnoise-plugin.ladspa; };
+        ".config/celluloid/scripts" =
+          pkgs.buildEnv {
+            name = "mpv-scripts";
+            pathsToLink = [ "/share/mpv/scripts" ];
+            paths = with pkgs.mpvScripts; [
+              autoload
+              mpris
+              sponsorblock-minimal
+            ];
+          }
+          + /share/mpv/scripts;
+        ".local/state/codex/model_catalog.json" =
+          pkgs.runCommand "codex-openrouter-model-catalog.json"
+            { nativeBuildInputs = [ pkgs.jq ]; }
+            ''
+              jq '
+                def openrouter_models: [
+                  "gpt-5.6-luna",
+                  "gpt-5.6-sol",
+                  "gpt-6-luna",
+                  "gpt-6-sol",
+                  "gpt-6-astra"
+                ];
+                .models = [
+                  .models[]
+                  | .slug as $slug
+                  | select(openrouter_models | index($slug))
+                  | .slug = "openai/\($slug):floor"
+                  | .supported_reasoning_levels |= map(select(.effort != "ultra"))
+                  | .use_responses_lite = false
+                  | .prefer_websockets = false
+                  | .supports_search_tool = false
+                  | .service_tiers = []
+                  | del(.available_in_plans, .multi_agent_version, .tool_mode)
+                ]
+              ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
+            '';
+      };
     activation = {
       passGitConfig =
         let
@@ -147,29 +146,21 @@ in
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config user.signingkey \
             "$PASSWORD_STORE_SIGNING_KEY"
         '';
-      codecommitUsername =
-        let
-          default = builtins.toFile "default-codecommit-config" ''
-            Host codecommit
-              User <missing-username>
-          '';
-        in
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
-            $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
-            $DRY_RUN_CMD cat ${default} > "$HOME/.ssh/config.d/codecommit"
-          fi
-        '';
-      gimpConfig =
-        let
-          gimprc = pkgs.writeText "gimprc" ''
-            (theme "System")
-          '';
-        in
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -p "$HOME/.config/GIMP/3.0/"
-          $DRY_RUN_CMD install -m600 ${gimprc} "$HOME/.config/GIMP/3.0/gimprc"
-        '';
+      codecommitUsername = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
+          $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
+          $DRY_RUN_CMD cat << EOF > "$HOME/.ssh/config.d/codecommit"
+        Host codecommit
+          User <missing-username>
+        EOF
+        fi
+      '';
+      gimpConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p "$HOME/.config/GIMP/3.0/"
+        $DRY_RUN_CMD cat << EOF > "$HOME/.config/GIMP/3.0/gimprc"
+        (theme "System")
+        EOF
+      '';
     };
   };
 
@@ -177,14 +168,14 @@ in
     set-album-arts = {
       Unit.Description = "Set album arts";
       Install.WantedBy = [ "graphical-session.target" ];
-      Service.ExecStart = lib.getExe (
+      Service.ExecStart = getExe (
         pkgs.writeShellApplication {
           name = "set-album-arts";
           runtimeInputs = [
             pkgs.glib
             pkgs.ffmpeg-headless
           ];
-          text = builtins.readFile ./scripts/set-album-arts;
+          text = readFile ./scripts/set-album-arts;
         }
       );
     };
@@ -199,14 +190,14 @@ in
       };
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
-        ExecStart = lib.getExe (
+        ExecStart = getExe (
           pkgs.writeShellApplication {
             name = "local-api-proxy";
             runtimeInputs = [
               pkgs.caddy
               pkgs.libsecret
             ];
-            text = builtins.readFile ./scripts/local-api-proxy;
+            text = readFile ./scripts/local-api-proxy;
           }
         );
         Restart = "on-failure";

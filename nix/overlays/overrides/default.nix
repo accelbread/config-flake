@@ -3,32 +3,27 @@
 final: prev:
 let
   inherit (builtins)
-    any
     filter
     mapAttrs
     path
+    readDir
     ;
-  inherit (final.lib) filesystem hasSuffix;
+  inherit (final.lib) concat filesystem hasSuffix;
 in
 prev.lib.composeManyExtensions [
   (
     final: prev:
-    mapAttrs (
-      pkg: _:
-      prev.${pkg}.overrideAttrs (old: {
+    readDir ./patches
+    |> mapAttrs (
+      k: _:
+      prev.${k}.overrideAttrs (old: {
         patches =
-          old.patches or [ ]
-          ++ (map (p: path { path = p; }) (
-            filter (
-              p:
-              any (e: hasSuffix e p) [
-                ".patch"
-                ".mbx"
-              ]
-            ) (filesystem.listFilesRecursive (./patches + "/${pkg}"))
-          ));
+          filesystem.listFilesRecursive (./patches + "/${k}")
+          |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
+          |> map (p: path { path = p; })
+          |> concat old.patches or [ ];
       })
-    ) (builtins.readDir ./patches)
+    )
   )
   (final: prev: {
     ccacheWrapper = prev.ccacheWrapper.override {

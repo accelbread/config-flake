@@ -45,6 +45,7 @@
 let
   inherit (builtins)
     attrNames
+    attrValues
     filter
     head
     listToAttrs
@@ -58,6 +59,7 @@ let
     concatMap
     concatMapStringsSep
     flatten
+    flip
     hasSuffix
     pipe
     makeBinPath
@@ -65,25 +67,18 @@ let
     splitString
     ;
 
-  rustAnalyzerWithToolchain =
-    let
-      toolchain = makeBinPath (
-        with rustPackages;
-        [
-          cargo
-          rustc
-          clippy
-        ]
-      );
-    in
-    symlinkJoin {
-      name = "rust-analyzer-with-toolchain";
-      paths = [ rust-analyzer ];
-      nativeBuildInputs = [ makeBinaryWrapper ];
-      postBuild = ''
-        wrapProgram $out/bin/rust-analyzer --prefix PATH : ${toolchain}
-      '';
-    };
+  rustAnalyzerWithToolchain = symlinkJoin {
+    name = "rust-analyzer-with-toolchain";
+    paths = [ rust-analyzer ];
+    nativeBuildInputs = [ makeBinaryWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/rust-analyzer --prefix PATH : ${
+        makeBinPath (attrValues {
+          inherit (rustPackages) cargo rustc clippy;
+        })
+      }
+    '';
+  };
 
   gitWithAbsorb = symlinkJoin {
     name = "git-with-absorb";
@@ -118,25 +113,21 @@ let
     openscad = openscad-unstable;
   };
 
-  packageRequiresFromFile =
-    file:
-    pipe file [
-      readFile
-      (match ".*\n;; Package-Requires: \\(([^\n]*)\\)\n.*")
-      (
-        requires:
-        if requires == null then
-          [ ]
-        else
-          pipe requires [
-            head
-            (split "\\(([-a-z]+) \"[^\"]+\"\\)")
-            flatten
-            (concatMap (splitString " "))
-            (filter (pkg: pkg != "" && pkg != "emacs"))
-          ]
-      )
-    ];
+  packageRequiresFromFile = flip pipe [
+    readFile
+    (match ".*\n;; Package-Requires: \\(([^\n]*)\\)\n.*")
+    (
+      requires:
+      if requires == null then
+        [ ]
+      else
+        head requires
+        |> split "\\(([-a-z]+) \"[^\"]+\"\\)"
+        |> flatten
+        |> concatMap (splitString " ")
+        |> filter (pkg: pkg != "" && pkg != "emacs")
+    )
+  ];
 
   pkgName = src: removeSuffix ".el" (baseNameOf src);
   buildPkg =

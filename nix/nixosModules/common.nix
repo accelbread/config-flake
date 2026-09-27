@@ -13,6 +13,12 @@
 let
   inherit (inputs) self;
   inherit (builtins) mapAttrs substring hashString;
+  inherit (lib)
+    genAttrs
+    getExe
+    mergeAttrs
+    mkForce
+    ;
 
   machine-id = substring 0 32 (hashString "sha256" "accelbread-${hostname}");
 in
@@ -30,7 +36,7 @@ in
 
   nix = {
     package = pkgs.nixVersions.latest;
-    registry = lib.genAttrs [ "self" "nixpkgs" ] (n: {
+    registry = genAttrs [ "self" "nixpkgs" ] (n: {
       flake = inputs.${n};
     });
     channel.enable = false;
@@ -97,7 +103,7 @@ in
           ${util-linux}/bin/mount -t btrfs -o noatime,compress=zstd \
             /dev/${hostname}_vg1/pool /mnt
           if [ -e /mnt/root ]; then
-            ${lib.getExe btrfs-subvol-rm-r} /mnt/root
+            ${getExe btrfs-subvol-rm-r} /mnt/root
           fi
           ${btrfs-progs}/bin/btrfs subvolume create /mnt/root
           ${util-linux}/bin/umount /mnt
@@ -138,7 +144,7 @@ in
     sudo.enable = false;
     doas.enable = true; # needed for btrbk
     pam = {
-      services = lib.genAttrs [ "login" "systemd-user" "sshd" ] (_: {
+      services = genAttrs [ "login" "systemd-user" "sshd" ] (_: {
         rules.session.umask = {
           order = 0;
           control = "optional";
@@ -192,32 +198,19 @@ in
       colord.path = [ pkgs.argyllcms ];
     };
     tmpfiles.settings.preservation =
-      (lib.flip lib.genAttrs
-        (k: {
+      let
+        dir = mode: {
           d = {
             user = "root";
             group = "root";
-            mode = "0700";
+            inherit mode;
           };
-        })
-        [
-          "/etc/NetworkManager"
-        ]
-      )
-      // (lib.flip lib.genAttrs
-        (k: {
-          d = {
-            user = "root";
-            group = "root";
-            mode = "0755";
-          };
-        })
-        [
-          "/etc"
-        ]
-      )
-      // {
-        "/var/log" = lib.mkForce { };
+        };
+      in
+      {
+        "/etc/NetworkManager" = dir "0700";
+        "/etc" = dir "0755";
+        "/var/log" = mkForce { };
       };
   };
 
@@ -355,48 +348,43 @@ in
   preservation = {
     enable = true;
     preserveAt =
-      mapAttrs
-        (
-          k: v:
-          v
-          // {
-            persistentStoragePath = "/persist/${k}";
-            commonMountOptions = [
-              "x-gvfs-hide"
-              "x-gdu.hide"
-            ];
-          }
-        )
-        {
-          state = { };
-          data = { };
-          cache = {
-            directories =
-              (map
-                (d: {
-                  directory = d;
-                  mode = "0700";
-                })
-                [
-                  "/etc/NetworkManager/system-connections"
-                  "/var/lib/bluetooth"
-                  "/var/lib/private/tailscale"
-                ]
-              )
-              ++ [
-                "/var/log"
-                "/var/lib/systemd/timesync"
-                "/var/lib/systemd/timers"
-                "/var/lib/fwupd/metadata/lvfs"
-              ];
-            files = [
-              {
-                file = "/var/lib/systemd/random-seed";
-                how = "symlink";
-                inInitrd = true;
-              }
-            ];
-          };
+      let
+        common = k: {
+          persistentStoragePath = "/persist/${k}";
+          commonMountOptions = [
+            "x-gvfs-hide"
+            "x-gdu.hide"
+          ];
         };
+        privDir = d: {
+          directory = d;
+          mode = "0700";
+        };
+      in
+      mapAttrs (k: mergeAttrs (common k)) {
+        state = { };
+        data = { };
+        cache = {
+          directories =
+            map privDir [
+              "/etc/NetworkManager/system-connections"
+              "/var/lib/bluetooth"
+              "/var/lib/private/tailscale"
+            ]
+            ++ [
+              "/var/log"
+              "/var/lib/systemd/timesync"
+              "/var/lib/systemd/timers"
+              "/var/lib/fwupd/metadata/lvfs"
+            ];
+          files = [
+            {
+              file = "/var/lib/systemd/random-seed";
+              how = "symlink";
+              inInitrd = true;
+            }
+          ];
+        };
+      };
   };
 }

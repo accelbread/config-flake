@@ -7,12 +7,11 @@
   ...
 }:
 {
-  environment.systemPackages = lib.singleton (
-    lib.hiPrio (
-      pkgs.nixNomWrappers.override {
-        nix = config.nix.package;
-        nixos-rebuild-ng = config.system.build.nixos-rebuild;
-      }
-    )
-  );
+  environment.systemPackages =
+    lib.singleton
+    <| lib.hiPrio
+    <| pkgs.nixNomWrappers.override {
+      nix = config.nix.package;
+      nixos-rebuild-ng = config.system.build.nixos-rebuild;
+    };
 }

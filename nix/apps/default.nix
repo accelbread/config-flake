@@ -10,13 +10,14 @@
   ...
 }:
 let
-  experimentalFeatures = lib.concatStringsSep " " [
-    "nix-command"
-    "flakes"
-    "ca-derivations"
-    "pipe-operators"
-  ];
-  nix = ''nix --extra-experimental-features "${experimentalFeatures}"'';
+  nix = ''nix --extra-experimental-features "${
+    lib.concatStringsSep " " [
+      "nix-command"
+      "flakes"
+      "ca-derivations"
+      "pipe-operators"
+    ]
+  }"'';
   mkBuildScript =
     script:
     writeShellScript script ''

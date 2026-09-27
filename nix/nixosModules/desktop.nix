@@ -9,6 +9,13 @@
   ...
 }:
 let
+  inherit (lib)
+    attrValues
+    getExe
+    optional
+    singleton
+    ;
+
   desktopBackgrounds = pkgs.writeTextFile {
     name = "desktop-backgrounds";
     text = ''
@@ -41,12 +48,16 @@ in
   nix = {
     settings = {
       keep-outputs = true;
-      extra-sandbox-paths = lib.optional config.programs.ccache.enable config.programs.ccache.cacheDir;
+      extra-sandbox-paths =
+        let
+          inherit (config.programs) ccache;
+        in
+        optional ccache.enable ccache.cacheDir;
     };
     daemonCPUSchedPolicy = "idle";
   };
 
-  system.extraDependencies = lib.attrValues flake.outputs'.devShells;
+  system.extraDependencies = attrValues flake.outputs'.devShells;
 
   users.users.archit.extraGroups = [
     "dialout"
@@ -83,7 +94,7 @@ in
       '';
       logo =
         pkgs.runCommand "boot_logo.png" { }
-          "${lib.getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
+          "${getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -333,23 +344,27 @@ in
     };
   };
 
-  preservation.preserveAt = {
-    state = {
-      files = [
-        {
+  preservation.preserveAt =
+    let
+      dir = mode: d: {
+        directory = d;
+        inherit mode;
+      };
+      file = mode: f: {
+        file = f;
+        inherit mode;
+      };
+    in
+    {
+      state = {
+        files = singleton {
           file = "/var/lib/colord/mapping.db";
           user = "colord";
           group = "colord";
-        }
-      ];
-      users.archit = {
-        directories =
-          (map
-            (d: {
-              directory = d;
-              mode = "0700";
-            })
-            [
+        };
+        users.archit = {
+          directories =
+            map (dir "0700") [
               "Projects"
               ".ssh/config.d"
               ".config/emacs"
@@ -362,60 +377,33 @@ in
               ".local/share/fractal"
               ".var/app/com.valvesoftware.Steam"
             ]
-          )
-          ++ (map
-            (d: {
-              directory = d;
-              mode = "0755";
-            })
-            [
+            ++ map (dir "0755") [
               ".local/share/icc"
-            ]
-          );
-        files =
-          map
-            (f: {
-              file = f;
-              mode = "0600";
-            })
-            [
-              ".ssh/id_ed25519_sk"
-              ".ssh/id_ed25519_sk-cert.pub"
             ];
+          files = map (file "0600") [
+            ".ssh/id_ed25519_sk"
+            ".ssh/id_ed25519_sk-cert.pub"
+          ];
+        };
       };
-    };
-    data.users.archit.directories =
-      map
-        (d: {
-          directory = d;
-          mode = "0700";
-        })
-        [
-          "Documents"
-          "Music"
-          "Pictures"
-          "Videos"
-          "Library"
-        ];
-    cache = {
-      directories = [
-        {
+      data.users.archit.directories = map (dir "0700") [
+        "Documents"
+        "Music"
+        "Pictures"
+        "Videos"
+        "Library"
+      ];
+      cache = {
+        directories = singleton {
           directory = "/var/cache/ccache";
           mode = "0770";
           group = "nixbld";
-        }
-      ];
-      users.archit.directories =
-        map
-          (d: {
-            directory = d;
-            mode = "0700";
-          })
-          [
-            "Downloads"
-            ".cache/fractal"
-            ".local/share/flatpak"
-          ];
+        };
+        users.archit.directories = map (dir "0700") [
+          "Downloads"
+          ".cache/fractal"
+          ".local/share/flatpak"
+        ];
+      };
     };
-  };
 }

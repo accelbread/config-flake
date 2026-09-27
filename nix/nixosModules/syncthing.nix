@@ -13,6 +13,7 @@ let
     genAttrs
     mapAttrs
     mergeAttrs
+    singleton
     ;
 
   cfg = config.services.syncthing;
@@ -54,11 +55,9 @@ in
 
   systemd.services = {
     syncthing.serviceConfig = {
-      ExecStartPre =
-        "+"
-        + pkgs.writers.writeBash "syncthing-make-data-dir" ''
-          install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
-        '';
+      ExecStartPre = "+${pkgs.writers.writeBash "syncthing-make-data-dir" ''
+        install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
+      ''}";
       UMask = config.security.loginDefs.settings.UMASK;
 
       CapabilityBoundingSet = lib.mkForce "";
@@ -136,12 +135,10 @@ in
   # Persisting dir since syncthing doesnt handle empty file for config.xml.
   preservation.preserveAt.state.users.syncthing = {
     home = cfg.dataDir;
-    directories = [
-      {
-        directory = ".config/syncthing/";
-        mode = "0700";
-      }
-    ];
+    directories = singleton {
+      directory = ".config/syncthing/";
+      mode = "0700";
+    };
   };
 
   systemd.tmpfiles.settings.preservation =

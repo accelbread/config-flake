@@ -11,13 +11,11 @@ let
     mkOption
     mkEnableOption
     mkPackageOption
+    optionalString
     types
     mkIf
     ;
   cfg = config.services.rnnoise;
-  label = "noise_suppressor_" + (if cfg.stereo then "stereo" else "mono");
-  targetStr =
-    if cfg.target != null then ''node.target = "${cfg.target}"'' else "";
 in
 {
   options.services.rnnoise = {
@@ -62,7 +60,7 @@ in
               type = ladspa
               name = rnnoise
               plugin = ${cfg.package}/lib/ladspa/librnnoise_ladspa.so
-              label = ${label}
+              label = noise_suppressor_${if cfg.stereo then "stereo" else "mono"}
               control = {
                 "VAD Threshold (%)" = ${toString cfg.vadThreshold}
                 "VAD Grace Period (ms)" = ${toString cfg.vadGracePeriod}
@@ -74,7 +72,7 @@ in
             node.name = "capture.rnnoise_source"
             node.description = "RNNoise capture"
             node.passive = true
-            ${targetStr}
+            ${optionalString (cfg.target != null) ''node.target = "${cfg.target}"''}
             audio.rate = 48000
           }
           playback.props = {
