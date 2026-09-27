@@ -324,8 +324,6 @@ let
   );
 
   early-default-init = writeText "early-default.el" ''
-    (setenv "FONTCONFIG_FILE" "${fontConfig}")
-    (setenv "DICTDIR" "${hunspellDicts.en_US}/share/hunspell")
     (setq hermetic-executable-paths '(${execPaths})
           ;; flymake-vale has incorrect option types
           flymake-vale-program-args '("--config=${valeConfig}"))
@@ -375,11 +373,17 @@ let
         eatTerminfo
       ];
       nativeBuildInputs = [
+        makeBinaryWrapper
         ncurses
       ];
       inherit (emacs) meta;
       postBuild = ''
-        rm $out/bin/.* $out/share/applications
+        rm $out/bin/* $out/bin/.* $out/share/applications
+        for bin in ${emacs}/bin/*; do
+          makeWrapper "$bin" $out/bin/$(basename "$bin") --inherit-argv0 \
+            --set FONTCONFIG_FILE ${fontConfig} \
+            --set DICTDIR ${hunspellDicts.en_US}/share/hunspell
+        done
         ln -s ${desktopItem}/share/applications $out/share
       '';
     };
