@@ -41,6 +41,7 @@
   codex-acp,
   emptyDirectory,
   fetchFromGitHub,
+  ncurses,
 }:
 let
   inherit (builtins)
@@ -325,19 +326,24 @@ let
 
   wrapEmacs =
     emacs:
-    runCommand emacs.name
-      {
-        nativeBuildInputs = [ makeBinaryWrapper ];
-        inherit (emacs) meta;
-      }
-      ''
-        mkdir -p $out/bin
+    symlinkJoin {
+      name = emacs.name;
+      paths = [ emacs ];
+      nativeBuildInputs = [
+        makeBinaryWrapper
+        ncurses
+      ];
+      inherit (emacs) meta;
+      postBuild = ''
+        rm $out/bin/* $out/bin/.*
         for bin in ${emacs}/bin/*; do
           makeWrapper "$bin" $out/bin/$(basename "$bin") --inherit-argv0 \
             --set FONTCONFIG_FILE ${fontConfig} \
             --set DICTDIR ${hunspellDicts.en_US}/share/hunspell
         done
-        ln -s ${emacs}/share $out/share
+        mkdir -p $out/share/terminfo
+        tic -x -o $out/share/terminfo ${../../misc/dumb-emacs-ansi.ti}
       '';
+    };
 in
 wrapEmacs emacsWPkgs

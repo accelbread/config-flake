@@ -12,7 +12,6 @@ in
   home = {
     packages = with pkgs; [
       emacsAccelbread
-      emacsAccelbread-terminfo
       emacs-eat-terminfo
     ];
     file.".config/emacs" = {
