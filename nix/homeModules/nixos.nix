@@ -37,6 +37,7 @@ in
       CODEX_HOME = "${config.xdg.stateHome}/codex";
     };
     packages = with pkgs; [
+      emacsAccelbread
       hunspellDicts.en_US
       rsgain
       flac

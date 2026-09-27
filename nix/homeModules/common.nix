@@ -38,7 +38,6 @@ let
 in
 {
   imports = with inputs.self.homeModules; [
-    emacs
     gui-only-programs
   ];
 
@@ -165,7 +164,11 @@ in
           "*.kt diff=kotlin"
           "*.go diff=golang"
         ];
-        ignores = [ ".envrc" ];
+        ignores = [
+          ".envrc"
+          ".direnv"
+          "/.evc"
+        ];
       };
       less.config = ''
         #env
