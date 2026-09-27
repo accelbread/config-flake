@@ -20,7 +20,7 @@ Format to LBA format #:
 - On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
 ```sh
-export NIX_CONFIG="extra-experimental-features = nix-command flakes ca-derivations"
+export NIX_CONFIG="extra-experimental-features = nix-command flakes"
 nix run .#nixosFullInstall -- ${SYSTEM}
 ```
 

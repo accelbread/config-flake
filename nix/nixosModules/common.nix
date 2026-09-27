@@ -24,7 +24,12 @@ in
     registry = lib.genAttrs [ "self" "nixpkgs" ] (n: { flake = inputs.${n}; });
     channel.enable = false;
     settings = {
-      experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        "ca-derivations"
+        "pipe-operators"
+      ];
       flake-registry = "";
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;

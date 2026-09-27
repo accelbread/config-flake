@@ -1,8 +1,14 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
+{ lib, src, writeShellScript, emacsAccelbread, bubblewrap, firefox, ... }:
 let
-  nix = ''nix --extra-experimental-features "nix-command flakes ca-derivations"'';
+  experimentalFeatures = lib.concatStringsSep " " [
+    "nix-command"
+    "flakes"
+    "ca-derivations"
+    "pipe-operators"
+  ];
+  nix = ''nix --extra-experimental-features "${experimentalFeatures}"'';
   mkBuildScript = script: writeShellScript script ''
     set -eu
     ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
