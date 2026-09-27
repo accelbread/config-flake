@@ -43,6 +43,7 @@
   fetchFromGitHub,
   ncurses,
   stdenvNoCC,
+  makeDesktopItem,
 }:
 let
   inherit (builtins)
@@ -273,6 +274,23 @@ let
     '';
   };
 
+  desktopItem = makeDesktopItem {
+    name = "emacs";
+    desktopName = "Emacs";
+    mimeTypes = [
+      "text/english"
+      "text/plain"
+    ];
+    exec = "emacsclient -ca \"\" %F";
+    icon = "emacs";
+    startupNotify = true;
+    startupWMClass = "Emacs";
+    actions.new-instance = {
+      name = "New Instance";
+      exec = "emacs %F";
+    };
+  };
+
   patchElpaPackage =
     package: patches:
     package.overrideAttrs (
@@ -361,7 +379,8 @@ let
       ];
       inherit (emacs) meta;
       postBuild = ''
-        rm $out/bin/.*
+        rm $out/bin/.* $out/share/applications
+        ln -s ${desktopItem}/share/applications $out/share
       '';
     };
 in
