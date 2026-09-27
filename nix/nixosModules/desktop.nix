@@ -36,7 +36,7 @@ let
 in
 {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
+    inputs.self.nixosModules.home
     inputs.self.nixosModules.syncthing
     inputs.self.nixosModules.dconf
   ];
@@ -58,14 +58,6 @@ in
   };
 
   system.extraDependencies = attrValues flake.outputs'.devShells;
-
-  users.users.archit.extraGroups = [
-    "dialout"
-    "wireshark"
-    "video"
-    "render"
-    "audio"
-  ];
 
   hardware = {
     graphics.enable = true;
@@ -152,28 +144,16 @@ in
       wantedBy = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
     };
-    tmpfiles.settings = {
-      preservation = {
-        "/var/lib/colord".d = {
-          user = "colord";
-          group = "colord";
-          mode = "0755";
-        };
-        "/home/archit".d = {
-          user = "archit";
-          group = "users";
-          mode = "0755";
-        };
-      }
-      // (lib.flip lib.genAttrs (_: { d.mode = lib.mkForce "0700"; }) [
-        "/home/archit/.ssh"
-        "/home/archit/.librewolf"
-        "/home/archit/.thunderbird"
-      ]);
-      playground."/home/archit/Projects/Playground".v = {
-        mode = "0700";
+    tmpfiles.settings.preservation = {
+      "/var/lib/colord".d = {
+        user = "colord";
+        group = "colord";
+        mode = "0755";
+      };
+      "/home/archit".d = {
         user = "archit";
-        group = config.users.users.archit.group;
+        group = "users";
+        mode = "0755";
       };
     };
     # Remove when bluez removes AF_ALG use
@@ -253,13 +233,6 @@ in
       enable = true;
       unixSocket = false;
     };
-  };
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.archit = inputs.self.homeModules.nixos;
-    extraSpecialArgs = { inherit inputs; };
   };
 
   xdg.portal.xdgOpenUsePortal = true;
@@ -344,66 +317,16 @@ in
     };
   };
 
-  preservation.preserveAt =
-    let
-      dir = mode: d: {
-        directory = d;
-        inherit mode;
-      };
-      file = mode: f: {
-        file = f;
-        inherit mode;
-      };
-    in
-    {
-      state = {
-        files = singleton {
-          file = "/var/lib/colord/mapping.db";
-          user = "colord";
-          group = "colord";
-        };
-        users.archit = {
-          directories =
-            map (dir "0700") [
-              "Projects"
-              ".ssh/config.d"
-              ".config/emacs"
-              ".librewolf/profile"
-              ".thunderbird/profile"
-              ".local/share/keyrings"
-              ".local/share/vault"
-              ".local/share/gnupg"
-              ".local/share/pass"
-              ".local/share/fractal"
-              ".var/app/com.valvesoftware.Steam"
-            ]
-            ++ map (dir "0755") [
-              ".local/share/icc"
-            ];
-          files = map (file "0600") [
-            ".ssh/id_ed25519_sk"
-            ".ssh/id_ed25519_sk-cert.pub"
-          ];
-        };
-      };
-      data.users.archit.directories = map (dir "0700") [
-        "Documents"
-        "Music"
-        "Pictures"
-        "Videos"
-        "Library"
-      ];
-      cache = {
-        directories = singleton {
-          directory = "/var/cache/ccache";
-          mode = "0770";
-          group = "nixbld";
-        };
-        users.archit.directories = map (dir "0700") [
-          "Downloads"
-          ".cache/fractal"
-          ".local/share/flatpak"
-        ];
-      };
+  preservation.preserveAt = {
+    state.files = singleton {
+      file = "/var/lib/colord/mapping.db";
+      user = "colord";
+      group = "colord";
     };
+    cache.directories = singleton {
+      directory = "/var/cache/ccache";
+      mode = "0770";
+      group = "nixbld";
+    };
+  };
 }
