@@ -13,18 +13,38 @@ let
     unsafeDiscardStringContext
     ;
   inherit (lib)
+    concatStringsSep
     flip
     genAttrs
     genAttrs'
     hasPrefix
     mapAttrs
+    mapAttrsToList
     mkForce
     nameValuePair
     removePrefix
+    toUpper
     ;
   inherit (lib.filesystem) listFilesRecursive;
 
-  pass = pkgs.pass-wayland.withExtensions (exts: [ exts.pass-otp ]);
+  passSettings = {
+    dir = "/home/archit/.local/share/pass/";
+    clip_time = 10;
+    generated_length = 16;
+    signing_key = "C4F4D63E4C22651B053D0848DE26C77562110E92";
+  };
+  pass =
+    (pkgs.pass-wayland.withExtensions (exts: [ exts.pass-otp ])).overrideAttrs
+      (old: {
+        postBuild = old.postBuild + ''
+          wrapProgram $out/bin/pass \
+            ${concatStringsSep " \\\n" (
+              mapAttrsToList (
+                k: v: "--set-default PASSWORD_STORE_${toUpper k} ${toString v}"
+              ) passSettings
+            )}
+        '';
+      });
 in
 {
   imports = [
@@ -32,13 +52,18 @@ in
     inputs.hjem.nixosModules.default
   ];
 
-  users.users.archit.extraGroups = [
-    "dialout"
-    "wireshark"
-    "video"
-    "render"
-    "audio"
-  ];
+  users.users.archit = {
+    extraGroups = [
+      "dialout"
+      "wireshark"
+      "video"
+      "render"
+      "audio"
+    ];
+    packages = [
+      pass
+    ];
+  };
 
   home-manager = {
     useGlobalPkgs = true;
@@ -47,9 +72,9 @@ in
     extraSpecialArgs = { inherit inputs; };
   };
 
-  hjem = {
-    clobberByDefault = true;
-    users.archit.files =
+  hjem.users.archit = {
+    clobberFiles = true;
+    files =
       let
         dotDir = flake.src + /dotfiles;
         pathToTarget =
@@ -125,6 +150,30 @@ in
           '';
         };
       };
+    systemd.services = {
+      pass-initialize = {
+        description = "Configure pass";
+        wantedBy = [ "default.target" ];
+        path = [ pass ];
+        script = ''
+          if [[ ! -e ${passSettings.dir}/.git ]]; then
+            mkdir -p ${passSettings.dir}
+            pass git init
+            pass git remote add \
+              aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
+          fi
+          pass git remote set-url \
+            aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
+          pass git config remote.pushDefault aws
+          pass git config pass.signcommits true
+          pass git config user.signingkey ${passSettings.signing_key}
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+      };
+    };
   };
 
   systemd.tmpfiles.settings = {
