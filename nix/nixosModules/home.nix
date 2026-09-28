@@ -163,7 +163,6 @@ in
         directories =
           map (dir "0700") [
             "Projects"
-            ".ssh/config.d"
             ".config/emacs"
             ".librewolf/profile"
             ".thunderbird/profile"

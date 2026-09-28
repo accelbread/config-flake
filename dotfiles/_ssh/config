@@ -1,5 +1,3 @@
-Include config.d/*
-
 Host codeberg.org
   User git
 
@@ -12,8 +10,8 @@ Host gitlab.com
 Host ssh.gitlab.gnome.org
   User git
 
-Host codecommit
-  HostName git-codecommit.us-west-2.amazonaws.com
+Host git-codecommit.*.amazonaws.com
+  User APKAYUJSTM4B3L2KNEX2
 
 Host hf.co
   User git

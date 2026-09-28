@@ -67,22 +67,15 @@ in
             $DRY_RUN_CMD mkdir -p "$PASSWORD_STORE_DIR"
             $DRY_RUN_CMD ${pkgs.pass}/bin/pass git init
             $DRY_RUN_CMD ${pkgs.pass}/bin/pass git remote add \
-              aws ssh://codecommit/v1/repos/pass
+              aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
           fi
+          $DRY_RUN_CMD ${pkgs.pass}/bin/pass git remote set-url \
+            aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config remote.pushDefault aws
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config pass.signcommits true
           $DRY_RUN_CMD ${pkgs.pass}/bin/pass git config user.signingkey \
             "$PASSWORD_STORE_SIGNING_KEY"
         '';
-      codecommitUsername = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [[ ! -f "$HOME/.ssh/config.d/codecommit" ]]; then
-          $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
-          $DRY_RUN_CMD cat << EOF > "$HOME/.ssh/config.d/codecommit"
-        Host codecommit
-          User <missing-username>
-        EOF
-        fi
-      '';
     };
   };
 
