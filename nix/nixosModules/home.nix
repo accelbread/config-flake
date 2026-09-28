@@ -173,6 +173,39 @@ in
           RemainAfterExit = true;
         };
       };
+      set-album-arts = {
+        description = "Set album arts";
+        wantedBy = [ "graphical-session.target" ];
+        path = [
+          pkgs.bash
+          pkgs.glib
+          pkgs.ffmpeg-headless
+        ];
+        serviceConfig = {
+          ExecStart = "${./homeFiles/set-album-arts}";
+          Type = "oneshot";
+        };
+      };
+      local-api-proxy = {
+        description = "Local proxy for authenticated APIs";
+        wantedBy = [ "graphical-session.target" ];
+        partOf = [ "graphical-session.target" ];
+        after = [
+          "graphical-session.target"
+          "dbus.socket"
+        ];
+        path = [
+          pkgs.bash
+          pkgs.caddy
+          pkgs.libsecret
+        ];
+        serviceConfig = {
+          ExecStart = "${./homeFiles/local-api-proxy}";
+          Type = "exec";
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+      };
     };
   };
 
