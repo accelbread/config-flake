@@ -21,7 +21,7 @@ command = "secret-tool"
 args = ["lookup", "api_token", "openrouter"]
 
 [mcp_servers.kagi]
-url = "http://127.0.0.1:25619/mcp"
+url = "http://127.0.0.1:25619/kagi/mcp"
 enabled = true
 
 [tui]
