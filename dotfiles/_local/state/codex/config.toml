@@ -1,24 +1,19 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-model = "openai/gpt-6-luna:floor"
+model = "gpt-6-luna"
 model_reasoning_effort = "medium"
-model_provider = "openrouter"
-model_catalog_json = "model_catalog.json"
+service_tier = "flex"
 
 sandbox_mode = "read-only"
 approval_policy = "on-request"
 approvals_reviewer = "user"
 file_opener = "none"
 web_search = "disabled"
+cli_auth_credentials_store = "keyring"
 check_for_update_on_startup = false
 
-[model_providers.openrouter]
-name = "OpenRouter"
-base_url = "https://openrouter.ai/api/v1"
-
-[model_providers.openrouter.auth]
-command = "secret-tool"
-args = ["lookup", "api_token", "openrouter"]
+[features]
+api_key_model_discovery = true
 
 [mcp_servers.kagi]
 url = "http://127.0.0.1:25619/kagi/mcp"

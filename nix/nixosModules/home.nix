@@ -109,32 +109,6 @@ in
             ];
           }
           + /share/mpv/scripts;
-        ".local/state/codex/model_catalog.json" =
-          pkgs.runCommand "codex-openrouter-model-catalog.json"
-            { nativeBuildInputs = [ pkgs.jq ]; }
-            ''
-              jq '
-                def openrouter_models: [
-                  "gpt-5.6-luna",
-                  "gpt-5.6-sol",
-                  "gpt-6-luna",
-                  "gpt-6-sol",
-                  "gpt-6-astra"
-                ];
-                .models = [
-                  .models[]
-                  | .slug as $slug
-                  | select(openrouter_models | index($slug))
-                  | .slug = "openai/\($slug):floor"
-                  | .supported_reasoning_levels |= map(select(.effort != "ultra"))
-                  | .use_responses_lite = false
-                  | .prefer_websockets = false
-                  | .supports_search_tool = false
-                  | .service_tiers = []
-                  | del(.available_in_plans, .multi_agent_version, .tool_mode)
-                ]
-              ' ${pkgs.codex.src}/codex-rs/models-manager/models.json > "$out"
-            '';
       }
       // {
         ".config/gtk-3.0/gtk.css".text = ''
