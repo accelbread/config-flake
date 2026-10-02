@@ -486,29 +486,37 @@ returns nil."
 
 ;;; Font lock
 
-(defun enable-font-lock-clear-display ()
-  "Add display to font-lock's managed properties."
-  (unless (memq 'display font-lock-extra-managed-props)
-    (setq-local font-lock-extra-managed-props
-                (cons 'display font-lock-extra-managed-props))))
+(defun ag--font-lock-clear-display (beg end)
+  "Clear display props matching `ag-manage-display' props between BEG and END."
+  (with-silent-modifications
+    (while (< beg end)
+      (let ((next (next-property-change beg nil end)))
+        (when (get-text-property beg 'ag-manage-display)
+          (remove-text-properties beg next '(display nil ag-manage-display nil)))
+        (setq beg next)))))
 
-(add-hook 'font-lock-mode-hook #'enable-font-lock-clear-display)
+(defun ag-clear-managed-display-props ()
+  "Make font-lock clear display props with matching `ag-manage-display' props."
+  (add-function :before (local 'font-lock-unfontify-region-function)
+                #'ag--font-lock-clear-display))
 
 
 ;;; Display page breaks as lines
 
 (defun display-page-breaks-as-lines ()
   "Configure font-lock to display lines with only a page break as a line."
-  (if font-lock-defaults
-      (font-lock-add-keywords
-       nil
-       '(("^\f$"
-          0
-          (prog1 'shadow
-            (with-silent-modifications
-              (put-text-property (match-beginning 0) (match-end 0)
-                                 'display (make-string fill-column ?─))))
-          t)))))
+  (when font-lock-defaults
+    (ag-clear-managed-display-props)
+    (font-lock-add-keywords
+     nil
+     '(("^\f$"
+        0
+        (prog1 'shadow
+          (with-silent-modifications
+            (add-text-properties (match-beginning 0) (match-end 0)
+                                 `( display ,(make-string fill-column ?─)
+                                    ag-manage-display t))))
+        t)))))
 
 
 ;;; Inline annotations
@@ -1438,9 +1446,10 @@ used instead. OPTIONS sets server initialization options."
               (defalias (intern sym)
                 (lambda (node &rest _)
                   (with-silent-modifications
-                    (put-text-property (treesit-node-start node)
-                                       (treesit-node-end node)
-                                       'display disp)))))))
+                    (add-text-properties (treesit-node-start node)
+                                         (treesit-node-end node)
+                                         `( display ,disp
+                                            ag-manage-display t))))))))
   (dolist (elem '((lteq . "≤")
                   (gteq . "≥")
                   (neq . "≠")
@@ -1928,6 +1937,7 @@ used instead. OPTIONS sets server initialization options."
 
 (defun rust-ts-add-custom-rules ()
   "Add additional highlighting rules for `rust-ts-mode'."
+  (ag-clear-managed-display-props)
   (setq-local
    treesit-font-lock-settings
    (append treesit-font-lock-settings
@@ -1992,6 +2002,7 @@ used instead. OPTIONS sets server initialization options."
 (defun c-ts-add-custom-rules ()
   "Add additional highlighting rules for `c-ts-mode' and `c++-ts-mode'."
   (let ((mode (if (eq major-mode 'c++-ts-mode) 'cpp 'c)))
+    (ag-clear-managed-display-props)
     (setq-local
      treesit-font-lock-settings
      (append treesit-font-lock-settings
