@@ -52,6 +52,7 @@ let
     filter
     head
     listToAttrs
+    mapAttrs
     match
     readDir
     readFile
@@ -61,6 +62,7 @@ let
     attrVals
     concatMap
     concatMapStringsSep
+    filesystem
     flatten
     flip
     hasSuffix
@@ -311,13 +313,13 @@ let
       }
     );
 
-  elpaPatches = {
-    eat = [
-      ./misc/eat-cnl-cpl.patch
-      ./misc/eat-handle-word-wrap.patch
-    ];
-    typst-ts-mode = [ ./misc/typst-ts-mode-autoload.patch ];
-  };
+  elpaPatches =
+    readDir ./misc/elpa-patches
+    |> mapAttrs (
+      k: _:
+      filesystem.listFilesRecursive (./misc/elpa-patches + "/${k}")
+      |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
+    );
 
   execPaths = lib.concatStrings (
     lib.mapAttrsToList (k: v: "(\"${k}\" . \"${v}/bin/${k}\")") binPkgMap
