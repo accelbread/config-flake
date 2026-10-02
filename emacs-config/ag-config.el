@@ -1339,7 +1339,9 @@ Wraps ORIG-FUN."
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   (keymap-set project-prefix-map "R" #'rg-project)
-  (add-to-list 'project-switch-commands '(rg-project "Ripgrep") t))
+  (add-to-list 'project-switch-commands '(rg-project "Ripgrep") t)
+  (keymap-set project-prefix-map "A" #'agent-shell)
+  (add-to-list 'project-switch-commands '(agent-shell "Agent-Shell") t))
 
 
 ;;; Eglot
