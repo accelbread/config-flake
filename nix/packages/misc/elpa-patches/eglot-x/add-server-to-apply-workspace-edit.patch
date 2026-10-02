@@ -1,0 +1,22 @@
+From 5cd6f936b9dc571edd4437b8fbf93ff68b0e723b Mon Sep 17 00:00:00 2001
+From: Dylan Hardison <dhardison@fastly.com>
+Date: Sat, 6 Jun 2026 12:00:52 -0700
+Subject: [PATCH] Add server to eglot--apply-workspace-edit call
+
+---
+ eglot-x.el | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eglot-x.el b/eglot-x.el
+index da58cb0..93112f6 100644
+--- a/eglot-x.el
++++ b/eglot-x.el
+@@ -2288,7 +2288,7 @@ It relys on a rust-analyzer LSP extension."
+                 (eglot-server-capable :codeActionProvider :resolveProvider))
+            (eglot-execute server
+                           (eglot--request server :codeAction/resolve action))
+-         (when edit (eglot--apply-workspace-edit edit this-command))
++         (when edit (eglot--apply-workspace-edit server edit this-command))
+          (when command
+            (eglot-x-execute-command server command)))))))
+ 

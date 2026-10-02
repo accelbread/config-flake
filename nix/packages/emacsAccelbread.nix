@@ -303,7 +303,12 @@ let
       {
         src = runCommand "${sourceDir}-patched.tar" { } ''
           mkdir source
-          tar -xf ${old.src} -C source
+          if [ -d ${old.src} ]; then
+            mkdir -p source/${sourceDir}
+            cp -R ${old.src}/. source/${sourceDir}/
+          else
+            tar -xf ${old.src} -C source
+          fi
           ${concatMapStringsSep "\n" (patchFile: ''
             patch -d source/${sourceDir} -p1 < ${patchFile}
           '') patches}
