@@ -221,8 +221,7 @@ returns nil."
 
 ;;; Prevent accidental closing
 
-(global-unset-key (kbd "C-z"))
-(global-unset-key (kbd "C-x C-z"))
+(setopt confirm-kill-emacs #'y-or-n-p)
 
 
 ;;; Save minibuffer history
