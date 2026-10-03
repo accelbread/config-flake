@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 {
   config,
-  options,
   pkgs,
   lib,
   inputs,
@@ -18,6 +17,7 @@ let
     getExe
     mergeAttrs
     mkForce
+    subtractLists
     ;
 
   machine-id = substring 0 32 (hashString "sha256" "accelbread-${hostname}");
@@ -169,14 +169,19 @@ in
     man = {
       cache.enable = true;
       man-db.manualPages =
-        let
-          makeContentAddressed =
-            drv:
-            pkgs.runCommandLocal drv.name {
-              __contentAddressed = true;
-            } "cp -rL ${drv} $out";
-        in
-        makeContentAddressed options.documentation.man.man-db.manualPages.default;
+        pkgs.runCommandLocal "man-pages" { __contentAddressed = true; }
+          "cp -rL ${
+            pkgs.buildEnv {
+              name = "man-paths";
+              paths =
+                config.environment.systemPackages
+                |> subtractLists config.documentation.man.man-db.skipPackages;
+              pathsToLink = [ "/share/man" ];
+              extraOutputsToInstall = [ "man" ];
+              ignoreCollisions = true;
+              derivationArgs.__contentAddressed = true;
+            }
+          } $out";
     };
   };
 
