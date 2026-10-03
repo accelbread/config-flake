@@ -27,6 +27,19 @@ let
     ;
   inherit (lib.filesystem) listFilesRecursive;
 
+  manualPages =
+    pkgs.runCommandLocal "man-pages" { __contentAddressed = true; }
+      "cp -rL ${
+        pkgs.buildEnv {
+          name = "man-paths";
+          paths = config.users.users.archit.packages;
+          pathsToLink = [ "/share/man" ];
+          extraOutputsToInstall = [ "man" ];
+          ignoreCollisions = true;
+          derivationArgs.__contentAddressed = true;
+        }
+      } $out";
+
   passSettings = {
     dir = "/home/archit/.local/share/pass/";
     clip_time = 10;
@@ -111,6 +124,14 @@ in
           + /share/mpv/scripts;
       }
       // {
+        ".manpath".text = ''
+          MANDB_MAP /etc/profiles/per-user/archit/share/man ${
+            pkgs.runCommand "man-cache" { nativeBuildInputs = [ pkgs.man-db ]; } ''
+              echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
+              mandb -C man.conf --no-straycats --create ${manualPages}/share/man
+            ''
+          }
+        '';
         ".config/gtk-3.0/gtk.css".text = ''
           @define-color accent_bg_color #9141ac;
         '';

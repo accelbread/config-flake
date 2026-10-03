@@ -10,31 +10,6 @@
 let
   inherit (builtins) mapAttrs;
   inherit (lib) mkOption types;
-
-  makeContentAddressed =
-    drv:
-    pkgs.runCommandLocal drv.name {
-      __contentAddressed = true;
-    } "cp -rL ${drv} $out";
-
-  manualPages = makeContentAddressed (
-    pkgs.buildEnv {
-      name = "man-paths";
-      paths = config.home.packages;
-      pathsToLink = [ "/share/man" ];
-      extraOutputsToInstall = [ "man" ];
-      ignoreCollisions = true;
-      derivationArgs.__contentAddressed = true;
-    }
-  );
-
-  manualCache =
-    pkgs.runCommand "man-cache"
-      { nativeBuildInputs = [ config.programs.man.package ]; }
-      ''
-        echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
-        mandb -C man.conf --no-straycats --create ${manualPages}/share/man
-      '';
 in
 {
   imports = with inputs.self.homeModules; [
@@ -80,11 +55,6 @@ in
         libsecret
         wl-clipboard
       ];
-      file = {
-        ".manpath".text = ''
-          MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
-        '';
-      };
       sessionVariables.CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
     };
 
