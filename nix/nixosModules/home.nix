@@ -23,9 +23,9 @@ let
     genAttrs'
     hasPrefix
     hashString
-    mapAttrs
     mapAttrsToList
     mkForce
+    mkMerge
     removePrefix
     replaceStrings
     replicate
@@ -180,43 +180,47 @@ in
 
   hjem.users.archit = {
     clobberFiles = true;
-    files =
-      let
-        dotDir = flake.src + /dotfiles;
-        replacements = {
-          ".bashrc" = { inherit (pkgs) coreutils; };
-          ".config/git/config".templateDir = ./homeFiles/git-template;
-          ".config/pipewire/pipewire.conf.d/99-input-denoising.conf".rnnoisePath =
-            pkgs.rnnoise-plugin.ladspa;
-          ".local/share/gnupg/gpg-agent.conf".pinentry =
-            lib.getExe pkgs.pinentry-gnome3;
-          ".config/direnv/direnvrc".nix-direnv =
-            pkgs.nix-direnv.override { nix = config.nix.package; };
-        };
-      in
-      genAttrs' (listFilesRecursive dotDir) (p: rec {
-        name =
-          toString p
-          |> removePrefix "${toString dotDir}/"
-          |> unsafeDiscardStringContext
-          |> (p: if hasPrefix "_" p then ".${removePrefix "_" p}" else p);
-        value.source = pkgs.replaceVarsWith {
-          src = p;
-          replacements = replacements.${name} or { };
-          postBuild = ''
-            if [ -x "$src" ]; then chmod +x "$out"; fi
-          '';
-        };
-      })
-      // mapAttrs (_: v: { source = v; }) {
-        ".face" = flake.src + /misc/icon.png;
-        ".librewolf/native-messaging-hosts/passff.json" =
+    files = mkMerge [
+      (
+        let
+          dotDir = flake.src + /dotfiles;
+          replacements = {
+            ".bashrc" = { inherit (pkgs) coreutils; };
+            ".config/git/config".templateDir = ./homeFiles/git-template;
+            ".config/pipewire/pipewire.conf.d/99-input-denoising.conf".rnnoisePath =
+              pkgs.rnnoise-plugin.ladspa;
+            ".local/share/gnupg/gpg-agent.conf".pinentry =
+              lib.getExe pkgs.pinentry-gnome3;
+            ".config/direnv/direnvrc".nix-direnv = pkgs.nix-direnv.override {
+              nix = config.nix.package;
+            };
+          };
+        in
+        genAttrs' (listFilesRecursive dotDir) (p: rec {
+          name =
+            toString p
+            |> removePrefix "${toString dotDir}/"
+            |> unsafeDiscardStringContext
+            |> (p: if hasPrefix "_" p then ".${removePrefix "_" p}" else p);
+          value.source = pkgs.replaceVarsWith {
+            src = p;
+            replacements = replacements.${name} or { };
+            postBuild = ''
+              if [ -x "$src" ]; then chmod +x "$out"; fi
+            '';
+          };
+        })
+      )
+      {
+        ".face".source = flake.src + /misc/icon.png;
+        ".librewolf/native-messaging-hosts/passff.json".source =
           (pkgs.passff-host.override { inherit pass; })
           + /lib/librewolf/native-messaging-hosts/passff.json;
-        ".librewolf/profile/chrome/firefox-gnome-theme" = pkgs.firefox-gnome-theme;
-        ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
+        ".librewolf/profile/chrome/firefox-gnome-theme".source =
+          pkgs.firefox-gnome-theme;
+        ".thunderbird/profile/chrome/thunderbird-gnome-theme".source =
           pkgs.thunderbird-gnome-theme;
-        ".config/celluloid/scripts" =
+        ".config/celluloid/scripts".source =
           pkgs.buildEnv {
             name = "mpv-scripts";
             pathsToLink = [ "/share/mpv/scripts" ];
@@ -227,8 +231,7 @@ in
             ];
           }
           + /share/mpv/scripts;
-      }
-      // {
+        ".config/GIMP/3.0/gimprc".type = "copy";
         ".config/environment.d/10-user.conf".text =
           sessionVariables
           |> mapAttrsToList (
@@ -249,13 +252,8 @@ in
             ''
           }
         '';
-        ".config/GIMP/3.0/gimprc" = {
-          type = "copy";
-          text = ''
-            (theme "System")
-          '';
-        };
-      };
+      }
+    ];
     systemd = {
       services = {
         pass-initialize = {
