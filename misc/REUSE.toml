@@ -3,16 +3,8 @@ version = 1
 # Defaults for files without more specific metadata
 [[annotations]]
 path = [
-  "flake.lock",
-  ".envrc",
-  ".gitignore",
-  "statix.toml",
-  "doc/**",
-  "dotfiles/**",
-  "nix/templates/**",
-  "esphome/**",
-  "**/*.xml",
-  "**/*.conf",
+  "*.pub",
+  "*.ti",
 ]
 SPDX-License-Identifier = "FSFAP"
 SPDX-FileCopyrightText = "Archit Gupta <archit@accelbread.com>"

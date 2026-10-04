@@ -10,7 +10,6 @@ let
     "--n-gpu-layers 100"
     "--host 0.0.0.0"
     "--port ${toString port}"
-    "--system-prompt-file ${./system_prompt}"
     "--log-disable"
   ];
 in

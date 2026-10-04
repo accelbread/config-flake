@@ -1,6 +1,7 @@
 ;;; meow-term.el --- Integrate meow and term modes -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022 Archit Gupta
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; Version: 1.0.0
 ;; Author: Archit Gupta <archit@accelbread.com>

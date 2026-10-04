@@ -212,7 +212,7 @@ in
         })
       )
       {
-        ".face".source = flake.src + /misc/icon.png;
+        ".face".source = flake.src + /assets/icon.png;
         ".librewolf/native-messaging-hosts/passff.json".source =
           (pkgs.passff-host.override { inherit pass; })
           + /lib/librewolf/native-messaging-hosts/passff.json;
@@ -453,8 +453,8 @@ in
       "org/gnome/desktop/background" = {
         color-shading-type = "solid";
         picture-options = "scaled";
-        picture-uri = "file://${flake.src + /misc/desktop.svg}";
-        picture-uri-dark = "file://${flake.src + /misc/desktop.svg}";
+        picture-uri = "file://${flake.src + /assets/desktop.svg}";
+        picture-uri-dark = "file://${flake.src + /assets/desktop.svg}";
         primary-color = "#7767B2";
       };
       "org/gnome/desktop/input-sources" = {

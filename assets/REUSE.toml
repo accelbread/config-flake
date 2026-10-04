@@ -1,0 +1,6 @@
+version = 1
+
+[[annotations]]
+path = "**"
+SPDX-License-Identifier = "LicenseRef-All-Rights-Reserved"
+SPDX-FileCopyrightText = "Archit Gupta <archit@accelbread.com>"

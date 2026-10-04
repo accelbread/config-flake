@@ -24,7 +24,7 @@ let
       <wallpapers>
         <wallpaper>
           <name>Catbox</name>
-          <filename>${flake.src + /misc/desktop.svg}</filename>
+          <filename>${flake.src + /assets/desktop.svg}</filename>
           <options>scaled</options>
           <shade_type>solid</shade_type>
           <pcolor>#7767B2</pcolor>
@@ -86,7 +86,7 @@ in
       '';
       logo =
         pkgs.runCommand "boot_logo.png" { }
-          "${getExe pkgs.resvg} ${flake.src + /misc/boot_logo.svg} $out";
+          "${getExe pkgs.resvg} ${flake.src + /assets/boot_logo.svg} $out";
     };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
@@ -283,7 +283,7 @@ in
   };
 
   ab.dconf = with lib.gvariant; {
-    gdm."org/gnome/login-screen".logo = "${flake.src + /misc/boot_logo.svg}";
+    gdm."org/gnome/login-screen".logo = "${flake.src + /assets/boot_logo.svg}";
     all = {
       "org/gnome/desktop/interface" = {
         clock-format = "12h";
