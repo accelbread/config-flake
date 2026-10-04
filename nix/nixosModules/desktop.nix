@@ -247,7 +247,6 @@ in
       pkgs.gnome-music
       pkgs.gnome-tour
       pkgs.showtime
-      pkgs.snapshot # broken
     ];
     sessionVariables = {
       GST_PLUGIN_SYSTEM_PATH_1_0 =

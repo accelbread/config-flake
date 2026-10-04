@@ -154,7 +154,6 @@ in
         [
           dconf-editor
           crosspipe
-          cheese # snapshot is broken
           thunderbird
           fractal
           gimp3
