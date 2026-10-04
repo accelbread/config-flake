@@ -305,27 +305,45 @@ returns nil."
 
 (defvar-local fill-column-indicator-stipple-cookie nil
   "Cookie for the buffer-local fill-column indicator face remapping.")
+(defvar-local fill-column-indicator-stipple-geometry nil
+  "Cached window widths and stipple offsets for the current buffer.")
 
-(defun set-fill-column-indicator-stipple ()
+(defun set-fill-column-indicator-stipple (&rest _)
   "Draw the `fill-column' indicator as a gapless one-pixel rule."
-  (when fill-column-indicator-stipple-cookie
-    (face-remap-remove-relative fill-column-indicator-stipple-cookie)
-    (setq fill-column-indicator-stipple-cookie nil))
-  (when-let* ((display-fill-column-indicator-mode)
-              (window (or (get-buffer-window nil t)
-                          (selected-window)))
-              ((display-graphic-p (window-frame window))))
-    (let* ((width (window-font-width window))
-           (bytes (make-list (ceiling width 8) 0)))
-      (setf (car (last bytes)) 1)
+  (let ((geometry
+         (when display-fill-column-indicator-mode
+           (mapcar
+            (lambda (window)
+              (with-selected-window window
+                (let* ((cell-width (window-font-width window))
+                       (x-origin (- (car (window-inside-pixel-edges window))
+                                    (* (window-hscroll window)
+                                       (frame-char-width (window-frame window)))))
+                       (offset (mod (+ x-origin (/ cell-width 2)) cell-width)))
+                  (list window cell-width offset))))
+            (get-buffer-window-list nil nil t)))))
+    (unless (equal geometry fill-column-indicator-stipple-geometry)
+      (setq fill-column-indicator-stipple-geometry geometry)
+      (when fill-column-indicator-stipple-cookie
+        (face-remap-remove-relative fill-column-indicator-stipple-cookie))
       (setq fill-column-indicator-stipple-cookie
-            (face-remap-add-relative
-             'fill-column-indicator
-             `(:stipple (,width 1 ,(apply #'unibyte-string bytes))))))))
-
+            (when geometry
+              (apply
+               #'face-remap-add-relative 'fill-column-indicator
+               (mapcar
+                (lambda (entry)
+                  (pcase-let* ((`(,window ,cell-width ,offset) entry)
+                               (bits (make-string (ceiling cell-width 8) 0)))
+                    (aset bits (/ offset 8) (ash 1 (% offset 8)))
+                    (set-window-parameter
+                     window 'fill-column-indicator-stipple-window window)
+                    `(:filtered
+                      (:window fill-column-indicator-stipple-window ,window)
+                      (:stipple (,cell-width 1 ,(string-to-unibyte bits))))))
+                geometry)))))))
 (add-hook 'display-fill-column-indicator-mode-hook
           #'set-fill-column-indicator-stipple)
-(add-hook 'text-scale-mode-hook #'set-fill-column-indicator-stipple)
+(add-hook 'pre-redisplay-functions #'set-fill-column-indicator-stipple)
 
 (blink-cursor-mode -1)
 (window-divider-mode)
