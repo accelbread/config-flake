@@ -1,0 +1,38 @@
+[user]
+	email = "archit@accelbread.com"
+	name = "Archit Gupta"
+	useConfigOnly = true
+[pull]
+	ff = "only"
+[clone]
+	filterSubmodules = true
+[advice]
+	detachedHead = false
+[diff]
+	algorithm = "histogram"
+	submodule = "log"
+	colorMoved = "zebra"
+[merge]
+	conflictStyle = "diff3"
+[status]
+	submoduleSummary = true
+[init]
+	defaultBranch = "master"
+	templateDir = "/home/archit/.config/git/template"
+[core]
+	untrackedCache = true
+[fetch]
+	parallel = 0
+	writeCommitGraph = true
+[remote]
+	pushDefault = "origin"
+[checkout]
+	workers = 0
+[commit]
+	verbose = true
+[branch]
+	sort = "-committerdate"
+[tag]
+	sort = "version:refname"
+[diff "lisp"]
+	xfuncname = "^(\\(def\\S+\\s+\\S+)"

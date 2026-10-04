@@ -19,10 +19,6 @@
       url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     preservation.url = "github:nix-community/preservation";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
@@ -32,10 +28,6 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     { flakelight, ... }@inputs:
@@ -43,7 +35,6 @@
       imports = [ inputs.flakelight-elisp.flakelightModules.default ];
       inherit inputs;
       withOverlays = [
-        inputs.nixgl.overlays.default
         inputs.emacs-overlay.overlays.package
         inputs.self.overlays.overrides
       ];

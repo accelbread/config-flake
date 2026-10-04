@@ -1,0 +1,12 @@
+[Default Applications]
+text/html=librewolf.desktop
+x-scheme-handler/http=librewolf.desktop
+x-scheme-handler/https=librewolf.desktop
+application/pdf=org.gnome.Evince.desktop
+image/png=org.gnome.Loupe.desktop
+image/jpeg=org.gnome.Loupe.desktop
+audio/mpeg=io.bassi.Amberol.desktop
+audio/flac=io.bassi.Amberol.desktop
+
+[Removed Associations]
+x-scheme-handler/mailto=chromium.desktop

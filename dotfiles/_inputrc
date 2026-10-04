@@ -1,0 +1,11 @@
+$include /etc/inputrc
+set bell-style audible
+set colored-stats on
+set completion-ignore-case on
+set completion-map-case on
+set completion-prefix-display-length 4
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set visible-stats on
+"\C-n": history-search-forward
+"\C-p": history-search-backward

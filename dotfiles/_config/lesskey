@@ -1,0 +1,2 @@
+#env
+LESS = -i -R

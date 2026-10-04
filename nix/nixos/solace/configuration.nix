@@ -48,8 +48,6 @@
     ratbagd.enable = true;
   };
 
-  home-manager.sharedModules = [ ./home.nix ];
-
   hardware = {
     cpu.amd.updateMicrocode = true;
     graphics.enable32Bit = false;
@@ -64,4 +62,7 @@
       sleep-inactive-ac-type = "nothing";
     };
   };
+
+  hjem.users.archit.files.".config/wireplumber/wireplumber.conf.d/local.conf".source =
+    ./wireplumber.conf;
 }

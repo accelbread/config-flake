@@ -50,8 +50,6 @@
 
   environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 
-  home-manager.sharedModules = [ ./home.nix ];
-
   services = {
     logind.settings.Login.IdleAction = "hibernate";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
