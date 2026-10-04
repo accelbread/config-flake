@@ -52,7 +52,6 @@ let
     filter
     head
     listToAttrs
-    mapAttrs
     match
     readDir
     readFile
@@ -61,8 +60,6 @@ let
   inherit (lib)
     attrVals
     concatMap
-    concatMapStringsSep
-    filesystem
     flatten
     flip
     hasSuffix
@@ -293,39 +290,6 @@ let
     };
   };
 
-  patchElpaPackage =
-    package: patches:
-    package.overrideAttrs (
-      old:
-      let
-        sourceDir = "${old.pname}-${old.version}";
-      in
-      {
-        src = runCommand "${sourceDir}-patched.tar" { } ''
-          mkdir source
-          if [ -d ${old.src} ]; then
-            mkdir -p source/${sourceDir}
-            cp -R ${old.src}/. source/${sourceDir}/
-          else
-            tar -xf ${old.src} -C source
-          fi
-          ${concatMapStringsSep "\n" (patchFile: ''
-            patch -d source/${sourceDir} -p1 < ${patchFile}
-          '') patches}
-          tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-            -cf $out -C source ${sourceDir}
-        '';
-      }
-    );
-
-  elpaPatches =
-    readDir ./misc/elpa-patches
-    |> mapAttrs (
-      k: _:
-      filesystem.listFilesRecursive (./misc/elpa-patches + "/${k}")
-      |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
-    );
-
   execPaths = lib.concatStrings (
     lib.mapAttrsToList (k: v: "(\"${k}\" . \"${v}/bin/${k}\")") binPkgMap
   );
@@ -347,7 +311,6 @@ let
 
   emacsPackages = (emacsPackagesFor baseEmacs).overrideScope (
     lib.composeManyExtensions [
-      (_: prev: lib.mapAttrs (k: v: patchElpaPackage prev.${k} v) elpaPatches)
       (_: _: lib.genAttrs builtinLibs (_: emptyDirectory))
       configOverlay
     ]

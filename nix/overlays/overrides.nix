@@ -8,39 +8,72 @@ let
     path
     readDir
     ;
-  inherit (final.lib) concat filesystem hasSuffix;
+  inherit (final.lib)
+    concatMapStringsSep
+    filesystem
+    hasSuffix
+    ;
 
-  applyPatches =
-    dir: overrideFn:
+  applyPatches' =
+    overrideArgFor: overrideFn: dir:
     readDir dir
     |> mapAttrs (
       k: _:
-      overrideFn k (old: {
-        patches =
-          filesystem.listFilesRecursive (dir + "/${k}")
-          |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
-          |> map (p: path { path = p; })
-          |> concat old.patches or [ ];
-      })
+      filesystem.listFilesRecursive (dir + "/${k}")
+      |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
+      |> map (p: path { path = p; })
+      |> overrideArgFor
+      |> overrideFn k
     );
+
+  applyPatches = applyPatches' (
+    ps: old: { patches = old.patches or [ ] ++ ps; }
+  );
 
   patchDir = prev.src + /patches;
 in
 prev.lib.composeManyExtensions [
-  (_: _: applyPatches patchDir (n: prev.${n}.overrideAttrs))
+  (_: _: applyPatches (n: prev.${n}.overrideAttrs) patchDir)
   (_: _: {
     gnomeExtensions =
       prev.gnomeExtensions
-      // (applyPatches (patchDir + /gnomeExtensions) (
-        n: prev.gnomeExtensions.${n}.overrideAttrs
+      // (applyPatches (n: prev.gnomeExtensions.${n}.overrideAttrs) (
+        patchDir + /gnomeExtensions
       ));
     haskellPackages = prev.haskellPackages.override {
       overrides =
         _: hprev:
-        applyPatches (patchDir + /haskellPackages) (
-          n: final.haskell.lib.overrideCabal hprev.${n}
+        applyPatches (n: final.haskell.lib.overrideCabal hprev.${n}) (
+          patchDir + /haskellPackages
         );
     };
+    emacsPackagesFor =
+      emacs:
+      (prev.emacsPackagesFor emacs).overrideScope (
+        _: eprev:
+        applyPatches' (
+          patches: old:
+          let
+            sourceDir = "${old.pname}-${old.version}";
+          in
+          {
+            src = final.runCommand "${sourceDir}-patched.tar" { } ''
+              mkdir source
+              if [ -d ${old.src} ]; then
+                mkdir -p source/${sourceDir}
+                cp -R ${old.src}/. source/${sourceDir}/
+              else
+                tar -xf ${old.src} -C source
+              fi
+              ${concatMapStringsSep "\n" (patchFile: ''
+                patch -d source/${sourceDir} -p1 < ${patchFile}
+              '') patches}
+              tar --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+                -cf $out -C source ${sourceDir}
+            '';
+          }
+        ) (n: eprev.${n}.overrideAttrs) (patchDir + /emacsPackages)
+      );
   })
   (_: prev: {
     ccacheWrapper = prev.ccacheWrapper.override {
