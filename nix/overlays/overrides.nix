@@ -24,7 +24,7 @@ let
       })
     );
 
-  patchDir = ./patches;
+  patchDir = prev.src + /patches;
 in
 prev.lib.composeManyExtensions [
   (_: _: applyPatches patchDir (n: prev.${n}.overrideAttrs))
