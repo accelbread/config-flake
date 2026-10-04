@@ -9,23 +9,40 @@ let
     readDir
     ;
   inherit (final.lib) concat filesystem hasSuffix;
-in
-prev.lib.composeManyExtensions [
-  (
-    final: prev:
-    readDir ./patches
+
+  applyPatches =
+    dir: overrideFn:
+    readDir dir
     |> mapAttrs (
       k: _:
-      prev.${k}.overrideAttrs (old: {
+      overrideFn k (old: {
         patches =
-          filesystem.listFilesRecursive (./patches + "/${k}")
+          filesystem.listFilesRecursive (dir + "/${k}")
           |> filter (p: hasSuffix ".patch" p || hasSuffix ".mbx" p)
           |> map (p: path { path = p; })
           |> concat old.patches or [ ];
       })
-    )
-  )
-  (final: prev: {
+    );
+
+  patchDir = ./patches;
+in
+prev.lib.composeManyExtensions [
+  (_: _: applyPatches patchDir (n: prev.${n}.overrideAttrs))
+  (_: _: {
+    gnomeExtensions =
+      prev.gnomeExtensions
+      // (applyPatches (patchDir + /gnomeExtensions) (
+        n: prev.gnomeExtensions.${n}.overrideAttrs
+      ));
+    haskellPackages = prev.haskellPackages.override {
+      overrides =
+        _: hprev:
+        applyPatches (patchDir + /haskellPackages) (
+          n: final.haskell.lib.overrideCabal hprev.${n}
+        );
+    };
+  })
+  (_: prev: {
     ccacheWrapper = prev.ccacheWrapper.override {
       extraConfig = ''
         export CCACHE_COMPRESS=1
@@ -63,21 +80,5 @@ prev.lib.composeManyExtensions [
       chmod -R u+w $out
       rm -r $out/share/fonts
     '';
-    haskellPackages = prev.haskellPackages.override {
-      overrides = _: hprev: {
-        nix-derivation = final.haskell.lib.overrideCabal hprev.nix-derivation (old: {
-          patches = (old.patches or [ ]) ++ [
-            ./haskellPatches/nix-derivation/support-ca-derivations.patch
-          ];
-        });
-      };
-    };
-    gnomeExtensions = prev.gnomeExtensions // {
-      tiling-assistant = prev.gnomeExtensions.tiling-assistant.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [
-          ./gnomeExtensions/tiling-assistant/tilingWindowManager-Override-window-constraints-style.patch
-        ];
-      });
-    };
   })
 ] final prev
