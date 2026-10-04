@@ -8,15 +8,17 @@ let
     path
     readDir
     ;
-  inherit (final.lib)
+  inherit (prev.lib)
     concatMapStringsSep
     filesystem
+    filterAttrs
     hasSuffix
     ;
 
   applyPatches' =
     overrideArgFor: overrideFn: dir:
     readDir dir
+    |> filterAttrs (_: v: v == "directory")
     |> mapAttrs (
       k: _:
       filesystem.listFilesRecursive (dir + "/${k}")

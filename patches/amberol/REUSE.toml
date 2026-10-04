@@ -1,6 +1,0 @@
-version = 1
-
-[[annotations]]
-path = "**"
-SPDX-License-Identifier = "FSFAP"
-SPDX-FileCopyrightText = "NOASSERTION"
