@@ -824,6 +824,7 @@ returns nil."
         completion-at-point-functions (list #'cape-file
                                             (cape-capf-super #'my-cape-dabbrev
                                                              #'cape-dict))
+        dabbrev-case-replace nil
         dabbrev-ignored-buffer-regexps '("\\` ")
         dabbrev-friend-buffer-function #'always
         cape-dabbrev-buffer-function #'my-cape-dabbrev-buffers
