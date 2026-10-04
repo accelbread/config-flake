@@ -70,6 +70,7 @@ let
   gnomeExtensions = with pkgs.gnomeExtensions; [
     caffeine
     hide-universal-access
+    tiling-assistant
   ];
 
   passSettings = {
@@ -519,6 +520,10 @@ in
       };
       "org/gnome/shell/extensions/caffeine" = {
         show-timer = false;
+      };
+      "org/gnome/shell/extensions/tiling-assistant" = {
+        enable-tiling-popup = false;
+        enable-raise-tile-group = false;
       };
       "org/gnome/shell/world-clocks" = {
         locations = [ utc ];

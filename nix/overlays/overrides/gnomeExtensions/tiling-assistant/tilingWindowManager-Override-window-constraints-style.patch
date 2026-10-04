@@ -1,0 +1,48 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Thu, 16 Mar 2023 07:14:24 +0100
+Subject: tilingWindowManager: Override window constraints style
+
+Use ubuntu-only function to override window edge constraints so that tiled
+windows are correctly painted with no shadows and no rounded decorations.
+---
+ .../src/extension/tilingWindowManager.js             | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/src/extension/tilingWindowManager.js b/src/extension/tilingWindowManager.js
+index 1871180..4e33296 100644
+--- a/src/extension/tilingWindowManager.js
++++ b/src/extension/tilingWindowManager.js
+@@ -233,6 +233,20 @@ export class TilingWindowManager {
+             );
+         }
+ 
++        if (!maximize && window.override_constraints) {
++            const leftConstraint = newRect.x === workArea.x ?
++                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
++            const rightConstraint = newRect.x2 === workArea.x2 ?
++                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
++            const topConstraint = newRect.y === workArea.y ?
++                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
++            const bottomConstraint = newRect.y2 === workArea.y2 ?
++                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
++
++            window.override_constraints(topConstraint, leftConstraint,
++                rightConstraint, bottomConstraint);
++        }
++
+         // See issue #137.
+         // Under some circumstances it's possible that windows will tile to the wrong
+         // monitor. I can't reproduce it but I suspect that it's because of passing
+@@ -321,6 +335,12 @@ export class TilingWindowManager {
+             );
+         }
+ 
++        if (window.override_constraints) {
++            window.override_constraints(Meta.WindowConstraint.NONE,
++                Meta.WindowConstraint.NONE, Meta.WindowConstraint.NONE,
++                Meta.WindowConstraint.NONE);
++        }
++
+         // userOp means that the window won't clamp to the workspace. For DND
+         // we don't want to clamp to the workspace, so it's false by default.
+         const userOp = !clampToWorkspace;

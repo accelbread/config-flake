@@ -72,5 +72,12 @@ prev.lib.composeManyExtensions [
         });
       };
     };
+    gnomeExtensions = prev.gnomeExtensions // {
+      tiling-assistant = prev.gnomeExtensions.tiling-assistant.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [
+          ./gnomeExtensions/tiling-assistant/tilingWindowManager-Override-window-constraints-style.patch
+        ];
+      });
+    };
   })
 ] final prev
