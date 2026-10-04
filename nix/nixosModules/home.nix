@@ -26,7 +26,6 @@ let
     mapAttrs
     mapAttrsToList
     mkForce
-    nameValuePair
     removePrefix
     replaceStrings
     replicate
@@ -184,16 +183,31 @@ in
     files =
       let
         dotDir = flake.src + /dotfiles;
-        pathToTarget =
-          p:
+        replacements = {
+          ".bashrc" = { inherit (pkgs) coreutils; };
+          ".config/git/config".templateDir = ./homeFiles/git-template;
+          ".config/pipewire/pipewire.conf.d/99-input-denoising.conf".rnnoisePath =
+            pkgs.rnnoise-plugin.ladspa;
+          ".local/share/gnupg/gpg-agent.conf".pinentry =
+            lib.getExe pkgs.pinentry-gnome3;
+          ".config/direnv/direnvrc".nix-direnv =
+            pkgs.nix-direnv.override { nix = config.nix.package; };
+        };
+      in
+      genAttrs' (listFilesRecursive dotDir) (p: rec {
+        name =
           toString p
           |> removePrefix "${toString dotDir}/"
           |> unsafeDiscardStringContext
           |> (p: if hasPrefix "_" p then ".${removePrefix "_" p}" else p);
-      in
-      (genAttrs' (listFilesRecursive dotDir) (
-        p: nameValuePair (pathToTarget p) { source = p; }
-      ))
+        value.source = pkgs.replaceVarsWith {
+          src = p;
+          replacements = replacements.${name} or { };
+          postBuild = ''
+            if [ -x "$src" ]; then chmod +x "$out"; fi
+          '';
+        };
+      })
       // mapAttrs (_: v: { source = v; }) {
         ".face" = flake.src + /misc/icon.png;
         ".librewolf/native-messaging-hosts/passff.json" =
@@ -202,9 +216,6 @@ in
         ".librewolf/profile/chrome/firefox-gnome-theme" = pkgs.firefox-gnome-theme;
         ".thunderbird/profile/chrome/thunderbird-gnome-theme" =
           pkgs.thunderbird-gnome-theme;
-        ".config/pipewire/pipewire.conf.d/99-input-denoising.conf" =
-          pkgs.replaceVars ./homeFiles/99-input-denoising.conf
-            { rnnoisePath = pkgs.rnnoise-plugin.ladspa; };
         ".config/celluloid/scripts" =
           pkgs.buildEnv {
             name = "mpv-scripts";
@@ -230,15 +241,6 @@ in
           sessionVariables
           |> mapAttrsToList (k: v: "export ${k}=${escapeShellArg v}\n")
           |> concatStrings;
-        ".bashrc".text = ''
-          [[ $- == *i* ]] || return
-          shopt -s globstar checkjobs
-          HISTCONTROL=ignoreboth
-          unset HISTFILE
-          if [[ -z "$LS_COLORS" ]]; then
-            eval "$(${pkgs.coreutils}/bin/dircolors -b)"
-          fi
-        '';
         ".manpath".text = ''
           MANDB_MAP /etc/profiles/per-user/archit/share/man ${
             pkgs.runCommand "man-cache" { nativeBuildInputs = [ pkgs.man-db ]; } ''
@@ -246,23 +248,6 @@ in
               mandb -C man.conf --no-straycats --create ${manualPages}/share/man
             ''
           }
-        '';
-        ".config/direnv/direnvrc".text = ''
-          source ${
-            pkgs.nix-direnv.override { nix = config.nix.package; }
-          }/share/nix-direnv/direnvrc
-        '';
-        ".local/share/gnupg/gpg-agent.conf".text = ''
-          pinentry-program ${lib.getExe pkgs.pinentry-gnome3}
-          default-cache-ttl 300
-          max-cache-ttl 1800
-          no-allow-external-cache
-        '';
-        ".config/gtk-3.0/gtk.css".text = ''
-          @define-color accent_bg_color #9141ac;
-        '';
-        ".config/gtk-4.0/gtk.css".text = ''
-          :root { --accent-bg-color: var(--accent-purple); }
         '';
         ".config/GIMP/3.0/gimprc" = {
           type = "copy";

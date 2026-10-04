@@ -18,7 +18,7 @@
 	submoduleSummary = true
 [init]
 	defaultBranch = "master"
-	templateDir = "/home/archit/.config/git/template"
+	templateDir = "@templateDir@"
 [core]
 	untrackedCache = true
 [fetch]

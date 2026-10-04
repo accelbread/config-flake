@@ -1,0 +1,7 @@
+[[ $- == *i* ]] || return
+shopt -s globstar checkjobs
+HISTCONTROL=ignoreboth
+unset HISTFILE
+if [[ -z "$LS_COLORS" ]]; then
+  eval "$(@coreutils@/bin/dircolors -b)"
+fi
