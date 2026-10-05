@@ -9,7 +9,7 @@
 }:
 let
   use-ccache = false;
-  stdenv = llvmStdenv pkgs.llvmPackages;
+  stdenv = llvmStdenv pkgs.llvmPackages_latest;
   base-kernel = pkgs.linux_7_2;
 
   extraMakeFlags = [ "INSTALL_MOD_STRIP=1" ];
