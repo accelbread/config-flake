@@ -1,27 +1,24 @@
 @import "firefox-gnome-theme/userChrome.css";
 
-#nav-bar-overflow-button {
-  display: none;
-}
-
 /* Hide bottom section of vertical tab bar */
-div.buttons-wrapper:has(button-group.tools-and-extensions),
+.wrapper > div.buttons-wrapper:has(button-group.tools-and-extensions) {
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+}
 #sidebar-tools-and-extensions-splitter {
   display: none !important;
 }
 
-/* Prevent sidebar from disappearing when collapsed to just icons. */
-#sidebar-main {
-  min-width: 55px;
-}
-
 /* Make sidebar easier to resize */
-.sidebar-splitter {
+#sidebar-splitter,
+#sidebar-launcher-splitter {
   min-width: 4px !important;
-}
-
-:root[customtitlebar] {
-  &[sizemode="normal"]:not([gtktiledwindow="true"]) #nav-bar {
-    border-radius: 12px 12px 0 0 !important;
-  }
+    background: linear-gradient(
+      var(--gnome-sidebar-border-color),
+      var(--gnome-sidebar-border-color)
+    ) right / 1px 100% no-repeat !important;
+  border-radius: 0 !important;
+  margin-inline-start: -3px !important;
+  margin-block-start: 0 !important;
 }
