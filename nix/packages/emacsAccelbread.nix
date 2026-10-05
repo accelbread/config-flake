@@ -336,7 +336,7 @@ let
   wrapEmacs =
     emacs:
     symlinkJoin {
-      name = emacs.name;
+      name = "wrappedEmacs";
       paths = [
         emacs
         emacsTerminfo
