@@ -1,1 +1,16 @@
 @import "firefox-gnome-theme/userContent.css";
+
+@-moz-document url-prefix("about:") {
+  :root {
+    --gnome-accent-bg: #9141ac !important;
+    --color-accent-primary: var(--gnome-accent-bg) !important;
+  }
+}
+
+@-moz-document url-prefix("about:newtab"), url-prefix("about:home") {
+  :root, body {
+    --newtab-background-color: light-dark(#fafafb, #222226) !important;
+    --newtab-background-color-secondary: light-dark(#ffffff, #36363a) !important;
+    background: var(--newtab-background-color) !important;
+  }
+}
