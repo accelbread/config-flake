@@ -17,3 +17,8 @@
     --gnome-accent: #9141ac;
   }
 }
+
+.tab-close-button {
+  content: var(--gnome-icon-window-close-symbolic) !important;
+  fill: var(--gnome-toolbar-icon-fill) !important;
+}
