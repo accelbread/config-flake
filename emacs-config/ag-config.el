@@ -12,6 +12,14 @@
 ;;; Code:
 
 
+;;; Run this file at init
+
+;;;###autoload (when init-file-user
+;;;###autoload   (add-hook 'after-init-hook
+;;;###autoload             (lambda () (require 'ag-config))
+;;;###autoload             -100))
+
+
 ;;; Error if this file is executed while byte-compiling
 
 (when (bound-and-true-p byte-compile-current-file)
@@ -1051,10 +1059,11 @@ returns nil."
 
 (add-hook 'eshell-pre-command-hook #'my-eshell-highlight-last-input)
 
-(with-eval-after-load 'abbrev
-  (define-abbrev-table 'eshell-mode-abbrev-table
-    '(("gitcl" "git clone --filter=blob:none")
-      ("gitsub" "git submodule update --init --recursive --filter=blob:none"))))
+(define-abbrev-table 'eshell-mode-abbrev-table
+  (mapcar
+   (lambda (a) `(,@a nil :system t))
+   '(("gitcl" "git clone --filter=blob:none")
+     ("gitsub" "git submodule update --init --recursive --filter=blob:none"))))
 
 (advice-add #'eat--eshell-local-mode :after
             (lambda (&rest _)
@@ -1136,7 +1145,7 @@ returns nil."
 
 (push `(,(rx bos "*envrc*" eos) always) display-buffer-alist)
 
-(add-hook 'after-init-hook #'envrc-global-mode)
+(envrc-global-mode)
 
 (defun envrc-refresh-dir-wrapper (orig-fun verb)
   "Refresh the cached env directory before calling ORIG-FUN with VERB."
