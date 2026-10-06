@@ -219,11 +219,6 @@ returns nil."
 (setq print-circle t)
 
 
-;;; Prevent accidental closing
-
-(setopt confirm-kill-emacs #'y-or-n-p)
-
-
 ;;; Save minibuffer history
 
 (when (daemonp)
