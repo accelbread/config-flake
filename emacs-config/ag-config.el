@@ -1835,7 +1835,7 @@ used instead. OPTIONS sets server initialization options."
         markdown-fontify-code-blocks-natively t
         markdown-ordered-list-enumeration nil
         markdown-disable-tooltip-prompt t
-        markdown-command '("pandoc" "--from=markdown" "--to=html5"))
+        markdown-command '("pandoc" "--from=gfm" "--to=html5"))
 
 (advice-add #'markdown-fontify-hrs :around
             (lambda (orig-fun &rest args)
@@ -1850,6 +1850,8 @@ used instead. OPTIONS sets server initialization options."
   (setq-local page-delimiter markdown-regex-hr))
 
 (add-hook 'markdown-mode-hook #'markdown-set-page-delimiter)
+
+(add-to-list 'auto-mode-alist `(,(rx ".md" eos) . gfm-mode))
 
 
 ;;; Typst
