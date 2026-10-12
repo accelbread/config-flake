@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sun, 11 Oct 2026 23:32:29 -0700
+Subject: [PATCH] Fix missing category when table is buffer-local
+
+`word-wrap-whitespace-mode` or other global minor modes can make the
+category table buffer-local. `haskell-mode`'s category modifications
+apply to the table in the buffer where the file is loaded. If that
+buffer has a buffer-local category table, the changes will be lost for
+other buffers or when the buffer changes mode.
+
+This was causing syntax highlighting to be wrong since the library was
+loaded while in fundamental-mode before normal-mode activates
+haskell-mode.
+---
+ haskell-lexeme.el | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/haskell-lexeme.el b/haskell-lexeme.el
+index 99be99c..dd44db7 100644
+--- a/haskell-lexeme.el
++++ b/haskell-lexeme.el
+@@ -21,19 +21,20 @@
+ 
+ (require 'rx)
+ 
+-(unless (category-docstring ?P)
+-  (define-category ?P "Haskell symbol constituent characters")
+-  (map-char-table
+-   #'(lambda (key val)
+-       (if (or
+-            (and (consp key) (> (car key) 128))
+-            (and (numberp key) (> key 128)))
+-           (if (member val '(Pc Pd Po Sm Sc Sk So))
+-               (modify-category-entry key ?P))))
+-   unicode-category-table)
++(let ((table (standard-category-table)))
++  (unless (category-docstring ?P table)
++    (define-category ?P "Haskell symbol constituent characters" table)
++    (map-char-table
++     #'(lambda (key val)
++         (if (or
++              (and (consp key) (> (car key) 128))
++              (and (numberp key) (> key 128)))
++             (if (member val '(Pc Pd Po Sm Sc Sk So))
++                 (modify-category-entry key ?P table))))
++     unicode-category-table)
+ 
+-  (dolist (key (string-to-list "!#$%&*+./<=>?@^|~\\-:"))
+-    (modify-category-entry key ?P)))
++    (dolist (key (string-to-list "!#$%&*+./<=>?@^|~\\-:"))
++      (modify-category-entry key ?P table))))
+ 
+ (defconst haskell-lexeme-modid
+   "[[:upper:]][[:alnum:]'_]*"
