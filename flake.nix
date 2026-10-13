@@ -47,7 +47,7 @@
         "*.nix" = "${lib.getExe pkgs.nixfmt} -w78";
         "*.md" = "${lib.getExe pkgs.mdformat} --wrap 80 --number";
         "*.json" = "${pkgs.writeShellScript "jq-fmt" ''
-          ${pkgs.jq}/bin/jq . $1 | ${pkgs.moreutils}/bin/sponge $1
+          ${pkgs.jq}/bin/jq . "$1" | ${pkgs.moreutils}/bin/sponge "$1"
         ''}";
         "*.yaml" = lib.getExe pkgs.yamlfmt;
         "*.js" = "${lib.getExe pkgs.prettier} --write";
