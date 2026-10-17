@@ -12,6 +12,11 @@ web_search = "disabled"
 cli_auth_credentials_store = "keyring"
 check_for_update_on_startup = false
 
+developer_instructions = '''
+Use Nix or Git (blob:none), preferably Nix, to fetch sources for investigation.
+Use Kagi for generic web search and page extraction, not for source code.
+'''
+
 [features]
 api_key_model_discovery = true
 
