@@ -21,3 +21,8 @@ path = [
 ]
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "webkitgtk_6_0/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "BSD-2-Clause"

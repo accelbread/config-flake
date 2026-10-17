@@ -1,0 +1,14 @@
+--- a/Source/WTF/wtf/PlatformEnableGlib.h
++++ b/Source/WTF/wtf/PlatformEnableGlib.h
+@@ -58,3 +58,3 @@
+ #if !defined(ENABLE_SERVER_PRECONNECT)
+-#define ENABLE_SERVER_PRECONNECT 1
++#define ENABLE_SERVER_PRECONNECT 0
+ #endif
+--- a/Source/WebCore/platform/network/DNS.cpp
++++ b/Source/WebCore/platform/network/DNS.cpp
+@@ -55,4 +55,2 @@
+         return;
+-
+-    DNSResolveQueue::singleton().add(hostname);
+ }
