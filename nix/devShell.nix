@@ -5,6 +5,5 @@ pkgs: with pkgs; {
   packages = [
     mqttui
     b4
-    reuse
   ];
 }
