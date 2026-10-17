@@ -5,6 +5,7 @@ path = [
   "emacs*/**",
   "dbus-broker/**",
   "amberol/**",
+  "ccache/**",
 ]
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "GPL-3.0-or-later"

@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Fri, 16 Oct 2026 23:53:07 -0700
+Subject: [PATCH] Honor SOURCE_DATE_EPOCH for cache entry creation time
+
+Use SOURCE_DATE_EPOCH, when set, for the timestamp embedded in newly
+written result and manifest entries. Validate it using ccache's unsigned
+integer parser so malformed values cause an error.
+---
+ src/ccache/core/cacheentry.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/ccache/core/cacheentry.cpp b/src/ccache/core/cacheentry.cpp
+index 03f8d6ae..68990ad0 100644
+--- a/src/ccache/core/cacheentry.cpp
++++ b/src/ccache/core/cacheentry.cpp
+@@ -29,10 +29,12 @@
+ #include <ccache/util/filesystem.hpp>
+ #include <ccache/util/format.hpp>
+ #include <ccache/util/logging.hpp>
++#include <ccache/util/string.hpp>
+ #include <ccache/util/time.hpp>
+ #include <ccache/util/xxh3_128.hpp>
+ #include <ccache/util/zstd.hpp>
+ 
++#include <cstdlib>
+ #include <cstring>
+ #include <limits>
+ 
+@@ -105,6 +107,12 @@ CacheEntry::Header::Header(const Config& config,
+     namespace_(config.namespace_()),
+     entry_size(0)
+ {
++  if (const char* source_date_epoch = std::getenv("SOURCE_DATE_EPOCH")) {
++    creation_time = util::value_or_throw<core::Error>(
++      util::parse_unsigned(source_date_epoch),
++      "Invalid SOURCE_DATE_EPOCH: ");
++  }
++
+   if (compression_type == CompressionType::none) {
+     LOG("Using no compression");
+   } else if (compression_level == 0) {
