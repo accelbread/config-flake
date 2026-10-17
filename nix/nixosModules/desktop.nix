@@ -243,7 +243,6 @@ in
     gnome.excludePackages = [
       pkgs.epiphany
       pkgs.gnome-backgrounds
-      pkgs.gnome-contacts
       pkgs.gnome-music
       pkgs.gnome-tour
       pkgs.showtime

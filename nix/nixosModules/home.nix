@@ -392,6 +392,8 @@ in
           map (dir "0700") [
             "Projects"
             ".config/emacs"
+            ".config/goa-1.0"
+            ".config/evolution"
             ".librewolf/profile"
             ".thunderbird/profile"
             ".local/share/keyrings"
@@ -411,6 +413,7 @@ in
       };
       cache.users.archit.directories = map (dir "0700") [
         "Downloads"
+        ".cache/evolution"
         ".cache/fractal"
         ".local/share/flatpak"
       ];

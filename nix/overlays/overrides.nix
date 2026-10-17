@@ -86,6 +86,9 @@ prev.lib.composeManyExtensions [
         export CCACHE_UMASK=007
       '';
     };
+    gnome-online-accounts = prev.gnome-online-accounts.overrideAttrs (old: {
+      mesonFlags = old.mesonFlags ++ [ "-Dsysconfdir=/etc" ];
+    });
     nut = prev.nut.overrideAttrs (old: {
       postPatch = ">conf/Makefile.am";
       configureFlags = old.configureFlags ++ [
