@@ -155,7 +155,6 @@ in
           dconf-editor
           crosspipe
           convey
-          thunderbird
           fractal
           gimp3
           libreoffice
@@ -219,8 +218,6 @@ in
           + /lib/librewolf/native-messaging-hosts/passff.json;
         ".librewolf/profile/chrome/firefox-gnome-theme".source =
           pkgs.firefox-gnome-theme;
-        ".thunderbird/profile/chrome/thunderbird-gnome-theme".source =
-          pkgs.thunderbird-gnome-theme;
         ".config/celluloid/scripts".source =
           pkgs.buildEnv {
             name = "mpv-scripts";
@@ -360,7 +357,6 @@ in
     preservation = flip genAttrs (_: { d.mode = mkForce "0700"; }) [
       "/home/archit/.ssh"
       "/home/archit/.librewolf"
-      "/home/archit/.thunderbird"
     ];
     playground."/home/archit/Projects/Playground".v = {
       mode = "0700";
@@ -397,7 +393,6 @@ in
             ".config/evolution"
             ".config/convey"
             ".librewolf/profile"
-            ".thunderbird/profile"
             ".local/share/keyrings"
             ".local/share/vault"
             ".local/share/gnupg"
