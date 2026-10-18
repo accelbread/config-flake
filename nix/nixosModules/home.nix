@@ -394,7 +394,6 @@ in
             ".config/convey"
             ".librewolf/profile"
             ".local/share/keyrings"
-            ".local/share/vault"
             ".local/share/gnupg"
             ".local/share/pass"
             ".local/share/convey"
