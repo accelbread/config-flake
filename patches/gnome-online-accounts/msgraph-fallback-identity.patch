@@ -1,0 +1,21 @@
+diff --git a/src/goabackend/goamsgraphprovider.c b/src/goabackend/goamsgraphprovider.c
+--- a/src/goabackend/goamsgraphprovider.c
++++ b/src/goabackend/goamsgraphprovider.c
+@@ -223,6 +223,8 @@ get_identity_sync (GoaOAuth2Provider  *oauth2_provider,
+   if (json_member != NULL && json_node_get_value_type (json_member) == G_TYPE_STRING)
+     {
+       presentation_identity = json_node_get_string (json_member);
++      /* Personal Microsoft accounts may return "mail": null. */
++      id = presentation_identity;
+     }
+ 
+   // Use the "mail" field as the "Identity"
+@@ -238,7 +240,7 @@ get_identity_sync (GoaOAuth2Provider  *oauth2_provider,
+ 
+   if (!presentation_identity || !id)
+     {
+-      g_debug ("%s(): expected \"userPrincipalName\" and \"mail\" field holding a string",
++      g_debug ("%s(): expected \"userPrincipalName\" or \"mail\" field holding a string",
+                G_STRFUNC);
+       g_set_error (error,
+                    GOA_ERROR,

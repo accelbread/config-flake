@@ -27,3 +27,8 @@ SPDX-License-Identifier = "GPL-2.0-only"
 path = "webkitgtk_6_0/**"
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "BSD-2-Clause"
+
+[[annotations]]
+path = "gnome-online-accounts/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "LGPL-2.0-or-later"
