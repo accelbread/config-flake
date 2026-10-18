@@ -15,6 +15,10 @@ check_for_update_on_startup = false
 developer_instructions = '''
 Use Nix or Git (blob:none), preferably Nix, to fetch sources for investigation.
 Use Kagi for generic web search and page extraction, not for source code.
+
+To fetch source with Nix, build a flakeref such as self#hello.src to get a
+source store path. The system configuration makes the flake used to build it
+available as `self`.
 '''
 
 [features]
