@@ -154,6 +154,7 @@ in
         [
           dconf-editor
           crosspipe
+          convey
           thunderbird
           fractal
           gimp3
@@ -394,12 +395,14 @@ in
             ".config/emacs"
             ".config/goa-1.0"
             ".config/evolution"
+            ".config/convey"
             ".librewolf/profile"
             ".thunderbird/profile"
             ".local/share/keyrings"
             ".local/share/vault"
             ".local/share/gnupg"
             ".local/share/pass"
+            ".local/share/convey"
             ".local/share/fractal"
             ".var/app/com.valvesoftware.Steam"
           ]
@@ -447,6 +450,11 @@ in
         mpris-enable = false;
         draggable-video-area-enable = true;
       };
+      "net/donnybeelo/Convey" = {
+        remember-last-inbox = false;
+        unset-html-colors = true;
+        window-maximize = true;
+      };
       "org/gnome/Console" = {
         visual-bell = false;
       };
@@ -490,6 +498,9 @@ in
         visual-bell = true;
         visual-bell-type = "frame-flash";
       };
+      "org/gnome/evolution-data-server" = {
+        limit-operations-in-power-saver-mode = true;
+      };
       "org/gnome/Fractal/Stable" = {
         is-maximized = true;
       };
@@ -514,7 +525,7 @@ in
         favorite-apps = [
           "emacs.desktop"
           "librewolf.desktop"
-          "thunderbird.desktop"
+          "net.donnybeelo.Convey.desktop"
           "org.gnome.Fractal.desktop"
           "org.gnome.Nautilus.desktop"
           "io.bassi.Amberol.desktop"
