@@ -11,7 +11,13 @@
 }:
 let
   inherit (inputs) self;
-  inherit (builtins) mapAttrs substring hashString;
+  inherit (builtins)
+    attrValues
+    genericClosure
+    mapAttrs
+    substring
+    hashString
+    ;
   inherit (lib)
     genAttrs
     getExe
@@ -32,7 +38,20 @@ in
     self.nixosModules.auto-nom
   ];
 
-  system.configurationRevision = self.rev or null;
+  system = {
+    configurationRevision = self.rev or null;
+    extraDependencies =
+      let
+        mkItem = input: {
+          key = "${input.outPath}";
+          inputs = input.inputs or { };
+        };
+      in
+      map (node: node.key) (genericClosure {
+        startSet = [ (mkItem self) ];
+        operator = item: map mkItem (attrValues item.inputs);
+      });
+  };
 
   nix = {
     package = pkgs.nixVersions.latest;
