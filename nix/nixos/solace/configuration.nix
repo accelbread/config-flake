@@ -41,7 +41,19 @@
 
   environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 
+  users = {
+    users.remotebuild = {
+      isSystemUser = true;
+      group = "remotebuild";
+      useDefaultShell = true;
+    };
+    groups.remotebuild = { };
+  };
+
+  nix.settings.allowed-users = [ "remotebuild" ];
+
   services = {
+    openssh.settings.AllowGroups = [ "remotebuild" ];
     logind.settings.Login.IdleAction = "lock";
     usbguard.rules = builtins.readFile ./usbguard-rules.conf;
     clight.enable = true;
