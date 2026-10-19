@@ -50,7 +50,7 @@
     groups.remotebuild = { };
   };
 
-  nix.settings.allowed-users = [ "remotebuild" ];
+  nix.settings.trusted-users = [ "remotebuild" ];
 
   services = {
     openssh.settings.AllowGroups = [ "remotebuild" ];
