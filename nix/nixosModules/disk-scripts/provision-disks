@@ -17,6 +17,12 @@ btrfs_devices=()
 for i in $(seq 1 ${#disks[@]}); do
     disk=${disks[$i-1]}
     diskPart=${disksPart[$i-1]}
+    if [[ $(readlink -f "$disk") =~ ^/dev/nvme[0-9]+n[0-9]+$ ]]; then
+        lbaf=$(nvme id-ns --output-format=json "$disk" | jq -er '
+            .lbafs | map(select(.ms == 0)) | min_by([.rp, -.ds]) | .lbaf
+        ')
+        nvme format --lbaf="$lbaf" "$disk"
+    fi
     wipefs -af "$disk"
     blkdiscard "$disk" || true
     parted "$disk" mklabel gpt

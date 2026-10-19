@@ -165,6 +165,8 @@ in
             [
               coreutils
               util-linux
+              nvme-cli
+              jq
               parted
               dosfstools
               cryptsetup

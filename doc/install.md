@@ -1,17 +1,3 @@
-## Set nvme/hdd drives to 4k sectors
-
-[See link](https://wiki.archlinux.org/title/Advanced_Format)
-
-`nix shell nixpkgs#nvme-cli`
-
-Check LBA formats available:
-
-`nvme id-ns -H /dev/nvme0n1`
-
-Format to LBA format #:
-
-`nvme format --lbaf=<#> /dev/nvme0n1`
-
 ## Configure system
 
 - Add nixos config for system.
