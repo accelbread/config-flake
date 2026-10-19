@@ -5,9 +5,11 @@
 - Set `services.usbguard.implicitPolicyTarget = "keep"`.
 - On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
+From installation media:
+
 ```sh
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
-nix run .#nixosFullInstall -- ${SYSTEM}
+nix run .#system -- ${SYSTEM} full-install
 ```
 
 ## Post-install

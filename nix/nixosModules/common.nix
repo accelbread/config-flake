@@ -34,6 +34,7 @@ in
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.kernel
     self.nixosModules.disks
+    self.nixosModules.provisioning
     self.nixosModules.tailscale
     self.nixosModules.auto-nom
   ];
@@ -253,6 +254,26 @@ in
         forwarding_rules = pkgs.writeText "forwarding-rules.txt" ''
           ts.net 100.100.100.100
         '';
+      };
+    };
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+      fileSystems = [ "/" ];
+    };
+    btrbk.instances.btrbk = {
+      onCalendar = "*:0/10";
+      settings = {
+        timestamp_format = "long";
+        volume."/persist" = {
+          subvolume = {
+            state = { };
+            data = { };
+          };
+          snapshot_dir = ".snapshots";
+          snapshot_preserve_min = "4h";
+          snapshot_preserve = "48h 14d 4w";
+        };
       };
     };
     logind.settings.Login = {

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 {
   config,
-  pkgs,
   lib,
   hostname,
   ...
@@ -128,90 +127,5 @@ in
           };
         }
       );
-
-    services = {
-      btrfs.autoScrub = {
-        enable = true;
-        interval = "weekly";
-        fileSystems = [ "/" ];
-      };
-      btrbk.instances.btrbk = {
-        onCalendar = "*:0/10";
-        settings = {
-          timestamp_format = "long";
-          volume."/persist" = {
-            subvolume = {
-              state = { };
-              data = { };
-            };
-            snapshot_dir = ".snapshots";
-            snapshot_preserve_min = "4h";
-            snapshot_preserve = "48h 14d 4w";
-          };
-        };
-      };
-    };
-
-    system.build = {
-      provisionScript = pkgs.replaceVarsWith {
-        src = ./disk-scripts/provision-disks;
-        isExecutable = true;
-        replacements = {
-          inherit hostname;
-          inherit (cfg) devices size swap;
-          devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (
-            with pkgs;
-            [
-              coreutils
-              util-linux
-              nvme-cli
-              jq
-              parted
-              dosfstools
-              cryptsetup
-              lvm2
-              btrfs-progs
-              mkpasswd
-            ]
-          );
-        };
-      };
-
-      mountScript = pkgs.replaceVarsWith {
-        src = ./disk-scripts/mount-disks;
-        isExecutable = true;
-        replacements = {
-          inherit hostname;
-          devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (
-            with pkgs;
-            [
-              coreutils
-              util-linux
-              cryptsetup
-            ]
-          );
-        };
-      };
-
-      unmountScript = pkgs.replaceVarsWith {
-        src = ./disk-scripts/unmount-disks;
-        isExecutable = true;
-        replacements = {
-          inherit hostname;
-          devicesPart = map getPartPrefix cfg.devices;
-          path = lib.makeBinPath (
-            with pkgs;
-            [
-              coreutils
-              util-linux
-              lvm2
-              cryptsetup
-            ]
-          );
-        };
-      };
-    };
   };
 }

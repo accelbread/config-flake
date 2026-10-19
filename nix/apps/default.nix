@@ -3,6 +3,7 @@
 {
   lib,
   src,
+  nixVersions,
   writeShellScript,
   emacsAccelbread,
   bubblewrap,
@@ -10,7 +11,7 @@
   ...
 }:
 let
-  nix = ''nix --extra-experimental-features "${
+  nix = ''${nixVersions.latest}/bin/nix --extra-experimental-features "${
     lib.concatStringsSep " " [
       "nix-command"
       "flakes"
@@ -18,15 +19,6 @@ let
       "pipe-operators"
     ]
   }"'';
-  mkBuildScript =
-    script:
-    writeShellScript script ''
-      set -eu
-      ref="${src}#nixosConfigurations.$1.config.system.build.${script}"
-      ${nix} build --no-link "$ref"
-      script=$(${nix} eval --raw "$ref")
-      run0 $script
-    '';
 in
 rec {
   default = emacs;
@@ -38,18 +30,12 @@ rec {
     ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
   '';
 
-  nixosProvision = mkBuildScript "provisionScript";
-  nixosMount = mkBuildScript "mountScript";
-  nixosUnmount = mkBuildScript "unmountScript";
-  nixosInstall = writeShellScript "nixos-install" ''
+  system = writeShellScript "run-system-action" ''
     set -eu
-    run0 nixos-install --no-root-passwd --flake ${src}#$1
-  '';
-  nixosFullInstall = writeShellScript "nixos-fullinstall" ''
-    set -xeu
-    ${nixosProvision} $1
-    ${nixosMount} $1
-    ${nixosInstall} $1
+    ref="${src}#nixosConfigurations.$1.config.ab.systemActions.$2"
+    ${nix} build --no-link "$ref"
+    script=$(${nix} eval --raw "$ref")
+    exec $script
   '';
 
   firefoxNetworkDns = writeShellScript "firefoxNetworkDns" ''
