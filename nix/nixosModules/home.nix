@@ -471,6 +471,9 @@ in
       "org/gnome/desktop/interface" = {
         gtk-enable-primary-paste = true;
       };
+      "org/gnome/desktop/notifications/application/net-donnybeelo-convey" = {
+        enable = false;
+      };
       "org/gnome/desktop/privacy" = {
         old-files-age = mkUint32 30;
         recent-files-max-age = mkInt32 (-1);
