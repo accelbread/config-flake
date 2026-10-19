@@ -43,3 +43,28 @@ ssh-keygen \
 ```
 
 After entering pin, tap the Yubikey.
+
+## Create remote builder key
+
+With machine YubiKey plugged in:
+
+```sh
+ssh-keygen -t ed25519-sk -O no-touch-required -N '' -C '<hostname> remotebuild' \
+  -f /persist/state/nix/remote_build_ssh_key
+```
+
+## Sign remote builder key
+
+With SSH CA YubiKey plugged in:
+
+```sh
+ssh-keygen \
+  -s /<path-to-flake>/misc/ssh_ca_user_key.pub \
+  -D /etc/profiles/per-user/archit/lib/libykcs11.so \
+  -I '<hostname> remotebuild' \
+  -n remotebuild \
+  -O no-touch-required \
+  /persist/state/nix/remote_build_ssh_key.pub
+```
+
+After entering pin, tap the Yubikey.

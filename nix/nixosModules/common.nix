@@ -70,6 +70,7 @@ in
       allowed-users = [ "@wheel" ];
       auto-optimise-store = true;
       fsync-store-paths = true;
+      builders-use-substitutes = true;
     };
   };
 
@@ -359,6 +360,11 @@ in
         StrictHostKeyChecking yes
         VerifyHostKeyDNS ask
         UpdateHostKeys ask
+
+        CanonicalizeHostname yes
+        CanonicalizeMaxDots 0
+        CanonicalizeFallbackLocal no
+        CanonicalDomains fluffy-bebop.ts.net
       '';
     };
   };

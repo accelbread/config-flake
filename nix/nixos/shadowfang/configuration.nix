@@ -15,6 +15,30 @@
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
 
+  nix = {
+    distributedBuilds = true;
+    buildMachines = [
+      {
+        hostName = "solace";
+        sshUser = "remotebuild";
+        sshKey = "/persist/state/nix/remote_build_ssh_key";
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
+        protocol = "ssh-ng";
+        maxJobs = 32;
+        speedFactor = 4;
+        supportedFeatures = [
+          "ca-derivations"
+          "nixos-test"
+          "big-parallel"
+          "kvm"
+        ];
+      }
+    ];
+  };
+
   boot = {
     initrd.availableKernelModules = [
       "nvme"
