@@ -1862,7 +1862,7 @@ used instead. OPTIONS sets server initialization options."
 
 ;;; Nix
 
-(eval-when-compile (require 'reformatter))
+(require 'reformatter)
 
 (set-lsp-server 'nix-mode '("nixd" "--log=error"))
 
