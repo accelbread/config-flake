@@ -39,7 +39,7 @@
           "set -eo pipefail; "
           "@nixos-rebuild-ng@/bin/nixos-rebuild "
           (string-join (map shell-quote (cdr (command-line))) " ")
-          " --log-format internal-json -v |& "
+          " --log-format internal-json |& "
           "@nix-output-monitor@/bin/nom --json")))
 
 (define inside-nom (getenv "_NIX_INSIDE_NOM"))
