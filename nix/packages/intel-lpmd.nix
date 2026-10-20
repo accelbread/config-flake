@@ -16,12 +16,12 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "intel-lpmd";
-  version = lib.substring 1 (-1) finalAttrs.src.rev;
+  version = "0.1.1-git";
   src = fetchFromGitHub {
     owner = "intel";
     repo = "intel-lpmd";
-    rev = "v0.1.0";
-    hash = "sha256-eZBgWpR2tdSDeqYV4Y2h2j5UeJebQg2tXlXcUywwZEA=";
+    rev = "9bf8b8de3ed11c301817814fef79b3161e6294b6";
+    hash = "sha256-mCR7ZGk79Hnl2zp8ywHSbi5Fk1ofNfsDt2joF61aHko=";
   };
   nativeBuildInputs = [
     autoreconfHook
