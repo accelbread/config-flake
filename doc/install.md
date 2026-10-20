@@ -1,7 +1,6 @@
 ## Configure system
 
 - Add nixos config for system.
-- Set `services.usbguard.implicitPolicyTarget = "keep"`.
 - On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
 From installation media:
@@ -19,7 +18,7 @@ nix run .#system -- ${SYSTEM} full-install
 usbguard generate-policy > usbguard-rules.conf
 ```
 
-Replace `usbguard.implicitPolicyTarget` with `usbguard.rules`.
+Set `services.usbguard.rules`.
 
 ```sh
 run0 sbctl create-keys

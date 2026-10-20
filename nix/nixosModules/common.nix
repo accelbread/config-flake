@@ -23,6 +23,7 @@ let
     getExe
     mergeAttrs
     mkForce
+    mkIf
     subtractLists
     ;
 
@@ -286,6 +287,7 @@ in
     usbguard = {
       enable = true;
       IPCAllowedGroups = [ "wheel" ];
+      implicitPolicyTarget = mkIf (config.services.usbguard.rules == null) "allow";
     };
     avahi.enable = false;
     udev.packages = with pkgs; [ r8152-udev-rules ];
