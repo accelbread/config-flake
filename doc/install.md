@@ -1,7 +1,6 @@
 ## Configure system
 
 - Add nixos config for system.
-- On x86_64, `boot.lanzaboote.enable = lib.mkForce false`.
 
 From installation media:
 
@@ -12,30 +11,18 @@ nix run .#system -- ${SYSTEM} full-install
 
 ## Post-install
 
-(with necessary devices plugged in)
+### Secure Boot
+
+After first boot, enable Secure Boot in firmware and put it in Setup Mode.
+
+Verify secureboot with `bootctl status`.
+
+### USBGuard
+
+Plug in all necessary devices.
 
 ```sh
 usbguard generate-policy > usbguard-rules.conf
 ```
 
-Set `services.usbguard.rules`.
-
-```sh
-run0 sbctl create-keys
-```
-
-Remove disabled lanzaboote and rebuild system.
-
-```sh
-run0 sbctl verify
-```
-
-bzimage not signed is ok.
-
-Reboot.
-
-```sh
-run0 sbctl enroll-keys
-```
-
-Enable secureboot and check with `bootctl status`.
+Set `services.usbguard.rules`, and rebuild system.

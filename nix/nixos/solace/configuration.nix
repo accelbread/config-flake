@@ -17,6 +17,7 @@
   networking.networkmanager.ethernet.macAddress = lib.mkForce "5E:34:87:DE:A3:7A";
 
   boot = {
+    lanzaboote.autoEnrollKeys.includeChecksumsFromTPM = true;
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"

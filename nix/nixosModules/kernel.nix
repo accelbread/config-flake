@@ -231,6 +231,7 @@ in
           SECCOMP = yes;
           SECCOMP_FILTER = yes;
           SECURITY = yes;
+          SECURITYFS = yes; # sbctl requires for tpm event-log
           SECURITY_LANDLOCK = yes;
           SIGNALFD = yes;
           SMP = yes;
@@ -817,7 +818,6 @@ in
           SCSI_LOWLEVEL = no;
           SCSI_PROC_FS = no;
           SECRETMEM = no;
-          SECURITYFS = no;
           SECURITY_SELINUX = no;
           SERIO_SERPORT = no;
           SGETMASK_SYSCALL = no;

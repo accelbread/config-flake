@@ -33,6 +33,7 @@ in
   imports = [
     inputs.preservation.nixosModules.preservation
     inputs.lanzaboote.nixosModules.lanzaboote
+    self.nixosModules.lanzeboote-patch
     self.nixosModules.kernel
     self.nixosModules.disks
     self.nixosModules.provisioning
@@ -81,6 +82,12 @@ in
     lanzaboote = {
       enable = pkgs.system == "x86_64-linux";
       pkiBundle = "/persist/state/secureboot";
+      autoGenerateKeys.enable = true;
+      autoEnrollKeys = {
+        enable = true;
+        autoReboot = true;
+        includeMicrosoftKeys = false;
+      };
     };
     loader = {
       timeout = 0;
@@ -362,9 +369,6 @@ in
     ];
     systemPackages = with pkgs; [
       lkl
-      (sbctl.override {
-        databasePath = "/persist/state/secureboot";
-      })
     ];
     variables.EDITOR = "zile";
   };
