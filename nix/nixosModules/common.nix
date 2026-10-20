@@ -141,6 +141,7 @@ in
 
   networking = {
     hostName = hostname;
+    hostId = substring 0 8 machine-id;
     networkmanager = {
       enable = true;
       dns = "none";
