@@ -14,7 +14,15 @@ in
     enable = lib.mkEnableOption "intel-lpmd";
     config-dir = lib.mkOption {
       type = lib.types.path;
-      default = pkgs.intel-lpmd + /etc/intel_lpmd;
+      default = pkgs.runCommand "intel-lpmd-config" { } ''
+        cp -r ${pkgs.intel-lpmd}/etc/intel_lpmd "$out"
+        chmod -R u+w "$out"
+        sed -i -E \
+          -e 's|<Mode>[[:space:]]*-1[[:space:]]*</Mode>|<Mode>0</Mode>|g' \
+          -e 's|<BalancedDef>[^<]*</BalancedDef>|<BalancedDef>0</BalancedDef>|g' \
+          -e 's|<PowersaverDef>[^<]*</PowersaverDef>|<PowersaverDef>0</PowersaverDef>|g' \
+          "$out"/intel_lpmd_config*.xml
+      '';
       description = "intel-lpmd config dir.";
     };
   };
