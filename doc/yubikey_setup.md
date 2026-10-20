@@ -1,15 +1,3 @@
-## Set up host YubiKey
-
-Plug in the YubiKey and ensure its the only plugged in key.
-
-Disable features other than u2f/fido2 and set fido pin:
-
-```sh
-ykman info
-ykman config usb -d otp -d oath -d piv -d openpgp -d hsmauth
-ykman fido access change-pin
-```
-
 ## Main YubiKey PIV setup
 
 Set non-default PIV pin/key. Default pin is 123456

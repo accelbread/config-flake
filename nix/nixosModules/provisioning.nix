@@ -96,6 +96,16 @@ in
       ${install} $1
     '';
 
+    provision-yubikey = pkgs.replaceVarsWith {
+      src = ./scripts/provision-yubikey;
+      isExecutable = true;
+      replacements = {
+        path = lib.makeBinPath [
+          pkgs.yubikey-manager
+        ];
+      };
+    };
+
     provision-ssh = pkgs.replaceVarsWith {
       src = ./scripts/provision-ssh;
       isExecutable = true;

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+set -euo pipefail
+
+export PATH=@path@
+
+ykman info
+ykman config usb -d otp -d oath -d piv -d openpgp -d hsmauth
+ykman fido access change-pin

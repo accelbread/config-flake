@@ -30,5 +30,8 @@ Set `services.usbguard.rules`, and rebuild system.
 ### SSH keys
 
 ```sh
+# Plug in host YubiKey.
+nix run self#system -- provision-yubikey
+# Plug in SSH CA YubiKey too.
 run0 nix run self#system -- provision-ssh
 ```
