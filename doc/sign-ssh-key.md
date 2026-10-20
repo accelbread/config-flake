@@ -25,7 +25,7 @@ With machine YubiKey plugged in:
 
 ```sh
 ssh-keygen -t ed25519-sk -O no-touch-required -N '' -C '<hostname>' \
-  -f /persist/state/sshd/ssh_host_ed25519_sk_key
+  -f /persist/state/system/keys/ssh_host_ed25519_sk_key
 ```
 
 ## Sign host key
@@ -39,7 +39,7 @@ ssh-keygen \
   -I <hostname> \
   -n <hostname>.fluffy-bebop.ts.net \
   -h \
-  /persist/state/sshd/ssh_host_ed25519_sk_key.pub
+  /persist/state/system/keys/ssh_host_ed25519_sk_key.pub
 ```
 
 After entering pin, tap the Yubikey.
@@ -50,7 +50,7 @@ With machine YubiKey plugged in:
 
 ```sh
 ssh-keygen -t ed25519-sk -O no-touch-required -N '' -C '<hostname> remotebuild' \
-  -f /persist/state/nix/remote_build_ssh_key
+  -f /persist/state/system/keys/remote_build_ssh_key
 ```
 
 ## Sign remote builder key
@@ -64,7 +64,7 @@ ssh-keygen \
   -I '<hostname> remotebuild' \
   -n remotebuild \
   -O no-touch-required \
-  /persist/state/nix/remote_build_ssh_key.pub
+  /persist/state/system/keys/remote_build_ssh_key.pub
 ```
 
 After entering pin, tap the Yubikey.

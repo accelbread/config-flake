@@ -81,7 +81,7 @@ in
   boot = {
     lanzaboote = {
       enable = pkgs.system == "x86_64-linux";
-      pkiBundle = "/persist/state/secureboot";
+      pkiBundle = "/persist/state/system/secureboot";
       autoGenerateKeys.enable = true;
       autoEnrollKeys = {
         enable = true;
@@ -247,6 +247,8 @@ in
         "/etc/NetworkManager" = dir "0700";
         "/etc" = dir "0755";
         "/var/log" = mkForce { };
+        "/persist/state/system" = dir "0700";
+        "/persist/state/system/keys" = dir "0700";
       };
   };
 
@@ -316,8 +318,8 @@ in
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
         TrustedUserCAKeys = "${flake.src + /misc/ssh_ca_user_key.pub}";
-        HostKey = "/persist/state/sshd/ssh_host_ed25519_sk_key";
-        HostCertificate = "/persist/state/sshd/ssh_host_ed25519_sk_key-cert.pub";
+        HostKey = "/persist/state/system/keys/ssh_host_ed25519_sk_key";
+        HostCertificate = "/persist/state/system/keys/ssh_host_ed25519_sk_key-cert.pub";
         ClientAliveInterval = 15;
       };
     };

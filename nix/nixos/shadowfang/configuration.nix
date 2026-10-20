@@ -21,7 +21,7 @@
       {
         hostName = "solace";
         sshUser = "remotebuild";
-        sshKey = "/persist/state/nix/remote_build_ssh_key";
+        sshKey = "/persist/state/system/keys/remote_build_ssh_key";
         systems = [
           "x86_64-linux"
           "aarch64-linux"
