@@ -32,6 +32,9 @@ rec {
 
   system = writeShellScript "run-system-action" ''
     set -eu
+    if [[ $# -eq 1 ]]; then
+      set -- "$(</etc/hostname)" "$1"
+    fi
     ref="${src}#nixosConfigurations.$1.config.ab.systemActions.$2"
     ${nix} build --no-link "$ref"
     script=$(${nix} eval --raw "$ref")

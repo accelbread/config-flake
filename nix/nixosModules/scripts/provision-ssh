@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+set -xeuo pipefail
+
+export PATH=@path@
+
+umask 077
+
+hostname=$(</etc/hostname)
+
+if [[ ! -e /persist/state/system/keys/ssh_host_ed25519_sk_key ]]; then
+    ssh-keygen -t ed25519-sk -O no-touch-required -N "" -C "$hostname" \
+        -f /persist/state/system/keys/ssh_host_ed25519_sk_key
+fi
+if [[ ! -e /persist/state/system/keys/remote_build_ssh_key ]]; then
+    ssh-keygen -t ed25519-sk -O no-touch-required -N "" \
+        -C "$hostname remotebuild" \
+        -f /persist/state/system/keys/remote_build_ssh_key
+fi
+if [[ ! -s ~archit/.ssh/id_ed25519_sk ]]; then
+    ssh-keygen -t ed25519-sk -O verify-required -C "archit@$hostname" \
+      -f ~archit/.ssh/id_ed25519_sk
+fi
+if [[ ! -e ~archit/.ssh/id_ed25519_sk.pub ]]; then
+    ssh-keygen -y -f ~archit/.ssh/id_ed25519_sk > ~archit/.ssh/id_ed25519_sk.pub
+fi
+
+ssh-keygen \
+    -s @flake@/misc/ssh_ca_host_key.pub \
+    -D @yubico-piv-tool@/lib/libykcs11.so \
+    -h \
+    -I "$hostname" \
+    -n "$hostname.fluffy-bebop.ts.net" \
+    -O no-touch-required \
+    /persist/state/system/keys/ssh_host_ed25519_sk_key.pub
+ssh-keygen \
+    -s @flake@/misc/ssh_ca_user_key.pub \
+    -D @yubico-piv-tool@/lib/libykcs11.so \
+    -I "$hostname remotebuild" \
+    -n remotebuild \
+    -O no-touch-required \
+    /persist/state/system/keys/remote_build_ssh_key.pub
+ssh-keygen \
+    -s @flake@/misc/ssh_ca_user_key.pub \
+    -D @yubico-piv-tool@/lib/libykcs11.so \
+    -I "archit@$hostname" \
+    -n archit \
+    ~archit/.ssh/id_ed25519_sk.pub
+
+chown archit: ~archit/.ssh/id_ed25519_sk{,.pub,-cert.pub}

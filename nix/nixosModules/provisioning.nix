@@ -5,6 +5,7 @@
   pkgs,
   lib,
   hostname,
+  flake,
   ...
 }:
 let
@@ -23,7 +24,7 @@ in
 
   config.ab.systemActions = rec {
     disk-provision = pkgs.replaceVarsWith {
-      src = ./disk-scripts/provision-disks;
+      src = ./scripts/provision-disks;
       isExecutable = true;
       replacements = {
         inherit hostname;
@@ -48,7 +49,7 @@ in
     };
 
     disk-mount = pkgs.replaceVarsWith {
-      src = ./disk-scripts/mount-disks;
+      src = ./scripts/mount-disks;
       isExecutable = true;
       replacements = {
         inherit hostname;
@@ -65,7 +66,7 @@ in
     };
 
     disk-unmount = pkgs.replaceVarsWith {
-      src = ./disk-scripts/unmount-disks;
+      src = ./scripts/unmount-disks;
       isExecutable = true;
       replacements = {
         inherit hostname;
@@ -94,5 +95,18 @@ in
       ${disk-mount} $1
       ${install} $1
     '';
+
+    provision-ssh = pkgs.replaceVarsWith {
+      src = ./scripts/provision-ssh;
+      isExecutable = true;
+      replacements = {
+        path = lib.makeBinPath [
+          pkgs.coreutils
+          pkgs.openssh
+        ];
+        flake = flake.src;
+        inherit (pkgs) yubico-piv-tool;
+      };
+    };
   };
 }

@@ -26,3 +26,9 @@ usbguard generate-policy > usbguard-rules.conf
 ```
 
 Set `services.usbguard.rules`, and rebuild system.
+
+### SSH keys
+
+```sh
+run0 nix run self#system -- provision-ssh
+```
