@@ -41,6 +41,7 @@ in
 
   system = {
     configurationRevision = self.rev or null;
+    stateVersion = "26.05";
     extraDependencies =
       let
         mkItem = input: {

@@ -13,7 +13,6 @@
         size = "900GiB";
         swap = "64g";
       };
-      system.stateVersion = "25.11";
     }
   ];
 }
