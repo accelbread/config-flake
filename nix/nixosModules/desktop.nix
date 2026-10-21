@@ -36,6 +36,7 @@ let
 in
 {
   imports = [
+    inputs.self.nixosModules.common
     inputs.self.nixosModules.home
     inputs.self.nixosModules.syncthing
     inputs.self.nixosModules.dconf

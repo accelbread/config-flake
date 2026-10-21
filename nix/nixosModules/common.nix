@@ -325,6 +325,7 @@ in
     };
     printing.enable = false;
     jitterentropy-rngd.enable = true;
+    fprintd.enable = false;
   };
 
   fonts = {

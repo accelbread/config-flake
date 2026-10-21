@@ -4,7 +4,6 @@
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-gpu-amd
-    inputs.self.nixosModules.common
     inputs.self.nixosModules.desktop
     ./ups.nix
   ];
