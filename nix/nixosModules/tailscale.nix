@@ -1,6 +1,16 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  configFile = (pkgs.formats.json { }).generate "tailscaled.json" {
+    version = "alpha0";
+    locked = false;
+    acceptDNS = false;
+    acceptRoutes = false;
+    runSSHServer = false;
+  };
+in
+{
   boot.kernelModules = [ "tun" ];
 
   systemd.services.tailscaled = {
@@ -8,7 +18,11 @@
     serviceConfig = {
       ExecStart = [
         ""
-        "${pkgs.tailscale}/bin/tailscaled --statedir /var/lib/private/tailscale"
+        (
+          "${pkgs.tailscale}/bin/tailscaled"
+          + " --statedir /var/lib/private/tailscale"
+          + " --config=${configFile}"
+        )
       ];
       User = "tailscaled";
       Group = "tailscaled";
