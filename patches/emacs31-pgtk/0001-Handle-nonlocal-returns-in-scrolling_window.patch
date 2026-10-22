@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sat, 10 Oct 2026 11:51:46 -0700
+Subject: [PATCH] Handle nonlocal returns in scrolling_window
+
+A nonlocal exit in scrolling_window skips the cleanup that empties
+row_table, leaving stale data in the global var. Future calls use this
+data breaking assumptions about the data in the table. This stale data
+can be readily observed in row_table between calls.
+
+This was rarely observed to end up in a scenario where the stale data
+forms a loop and traversing entries gets Emacs stuck in an infinite
+loop, though I am not aware of how to reproduce that scenario reliably.
+---
+ src/dispnew.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/src/dispnew.c b/src/dispnew.c
+index 155075570a..579ecf9d3f 100644
+--- a/src/dispnew.c
++++ b/src/dispnew.c
+@@ -5248,6 +5248,16 @@ add_row_entry (struct glyph_row *row)
+   return entry;
+ }
+ 
++static void
++unwind_scrolling_window (void)
++{
++  ptrdiff_t i;
++
++  /* Clear the hash table, for the next time.  */
++  for (i = 0; i < row_entry_idx; ++i)
++    row_table[row_entry_pool[i].bucket] = NULL;
++}
++
+ /* Try to reuse part of the current display of W by scrolling lines.
+    HEADER_LINE_P means W has a header line.
+ 
+@@ -5286,6 +5296,7 @@ scrolling_window (struct window *w, int tab_line_p)
+   ptrdiff_t n;
+   struct row_entry *entry;
+   struct redisplay_interface *rif = FRAME_RIF (XFRAME (WINDOW_FRAME (w)));
++  specpdl_ref count;
+ 
+   /* Skip over rows equal at the start.  */
+   for (i = tab_line_p; i < current_matrix->nrows - 1; ++i)
+@@ -5394,6 +5405,9 @@ scrolling_window (struct window *w, int tab_line_p)
+   if (last_new == first_new)
+     return 0;
+ 
++  count = SPECPDL_INDEX ();
++  record_unwind_protect_void (unwind_scrolling_window);
++
+   /* Check for integer overflow in size calculation.
+ 
+      If next_almost_prime checks (N) for divisibility by 2..10, then
+@@ -5655,9 +5669,7 @@ scrolling_window (struct window *w, int tab_line_p)
+ 	  }
+       }
+ 
+-  /* Clear the hash table, for the next time.  */
+-  for (i = 0; i < row_entry_idx; ++i)
+-    row_table[row_entry_pool[i].bucket] = NULL;
++  unbind_to (count, Qnil);
+ 
+   /* Value is 1 to indicate that we scrolled the display.  */
+   return nruns > 0;
