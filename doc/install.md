@@ -2,6 +2,9 @@
 
 - Add nixos config for system.
 
+On target system, configure BIOS settings. Set BIOS password. Clear all secure
+boot certs. Launch the ISO and run:
+
 From installation media:
 
 ```sh
@@ -13,7 +16,8 @@ nix run .#system -- ${SYSTEM} full-install
 
 ### Secure Boot
 
-After first boot, enable Secure Boot in firmware and put it in Setup Mode.
+Bootloader should install secure boot certs. Afterwards, boot into BIOS settings
+and enable secure boot.
 
 Verify secureboot with `bootctl status`.
 
@@ -27,6 +31,12 @@ usbguard generate-policy > usbguard-rules.conf
 
 Set `services.usbguard.rules`, and rebuild system.
 
+### Tailscale
+
+```sh
+run0 tailscale up
+```
+
 ### SSH keys
 
 ```sh
@@ -34,4 +44,12 @@ Set `services.usbguard.rules`, and rebuild system.
 nix run self#system -- provision-yubikey
 # Plug in SSH CA YubiKey too.
 run0 nix run self#system -- provision-ssh
+```
+
+### Pass
+
+Import the pass gpg key.
+
+```sh
+pass git pull
 ```
