@@ -86,14 +86,15 @@ in
     install =
       with pkgs;
       writeShellScript "nixos-install" ''
-        exec ${nixos-install-tools}/bin/nixos-install --flake ${src}#$1 \
+        exec ${nixos-install-tools}/bin/nixos-install --flake ${src}#${hostname} \
           --no-root-passwd
       '';
 
     full-install = pkgs.writeShellScript "nixos-install" ''
-      ${disk-provision} $1
-      ${disk-mount} $1
-      ${install} $1
+      set -eu
+      ${disk-provision}
+      ${disk-mount}
+      exec ${install}
     '';
 
     provision-yubikey = pkgs.replaceVarsWith {
