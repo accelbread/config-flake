@@ -43,7 +43,11 @@ in
     disk.sata.enable = lib.mkEnableOption "SATA disk support";
     input.mouse.ps2.enable = lib.mkEnableOption "PS/2 mouse support";
     wireless.intel.ax200-ax210.enable = lib.mkEnableOption "Intel AX200/AX210 support";
-    audio.realtek.alc882.enable = lib.mkEnableOption "Realtek ALC882 support";
+    wireless.intel.be211.enable = lib.mkEnableOption "Intel BE211 support";
+    audio.realtek = {
+      alc269.enable = lib.mkEnableOption "Realtek ALC269 support";
+      alc882.enable = lib.mkEnableOption "Realtek ALC882 support";
+    };
   };
 
   config = {
@@ -86,6 +90,7 @@ in
           PERF_EVENTS_INTEL_CSTATE = module;
           PERF_EVENTS_INTEL_UNCORE = module;
           SENSORS_CORETEMP = module;
+          X86_FRED = yes;
           X86_INTEL_PSTATE = yes;
           X86_INTEL_TSX_MODE_OFF = yes;
           X86_MCE_INTEL = yes;
@@ -146,19 +151,28 @@ in
           IWLWIFI = module;
           IWLWIFI_DEVICE_TRACING = no;
         })
-        (mkConfigEntry "Realtek ALC882" cfg.audio.realtek.alc882.enable {
-          SND_HDA_CODEC_REALTEK = module;
-          SND_HDA_CODEC_ALC882 = module;
-          SND_HDA_CODEC_ALC260 = no;
-          SND_HDA_CODEC_ALC262 = no;
-          SND_HDA_CODEC_ALC268 = no;
-          SND_HDA_CODEC_ALC269 = no;
-          SND_HDA_CODEC_ALC662 = no;
-          SND_HDA_CODEC_ALC680 = no;
-          SND_HDA_CODEC_ALC861 = no;
-          SND_HDA_CODEC_ALC861VD = no;
-          SND_HDA_CODEC_ALC880 = no;
+        (mkConfigEntry "Intel BE211" cfg.wireless.intel.be211.enable {
+          BT_INTEL_PCIE = module;
+          IWLMLD = module;
+          IWLWIFI = module;
+          IWLWIFI_DEVICE_TRACING = no;
         })
+        (mkConfigEntry "Realtek HD audio"
+          (cfg.audio.realtek.alc269.enable || cfg.audio.realtek.alc882.enable)
+          {
+            SND_HDA_CODEC_REALTEK = module;
+            SND_HDA_CODEC_ALC882 = if cfg.audio.realtek.alc882.enable then module else no;
+            SND_HDA_CODEC_ALC260 = no;
+            SND_HDA_CODEC_ALC262 = no;
+            SND_HDA_CODEC_ALC268 = no;
+            SND_HDA_CODEC_ALC269 = if cfg.audio.realtek.alc269.enable then module else no;
+            SND_HDA_CODEC_ALC662 = no;
+            SND_HDA_CODEC_ALC680 = no;
+            SND_HDA_CODEC_ALC861 = no;
+            SND_HDA_CODEC_ALC861VD = no;
+            SND_HDA_CODEC_ALC880 = no;
+          }
+        )
       ];
     };
   };
