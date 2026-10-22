@@ -50,6 +50,7 @@ in
               n: d:
               nameValuePair "${hostname}_disk${toString n}" {
                 device = getPart 2 d;
+                allowDiscards = true;
                 bypassWorkqueues = true;
               }
             )
