@@ -25,7 +25,6 @@ let
 
   inherit (config.boot.kernelPackages) kernel;
   onStable = lib.mkIf (lib.versionOlder kernel.version "6.19.0");
-  onLatest = lib.mkIf (lib.versionAtLeast kernel.version "6.19.0");
 in
 {
   options.ab.hardware = {
@@ -44,7 +43,6 @@ in
     disk.sata.enable = lib.mkEnableOption "SATA disk support";
     input.mouse.ps2.enable = lib.mkEnableOption "PS/2 mouse support";
     wireless.intel.ax200-ax210.enable = lib.mkEnableOption "Intel AX200/AX210 support";
-    audio.intel.sof.enable = lib.mkEnableOption "SOF support";
     audio.realtek.alc882.enable = lib.mkEnableOption "Realtek ALC882 support";
   };
 
@@ -147,33 +145,6 @@ in
           IWLMVM = module;
           IWLWIFI = module;
           IWLWIFI_DEVICE_TRACING = no;
-        })
-        (mkConfigEntry "Intel SOF audio" cfg.audio.intel.sof.enable {
-          SND_SOC = module;
-          SND_SOC_SDCA_FDL = onLatest no;
-          SND_SOC_SOF_HDA_AUDIO_CODEC = yes;
-          SND_SOC_SOF_HDA_LINK = yes;
-          SND_SOC_SOF_INTEL_TOPLEVEL = yes;
-          SND_SOC_SOF_PCI = module;
-          SND_SOC_SOF_TOPLEVEL = yes;
-          SND_SST_ATOM_HIFI2_PLATFORM_ACPI = no;
-          SND_SOC_SOF_ALDERLAKE = no;
-          SND_SOC_SOF_APOLLOLAKE = no;
-          SND_SOC_SOF_CANNONLAKE = no;
-          SND_SOC_SOF_COFFEELAKE = no;
-          SND_SOC_SOF_COMETLAKE = no;
-          SND_SOC_SOF_ELKHARTLAKE = no;
-          SND_SOC_SOF_GEMINILAKE = no;
-          SND_SOC_SOF_ICELAKE = no;
-          SND_SOC_SOF_JASPERLAKE = no;
-          SND_SOC_SOF_KABYLAKE = no;
-          SND_SOC_SOF_LUNARLAKE = no;
-          SND_SOC_SOF_MERRIFIELD = no;
-          SND_SOC_SOF_METEORLAKE = no;
-          SND_SOC_SOF_NOVALAKE = onLatest no;
-          SND_SOC_SOF_PANTHERLAKE = lib.mkDefault no;
-          SND_SOC_SOF_TIGERLAKE = lib.mkDefault no;
-          SND_SOC_SOF_SKYLAKE = no;
         })
         (mkConfigEntry "Realtek ALC882" cfg.audio.realtek.alc882.enable {
           SND_HDA_CODEC_REALTEK = module;

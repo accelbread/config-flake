@@ -22,7 +22,6 @@
     };
     input.mouse.ps2.enable = true;
     wireless.intel.ax200-ax210.enable = true;
-    audio.intel.sof.enable = true;
   };
 
   boot.kernelPatches =
@@ -32,7 +31,6 @@
       patch = null;
       structuredExtraConfig = {
         PINCTRL_TIGERLAKE = module;
-        SND_SOC_SOF_TIGERLAKE = module;
         SND_HDA_CODEC_SIGMATEL = module;
         TCG_TIS = yes;
       };
