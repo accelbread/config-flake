@@ -413,6 +413,7 @@ in
         ".cache/evolution"
         ".cache/fractal"
         ".local/share/flatpak"
+        ".local/state/nix-output-monitor/build-reports.csv"
       ];
     };
 
