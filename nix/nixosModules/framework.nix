@@ -72,7 +72,11 @@ in
         driver = lib.mkIf config.ab.hardware.gpu.xe.enable "xe";
         vaapiDriver = "intel-media-driver";
       };
-      services.thermald.enable = true;
+
+      services = {
+        thermald.enable = true;
+        intel-lpmd.enable = true;
+      };
 
       boot = {
         kernelModules = [ "coretemp" ];

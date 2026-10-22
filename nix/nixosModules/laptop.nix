@@ -9,6 +9,7 @@
 {
   imports = [
     inputs.self.nixosModules.desktop
+    inputs.self.nixosModules.intel-lpmd
   ];
 
   nix = {
