@@ -1,15 +1,19 @@
 ## Configure system
 
-- Add nixos config for system.
+Add nixos config for system.
+
+Build installer ISO (has pre-loaded artifacts):
+
+```sh
+nix build .#nixosConfigurations.${SYSTEM}.config.ab.installerImage
+```
 
 On target system, configure BIOS settings. Set BIOS password. Clear all secure
 boot certs. Launch the ISO and run:
 
-From installation media:
 
 ```sh
-export NIX_CONFIG="extra-experimental-features = nix-command flakes"
-nix run .#system -- ${SYSTEM} full-install
+sudo sysinstall full-install
 ```
 
 ## Post-install
