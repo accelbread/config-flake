@@ -13,15 +13,21 @@
     config.rocmSupport = true;
   };
 
+  ab.hardware = {
+    cpu.amd.enable = true;
+    gpu.amd.enable = true;
+    memory.ecc.enable = true;
+    disk.sata.enable = true;
+    wireless.intel.ax200-ax210.enable = true;
+    audio.realtek.alc882.enable = true;
+  };
+
   networking.networkmanager.ethernet.macAddress = lib.mkForce "5E:34:87:DE:A3:7A";
 
   boot = {
     lanzaboote.autoEnrollKeys.includeChecksumsFromTPM = true;
     initrd.availableKernelModules = [
       "nvme"
-      "xhci_pci"
-      "usbhid"
-      "hid_generic"
     ];
     kernelModules = [
       "k10temp"
@@ -34,6 +40,25 @@
       "amdgpu.deep_color=1"
       "amdgpu.gpu_recovery=1"
     ];
+    kernelPatches =
+      with lib.kernel;
+      lib.singleton {
+        name = "hardware";
+        patch = null;
+        structuredExtraConfig = {
+          GIGABYTE_WMI = module;
+          I2C_PIIX4 = module;
+          IGB = module;
+          IGB_HWMON = no;
+          PINCTRL_AMD = yes;
+          R8169 = module;
+          SCHED_CLUSTER = no;
+          SENSORS_IT87 = module;
+          SP5100_TCO = module;
+          TCG_TIS = yes;
+          X86_AMD_PLATFORM_DEVICE = yes;
+        };
+      };
     plymouth.theme = "details";
   };
 
@@ -60,10 +85,7 @@
     ratbagd.enable = true;
   };
 
-  hardware = {
-    cpu.amd.updateMicrocode = true;
-    graphics.enable32Bit = false;
-  };
+  hardware.graphics.enable32Bit = false;
 
   ab.dconf.all = {
     "org/gnome/desktop/peripherals/touchpad" = {

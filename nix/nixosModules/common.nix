@@ -35,6 +35,7 @@ in
     inputs.lanzaboote.nixosModules.lanzaboote
     self.nixosModules.lanzeboote-patch
     self.nixosModules.kernel
+    self.nixosModules.hardware
     self.nixosModules.disks
     self.nixosModules.provisioning
     self.nixosModules.tailscale
