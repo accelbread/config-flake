@@ -268,6 +268,8 @@ in
             pass git remote set-url \
               aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
             pass git config remote.pushDefault aws
+            pass git config branch.master.remote aws
+            pass git config branch.master.merge refs/heads/master
             pass git config pass.signcommits true
             pass git config user.signingkey ${passSettings.signing_key}
           '';
