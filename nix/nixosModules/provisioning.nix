@@ -142,7 +142,10 @@ in
               "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
             ];
 
-            isoImage.edition = "ab-installer";
+            isoImage = {
+              edition = "ab-installer";
+              squashfsCompression = "zstd -Xcompression-level 6";
+            };
             nixpkgs.hostPlatform.system = system;
             boot.kernelPackages = pkgs.linuxPackages_latest;
 
