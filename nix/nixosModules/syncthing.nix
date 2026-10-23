@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 {
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -53,47 +52,50 @@ in
     };
   };
 
-  systemd.services = {
-    syncthing.serviceConfig = {
-      ExecStartPre = "+${pkgs.writers.writeBash "syncthing-make-data-dir" ''
-        install -dm700 -o ${cfg.user} -g ${cfg.group} ${cfg.databaseDir}
-      ''}";
-      UMask = config.security.loginDefs.settings.UMASK;
-
-      CapabilityBoundingSet = lib.mkForce "";
-      IPAddressAllow = "localhost 100.64.0.0/10";
-      IPAddressDeny = "any";
-      LockPersonality = true;
-      MemoryDenyWriteExecute = true;
-      NoNewPrivileges = true;
-      PrivateDevices = true;
-      PrivateIPC = true;
-      PrivateTmp = true;
-      PrivateUsers = true;
-      ProcSubset = "pid";
-      ProtectClock = true;
-      ProtectControlGroups = true;
-      ProtectHome = true;
-      ProtectHostname = true;
-      ProtectKernelLogs = true;
-      ProtectKernelModules = true;
-      ProtectKernelTunables = true;
-      ProtectProc = "invisible";
-      ProtectSystem = "strict";
-      ReadWritePaths = [
-        cfg.dataDir
-        cfg.databaseDir
-      ];
-      RemoveIPC = true;
-      RestrictAddressFamilies = [ "AF_INET" ];
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      SystemCallArchitectures = "native";
-      SystemCallFilter = [
-        "@system-service"
-        "~@privileged"
-      ];
+  systemd = {
+    tmpfiles.settings.syncthing."${cfg.databaseDir}".d = {
+      user = cfg.user;
+      group = cfg.group;
+      mode = "0700";
+    };
+    services = {
+      syncthing.serviceConfig = {
+        UMask = config.security.loginDefs.settings.UMASK;
+        CapabilityBoundingSet = lib.mkForce "";
+        IPAddressAllow = "localhost 100.64.0.0/10";
+        IPAddressDeny = "any";
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        NoNewPrivileges = true;
+        PrivateDevices = true;
+        PrivateIPC = true;
+        PrivateTmp = true;
+        PrivateUsers = true;
+        ProcSubset = "pid";
+        ProtectClock = true;
+        ProtectControlGroups = true;
+        ProtectHome = true;
+        ProtectHostname = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        ReadWritePaths = [
+          cfg.dataDir
+          cfg.databaseDir
+        ];
+        RemoveIPC = true;
+        RestrictAddressFamilies = [ "AF_INET" ];
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = [
+          "@system-service"
+          "~@privileged"
+        ];
+      };
     };
   };
 
