@@ -410,12 +410,16 @@ in
           ".ssh/id_ed25519_sk-cert.pub"
         ];
       };
-      cache.users.archit.directories = map (dir "0700") [
-        "Downloads"
-        ".cache/evolution"
-        ".cache/fractal"
-        ".local/state/nix-output-monitor/build-reports.csv"
-      ];
+      cache.users.archit = {
+        directories = map (dir "0700") [
+          "Downloads"
+          ".cache/evolution"
+          ".cache/fractal"
+        ];
+        files = map (file "0600") [
+          ".local/state/nix-output-monitor/build-reports.csv"
+        ];
+      };
     };
 
   ab.dconf.user =
