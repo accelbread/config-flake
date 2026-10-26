@@ -28,7 +28,7 @@ if [[ ! -e ~archit/.ssh/id_ed25519_sk.pub ]]; then
 fi
 
 ssh-keygen \
-    -s @flake@/misc/ssh_ca_host_key.pub \
+    -s @flake@/misc/ssh_ca_key.pub \
     -D @yubico-piv-tool@/lib/libykcs11.so \
     -h \
     -I "$hostname" \
@@ -36,14 +36,14 @@ ssh-keygen \
     -O no-touch-required \
     /persist/state/system/keys/ssh_host_ed25519_sk_key.pub
 ssh-keygen \
-    -s @flake@/misc/ssh_ca_user_key.pub \
+    -s @flake@/misc/ssh_ca_key.pub \
     -D @yubico-piv-tool@/lib/libykcs11.so \
     -I "$hostname remotebuild" \
     -n remotebuild \
     -O no-touch-required \
     /persist/state/system/keys/remote_build_ssh_key.pub
 ssh-keygen \
-    -s @flake@/misc/ssh_ca_user_key.pub \
+    -s @flake@/misc/ssh_ca_key.pub \
     -D @yubico-piv-tool@/lib/libykcs11.so \
     -I "archit@$hostname" \
     -n archit \

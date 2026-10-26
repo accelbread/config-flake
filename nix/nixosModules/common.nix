@@ -318,7 +318,7 @@ in
         AllowTcpForwarding = false;
         AllowAgentForwarding = false;
         AllowStreamLocalForwarding = false;
-        TrustedUserCAKeys = "${flake.src + /misc/ssh_ca_user_key.pub}";
+        TrustedUserCAKeys = "${flake.src + /misc/ssh_ca_key.pub}";
         HostKey = "/persist/state/system/keys/ssh_host_ed25519_sk_key";
         HostCertificate = "/persist/state/system/keys/ssh_host_ed25519_sk_key-cert.pub";
         ClientAliveInterval = 15;
@@ -385,7 +385,7 @@ in
     '';
     ssh = {
       knownHosts."*" = {
-        publicKeyFile = flake.src + /misc/ssh_ca_host_key.pub;
+        publicKeyFile = flake.src + /misc/ssh_ca_key.pub;
         certAuthority = true;
       };
       extraConfig = ''
