@@ -1,5 +1,92 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
+prefs:
+  browser.bookmarks.restore_default_bookmarks: false
+  browser.download.always_ask_before_handling_new_types: true
+  browser.download.useDownloadDir: true
+  browser.ml.linkPreview.enabled: false
+  browser.preferences.defaultPerformanceSettings.enabled: false
+  browser.sessionstore.interval: 30000
+  browser.startup.page: 3
+  browser.toolbars.bookmarks.visibility: never
+  browser.uiCustomization.state:
+    placements:
+      unified-extensions-area:
+        - ublock0_raymondhill_net-browser-action
+        - jid1-qofqdk4qzufgwq_jetpack-browser-action
+        - passff_invicem_pro-browser-action
+        - sponsorblocker_ajay_app-browser-action
+        - dearrow_ajay_app-browser-action
+      nav-bar:
+        - back-button
+        - forward-button
+        - stop-reload-button
+        - vertical-spacer
+        - spring
+        - urlbar-container
+        - spring
+        - downloads-button
+        - unified-extensions-button
+        - reset-pbm-toolbar-button
+    currentVersion: 26
+  browser.urlbar.showSearchTerms.enabled: false
+  browser.urlbar.suggest.history: false
+  browser.urlbar.suggest.openpage: false
+  browser.urlbar.suggest.recentsearches: false
+  browser.urlbar.trimURLs: false
+  dom.ipc.processCount: -1
+  font.default.x-western: sans-serif
+  full-screen-api.ignore-widgets: true
+  identity.fxaccounts.enabled: true
+  media.videocontrols.picture-in-picture.video-toggle.enabled: false
+  network.dns.disablePrefetchFromHTTPS: true
+  network.http.referer.XOriginPolicy: 2
+  network.preconnect: false
+  network.trr.mode: 5
+  places.history.enabled: false
+  privacy.clearOnShutdown_v2.browsingHistoryAndDownloads: false
+  privacy.clearOnShutdown_v2.downloads: true
+  privacy.clearOnShutdown_v2.formdata: true
+  privacy.fingerprintingProtection: true
+  privacy.fingerprintingProtection.granularOverrides:
+    - firstPartyDomain: element.io
+      overrides: -JSDateTimeUTC
+    - firstPartyDomain: fastmail.com
+      overrides: -JSDateTimeUTC
+    - firstPartyDomain: handmadecities.com
+      overrides: -JSDateTimeUTC
+    - firstPartyDomain: openrouter.ai
+      overrides: -JSDateTimeUTC
+  privacy.fingerprintingProtection.overrides: +AllTargets
+  privacy.fingerprintingProtection.remoteOverrides.enabled: false
+  privacy.resistFingerprinting: false
+  privacy.resistFingerprinting.letterboxing: true
+  privacy.spoof_english: 2
+  privacy.trackingprotection.allow_list.baseline.enabled: false
+  privacy.trackingprotection.allow_list.convenience.enabled: false
+  security.OCSP.enabled: 0
+  security.OCSP.require: false
+  security.insecure_connection_text.enabled: true
+  security.pki.crlite_mode: 2
+  services.sync.declinedEngines: addons,addresses,creditcards,forms,history,passwords,prefs
+  services.sync.engine.addons: false
+  services.sync.engine.addresses: false
+  services.sync.engine.bookmarks: true
+  services.sync.engine.creditcards: false
+  # Sync only extension settings only, without syncing extensions list
+  services.sync.engine.extension-storage.force: true
+  services.sync.engine.history: false
+  services.sync.engine.passwords: false
+  services.sync.engine.prefs: false
+  services.sync.engine.tabs: true
+  sidebar.main.tools: ""
+  sidebar.revamp: true
+  sidebar.revamp.round-content-area: false
+  sidebar.verticalTabs: true
+  svg.context-properties.content.enabled: true
+  toolkit.legacyUserProfileCustomizations.stylesheets: true
+  widget.wayland.fractional-scale.enabled: true
+  widget.workspace-management: true
 
 extensions:
   uBlock0@raymondhill.net:

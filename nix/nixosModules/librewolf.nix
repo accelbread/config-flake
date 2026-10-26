@@ -16,8 +16,8 @@ in
         pref("general.config.sandbox_enabled", false);
       '';
       extraPrefsFiles = old.extraPrefsFiles or [ ] ++ [
-        (pkgs.replaceVars ./misc/librewolf_extension_config.js {
-          extensionSettings = builtins.toJSON config.extensions;
+        (pkgs.replaceVars ./misc/librewolf_config.js {
+          config = builtins.toJSON config;
         })
       ];
       extraPolicies = old.extraPolicies or { } // {

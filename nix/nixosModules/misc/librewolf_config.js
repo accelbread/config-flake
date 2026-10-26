@@ -1,6 +1,23 @@
 // Copyright (C) Archit Gupta <archit@accelbread.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 (function() {
+  const config = @config@;
+
+  (function() {
+    function set(pref, val) {
+      if(typeof val === "object") {
+        val = JSON.stringify(val);
+      }
+      defaultPref(pref, val);
+      clearPref(pref);
+    }
+
+    set("identity.fxaccounts.account.device.name",
+      `${Services.dns.myHostName} ${Services.appinfo.name}`);
+
+    Object.entries(config.prefs).forEach(([k, v]) => set(k, v));
+  }());
+
   const { AddonManager } = ChromeUtils.importESModule(
     "resource://gre/modules/AddonManager.sys.mjs"
   );
@@ -9,7 +26,7 @@
   );
 
   async function configureExtension(extension) {
-    const extensionSettings = @extensionSettings@;
+    const extensionSettings = config.extensions;
 
     const settings = extensionSettings[extension.id];
     if (!settings?.local && !settings?.sync) {
