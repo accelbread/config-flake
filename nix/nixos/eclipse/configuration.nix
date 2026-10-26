@@ -32,4 +32,6 @@
         TCG_CRB = yes;
       };
     };
+
+  environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 }
