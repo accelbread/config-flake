@@ -486,7 +486,7 @@ in
       "org/gnome/desktop/search-providers" = {
         disabled = [
           "org.gnome.Software.desktop"
-          "org.gnome.Epiphany.desktop"
+          "org.gnome.Contacts.desktop"
         ];
       };
       "org/gnome/desktop/screensaver" = {
