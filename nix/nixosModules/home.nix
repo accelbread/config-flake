@@ -102,6 +102,7 @@ in
 {
   imports = [
     inputs.hjem.nixosModules.default
+    inputs.self.nixosModules.librewolf
   ];
 
   users.users.archit = {
@@ -115,7 +116,6 @@ in
     packages =
       (with pkgs; [
         emacsAccelbread
-        librewolf
         wl-clipboard
         hunspellDicts.en_US
         man-pages

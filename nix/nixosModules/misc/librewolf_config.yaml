@@ -1,0 +1,90 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+extensions:
+  uBlock0@raymondhill.net:
+    policy:
+      private_browsing: true
+    managed:
+      userSettings:
+        - [advancedUserEnabled, "true"]
+        - [cloudStorageEnabled, "true"]
+        - [firewallPaneMinimized, "false"]
+        - [popupPanelSections, "63"]
+        - [uiAccentCustom, "true"]
+        - [uiTheme, "dark"]
+      advancedSettings:
+        - [filterAuthorMode, "true"]
+
+  # Dark Background and Light Text.
+  jid1-QoFqdK4qzUfGWQ@jetpack:
+    local:
+      default_background_color: "#1d1d20"
+      default_foreground_color: "#ffffff"
+      default_link_color: "#fba7ff"
+      default_method: 1
+      default_selection_color: "#9141ac"
+      default_visited_color: "#fba7ff"
+      do_not_set_overrideDocumentColors_to_never: false
+      enabled: true
+
+  passff@invicem.pro:
+    local:
+      loginFieldNames: login,user,username,id,email
+      loginInputNames: login,user,mail,email,tel,username,opt_login,log,usr_name,acct,oid
+      markFillable: false
+      showNewPassButton: false
+      submitFillable: false
+
+  sponsorBlocker@ajay.app:
+    sync:
+      actuallySubmitKeybind: null
+      autoHideInfoButton: false
+      categorySelections:
+        # 0 = show on timeline, 1 = manual skip, 2 = auto skip.
+        - name: sponsor
+          option: 2
+        - name: selfpromo
+          option: 2
+        - name: interaction
+          option: 2
+        - name: intro
+          option: 2
+        - name: exclusive_access
+          option: 0
+        - name: chapter
+          option: 0
+      closeSkipNoticeKeybind: null
+      hideDeleteButtonPlayerControls: true
+      hideInfoButtonPlayerControls: true
+      hideSkipButtonPlayerControls: true
+      hideUploadButtonPlayerControls: true
+      hideVideoPlayerControls: true
+      minDuration: 5
+      nextChapterKeybind: null
+      previewKeybind: null
+      previousChapterKeybind: null
+      showChapterInfoMessage: false
+      showDonationLink: false
+      showTimeWithSkips: false
+      showUpsells: false
+      showZoomToFillError2: false
+      skipKeybind: null
+      skipToHighlightKeybind: null
+      startSponsorKeybind: null
+      submitKeybind: null
+      trackDownvotes: false
+      trackViewCount: false
+
+  deArrow@ajay.app:
+    sync:
+      countReplacements: false
+      enableExtensionKey: null
+      keepUnsubmitted: false
+      openMenuKey: null
+      showDonationLink: false
+      showGuidelineHelp: false
+      showIconForFormattedTitles: false
+      showUpsells: false
+      thumbnailFallback: 2 # original thumbnail
+      titleFormatting: 2 # sentence case

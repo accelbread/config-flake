@@ -2102,6 +2102,11 @@ DEPTH, MATCH, and LOC are passed to `rainbow-delimiters-default-pick-face'."
 (add-hook 'python-ts-mode-hook #'enable-eglot-when-trusted)
 
 
+;;; Javascript
+
+(setopt js-indent-level 2)
+
+
 ;;; Zig
 
 (set-lsp-server 'zig-ts-mode "zls")
