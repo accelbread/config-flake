@@ -34,4 +34,6 @@
     };
 
   environment.etc."xdg/monitors.xml".source = ./monitors.xml;
+
+  services.usbguard.rules = builtins.readFile ./usbguard-rules.conf;
 }
