@@ -1,12 +1,10 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 let
   config =
-    pkgs.runCommand "librewolf-config.json" {
-      nativeBuildInputs = [ pkgs.yq-go ];
-    } "yq -o=json ${./misc/librewolf_config.yaml} > $out"
-    |> lib.importJSON;
+    pkgs.runCommand "librewolf_config.json" { }
+      ''${pkgs.yq-go}/bin/yq -o=json ${./misc/librewolf_config.yaml} > "$out"'';
 in
 {
   users.users.archit.packages = [
@@ -16,17 +14,28 @@ in
         pref("general.config.sandbox_enabled", false);
       '';
       extraPrefsFiles = old.extraPrefsFiles or [ ] ++ [
-        (pkgs.replaceVars ./misc/librewolf_config.js {
-          config = builtins.toJSON config;
-        })
+        (pkgs.runCommand "librewolf_config.js" { } ''
+          substitute ${./misc/librewolf_config.js} "$out" \
+            --subst-var-by config "$(cat ${config})"
+        '')
       ];
+      # The wrapper gives earlier policy files precedence over later ones.
+      extraPoliciesFiles = [
+        (pkgs.runCommand "librewolf_policies.json" { } ''
+          ${pkgs.jq}/bin/jq '.extensions | {
+            policies: {
+              ExtensionSettings: map_values(
+                (.policy // {}) + {installation_mode: "force_installed"}
+              ),
+              "3rdparty": {
+                Extensions: map_values(select(has("managed")) | .managed)
+              }
+            }
+          }' ${config} > "$out"
+        '')
+      ]
+      ++ old.extraPoliciesFiles or [ ];
       extraPolicies = old.extraPolicies or { } // {
-        ExtensionSettings = lib.mapAttrs (
-          _: v: (v.policy or { }) // { installation_mode = "force_installed"; }
-        ) config.extensions;
-        "3rdparty".Extensions = lib.mapAttrs (_: v: v.managed) (
-          lib.filterAttrs (_: v: v ? managed) config.extensions
-        );
         SearchEngines = {
           Default = "Kagi";
           Remove = [
