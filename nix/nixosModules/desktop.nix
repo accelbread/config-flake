@@ -275,9 +275,15 @@ in
         "${pkgs.miscfiles}/share/web2"
       ];
     };
-    etc."nixos/flake.nix".source = pkgs.runCommandLocal "flake-symlink" { } ''
-      ln -s "/home/archit/Projects/config-flake/flake.nix" $out
-    '';
+    etc = {
+      "nixos/flake.nix".source = pkgs.runCommandLocal "flake-symlink" { } ''
+        ln -s "/home/archit/Projects/config-flake/flake.nix" $out
+      '';
+      "flatpak/remotes.d/flathub.flatpakrepo".source = pkgs.fetchurl {
+        url = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+        hash = "sha256-M3HdJQ5h2eFjNjAHP+/aFTzUQm9y9K+gwzc64uj+oDo=";
+      };
+    };
   };
 
   ab.dconf = with lib.gvariant; {
@@ -321,10 +327,16 @@ in
       user = "colord";
       group = "colord";
     };
-    cache.directories = singleton {
-      directory = "/var/cache/ccache";
-      mode = "0770";
-      group = "nixbld";
-    };
+    cache.directories = [
+      {
+        directory = "/var/cache/ccache";
+        mode = "0770";
+        group = "nixbld";
+      }
+      {
+        directory = "/var/lib/flatpak";
+        mode = "0755";
+      }
+    ];
   };
 }
