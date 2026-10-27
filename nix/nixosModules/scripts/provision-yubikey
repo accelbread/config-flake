@@ -8,4 +8,6 @@ export PATH=@path@
 
 ykman info
 ykman config usb -d otp -d oath -d piv -d openpgp -d hsmauth
+ykman config mode FIDO
+read -r -p "Press Enter when ready..." _
 ykman fido access change-pin
