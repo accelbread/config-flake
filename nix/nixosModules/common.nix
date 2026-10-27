@@ -141,6 +141,7 @@ in
         '';
       };
     };
+    kernelModules.atkbd = mkForce false;
   };
 
   hardware = {
