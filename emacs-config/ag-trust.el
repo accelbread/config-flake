@@ -123,9 +123,9 @@ argument, sets project as untrusted."
 
 (put #'ag--trust-initial-scratch-buffer 'permanent-local-hook t)
 
-(unless after-init-time
-  (when-let* ((buffer (get-buffer "*scratch*")))
-    (with-current-buffer buffer
+(when-let* ((buffer (get-buffer "*scratch*")))
+  (with-current-buffer buffer
+    (when (eq major-mode 'fundamental-mode)
       (add-hook 'change-major-mode-after-body-hook
                 #'ag--trust-initial-scratch-buffer nil t))))
 
