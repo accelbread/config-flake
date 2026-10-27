@@ -20,8 +20,8 @@ if [[ ! -e /persist/state/system/keys/remote_build_ssh_key ]]; then
         -f /persist/state/system/keys/remote_build_ssh_key
 fi
 if [[ ! -s ~archit/.ssh/id_ed25519_sk ]]; then
-    ssh-keygen -t ed25519-sk -O verify-required -C "archit@$hostname" \
-      -f ~archit/.ssh/id_ed25519_sk
+    ssh-keygen -t ed25519-sk -O verify-required -N "" -C "archit@$hostname" \
+        -f ~archit/.ssh/id_ed25519_sk <<< y
 fi
 if [[ ! -e ~archit/.ssh/id_ed25519_sk.pub ]]; then
     ssh-keygen -y -f ~archit/.ssh/id_ed25519_sk > ~archit/.ssh/id_ed25519_sk.pub
