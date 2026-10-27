@@ -4,7 +4,11 @@
 
 set -euo pipefail
 
-kagi_token="$(secret-tool lookup api_token kagi)"
+if ! kagi_token="$(secret-tool lookup api_token kagi)"; then
+  echo "Kagi API token unavailable" >&2
+  echo "Store it with: secret-tool store --label='Kagi API token' api_token kagi" >&2
+  exit 78
+fi
 
 exec caddy run --config - --adapter caddyfile <<EOF
 {

@@ -336,6 +336,7 @@ in
             ExecStart = "${./homeFiles/local-api-proxy}";
             Type = "exec";
             Restart = "on-failure";
+            RestartPreventExitStatus = [ 78 ];
             RestartSec = 5;
           };
         };
