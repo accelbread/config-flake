@@ -234,6 +234,8 @@ in
         IPAddressDeny = "any";
       };
       colord.path = [ pkgs.argyllcms ];
+      # Nixpkgs adds invalid empty LimitMEMLOCK=
+      jitterentropy.serviceConfig.LimitMEMLOCK = mkForce config.services.jitterentropy-rngd.memlockLimit;
     };
     tmpfiles.settings.preservation =
       let
