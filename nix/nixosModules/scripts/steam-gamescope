@@ -29,4 +29,12 @@ exec gamescope \
     --backend wayland --expose-wayland --adaptive-sync \
     --xwayland-count 2 -f -e \
     -w "$width" -h "$height" -- \
-    flatpak run com.valvesoftware.Steam -gamepadui "$@"
+    bash -c '
+        shutdown_steam() {
+            flatpak enter com.valvesoftware.Steam /app/bin/steam -shutdown || true
+        }
+        trap shutdown_steam EXIT
+        trap "exit 0" HUP INT TERM
+        flatpak run com.valvesoftware.Steam -gamepadui "$@" &
+        wait "$!"
+    ' steam-gamescope-session "$@"

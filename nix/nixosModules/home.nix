@@ -107,6 +107,7 @@ let
         src = ./scripts/steam-gamescope;
         isExecutable = true;
         replacements.path = lib.makeBinPath [
+          pkgs.bashNonInteractive
           pkgs.systemd
           pkgs.jq
           pkgs.gamescope
