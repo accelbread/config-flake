@@ -50,3 +50,5 @@ ssh-keygen \
     ~archit/.ssh/id_ed25519_sk.pub
 
 chown archit: ~archit/.ssh/id_ed25519_sk{,.pub,-cert.pub}
+
+systemctl restart sshd.service
