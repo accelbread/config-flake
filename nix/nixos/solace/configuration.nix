@@ -30,7 +30,6 @@
       "nvme"
     ];
     kernelModules = [
-      "k10temp"
       "it87"
     ];
     kernelParams = [
