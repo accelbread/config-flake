@@ -98,6 +98,31 @@ let
     GNUPGHOME = "/home/archit/.local/share/gnupg";
     CODEX_HOME = "/home/archit/.local/state/codex";
   };
+
+  steamDesktopItem = pkgs.makeDesktopItem {
+    name = "com.valvesoftware.Steam";
+    desktopName = "Steam";
+    exec = "${
+      pkgs.replaceVarsWith {
+        src = ./scripts/steam-gamescope;
+        isExecutable = true;
+        replacements.path = lib.makeBinPath [
+          pkgs.systemd
+          pkgs.jq
+          pkgs.gamescope
+          pkgs.flatpak
+        ];
+      }
+    } %U";
+    icon = "com.valvesoftware.Steam";
+    startupWMClass = "gamescope";
+    categories = [ "Game" ];
+    mimeTypes = [
+      "x-scheme-handler/steam"
+      "x-scheme-handler/steamlink"
+    ];
+    extraConfig.X-Flatpak = "com.valvesoftware.Steam";
+  };
 in
 {
   imports = [
@@ -250,6 +275,8 @@ in
             ''
           }
         '';
+        ".local/share/applications/com.valvesoftware.Steam.desktop".source =
+          steamDesktopItem + /share/applications/com.valvesoftware.Steam.desktop;
       }
     ];
     systemd = {
