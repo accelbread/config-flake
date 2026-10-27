@@ -333,6 +333,7 @@ in
           DMI_SYSFS = module;
           FAIR_GROUP_SCHED = yes;
           FHANDLE = yes;
+          FUNCTION_TRACER = yes; # Required by BPF LSM trampolines on x86_64
           FW_LOADER_USER_HELPER = no;
           MEMCG = yes;
           PSI = yes;
@@ -494,7 +495,6 @@ in
           DEVPORT = no;
           EFI_DISABLE_PCI_DMA = yes;
           FORTIFY_SOURCE = yes;
-          FUNCTION_TRACER = no;
           HARDENED_USERCOPY = yes;
           HARDENED_USERCOPY_DEFAULT_ON = yes;
           HW_RANDOM = yes;
