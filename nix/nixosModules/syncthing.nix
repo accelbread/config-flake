@@ -55,8 +55,7 @@ in
 
   systemd = {
     tmpfiles.settings.syncthing."${cfg.databaseDir}".d = {
-      user = cfg.user;
-      group = cfg.group;
+      inherit (cfg) user group;
       mode = "0700";
     };
     services = {
