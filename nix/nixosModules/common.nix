@@ -303,6 +303,7 @@ in
       implicitPolicyTarget = mkIf (config.services.usbguard.rules == null) "allow";
     };
     avahi.enable = false;
+    geoclue2.enableNmea = false;
     udev.packages = with pkgs; [ r8152-udev-rules ];
     tailscale.enable = true;
     openssh = {
