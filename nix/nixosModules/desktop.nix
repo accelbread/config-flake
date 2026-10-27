@@ -140,9 +140,12 @@ in
 
   systemd = {
     packages = [ pkgs.usbguard-notifier ];
-    user.services.usbguard-notifier = {
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
+    user.services = {
+      usbguard-notifier = {
+        wantedBy = [ "graphical-session.target" ];
+        partOf = [ "graphical-session.target" ];
+      };
+      "org.gnome.SettingsDaemon.UsbProtection".enable = false;
     };
     tmpfiles.settings.preservation = {
       "/var/lib/colord".d = {
