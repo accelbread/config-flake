@@ -35,6 +35,7 @@ prefs:
   browser.urlbar.suggest.recentsearches: false
   browser.urlbar.trimURLs: false
   dom.ipc.processCount: -1
+  extensions.formautofill.addresses.enabled: true
   font.default.x-western: sans-serif
   full-screen-api.ignore-widgets: true
   identity.fxaccounts.enabled: true
