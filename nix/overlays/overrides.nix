@@ -78,6 +78,10 @@ prev.lib.composeManyExtensions [
       );
   })
   (_: prev: {
+    # TODO: Remove once we have https://github.com/NixOS/nixpkgs/pull/573479
+    reuse = prev.reuse.overrideAttrs {
+      sphinxBuilders = "html man";
+    };
     ccacheWrapper = prev.ccacheWrapper.override {
       extraConfig = ''
         export CCACHE_COMPRESS=1

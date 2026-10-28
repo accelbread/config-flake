@@ -100,7 +100,6 @@ in
       efi.canTouchEfiVariables = true;
     };
     initrd.systemd = {
-      enable = true;
       contents."/etc/machine-id".text = machine-id;
       tpm2.enable = false;
       storePaths = with pkgs; [

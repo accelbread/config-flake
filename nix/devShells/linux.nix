@@ -20,7 +20,9 @@ in
     pkg-config
     ncurses
   ];
-  env.MAKEFLAGS = lib.concatStringsSep " " kernel.configfile.makeFlags;
+  env = kernel.env // {
+    MAKEFLAGS = lib.concatStringsSep " " kernel.configfile.makeFlags;
+  };
   shellHook = ''
     export MAKEFLAGS="$MAKEFLAGS -j$NIX_BUILD_CORES"
   '';

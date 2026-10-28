@@ -63,33 +63,23 @@ let
     |> (v: "(${v})")
     |> pkgs.writeText "required_kconfig";
 
-  configfile = stdenv.mkDerivation {
-    inherit (baseConfig)
-      pname
-      version
-      depsBuildBuild
-      nativeBuildInputs
-      makeFlags
-      preUnpack
-      src
-      patches
-      installPhase
-      enableParallelBuilding
-      ;
+  configfile = baseConfig.overrideAttrs (old: {
     inherit (base-kernel) postPatch;
+    makeFlags = lib.filter (f: !lib.hasPrefix "cmd_sign=" f) old.makeFlags;
     __contentAddressed = true;
     buildPhase = ''
       export buildRoot="''${buildRoot:-build}"
       mkdir -p "$buildRoot"
-      export MAKEFLAGS="$makeFlags"
-      ./scripts/kconfig/merge_config.sh -O "$buildRoot" -Q \
+      ./scripts/kconfig/merge_config.sh -m -O "$buildRoot" -Q \
         kernel/configs/hardening.config \
         arch/x86/configs/hardening.config \
         ${configFragment}
+      make "''${makeFlags[@]}" O="$buildRoot" \
+        KCONFIG_ALLCONFIG="$buildRoot/.config" alldefconfig
       ${pkgs.guile}/bin/guile --no-auto-compile -s ${./misc/check_kconfig.scm} \
         ${requiredConfig} "$buildRoot/.config"
     '';
-  };
+  });
 
   onStable = lib.mkIf (lib.versionOlder base-kernel.version "6.19.0");
   onLatest = lib.mkIf (lib.versionAtLeast base-kernel.version "6.19.0");
@@ -127,6 +117,20 @@ in
           # Fix build issue due to nixpkgs using the modules make target and the
           # module hashes patch not expecting that
           buildFlags = lib.subtractLists [ "modules" ] old.buildFlags;
+          # Nixpkgs' module cert signing overrides the module hashes signer
+          makeFlags = lib.filter (f: !lib.hasPrefix "cmd_sign=" f) old.makeFlags;
+          # Nullify nixpkgs' module cert application
+          postInstall =
+            lib.replaceStrings
+              [
+                "sed 's/$/\\.cer/' modules.order | xargs -d'\\n' cat > modules.cer"
+                "sed 's/$/\\.cer/' modules.order | xargs -d'\\n' rm"
+              ]
+              [
+                "> modules.cer"
+                ""
+              ]
+              old.postInstall;
         })
     );
     kernelPatches =
