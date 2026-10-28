@@ -136,6 +136,7 @@ in
       rygel.enable = false;
     };
     pcscd.enable = true;
+    xserver.xkb.options = "terminate:ctrl_alt_bksp,compose:caps";
   };
 
   systemd = {

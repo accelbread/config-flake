@@ -497,12 +497,6 @@ in
         picture-uri-dark = "file://${flake.src + /assets/desktop.svg}";
         primary-color = "#7767B2";
       };
-      "org/gnome/desktop/input-sources" = {
-        xkb-options = [
-          "terminate:ctrl_alt_bksp"
-          "compose:caps"
-        ];
-      };
       "org/gnome/desktop/interface" = {
         gtk-enable-primary-paste = true;
       };
