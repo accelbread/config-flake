@@ -239,9 +239,6 @@ in
       )
       {
         ".face".source = flake.src + /assets/icon.png;
-        ".librewolf/native-messaging-hosts/passff.json".source =
-          (pkgs.passff-host.override { inherit pass; })
-          + /lib/librewolf/native-messaging-hosts/passff.json;
         ".librewolf/profile/chrome/firefox-gnome-theme".source =
           pkgs.firefox-gnome-theme;
         ".config/celluloid/scripts".source =
@@ -383,6 +380,10 @@ in
       };
     };
   };
+
+  ab.librewolf.nativeMessagingHosts = [
+    (pkgs.passff-host.override { inherit pass; })
+  ];
 
   systemd.tmpfiles.settings = {
     preservation = flip genAttrs (_: { d.mode = mkForce "0700"; }) [
