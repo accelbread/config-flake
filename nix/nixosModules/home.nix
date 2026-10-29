@@ -239,7 +239,7 @@ in
       )
       {
         ".face".source = flake.src + /assets/icon.png;
-        ".librewolf/profile/chrome/firefox-gnome-theme".source =
+        ".config/librewolf/librewolf/profile/chrome/firefox-gnome-theme".source =
           pkgs.firefox-gnome-theme;
         ".config/celluloid/scripts".source =
           pkgs.buildEnv {
@@ -388,7 +388,7 @@ in
   systemd.tmpfiles.settings = {
     preservation = flip genAttrs (_: { d.mode = mkForce "0700"; }) [
       "/home/archit/.ssh"
-      "/home/archit/.librewolf"
+      "/home/archit/.config/librewolf/librewolf"
     ];
     playground."/home/archit/Projects/Playground".v = {
       mode = "0700";
@@ -424,7 +424,7 @@ in
             ".config/goa-1.0"
             ".config/evolution"
             ".config/convey"
-            ".librewolf/profile"
+            ".config/librewolf/librewolf/profile"
             ".local/share/keyrings"
             ".local/share/gnupg"
             ".local/share/pass"
