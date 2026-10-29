@@ -16,6 +16,11 @@ SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "GPL-2.0-or-later"
 
 [[annotations]]
+path = "gnomeExtensions/hide-universal-access/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "GPL-3.0-only"
+
+[[annotations]]
 path = [
   "gnomeExtensions/tiling-assistant/**",
   "wireshark/**",

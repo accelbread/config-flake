@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 29 Oct 2026 11:20:04 -0700
+Subject: [PATCH] hide-universal-access: keep GNOME 50 compatibility
+
+---
+ metadata.json | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/metadata.json b/metadata.json
+index 52d5126..dc707e3 100644
+--- a/metadata.json
++++ b/metadata.json
+@@ -3,6 +3,7 @@
+   "description": "Hide Universal Access icon from the status bar",
+   "name": "Hide Universal Access",
+   "shell-version": [
++    "50",
+     "51"
+   ],
+   "url": "https://github.com/akiirui/hide-universal-access",
