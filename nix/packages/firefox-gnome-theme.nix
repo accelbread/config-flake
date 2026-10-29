@@ -4,6 +4,6 @@
 fetchFromGitHub {
   owner = "rafaelmardojai";
   repo = "firefox-gnome-theme";
-  rev = "v157.1";
-  hash = "sha256-mg4JrSm2ym4dXyLeBS7/4/G7aLg0bxssTjEaJXymHrE=";
+  rev = "fdc1af075073f93dc63e43b28a499b2251bcfcc2";
+  hash = "sha256-0M5/QfbfHwI7gP+q6IGdidxl5caGXMaEalNj2E2Rxyg=";
 }
