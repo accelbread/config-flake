@@ -1,6 +1,10 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, ... }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 let
   configFile = (pkgs.formats.json { }).generate "tailscaled.json" {
     version = "alpha0";
@@ -14,6 +18,7 @@ in
   boot.kernelModules = [ "tun" ];
 
   systemd.services.tailscaled = {
+    path = lib.mkForce [ ];
     environment.TS_DEBUG_FIREWALL_MODE = "nftables";
     serviceConfig = {
       ExecStart = [
