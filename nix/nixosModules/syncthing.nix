@@ -41,6 +41,7 @@ in
         globalAnnounceEnabled = false;
         crashReportingEnabled = false;
         natEnabled = false;
+        listenAddresses = [ "tcp://0.0.0.0:22000" ];
       };
       folders = genAttrs dirs (k: {
         path = "~/${k}";
@@ -99,10 +100,7 @@ in
     };
   };
 
-  networking.firewall.interfaces."tailscale0" = {
-    allowedTCPPorts = [ 22000 ];
-    allowedUDPPorts = [ 22000 ];
-  };
+  networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ 22000 ];
 
   fileSystems =
     let
