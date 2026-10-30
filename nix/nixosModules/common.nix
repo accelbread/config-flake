@@ -43,8 +43,11 @@ in
   ];
 
   system = {
-    configurationRevision = self.rev or null;
     stateVersion = "26.05";
+    configurationRevision = self.rev or self.dirtyRev or null;
+    nixos.extraOSReleaseArgs.SYSTEM_CONFIGURATION_REVISION = (
+      toString config.system.configurationRevision
+    );
     extraDependencies =
       let
         mkItem = input: {
