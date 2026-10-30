@@ -135,6 +135,8 @@ in
       gnome-user-share.enable = false;
       rygel.enable = false;
     };
+    dleyna.enable = false;
+    orca.enable = false;
     pcscd.enable = true;
     xserver.xkb.options = "terminate:ctrl_alt_bksp,compose:caps";
   };
@@ -250,6 +252,7 @@ in
       pkgs.gnome-music
       pkgs.gnome-tour
       pkgs.showtime
+      pkgs.simple-scan
     ];
     sessionVariables = {
       GST_PLUGIN_SYSTEM_PATH_1_0 =
