@@ -49,6 +49,7 @@
           I2C_PIIX4 = module;
           IGB = module;
           IGB_HWMON = no;
+          NR_CPUS = freeform "16";
           PINCTRL_AMD = yes;
           R8169 = module;
           SCHED_CLUSTER = no;

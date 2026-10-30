@@ -28,6 +28,7 @@
       name = "hardware";
       patch = null;
       structuredExtraConfig = {
+        NR_CPUS = freeform "16";
         PINCTRL_INTEL_PLATFORM = module;
         TCG_CRB = yes;
       };

@@ -30,6 +30,7 @@
       name = "hardware";
       patch = null;
       structuredExtraConfig = {
+        NR_CPUS = freeform "16";
         PINCTRL_TIGERLAKE = module;
         SND_HDA_CODEC_SIGMATEL = module;
         TCG_TIS = yes;
