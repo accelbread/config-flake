@@ -54,6 +54,7 @@
           R8169 = module;
           SCHED_CLUSTER = no;
           SENSORS_IT87 = module;
+          SND_HDA_CODEC_HDMI_ATI = module;
           SP5100_TCO = module;
           TCG_TIS = yes;
           X86_AMD_PLATFORM_DEVICE = yes;

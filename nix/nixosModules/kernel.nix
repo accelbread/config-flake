@@ -259,7 +259,6 @@ in
           ACPI_APEI = yes;
           ACPI_BUTTON = module;
           ACPI_THERMAL = module;
-          ACPI_TINY_POWER_BUTTON = module;
           CRYPTO_AES_NI_INTEL = yes;
           CRYPTO_GHASH_CLMUL_NI_INTEL = onStable module;
           HPET = no;
@@ -389,7 +388,6 @@ in
         };
         "audio" = {
           SND = module;
-          SND_DYNAMIC_MINORS = yes;
           SND_HDA_CODEC_HDMI = module;
           SND_HDA_GENERIC = module;
           SND_HDA_INTEL = module;
@@ -405,7 +403,6 @@ in
           USB = yes;
           USB_ANNOUNCE_NEW_DEVICES = yes;
           USB_HID = module;
-          USB_HIDDEV = yes;
           USB_STORAGE = module;
           USB_UAS = module;
           USB_XHCI_HCD = module;
@@ -635,6 +632,7 @@ in
           ALLOW_DEV_COREDUMP = no;
           AMD_IOMMU = lib.mkDefault no;
           BLOCK_LEGACY_AUTOLOAD = no;
+          CFG80211_CRDA_SUPPORT = no;
           CPU_SUP_AMD = lib.mkDefault no;
           CPU_SUP_CENTAUR = no;
           CPU_SUP_HYGON = no;
@@ -699,6 +697,8 @@ in
           SECURITY_SELINUX = no;
           SERIO = lib.mkDefault no;
           SGETMASK_SYSCALL = no;
+          SND_HDA_CODEC_HDMI_ATI = lib.mkDefault no;
+          SND_HDA_CODEC_HDMI_INTEL = lib.mkDefault no;
           SND_HDA_CODEC_HDMI_NVIDIA = no;
           SND_HDA_CODEC_HDMI_NVIDIA_MCP = no;
           SND_HDA_CODEC_HDMI_SIMPLE = no;
@@ -712,6 +712,7 @@ in
           TCP_CONG_WESTWOOD = no;
           TRACEFS_AUTOMOUNT_DEPRECATED = no;
           USB_PCI_AMD = no;
+          VGA_CONSOLE = no;
           VHOST_ENABLE_FORK_OWNER_CONTROL = no;
           VIDEO_CAMERA_LENS = no;
           VIDEO_CAMERA_SENSOR = no;

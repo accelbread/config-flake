@@ -95,6 +95,7 @@ in
             INTEL_VSEC = module;
             ITCO_WDT = module;
             MFD_INTEL_LPSS_PCI = module;
+            SND_HDA_CODEC_HDMI_INTEL = module;
             THERMAL_GOV_USER_SPACE = yes; # used by thermald
             X86_INTEL_LPSS = yes;
           })
