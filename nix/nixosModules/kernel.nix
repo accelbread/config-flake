@@ -648,6 +648,7 @@ in
           EPROBE_EVENTS = no;
           FB_DEVICE = no;
           FIRMWARE_MEMMAP = no; # kexec
+          FUNCTION_GRAPH_TRACER = no;
           FW_LOADER_COMPRESS_XZ = no;
           GPIO_CDEV = no;
           HIBERNATION_SNAPSHOT_DEV = no;
