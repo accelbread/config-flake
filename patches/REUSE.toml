@@ -5,6 +5,7 @@ path = [
   "emacs*/**",
   "dbus-broker/**",
   "amberol/**",
+  "fractal/**",
   "ccache/**",
 ]
 SPDX-FileCopyrightText = "NOASSERTION"

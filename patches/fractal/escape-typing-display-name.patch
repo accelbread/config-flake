@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Fri, 30 Oct 2026 14:05:56 -0700
+Subject: [PATCH] typing-row: Escape display names in markup
+
+An ampersand or angle bracket in a display name must be treated as text,
+rather than Pango markup. Otherwise GTK rejects the label contents.
+---
+ src/session_view/room_history/typing_row.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/session_view/room_history/typing_row.rs b/src/session_view/room_history/typing_row.rs
+index 88b1e62e..ddc39f07 100644
+--- a/src/session_view/room_history/typing_row.rs
++++ b/src/session_view/room_history/typing_row.rs
+@@ -128,6 +128,7 @@ fn update_label(&self, list: &TypingList) {
+                     .and_downcast::<Member>()
+                     .expect("typing list has a member")
+                     .disambiguated_name();
++                let user = glib::markup_escape_text(&user);
+ 
+                 gettext_f(
+                     // Translators: Do NOT translate the content between '{' and '}', these are

@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Fri, 30 Oct 2026 14:05:56 -0700
+Subject: [PATCH] avatar: Measure children before allocating them
+
+Both widgets provide custom measurement implementations. Skipping their
+children leaves resize requests pending and triggers GTK warnings every
+time the avatars are allocated.
+---
+ src/components/avatar/crop_circle.rs | 2 ++
+ src/components/avatar/overlapping.rs | 6 +++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/components/avatar/crop_circle.rs b/src/components/avatar/crop_circle.rs
+index 83e8bbdd..3683498d 100644
+--- a/src/components/avatar/crop_circle.rs
++++ b/src/components/avatar/crop_circle.rs
+@@ -57,6 +57,8 @@ fn dispose(&self) {
+ 
+     impl WidgetImpl for CropCircle {
+         fn measure(&self, orientation: gtk::Orientation, for_size: i32) -> (i32, i32, i32, i32) {
++            self.mask.measure(orientation, for_size);
++
+             if let Some(child) = self.child.borrow().as_ref() {
+                 return child.measure(orientation, for_size);
+             }
+diff --git a/src/components/avatar/overlapping.rs b/src/components/avatar/overlapping.rs
+index 9167b804..d6432e3e 100644
+--- a/src/components/avatar/overlapping.rs
++++ b/src/components/avatar/overlapping.rs
+@@ -68,7 +68,11 @@ fn dispose(&self) {
+     }
+ 
+     impl WidgetImpl for OverlappingAvatars {
+-        fn measure(&self, orientation: gtk::Orientation, _for_size: i32) -> (i32, i32, i32, i32) {
++        fn measure(&self, orientation: gtk::Orientation, for_size: i32) -> (i32, i32, i32, i32) {
++            for child in self.children.borrow().iter() {
++                child.measure(orientation, for_size);
++            }
++
+             if self.children.borrow().is_empty() {
+                 return (0, 0, -1, -1);
+             }
