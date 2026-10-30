@@ -42,10 +42,6 @@ in
     inputs.self.nixosModules.dconf
   ];
 
-  # Allow steam package for steam-hardware udev rules
-  nixpkgs.config.allowUnfreePredicate =
-    pkg: (lib.getName pkg) == "steam-unwrapped";
-
   nix = {
     settings = {
       keep-outputs = true;
@@ -271,7 +267,6 @@ in
       pkgs.adw-gtk3
       pkgs.qadwaitadecorations
       pkgs.qadwaitadecorations-qt6
-      pkgs.gst-thumbnailers
       pkgs.gnome-epub-thumbnailer
       desktopBackgrounds
     ];

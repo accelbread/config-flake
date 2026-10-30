@@ -64,7 +64,6 @@ in
         };
         systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
       };
-      swraid.enable = false;
       bcache.enable = false;
       specialFileSystems = {
         "/dev".options = [ "noexec" ];

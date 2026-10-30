@@ -269,7 +269,6 @@ in
 
   services = {
     fwupd.enable = true;
-    pulseaudio.enable = false;
     dnscrypt-proxy = {
       enable = true;
       settings = {
@@ -327,7 +326,6 @@ in
         AllowGroups = [ "users" ];
         AuthenticationMethods = "publickey";
         PasswordAuthentication = false;
-        ChallengeResponseAuthentication = false;
         KbdInteractiveAuthentication = false;
         X11Forwarding = false;
         AllowTcpForwarding = false;
@@ -356,13 +354,10 @@ in
       noto-fonts-color-emoji
     ];
     fontDir.decompressFonts = true;
-    fontconfig = {
-      defaultFonts = {
-        sansSerif = [ "Adwaita Sans" ];
-        serif = [ "Noto Serif" ];
-        monospace = [ "Adwaita Mono" ];
-      };
-      useEmbeddedBitmaps = true;
+    fontconfig.defaultFonts = {
+      sansSerif = [ "Adwaita Sans" ];
+      serif = [ "Noto Serif" ];
+      monospace = [ "Adwaita Mono" ];
     };
   };
 

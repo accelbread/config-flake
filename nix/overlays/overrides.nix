@@ -104,19 +104,6 @@ prev.lib.composeManyExtensions [
         "--with-statepath=/var/lib/nut"
       ];
     });
-    bees = prev.bees.overrideAttrs {
-      utillinux =
-        final.runCommand final.util-linux.name
-          {
-            inherit (final.util-linux) meta pname version;
-            nativeBuildInputs = [ final.makeBinaryWrapper ];
-          }
-          ''
-            cp -r ${final.util-linux} $out
-            chmod -R u+w $out
-            wrapProgram $out/bin/mount --add-flags "-o noatime"
-          '';
-    };
     rnote = final.runCommand prev.rnote.name { } ''
       cp -Lr ${prev.rnote} $out
       chmod -R u+w $out

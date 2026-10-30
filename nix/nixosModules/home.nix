@@ -532,9 +532,6 @@ in
         is-maximized = true;
       };
       "org/gnome/mutter" = {
-        dynamic-workspaces = true;
-        edge-tiling = true;
-        workspaces-only-on-primary = true;
         attach-modal-dialogs = false;
       };
       "org/gnome/nautilus/preferences" = {
@@ -547,7 +544,6 @@ in
         donation-reminder-enabled = false;
       };
       "org/gnome/shell" = {
-        disable-user-extensions = false;
         enabled-extensions = catAttrs "extensionUuid" gnomeExtensions;
         favorite-apps = [
           "emacs.desktop"
