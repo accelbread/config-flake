@@ -187,20 +187,9 @@ in
   security = {
     sudo.enable = false;
     doas.enable = true; # needed for btrbk
-    pam = {
-      services = genAttrs [ "login" "systemd-user" "sshd" ] (_: {
-        rules.session.umask = {
-          order = 0;
-          control = "optional";
-          modulePath = "pam_umask.so";
-        };
-      });
-      mount.fuseMountOptions = [
-        "noatime"
-        "nosuid"
-        "nodev"
-      ];
-    };
+    pam.services = genAttrs [ "login" "systemd-user" "sshd" ] (_: {
+      enableUMask = true;
+    });
   };
 
   virtualisation.containers = {
