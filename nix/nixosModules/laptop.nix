@@ -7,10 +7,7 @@
   ...
 }:
 {
-  imports = [
-    inputs.self.nixosModules.desktop
-    inputs.self.nixosModules.intel-lpmd
-  ];
+  imports = [ inputs.self.nixosModules.desktop ];
 
   nix = {
     distributedBuilds = true;

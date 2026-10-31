@@ -75,7 +75,14 @@ in
 
       services = {
         thermald.enable = true;
-        intel-lpmd.enable = true;
+        intel-lpmd = {
+          enable = true;
+          configOverrides = {
+            Mode = 0;
+            BalancedDef = 0;
+            PowersaverDef = 0;
+          };
+        };
       };
 
       boot = {
