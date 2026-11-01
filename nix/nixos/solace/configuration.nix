@@ -1,6 +1,12 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ inputs, lib, ... }: {
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+{
   imports = [
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -68,10 +74,13 @@
   environment.etc."xdg/monitors.xml".source = ./monitors.xml;
 
   users = {
-    users.remotebuild = {
-      isSystemUser = true;
-      group = "remotebuild";
-      useDefaultShell = true;
+    users = {
+      remotebuild = {
+        isSystemUser = true;
+        group = "remotebuild";
+        useDefaultShell = true;
+      };
+      archit.packages = [ pkgs.dtach ];
     };
     groups.remotebuild = { };
   };
