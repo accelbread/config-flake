@@ -38,6 +38,7 @@ prefs:
   extensions.formautofill.addresses.enabled: true
   font.default.x-western: sans-serif
   full-screen-api.ignore-widgets: true
+  gfx.color_management.hdr: true
   identity.fxaccounts.enabled: true
   media.videocontrols.picture-in-picture.video-toggle.enabled: false
   network.dns.disablePrefetchFromHTTPS: true
@@ -58,6 +59,8 @@ prefs:
       overrides: -JSDateTimeUTC
     - firstPartyDomain: openrouter.ai
       overrides: -JSDateTimeUTC
+    - firstPartyDomain: youtube.com
+      overrides: -CSSVideoDynamicRange
   privacy.fingerprintingProtection.overrides: +AllTargets
   privacy.fingerprintingProtection.remoteOverrides.enabled: false
   privacy.resistFingerprinting: false

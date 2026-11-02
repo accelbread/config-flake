@@ -26,7 +26,7 @@ resolution=$(
 read -r width height <<< "$resolution"
 
 exec gamescope \
-    --backend wayland --expose-wayland --adaptive-sync \
+    --backend wayland --expose-wayland --adaptive-sync --hdr-enabled \
     --xwayland-count 2 -f -e \
     -w "$width" -h "$height" -- \
     bash -c '
