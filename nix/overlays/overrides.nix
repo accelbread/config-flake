@@ -90,6 +90,12 @@ prev.lib.composeManyExtensions [
         export CCACHE_UMASK=007
       '';
     };
+    mutter = prev.mutter.overrideAttrs (old: {
+      mesonFlags = old.mesonFlags ++ [ "-Dxwayland=false" ];
+    });
+    gnome-settings-daemon = prev.gnome-settings-daemon.overrideAttrs (old: {
+      mesonFlags = old.mesonFlags ++ [ "-Dxwayland=false" ];
+    });
     gnome-online-accounts = prev.gnome-online-accounts.overrideAttrs (old: {
       mesonFlags = old.mesonFlags ++ [ "-Dsysconfdir=/etc" ];
     });
