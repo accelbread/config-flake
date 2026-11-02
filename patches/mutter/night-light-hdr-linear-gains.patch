@@ -1,0 +1,133 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sun, 1 Nov 2026 22:14:37 -0800
+Subject: [PATCH] color-device: Fix excessive Night Light warming in HDR
+
+Night Light multiplies encoded channel values by gains intended for
+gamma-2.2 SDR output. Applying those gains directly to PQ values causes
+excessive warming that varies with pixel luminance.
+
+For PQ outputs, generate a neutral calibration LUT and apply equivalent
+gains in linear light before re-encoding its entries. Refresh the output
+color state first so HDR mode changes use the current transfer function.
+
+This preserves the existing SDR path and RGB gain approximation.
+Differences between SDR and HDR primaries remain uncorrected.
+
+Related: https://gitlab.gnome.org/GNOME/mutter/-/issues/3687
+---
+ src/backends/meta-color-device.c | 75 +++++++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 2 deletions(-)
+
+diff --git a/src/backends/meta-color-device.c b/src/backends/meta-color-device.c
+index 3eb29ca..e4abba2 100644
+--- a/src/backends/meta-color-device.c
++++ b/src/backends/meta-color-device.c
+@@ -23,6 +23,7 @@
+ #include "backends/meta-color-device.h"
+ 
+ #include <colord.h>
++#include <math.h>
+ 
+ #include "backends/meta-backend-private.h"
+ #include "backends/meta-color-device.h"
+@@ -1469,6 +1470,61 @@ meta_color_device_get_assigned_profile (MetaColorDevice *color_device)
+   return color_device->assigned_profile;
+ }
+ 
++static uint16_t
++apply_pq_gain (uint16_t value,
++               double   gain)
++{
++  const double m1 = 2610.0 / 16384.0;
++  const double m2 = 2523.0 / 32.0;
++  const double c1 = 3424.0 / 4096.0;
++  const double c2 = 2413.0 / 128.0;
++  const double c3 = 2392.0 / 128.0;
++  double encoded, linear;
++
++  /* Preserve black and identity ramps exactly, including when disabled. */
++  if (gain == 1.0 || value == 0)
++    return value;
++
++  encoded = pow (value / 65535.0, 1.0 / m2);
++  linear = pow (MAX (encoded - c1, 0.0) / (c2 - c3 * encoded), 1.0 / m1);
++  linear = pow (CLAMP (linear * gain, 0.0, 1.0), m1);
++  encoded = pow ((c1 + c2 * linear) / (1.0 + c3 * linear), m2);
++
++  return (uint16_t) round (CLAMP (encoded, 0.0, 1.0) * 65535.0);
++}
++
++static void
++apply_hdr_temperature (MetaGammaLut *lut,
++                       unsigned int  temperature)
++{
++  CdColorRGB blackbody_color;
++  size_t i;
++
++  if (!cd_color_get_blackbody_rgb_full (temperature,
++                                        &blackbody_color,
++                                        CD_COLOR_BLACKBODY_FLAG_USE_PLANCKIAN))
++    {
++      g_warning ("Failed to get blackbody for %uK", temperature);
++      return;
++    }
++
++  /* Convert the legacy gamma-2.2 SDR gains to linear light. Applying gains
++   * directly to PQ code values makes the colour shift luminance-dependent.
++   * This remains an RGB gain approximation, not full chromatic adaptation
++   * between the SDR and HDR output primaries.
++   */
++  blackbody_color.R = pow (blackbody_color.R, 2.2);
++  blackbody_color.G = pow (blackbody_color.G, 2.2);
++  blackbody_color.B = pow (blackbody_color.B, 2.2);
++
++  for (i = 0; i < lut->size; i++)
++    {
++      lut->red[i] = apply_pq_gain (lut->red[i], blackbody_color.R);
++      lut->green[i] = apply_pq_gain (lut->green[i], blackbody_color.G);
++      lut->blue[i] = apply_pq_gain (lut->blue[i], blackbody_color.B);
++    }
++}
++
+ static UpdateResult
+ update_white_point (MetaColorDevice *color_device)
+ {
+@@ -1518,11 +1574,26 @@ update_white_point (MetaColorDevice *color_device)
+   if (lut_size > 0)
+     {
+       g_autoptr (MetaGammaLut) lut = NULL;
++      const ClutterEOTF *eotf;
++      gboolean is_hdr;
++      unsigned int lut_temperature;
++
++      eotf = clutter_color_state_params_get_eotf (
++        CLUTTER_COLOR_STATE_PARAMS (color_device->color_state));
++      is_hdr = (eotf->type == CLUTTER_EOTF_TYPE_NAMED &&
++                eotf->tf_name == CLUTTER_TRANSFER_FUNCTION_PQ);
++      if (is_hdr)
++        lut_temperature = meta_color_manager_get_default_temperature (color_manager);
++      else
++        lut_temperature = temperature;
+ 
+       lut = meta_color_profile_generate_gamma_lut (color_profile,
+-                                                   temperature,
++                                                   lut_temperature,
+                                                    lut_size);
+ 
++      if (is_hdr)
++        apply_hdr_temperature (lut, temperature);
++
+       meta_monitor_set_gamma_lut (monitor, lut);
+     }
+ 
+@@ -1538,8 +1609,8 @@ do_update (MetaColorDevice *color_device)
+   if (!meta_monitor_is_active (monitor))
+     return;
+ 
+-  result |= update_white_point (color_device);
+   result |= update_color_state (color_device);
++  result |= update_white_point (color_device);
+ 
+   if (result & UPDATE_RESULT_CALIBRATION)
+     g_signal_emit (color_device, signals[CALIBRATION_CHANGED], 0);
