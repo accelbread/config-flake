@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sun, 1 Nov 2026 21:00:20 -0800
+Subject: [PATCH] drm/i915/hdmi: Rewrite VSC header for eDP on Panther Lake
+
+eDP output on Panther Lake can become corrupted or freeze after an HDR
+modeset. Rewriting the VSC SDP header with the DIP enabled restores output.
+
+In hsw_write_infoframe(), rewrite the header after enabling the DIP and
+flushing the control-register write. Restrict the workaround to VSC SDPs
+sent over eDP on Panther Lake.
+
+Link: https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/9693
+Link: https://github.com/HHHHanasak1/onexplayer3-steamos-setup/blob/e72e814da1944da3792076689995b6fe961f5768/issues/06-xe-vsc-sdp-ecc.md
+---
+ drivers/gpu/drm/i915/display/intel_hdmi.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
+index b9d11fb..21527d9 100644
+--- a/drivers/gpu/drm/i915/display/intel_hdmi.c
++++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
+@@ -557,6 +557,18 @@ void hsw_write_infoframe(struct intel_encoder *encoder,
+ 
+ 	intel_de_write(display, ctl_reg, val);
+ 	intel_de_posting_read(display, ctl_reg);
++
++	/*
++	 * On Panther Lake, rewrite the VSC header with the DIP enabled to
++	 * restore eDP output after HDR modesets.
++	 */
++	if (display->platform.pantherlake &&
++	    encoder->type == INTEL_OUTPUT_EDP && type == DP_SDP_VSC) {
++		intel_de_write(display,
++			       hsw_dip_data_reg(display, cpu_transcoder, type, 0),
++			       *(const u32 *)frame);
++		intel_de_posting_read(display, ctl_reg);
++	}
+ }
+ 
+ void hsw_read_infoframe(struct intel_encoder *encoder,
