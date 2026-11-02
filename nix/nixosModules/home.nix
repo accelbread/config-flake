@@ -97,6 +97,7 @@ let
     DICTDIR = "${pkgs.hunspellDicts.en_US}/share/hunspell";
     GNUPGHOME = "/home/archit/.local/share/gnupg";
     CODEX_HOME = "/home/archit/.local/state/codex";
+    PASSWORD_STORE_DIR = passSettings.dir; # for shell completion
   };
 
   steamDesktopItem = pkgs.makeDesktopItem {
