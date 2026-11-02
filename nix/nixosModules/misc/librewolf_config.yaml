@@ -1,6 +1,7 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 prefs:
+  autoadmin.global_config_url: ""
   browser.bookmarks.restore_default_bookmarks: false
   browser.download.always_ask_before_handling_new_types: true
   browser.download.useDownloadDir: true
