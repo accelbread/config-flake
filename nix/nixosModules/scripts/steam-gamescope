@@ -6,6 +6,15 @@ set -euo pipefail
 
 export PATH=@path@
 
+require_flatpak() {
+    flatpak info --system "$1" >/dev/null 2>&1 ||
+        flatpak install --system --noninteractive flathub "$1"
+}
+
+require_flatpak com.valvesoftware.Steam
+runtime=$(flatpak info --system --show-runtime com.valvesoftware.Steam)
+require_flatpak "org.freedesktop.Platform.VulkanLayer.gamescope//${runtime##*/}"
+
 resolution=$(
     busctl --user --json=short call \
         org.gnome.Mutter.DisplayConfig \
