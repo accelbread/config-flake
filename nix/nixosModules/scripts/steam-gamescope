@@ -14,6 +14,7 @@ require_flatpak() {
 require_flatpak com.valvesoftware.Steam
 runtime=$(flatpak info --system --show-runtime com.valvesoftware.Steam)
 require_flatpak "org.freedesktop.Platform.VulkanLayer.gamescope//${runtime##*/}"
+require_flatpak com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 
 resolution=$(
     busctl --user --json=short call \
