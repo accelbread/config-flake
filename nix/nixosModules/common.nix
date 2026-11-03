@@ -110,12 +110,7 @@ in
     initrd.systemd = {
       contents."/etc/machine-id".text = machine-id;
       tpm2.enable = false;
-      storePaths = with pkgs; [
-        tpm2-tss
-        coreutils
-        util-linux
-        btrfs-progs
-      ];
+      storePaths = [ pkgs.tpm2-tss ];
       services.wipe-root-subvolume = {
         wantedBy = [ "initrd.target" ];
         requiredBy = [ "sysroot.mount" ];
@@ -133,15 +128,20 @@ in
           Type = "oneshot";
           RemainAfterExit = true;
         };
-        script = with pkgs; ''
-          ${coreutils}/bin/mkdir -p /mnt
-          ${util-linux}/bin/mount -t btrfs -o subvolid=5,noatime,compress=zstd \
+        path = with pkgs; [
+          coreutils
+          util-linux
+          btrfs-progs
+        ];
+        script = ''
+          mkdir -p /mnt
+          mount -t btrfs -o subvolid=5,noatime,compress=zstd \
             /dev/${hostname}_vg1/pool /mnt
           if [ -e /mnt/root ]; then
-            ${btrfs-progs}/bin/btrfs subvolume delete --recursive /mnt/root
+            btrfs subvolume delete --recursive /mnt/root
           fi
-          ${btrfs-progs}/bin/btrfs subvolume create /mnt/root
-          ${util-linux}/bin/umount /mnt
+          btrfs subvolume create /mnt/root
+          umount /mnt
         '';
       };
     };
