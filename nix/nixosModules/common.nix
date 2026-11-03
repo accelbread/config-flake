@@ -115,10 +115,6 @@ in
         coreutils
         util-linux
         btrfs-progs
-        btrfs-subvol-rm-r
-        bash
-        gawk
-        gnused
       ];
       services.wipe-root-subvolume = {
         wantedBy = [ "initrd.target" ];
@@ -138,10 +134,10 @@ in
         serviceConfig.Type = "oneshot";
         script = with pkgs; ''
           ${coreutils}/bin/mkdir -p /mnt
-          ${util-linux}/bin/mount -t btrfs -o noatime,compress=zstd \
+          ${util-linux}/bin/mount -t btrfs -o subvolid=5,noatime,compress=zstd \
             /dev/${hostname}_vg1/pool /mnt
           if [ -e /mnt/root ]; then
-            ${getExe btrfs-subvol-rm-r} /mnt/root
+            ${btrfs-progs}/bin/btrfs subvolume delete --recursive /mnt/root
           fi
           ${btrfs-progs}/bin/btrfs subvolume create /mnt/root
           ${util-linux}/bin/umount /mnt
