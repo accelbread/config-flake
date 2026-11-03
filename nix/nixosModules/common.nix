@@ -118,6 +118,7 @@ in
       ];
       services.wipe-root-subvolume = {
         wantedBy = [ "initrd.target" ];
+        requiredBy = [ "sysroot.mount" ];
         requires = [
           "local-fs-pre.target"
           "initrd-root-device.target"
@@ -126,12 +127,12 @@ in
           "local-fs-pre.target"
           "initrd-root-device.target"
         ];
-        before = [
-          "sysroot.mount"
-          "create-needed-for-boot-dirs.service"
-        ];
+        before = [ "sysroot.mount" ];
         unitConfig.DefaultDependencies = false;
-        serviceConfig.Type = "oneshot";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
         script = with pkgs; ''
           ${coreutils}/bin/mkdir -p /mnt
           ${util-linux}/bin/mount -t btrfs -o subvolid=5,noatime,compress=zstd \
