@@ -22,6 +22,7 @@
   tinymist,
   openscad-unstable,
   yaml-language-server,
+  aws-cloudformation-languageserver,
   tombi,
   symlinkJoin,
   vale-proselint,
@@ -113,6 +114,7 @@ let
     clangd = llvmPackages_latest.clang-tools;
     lake = lean4;
     openscad = openscad-unstable;
+    cfn-lsp-server = aws-cloudformation-languageserver;
   };
 
   packageRequiresFromFile = flip pipe [

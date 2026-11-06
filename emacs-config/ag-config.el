@@ -2205,6 +2205,17 @@ DEPTH, MATCH, and LOC are passed to `rainbow-delimiters-default-pick-face'."
 (set-lsp-server 'yaml-ts-mode '("yaml-language-server" "--stdio"))
 (add-hook 'yaml-ts-mode-hook #'enable-eglot)
 
+(define-derived-mode cfn-mode yaml-ts-mode "CloudFormation"
+  "Major mode for AWS CloudFormation YAML templates.")
+
+(add-to-list 'magic-mode-alist
+             `(,(rx bos
+                    (* (seq (* blank) (opt (seq "#" (* nonl))) "\n"))
+                    "AWSTemplateFormatVersion:")
+               . cfn-mode))
+
+(set-lsp-server '(cfn-mode :language-id "yaml") '("cfn-lsp-server" "--stdio"))
+
 
 ;;; Toml
 
