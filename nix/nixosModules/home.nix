@@ -429,6 +429,7 @@ in
             ".local/share/keyrings"
             ".local/share/gnupg"
             ".local/share/pass"
+            ".local/share/x509"
             ".local/share/convey"
             ".local/share/fractal"
             ".var/app/com.valvesoftware.Steam"

@@ -118,16 +118,17 @@ in
         };
       };
 
-      provision-ssh = pkgs.replaceVarsWith {
-        src = ./scripts/provision-ssh;
+      provision-keys = pkgs.replaceVarsWith {
+        src = ./scripts/provision-keys;
         isExecutable = true;
         replacements = {
           path = lib.makeBinPath [
             pkgs.coreutils
             pkgs.openssh
+            pkgs.openssl
           ];
           flake = flake.src;
-          inherit (pkgs) yubico-piv-tool;
+          inherit (pkgs) yubico-piv-tool libp11 tpm2-openssl;
         };
       };
     };

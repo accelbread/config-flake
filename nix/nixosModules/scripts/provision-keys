@@ -51,4 +51,31 @@ ssh-keygen \
 
 chown archit: ~archit/.ssh/id_ed25519_sk{,.pub,-cert.pub}
 
-systemctl restart sshd.service
+/run/current-system/sw/bin/systemctl restart sshd.service
+
+export PKCS11_MODULE_PATH=@yubico-piv-tool@/lib/libykcs11.so
+
+provision_x509() {
+    local directory=$1 subject=$2 owner=$3
+
+    if [[ ! -e "$directory/key.pem" ]]; then
+        openssl genpkey \
+            -provider @tpm2-openssl@/lib/ossl-modules/tpm2.so \
+            -algorithm EC -pkeyopt group:P-384 -out "$directory/key.pem"
+    fi
+
+    openssl x509 -new \
+        -provider default \
+        -provider @libp11@/lib/ossl-module/pkcs11prov.so \
+        -provider @tpm2-openssl@/lib/ossl-modules/tpm2.so \
+        -force_pubkey "$directory/key.pem" -subj "$subject" \
+        -CA @flake@/misc/ca.pem -CAkey 'pkcs11:id=%05;type=private' \
+        -days 3650 -sha512 \
+        -extfile <(printf '%s\n' 'keyUsage=critical,digitalSignature') \
+        -out "$directory/cert.pem"
+    chown "$owner:" "$directory"/{key,cert}.pem
+    chmod 0600 "$directory"/{key,cert}.pem
+}
+
+provision_x509 /var/lib/x509 "/CN=$hostname/OU=machine" root
+provision_x509 ~archit/.local/share/x509 "/CN=archit@$hostname/OU=user" archit

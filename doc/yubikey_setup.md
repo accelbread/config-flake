@@ -22,7 +22,7 @@ ykman piv certificates generate \
 ssh-keygen -D /etc/profiles/per-user/archit/lib/libykcs11.so
 ```
 
-## Set up SSH CA YubiKey
+## Set up CA YubiKey
 
 Plug in the YubiKey and ensure its the only plugged in key.
 
@@ -52,10 +52,28 @@ Generate the CA keys/certs.
 ykman piv keys generate \
   -a ECCP384 --pin-policy always --touch-policy always 82 ssh_ca_key.pub
 ykman piv certificates generate \
-  -a sha512 -d 3650 -s "SSH CA" 82 ssh_ca_key.pub
+  -a sha512 -d 3650 -s "Personal CA" 82 ssh_ca_key.pub
 ykman piv info
 ssh-keygen -D /etc/profiles/per-user/archit/lib/libykcs11.so
 ```
 
 Take the corresponding public key from ssh-keygen output and save it in
 `misc/ssh_ca_key.pub`.
+
+Generate the X.509 CA cert:
+
+```sh
+export OPENSSL_MODULES="$(nix build --no-link --print-out-paths self#libp11.out)/lib/ossl-module"
+export PKCS11_MODULE_PATH="$(nix build --no-link --print-out-paths self#yubico-piv-tool.out)/lib/libykcs11.so"
+
+openssl req -new -x509 \
+  -provider pkcs11prov -provider default \
+  -key 'pkcs11:id=%05;type=private' \
+  -subj '/CN=Personal CA' \
+  -sha512 -days 3650 \
+  -addext 'basicConstraints=critical,CA:TRUE,pathlen:0' \
+  -addext 'keyUsage=critical,keyCertSign,cRLSign' \
+  -out misc/ca.pem
+```
+
+this writes `misc/ca.pem`.

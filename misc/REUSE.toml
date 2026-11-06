@@ -3,6 +3,7 @@ version = 1
 # Defaults for files without more specific metadata
 [[annotations]]
 path = [
+  "*.pem",
   "*.pub",
   "*.ti",
 ]

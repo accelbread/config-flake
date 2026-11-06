@@ -40,13 +40,13 @@ Set `services.usbguard.rules`, and rebuild system.
 run0 tailscale up
 ```
 
-### SSH keys
+### System Keys
 
 ```sh
 # Plug in host YubiKey.
 nix run self#system -- provision-yubikey
-# Plug in SSH CA YubiKey too.
-run0 nix run self#system -- provision-ssh
+# Plug in the CA YubiKey too.
+run0 nix run self#system -- provision-keys
 ```
 
 ### Pass

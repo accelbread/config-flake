@@ -179,6 +179,7 @@ in
   location.provider = "geoclue2";
 
   security = {
+    tpm2.enable = true;
     sudo.enable = false;
     doas.enable = true; # needed for btrbk
     pam.services = genAttrs [ "login" "systemd-user" "sshd" ] (_: {
@@ -352,6 +353,7 @@ in
       extraGroups = [
         "wheel"
         "networkmanager"
+        "tss"
       ];
       uid = 1000;
       hashedPasswordFile = "/persist/state/system/user_pass";
@@ -418,7 +420,7 @@ in
         };
       in
       mapAttrs (k: mergeAttrs (common k)) {
-        state = { };
+        state.directories = [ (privDir "/var/lib/x509") ];
         data = { };
         cache = {
           directories =
