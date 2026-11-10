@@ -1,3 +1,6 @@
+[default]
+region = us-west-2
+
 [profile tpm]
 region = us-west-2
 credential_process = @aws-signing-helper@/bin/aws_signing_helper credential-process --certificate /home/archit/.local/share/x509/cert.pem --private-key /home/archit/.local/share/x509/key.pem --trust-anchor-arn @TrustAnchorArn@ --profile-arn @ProfileArn@ --role-arn @UserRoleArn@
