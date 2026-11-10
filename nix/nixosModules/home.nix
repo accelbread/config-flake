@@ -301,22 +301,27 @@ in
             if [[ ! -e ${passSettings.dir}/.git ]]; then
               mkdir -p ${passSettings.dir}
               pass git init
-              pass git remote add \
-                aws https://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
             fi
-            pass git remote set-url \
-              aws https://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
-            pass git config \
-              credential.https://git-codecommit.us-west-2.amazonaws.com.helper \
-              '!${pkgs.awscli2}/bin/aws --profile tpm codecommit credential-helper "$@"'
-            pass git config \
-              credential.https://git-codecommit.us-west-2.amazonaws.com.useHttpPath \
-              true
-            pass git config remote.pushDefault aws
-            pass git config branch.master.remote aws
-            pass git config branch.master.merge refs/heads/master
-            pass git config pass.signcommits true
-            pass git config user.signingkey ${passSettings.signing_key}
+            pass git config include.path ${
+              pkgs.writeText "pass.gitconfig"
+              <| lib.generators.toGitINI {
+                remote.aws = {
+                  url = "https://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass";
+                  fetch = "+refs/heads/*:refs/remotes/aws/*";
+                };
+                credential."https://git-codecommit.us-west-2.amazonaws.com" = {
+                  helper = ''!${pkgs.awscli2}/bin/aws --profile tpm codecommit credential-helper "$@"'';
+                  useHttpPath = true;
+                };
+                remote.pushDefault = "aws";
+                branch.master = {
+                  remote = "aws";
+                  merge = "refs/heads/master";
+                };
+                pass.signcommits = true;
+                user.signingkey = passSettings.signing_key;
+              }
+            }
           '';
           serviceConfig = {
             Type = "oneshot";
