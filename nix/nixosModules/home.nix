@@ -221,6 +221,14 @@ in
             ".config/direnv/direnvrc".nix-direnv = pkgs.nix-direnv.override {
               nix = config.nix.package;
             };
+            ".aws/config" = {
+              inherit (pkgs) aws-signing-helper;
+              inherit (lib.importJSON (flake.src + /aws/outputs.json))
+                TrustAnchorArn
+                ProfileArn
+                UserRoleArn
+                ;
+            };
           };
         in
         genAttrs' (listFilesRecursive dotDir) (p: rec {
@@ -274,6 +282,10 @@ in
             ''
           }
         '';
+        ".aws/config" = {
+          type = "copy";
+          permissions = "600";
+        };
         ".local/share/applications/com.valvesoftware.Steam.desktop".source =
           steamDesktopItem + /share/applications/com.valvesoftware.Steam.desktop;
       }
