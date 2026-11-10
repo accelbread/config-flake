@@ -409,6 +409,12 @@ in
           DirectoryMode = "0700";
         };
       };
+      paths.set-album-arts = {
+        description = "Set album arts on ~/Music changes";
+        wantedBy = [ "graphical-session.target" ];
+        partOf = [ "graphical-session.target" ];
+        pathConfig.PathChanged = "%h/Music";
+      };
     };
   };
 
