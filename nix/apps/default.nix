@@ -8,9 +8,15 @@
   emacsAccelbread,
   bubblewrap,
   firefox,
+  awscli2,
+  jq,
+  replaceVars,
   ...
 }:
 let
+  inherit (builtins) readFile toJSON;
+  inherit (lib) removePrefix removeSuffix;
+
   nix = ''${nixVersions.latest}/bin/nix --extra-experimental-features "${
     lib.concatStringsSep " " [
       "nix-command"
@@ -19,6 +25,15 @@ let
       "pipe-operators"
     ]
   }"'';
+
+  awsStack = replaceVars (src + /aws/stack.yaml) {
+    ca =
+      src + /misc/ca.pem
+      |> readFile
+      |> toJSON
+      |> removePrefix "\""
+      |> removeSuffix "\"";
+  };
 in
 rec {
   default = emacs;
@@ -39,6 +54,27 @@ rec {
     ${nix} build --no-link "$ref"
     script=$(${nix} eval --raw "$ref")
     exec $script
+  '';
+
+  aws-deploy = writeShellScript "deploy-aws" ''
+    exec ${awscli2}/bin/aws cloudformation deploy \
+      --region us-west-2 \
+      --stack-name personal-infra \
+      --template-file ${awsStack} \
+      --capabilities CAPABILITY_IAM \
+      --no-fail-on-empty-changeset \
+      "$@"
+  '';
+  aws-outputs = writeShellScript "aws-outputs" ''
+    set -euo pipefail
+    ${awscli2}/bin/aws cloudformation describe-stacks \
+      --region us-west-2 \
+      --stack-name personal-infra \
+      --query 'Stacks[0].Outputs' \
+      --output json \
+      --no-cli-pager \
+      "$@" |
+      ${jq}/bin/jq 'map({key: .OutputKey, value: .OutputValue}) | from_entries'
   '';
 
   firefoxNetworkDns = writeShellScript "firefoxNetworkDns" ''

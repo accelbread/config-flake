@@ -1,0 +1,110 @@
+# Copyright (C) Archit Gupta <archit@accelbread.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  com.aws.cloudformation.Context:
+    arch: Resources required for personal machine configurations.
+Resources:
+  MachineCA:
+    Type: AWS::RolesAnywhere::TrustAnchor
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Enable AWS access with personal CA
+    Properties:
+      Name: personal-ca
+      Enabled: true
+      Source:
+        SourceType: CERTIFICATE_BUNDLE
+        SourceData:
+          X509CertificateData: "@ca@"
+  MachineAccessProfile:
+    Type: AWS::RolesAnywhere::Profile
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Profile for CA based access
+    Properties:
+      Name: machine-access
+      Enabled: true
+      DurationSeconds: 3600
+      RoleArns:
+        - !GetAtt MachineAccessRole.Arn
+        - !GetAtt UserAccessRole.Arn
+  MachineAccessRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Role for system management/provisioning resource access.
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: rolesanywhere.amazonaws.com
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+              - sts:SetSourceIdentity
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !GetAtt MachineCA.TrustAnchorArn
+              StringEquals:
+                aws:PrincipalTag/x509Subject/OU: machine
+      ManagedPolicyArns:
+        - !Ref MachineAccessPolicy
+  UserAccessRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Role for user resource access.
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: rolesanywhere.amazonaws.com
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+              - sts:SetSourceIdentity
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !GetAtt MachineCA.TrustAnchorArn
+              StringEquals:
+                aws:PrincipalTag/x509Subject/OU: user
+      ManagedPolicyArns:
+        - !Ref UserAccessPolicy
+  MachineAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Policy for system management/provisioning resource access.
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action: '*'
+            Resource: '*'
+  UserAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Policy for user resource access.
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action: '*'
+            Resource: '*'
+Outputs:
+  TrustAnchorArn:
+    Value: !GetAtt MachineCA.TrustAnchorArn
+  ProfileArn:
+    Value: !GetAtt MachineAccessProfile.ProfileArn
+  MachineRoleArn:
+    Value: !GetAtt MachineAccessRole.Arn
+  UserRoleArn:
+    Value: !GetAtt UserAccessRole.Arn

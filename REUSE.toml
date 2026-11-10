@@ -11,6 +11,7 @@ path = [
   "dotfiles/**",
   "nix/templates/**",
   "esphome/**",
+  "**/*.json",
   "**/*.xml",
   "**/*.conf",
 ]

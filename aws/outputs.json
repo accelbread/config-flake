@@ -1,0 +1,6 @@
+{
+  "UserRoleArn": "arn:aws:iam::593348486915:role/personal-infra-UserAccessRole-KfoDdnlQAMAR",
+  "TrustAnchorArn": "arn:aws:rolesanywhere:us-west-2:593348486915:trust-anchor/132b10c8-4e2d-40c6-81c8-c39f81464058",
+  "ProfileArn": "arn:aws:rolesanywhere:us-west-2:593348486915:profile/59fba8c0-49af-4db7-806c-5c98f79c39d8",
+  "MachineRoleArn": "arn:aws:iam::593348486915:role/personal-infra-MachineAccessRole-zLTa5X7sMeNu"
+}
