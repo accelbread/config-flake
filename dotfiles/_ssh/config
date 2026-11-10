@@ -10,8 +10,5 @@ Host gitlab.com
 Host ssh.gitlab.gnome.org
   User git
 
-Host git-codecommit.*.amazonaws.com
-  User APKAYUJSTM4B3L2KNEX2
-
 Host hf.co
   User git

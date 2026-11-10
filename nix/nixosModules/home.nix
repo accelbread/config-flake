@@ -301,10 +301,16 @@ in
               mkdir -p ${passSettings.dir}
               pass git init
               pass git remote add \
-                aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
+                aws https://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
             fi
             pass git remote set-url \
-              aws ssh://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
+              aws https://git-codecommit.us-west-2.amazonaws.com/v1/repos/pass
+            pass git config \
+              credential.https://git-codecommit.us-west-2.amazonaws.com.helper \
+              '!${pkgs.awscli2}/bin/aws --profile tpm codecommit credential-helper "$@"'
+            pass git config \
+              credential.https://git-codecommit.us-west-2.amazonaws.com.useHttpPath \
+              true
             pass git config remote.pushDefault aws
             pass git config branch.master.remote aws
             pass git config branch.master.merge refs/heads/master

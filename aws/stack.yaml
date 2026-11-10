@@ -96,9 +96,18 @@ Resources:
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Effect: Deny
-            Action: '*'
-            Resource: '*'
+          - Resource: !GetAtt PassRepo.Arn
+            Effect: Allow
+            Action:
+              - codecommit:GitPull
+              - codecommit:GitPush
+  PassRepo:
+    Type: AWS::CodeCommit::Repository
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Pass git remote.
+    Properties:
+      RepositoryName: pass
 Outputs:
   TrustAnchorArn:
     Value: !GetAtt MachineCA.TrustAnchorArn
