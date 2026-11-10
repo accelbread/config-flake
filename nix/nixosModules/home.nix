@@ -292,9 +292,10 @@ in
     ];
     systemd = {
       services = {
-        pass-initialize = {
+        pass-initialize = { config, ... }: {
           description = "Configure pass";
           wantedBy = [ "default.target" ];
+          restartTriggers = [ config.serviceConfig.ExecStart ];
           path = [ pass ];
           script = ''
             if [[ ! -e ${passSettings.dir}/.git ]]; then
@@ -335,7 +336,7 @@ in
             Type = "oneshot";
           };
         };
-        local-api-proxy = {
+        local-api-proxy = { config, ... }: {
           description = "Local proxy for authenticated APIs";
           wantedBy = [ "graphical-session.target" ];
           partOf = [ "graphical-session.target" ];
@@ -343,6 +344,7 @@ in
             "graphical-session.target"
             "dbus.socket"
           ];
+          restartTriggers = [ config.serviceConfig.ExecStart ] ++ config.path;
           path = [
             pkgs.bash
             pkgs.caddy
@@ -361,6 +363,10 @@ in
           documentation = [ "man:gpg-agent(1)" ];
           requires = [ "gpg-agent.socket" ];
           after = [ "gpg-agent.socket" ];
+          partOf = [ "gpg-agent.socket" ];
+          reloadTriggers = [
+            config.hjem.users.archit.files.".local/share/gnupg/gpg-agent.conf".source
+          ];
           unitConfig.RefuseManualStart = true;
           environment.GNUPGHOME = sessionVariables.GNUPGHOME;
           serviceConfig = {
@@ -373,6 +379,7 @@ in
         description = "GnuPG cryptographic agent and passphrase cache";
         documentation = [ "man:gpg-agent(1)" ];
         wantedBy = [ "sockets.target" ];
+        restartTriggers = [ pkgs.gnupg ];
         socketConfig = {
           ListenStream =
             let
