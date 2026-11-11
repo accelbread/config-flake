@@ -10,8 +10,8 @@ stdenv.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "wget";
     repo = "realtek-r8152-linux";
-    rev = "v2.16.3.20221209";
-    sha256 = "sha256-RaYuprQFbWAy8CtSZOau0Qlo3jtZnE1AhHBgzASopSA=";
+    rev = "v2.22.1.20261021";
+    sha256 = "sha256-kj3scuUWUFpVZ5ldiLCRwFxsaEt9NM4SfAYb0u8JTEs=";
   };
   dontBuild = true;
   dontConfigure = true;
