@@ -25,8 +25,6 @@
   aws-cloudformation-languageserver,
   tombi,
   symlinkJoin,
-  vale-proselint,
-  vale-write-good,
   makeFontsConf,
   adwaita-fonts,
   noto-fonts,
@@ -96,7 +94,6 @@ let
   binPkgMap = {
     inherit
       perl
-      vale
       shellcheck
       direnv
       guile
@@ -108,6 +105,10 @@ let
       codex-acp
       ;
     inherit (rustPackages) rustfmt;
+    vale = vale.withStyles (styles: [
+      styles.proselint
+      styles.write-good
+    ]);
     git = gitWithAbsorb;
     rg = ripgrep;
     rust-analyzer = rustAnalyzerWithToolchain;
@@ -159,16 +160,7 @@ let
     );
   configPkgs = attrVals (map pkgName configPkgsSrcs);
 
-  valeStyles = symlinkJoin {
-    name = "vale-styles";
-    paths = [
-      vale-proselint
-      vale-write-good
-    ];
-  };
-
   valeConfig = writeText "vale-config" ''
-    StylesPath = ${valeStyles}
     MinAlertLevel = suggestion
     [*]
     BasedOnStyles = proselint, write-good
