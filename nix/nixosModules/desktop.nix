@@ -11,6 +11,7 @@
 let
   inherit (lib)
     attrValues
+    escapeShellArgs
     getExe
     optional
     singleton
@@ -263,13 +264,29 @@ in
     };
     systemPackages = [
       pkgs.gnome-accent-directories
-      pkgs.morewaita-icon-theme
       pkgs.adw-gtk3
       pkgs.qadwaitadecorations
       pkgs.qadwaitadecorations-qt6
       pkgs.gnome-epub-thumbnailer
       desktopBackgrounds
     ];
+    extraSetup = ''
+      icon_source=${pkgs.morewaita-icon-theme}/share/icons/MoreWaita
+      icon_target=$out/share/icons/MoreWaita
+      install -Dm644 "$icon_source/index.theme" "$icon_target/index.theme"
+      {
+        find -L "$out" ${escapeShellArgs config.users.users.archit.packages} \
+          -maxdepth 3 -path '*/share/applications/*.desktop' -type f \
+          -exec sed -n 's/^Icon=//p' {} +
+        echo com.valvesoftware.Steam
+      } | while IFS= read -r icon; do
+        for file in "$icon_source"/{scalable,symbolic}/apps/{"$icon","$icon-symbolic"}.svg; do
+          if [ -f "$file" ]; then
+            install -Dm644 "$file" "$icon_target/''${file#"$icon_source/"}"
+          fi
+        done
+      done
+    '';
     wordlist = {
       enable = true;
       lists.WORDLIST = [
