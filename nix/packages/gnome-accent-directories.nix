@@ -3,6 +3,7 @@
 {
   stdenvNoCC,
   fetchFromGitHub,
+  adwaita-icon-theme,
 }:
 stdenvNoCC.mkDerivation (final: {
   pname = "gnome-accent-directories";
@@ -16,6 +17,18 @@ stdenvNoCC.mkDerivation (final: {
   };
 
   dontBuild = true;
+
+  # TODO: Remove when fixed upstream
+  postPatch = ''
+    sed \
+      -e 's/#438de6/#9141AC/g' \
+      -e 's/#62a0ea/#a05bb7/g' \
+      -e 's/#a4caee/#c69ed4/g' \
+      -e 's/#afd4ff/#ceabda/g' \
+      -e 's/#c0d5ea/#ceabda/g' \
+      ${adwaita-icon-theme}/share/icons/Adwaita/scalable/places/folder-projects.svg \
+      > icons/Adwaita-Purple/scalable/places/folder-projects.svg
+  '';
 
   installPhase = ''
     runHook preInstall
