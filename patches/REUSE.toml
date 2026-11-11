@@ -30,3 +30,8 @@ SPDX-License-Identifier = "BSD-2-Clause"
 path = "gnome-online-accounts/**"
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "LGPL-2.0-or-later"
+
+[[annotations]]
+path = "morewaita-icon-theme/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "GPL-3.0-only"
