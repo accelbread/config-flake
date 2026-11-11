@@ -8,7 +8,7 @@ cd /persist/.data-backup
 gocryptfs -reverse -ro --exclude-from backup-exclude . ~/Desktop/mnt
 cd ~/Desktop/mnt
 aws configure
-aws s3 sync --region us-west-2 --delete . s3://<bucket-name>
+rclone sync --checksum --s3-env-auth --s3-region us-west-2 . :s3:<bucket-name>
 # Remove creds
 cd ~
 umount ~/Desktop/mnt
