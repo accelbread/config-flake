@@ -12,23 +12,11 @@ stdenvNoCC.mkDerivation (final: {
   src = fetchFromGitHub {
     owner = "taiwbi";
     repo = final.pname;
-    rev = "7d96809684632911d2b4c63742a3360aefa20e98";
-    hash = "sha256-C8uCmDw9bMWKmbFEhUB0o6HxO7CY5g4wJk06dIaU1zQ=";
+    rev = "e77764bdde75144e879474247dd923b20d461a37";
+    hash = "sha256-3xmvhAz/OMUGo2DOJSCGUusSHpGZqXVHT95o3wzV58I=";
   };
 
   dontBuild = true;
-
-  # TODO: Remove when fixed upstream
-  postPatch = ''
-    sed \
-      -e 's/#438de6/#9141AC/g' \
-      -e 's/#62a0ea/#a05bb7/g' \
-      -e 's/#a4caee/#c69ed4/g' \
-      -e 's/#afd4ff/#ceabda/g' \
-      -e 's/#c0d5ea/#ceabda/g' \
-      ${adwaita-icon-theme}/share/icons/Adwaita/scalable/places/folder-projects.svg \
-      > icons/Adwaita-Purple/scalable/places/folder-projects.svg
-  '';
 
   installPhase = ''
     runHook preInstall
