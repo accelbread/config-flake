@@ -483,6 +483,7 @@ in
           "Downloads"
           ".cache/evolution"
           ".cache/fractal"
+          ".cache/agent-shell/transcripts"
         ];
         files = map (file "0600") [
           ".local/state/nix-output-monitor/build-reports.csv"
