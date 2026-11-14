@@ -1,0 +1,238 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sat, 14 Nov 2026 01:57:31 -0800
+Subject: [PATCH] Prevent GLib signal-list corruption from PGTK nonlocal exits
+
+Lisp nonlocal exits from GTK callbacks bypass GLib's cleanup of its
+stack-allocated Emission entries. Subsequent signal emissions can follow
+those dangling entries and segfault.
+
+This was observed from a hung Emacs core dump, though root cause is unknown.
+---
+ src/pgtkim.c   |  12 ++---
+ src/pgtkterm.c | 127 ++++++++++++++++++++++++++++++++++++++-----------
+ src/pgtkterm.h |   1 +
+ 3 files changed, 106 insertions(+), 34 deletions(-)
+
+diff --git a/src/pgtkim.c b/src/pgtkim.c
+index 81d9503cbc..4f99c5d377 100644
+--- a/src/pgtkim.c
++++ b/src/pgtkim.c
+@@ -242,20 +242,20 @@ pgtk_im_use_context (struct pgtk_display_info *dpyinfo, bool use_p)
+       if (dpyinfo->im.context == NULL)
+ 	{
+ 	  dpyinfo->im.context = gtk_im_multicontext_new ();
+-	  g_signal_connect (dpyinfo->im.context, "commit",
++	  pgtk_signal_connect (dpyinfo->im.context, "commit",
+ 			    G_CALLBACK (im_context_commit_cb), dpyinfo);
+-	  g_signal_connect (dpyinfo->im.context, "retrieve-surrounding",
++	  pgtk_signal_connect (dpyinfo->im.context, "retrieve-surrounding",
+ 			    G_CALLBACK (im_context_retrieve_surrounding_cb),
+ 			    dpyinfo);
+-	  g_signal_connect (dpyinfo->im.context, "delete-surrounding",
++	  pgtk_signal_connect (dpyinfo->im.context, "delete-surrounding",
+ 			    G_CALLBACK (im_context_delete_surrounding_cb),
+ 			    dpyinfo);
+-	  g_signal_connect (dpyinfo->im.context, "preedit-changed",
++	  pgtk_signal_connect (dpyinfo->im.context, "preedit-changed",
+ 			    G_CALLBACK (im_context_preedit_changed_cb),
+ 			    dpyinfo);
+-	  g_signal_connect (dpyinfo->im.context, "preedit-end",
++	  pgtk_signal_connect (dpyinfo->im.context, "preedit-end",
+ 			    G_CALLBACK (im_context_preedit_end_cb), dpyinfo);
+-	  g_signal_connect (dpyinfo->im.context, "preedit-start",
++	  pgtk_signal_connect (dpyinfo->im.context, "preedit-start",
+ 			    G_CALLBACK (im_context_preedit_start_cb),
+ 			    dpyinfo);
+ 	  gtk_im_context_set_use_preedit (dpyinfo->im.context, TRUE);
+diff --git a/src/pgtkterm.c b/src/pgtkterm.c
+index 733c7d27c4..9127a4eccd 100644
+--- a/src/pgtkterm.c
++++ b/src/pgtkterm.c
+@@ -6824,12 +6824,83 @@ static gboolean pgtk_selection_event (GtkWidget *, GdkEvent *, gpointer);
+ 
+ 
+ 
++
++/* A Lisp nonlocal exit must not cross g_closure_invoke or signal emission:
++   GLib keeps stack-allocated Emission entries until those calls return.
++   Install the catch inside the closure marshaller, so even errors from
++   mouse highlighting and redisplay return normally to GLib.  */
++struct pgtk_callback_invocation
++{
++  GClosure *closure;
++  GValue *return_value;
++  guint n_parameters;
++  const GValue *parameters;
++  gpointer invocation_hint;
++  gpointer marshal_data;
++  bool completed;
++};
++
++static Lisp_Object
++pgtk_invoke_callback (void *arg)
++{
++  struct pgtk_callback_invocation *invocation = arg;
++  g_cclosure_marshal_generic (invocation->closure, invocation->return_value,
++                             invocation->n_parameters, invocation->parameters,
++                             invocation->invocation_hint,
++                             invocation->marshal_data);
++  invocation->completed = true;
++  return Qnil;
++}
++
++static Lisp_Object
++pgtk_discard_callback_exit (enum nonlocal_exit type, Lisp_Object value)
++{
++  /* Do not signal, allocate Lisp objects, or call Lisp from this handler.  */
++  return Qnil;
++}
++
++static void
++pgtk_marshal_callback (GClosure *closure, GValue *return_value,
++                       guint n_parameters, const GValue *parameters,
++                       gpointer invocation_hint, gpointer marshal_data)
++{
++  struct pgtk_callback_invocation invocation =
++    { closure, return_value, n_parameters, parameters,
++      invocation_hint, marshal_data, false };
++
++  internal_catch_all (pgtk_invoke_callback, &invocation,
++                      pgtk_discard_callback_exit);
++  if (!invocation.completed)
++    {
++      /* Also covers failure to allocate the catch handler.  In particular,
++         a failed boolean event handler must not reuse a previous result.  */
++      if (return_value && G_VALUE_TYPE (return_value))
++        g_value_reset (return_value);
++      GSignalInvocationHint *hint = invocation_hint;
++      fprintf (stderr, "PGTK: discarded nonlocal exit or skipped callback"
++               " for signal %s\n",
++               hint ? g_signal_name (hint->signal_id) : "(unknown)");
++    }
++}
++
++/* Like g_signal_connect for PGTK's frame and input-method callbacks.
++   These connections are removed by handler ID or object destruction;
++   a custom marshaller does not support GLib's matching by callback function.  */
++gulong
++pgtk_signal_connect (gpointer instance, const gchar *signal,
++                     GCallback callback, gpointer data)
++{
++  GClosure *closure = g_cclosure_new (callback, data, NULL);
++  g_closure_set_marshal (closure, pgtk_marshal_callback);
++  return g_signal_connect_closure (instance, signal, closure, FALSE);
++}
++
+ void
+ pgtk_set_event_handler (struct frame *f)
+ {
+   if (f->tooltip)
+     {
+-      g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "draw",
++      pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "draw",
+ 			G_CALLBACK (pgtk_handle_draw), NULL);
+       return;
+     }
+@@ -6840,62 +6911,62 @@ pgtk_set_event_handler (struct frame *f)
+ 
+   if (FRAME_GTK_OUTER_WIDGET (f))
+     {
+-      g_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)),
++      pgtk_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)),
+ 			"window-state-event", G_CALLBACK (window_state_event),
+ 			NULL);
+-      g_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "delete-event",
++      pgtk_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "delete-event",
+ 			G_CALLBACK (delete_event), NULL);
+-      g_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "event",
++      pgtk_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "event",
+ 			G_CALLBACK (pgtk_handle_event), NULL);
+-      g_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "configure-event",
++      pgtk_signal_connect (G_OBJECT (FRAME_GTK_OUTER_WIDGET (f)), "configure-event",
+ 			G_CALLBACK (configure_event), NULL);
+     }
+ 
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "map-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "map-event",
+ 		    G_CALLBACK (map_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "size-allocate",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "size-allocate",
+ 		    G_CALLBACK (size_allocate), f);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "key-press-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "key-press-event",
+ 		    G_CALLBACK (key_press_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "key-release-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "key-release-event",
+ 		    G_CALLBACK (key_release_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "focus-in-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "focus-in-event",
+ 		    G_CALLBACK (focus_in_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "focus-out-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "focus-out-event",
+ 		    G_CALLBACK (focus_out_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "enter-notify-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "enter-notify-event",
+ 		    G_CALLBACK (enter_notify_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "leave-notify-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "leave-notify-event",
+ 		    G_CALLBACK (leave_notify_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "motion-notify-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "motion-notify-event",
+ 		    G_CALLBACK (motion_notify_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "button-press-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "button-press-event",
+ 		    G_CALLBACK (button_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "button-release-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "button-release-event",
+ 		    G_CALLBACK (button_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "scroll-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "scroll-event",
+ 		    G_CALLBACK (scroll_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "configure-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "configure-event",
+ 		    G_CALLBACK (configure_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-leave",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-leave",
+ 		    G_CALLBACK (drag_leave), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-motion",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-motion",
+ 		    G_CALLBACK (drag_motion), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-drop",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "drag-drop",
+ 		    G_CALLBACK (drag_drop), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "draw",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "draw",
+ 		    G_CALLBACK (pgtk_handle_draw), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "property-notify-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "property-notify-event",
+ 		    G_CALLBACK (pgtk_selection_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-clear-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-clear-event",
+ 		    G_CALLBACK (pgtk_selection_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-request-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-request-event",
+ 		    G_CALLBACK (pgtk_selection_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-notify-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "selection-notify-event",
+ 		    G_CALLBACK (pgtk_selection_event), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "touch-event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "touch-event",
+ 		    G_CALLBACK (touch_event_cb), NULL);
+-  g_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "event",
++  pgtk_signal_connect (G_OBJECT (FRAME_GTK_WIDGET (f)), "event",
+ 		    G_CALLBACK (pgtk_handle_event), NULL);
+ }
+ 
+diff --git a/src/pgtkterm.h b/src/pgtkterm.h
+index abf16b3aef..18fa68fe32 100644
+--- a/src/pgtkterm.h
++++ b/src/pgtkterm.h
+@@ -595,6 +595,7 @@ extern int pgtk_parse_color (struct frame *, const char *, Emacs_Color *);
+ extern void pgtk_clear_area (struct frame *, int, int, int, int);
+ extern int pgtk_gtk_to_emacs_modifiers (struct pgtk_display_info *, int);
+ extern void pgtk_clear_under_internal_border (struct frame *);
++extern gulong pgtk_signal_connect (gpointer, const gchar *, GCallback, gpointer);
+ extern void pgtk_set_event_handler (struct frame *);
+ 
+ /* Implemented in pgtkterm.c */
