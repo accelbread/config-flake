@@ -1570,6 +1570,7 @@ used instead. OPTIONS sets server initialization options."
         magit-no-message '("Turning on ")
         magit-wip-mode-lighter ""
         magit-process-apply-ansi-colors 'filter
+        magit-ediff-dwim-show-on-hunks t
         magit-git-executable (get-hermetic-executable "git")
         magit-perl-executable (get-hermetic-executable "perl"))
 
