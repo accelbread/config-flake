@@ -9,7 +9,8 @@
 let
   prefs =
     pkgs.runCommand "librewolf_config.json" { }
-      ''${pkgs.yq-go}/bin/yq -o=json ${./misc/librewolf_config.yaml} > "$out"'';
+      ''${pkgs.yq-go}/bin/yq -o=json ${./librewolf/config.yaml} > "$out"'';
+  pinnedExts = lib.importJSON ./librewolf/extensions.json;
 in
 {
   options.ab.librewolf.nativeMessagingHosts = lib.mkOption {
@@ -28,7 +29,7 @@ in
       '';
       extraPrefsFiles = old.extraPrefsFiles or [ ] ++ [
         (pkgs.runCommand "librewolf_config.js" { } ''
-          substitute ${./misc/librewolf_config.js} "$out" \
+          substitute ${./librewolf/config.js} "$out" \
             --subst-var-by config "$(cat ${prefs})"
         '')
       ];
@@ -49,6 +50,10 @@ in
       ]
       ++ old.extraPoliciesFiles or [ ];
       extraPolicies = old.extraPolicies or { } // {
+        ExtensionSettings = lib.mapAttrs (_: v: {
+          install_url = "file://${pkgs.fetchurl v}";
+          updates_disabled = true;
+        }) pinnedExts;
         SearchEngines = {
           Default = "Kagi";
           Remove = [
