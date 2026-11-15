@@ -5,6 +5,7 @@ prefs:
   browser.bookmarks.restore_default_bookmarks: false
   browser.download.always_ask_before_handling_new_types: true
   browser.download.useDownloadDir: true
+  browser.fireButton.enabled: false
   browser.ml.linkPreview.enabled: false
   browser.preferences.defaultPerformanceSettings.enabled: false
   browser.sessionstore.interval: 30000
