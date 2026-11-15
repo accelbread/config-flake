@@ -523,6 +523,7 @@ in
         remember-last-inbox = false;
         unset-html-colors = true;
         window-maximize = true;
+        compose-as-html = false;
       };
       "org/gnome/Console" = {
         visual-bell = false;
