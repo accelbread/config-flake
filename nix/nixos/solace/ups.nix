@@ -15,9 +15,8 @@ in
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.nut}/bin/upsdrvctl -u nut start";
+        Type = "notify";
+        ExecStart = "${pkgs.nut}/bin/upsdrvctl -F -u nut start";
       };
     };
     upsd = {
