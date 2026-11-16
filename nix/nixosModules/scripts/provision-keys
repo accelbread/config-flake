@@ -59,9 +59,15 @@ provision_x509() {
     local directory=$1 subject=$2 owner=$3
 
     if [[ ! -e "$directory/key.pem" ]]; then
+        local curves curve=P-256
+        curves=$(tpm2_getcap ecc-curves)
+        if [[ $curves == *TPM2_ECC_NIST_P384:* ]]; then
+            curve=P-384
+        fi
+
         openssl genpkey \
             -provider @tpm2-openssl@/lib/ossl-modules/tpm2.so \
-            -algorithm EC -pkeyopt group:P-384 -out "$directory/key.pem"
+            -algorithm EC -pkeyopt group:$curve -out "$directory/key.pem"
     fi
 
     openssl x509 -new \

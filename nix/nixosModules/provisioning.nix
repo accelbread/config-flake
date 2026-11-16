@@ -126,6 +126,7 @@ in
             pkgs.coreutils
             pkgs.openssh
             pkgs.openssl
+            pkgs.tpm2-tools
           ];
           flake = flake.src;
           inherit (pkgs) yubico-piv-tool libp11 tpm2-openssl;
