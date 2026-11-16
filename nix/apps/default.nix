@@ -3,6 +3,7 @@
 {
   lib,
   src,
+  system,
   nixVersions,
   writeShellScript,
   emacsAccelbread,
@@ -11,11 +12,13 @@
   awscli2,
   jq,
   replaceVars,
+  nix-update,
+  firefoxExtensions,
   ...
 }:
 let
   inherit (builtins) readFile toJSON;
-  inherit (lib) removePrefix removeSuffix;
+  inherit (lib) fix removePrefix removeSuffix;
 
   nix = ''${nixVersions.latest}/bin/nix --extra-experimental-features "${
     lib.concatStringsSep " " [
@@ -35,8 +38,8 @@ let
       |> removeSuffix "\"";
   };
 in
-rec {
-  default = emacs;
+fix (self: {
+  default = self.emacs;
   emacs = writeShellScript "emacsWithConfig" ''
     set -eu
     emacs_dir=$(mktemp -d)
@@ -77,9 +80,25 @@ rec {
       ${jq}/bin/jq 'map({key: .OutputKey, value: .OutputValue}) | from_entries'
   '';
 
+  update-packages = writeShellScript "update" ''
+    set -euo pipefail
+    update_package() {
+      ${lib.getExe nix-update} --flake "$@"
+    }
+
+    update_package r8152-udev-rules
+    update_package --version=branch firefox-gnome-theme
+    update_package --version=branch materialDesignIcons
+    update_package --version=branch gnome-accent-directories
+    update_package --version=branch \
+      legacyPackages.${system}.emacsPackages.flymake-vale
+
+    ${toString firefoxExtensions.updateScript}
+  '';
+
   firefoxNetworkDns = writeShellScript "firefoxNetworkDns" ''
     exec ${bubblewrap}/bin/bwrap --bind / / --dev-bind /dev /dev \
       --bind /run/NetworkManager/resolv.conf /etc/resolv.conf \
       -- ${firefox}/bin/firefox
   '';
-}
+})

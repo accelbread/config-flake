@@ -39,7 +39,7 @@
   jing-trang,
   codex-acp,
   emptyDirectory,
-  fetchFromGitHub,
+  materialDesignIcons,
   ncurses,
   stdenvNoCC,
   makeDesktopItem,
@@ -195,13 +195,6 @@ let
     EOF
     ${jing-trang}/bin/trang ${svgDtd} $out/svg.rnc
   '';
-
-  materialDesignIcons = fetchFromGitHub {
-    owner = "Templarian";
-    repo = "MaterialDesign";
-    rev = "2424e748e0cc63ab7b9c095a099b9fe239b737c0";
-    hash = "sha256-QMGl7soAhErrrnY3aKOZpt49yebkSNzy10p/v5OaqQ0=";
-  };
 
   kindIconIconList = runCommand "kind-icon-icon-list" { } ''
     set -o pipefail

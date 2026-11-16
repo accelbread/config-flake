@@ -7,16 +7,18 @@
 }:
 elpaBuild rec {
   pname = "flymake-vale";
-  version = "0.0.1";
+  version = "0-unstable-2026-09-21";
 
   packageRequires = [ compat ];
 
-  src =
-    fetchFromGitHub {
-      owner = "tpeacock19";
-      repo = pname;
-      rev = "28d4a675ed8a186b4f3d2c3613e2eeb0d97f090c";
-      sha256 = "sha256-s+FI4rznhtyRg3swdxS/ZZXWdkAToNIG3p6xIfW2yCw=";
-    }
-    + "/${pname}.el";
+  src = fetchFromGitHub {
+    owner = "tpeacock19";
+    repo = pname;
+    rev = "3ae16071d7e1ab7cf4b0d30a731584d65a6d1977";
+    sha256 = "sha256-e8KXuKrWLbEqO/kOGz7Ki+dZTK63rKAn0YJGfUy91OE=";
+  };
+
+  preInstall = ''
+    src=$src/${pname}.el
+  '';
 }

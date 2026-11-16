@@ -7,7 +7,7 @@
 }:
 stdenvNoCC.mkDerivation (final: {
   pname = "gnome-accent-directories";
-  version = "15";
+  version = "0-unstable-2026-11-13";
 
   src = fetchFromGitHub {
     owner = "taiwbi";

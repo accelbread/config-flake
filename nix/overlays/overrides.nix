@@ -76,6 +76,7 @@ prev.lib.composeManyExtensions [
           }
         ) (n: eprev.${n}.overrideAttrs) (patchDir + /emacsPackages)
       );
+    inherit (prev) emacsPackages;
   })
   (_: prev: {
     ccacheWrapper = prev.ccacheWrapper.override {
@@ -111,5 +112,13 @@ prev.lib.composeManyExtensions [
       chmod -R u+w $out
       rm -r $out/share/fonts
     '';
+    nix-update = prev.nix-update.overrideAttrs (old: {
+      patches = old.patches or [ ] ++ [
+        (final.fetchpatch {
+          url = "https://github.com/Mic92/nix-update/commit/d545c1fad667e573128cad0db55fdc77134a4d3c.patch";
+          hash = "sha256-CVSihQevWIwKSnjKo9ilw1hdi4a1t0xr6DunAUKSBFA=";
+        })
+      ];
+    });
   })
 ] final prev
