@@ -1498,10 +1498,9 @@ used instead. OPTIONS sets server initialization options."
 
 (eval-when-compile (require 'flymake-vale))
 
-;; `flymake-vale-modes' has incorrect option type
-(setq flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
-                            typst-ts-mode message-mode)
-      flymake-vale-program (get-hermetic-executable "vale"))
+(setopt flymake-vale-modes '( text-mode markdown-mode org-mode latex-mode
+                              typst-ts-mode message-mode)
+        flymake-vale-program (get-hermetic-executable "vale"))
 
 (add-hook 'find-file-hook 'flymake-vale-maybe-load)
 
