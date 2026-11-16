@@ -1,8 +1,32 @@
 {
+  "dark-background-light-text": {
+    "addonId": "jid1-QoFqdK4qzUfGWQ@jetpack",
+    "version": "0.7.7",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/5013743/dark_background_light_text-0.7.7.xpi",
+    "hash": "sha256:a2094b43e77b81aa156327f7e7201211f8770e7da4e55124de5b581ef90c425b"
+  },
+  "dearrow": {
+    "addonId": "deArrow@ajay.app",
+    "version": "2.3.10",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/4897568/dearrow-2.3.10.xpi",
+    "hash": "sha256:3151a51db8093746be646c041af3ead553e5de95fa4ebd5fae033e039e1056d1"
+  },
   "passff": {
     "addonId": "passff@invicem.pro",
     "version": "1.24",
     "url": "https://addons.mozilla.org/firefox/downloads/file/4985036/passff-1.24.xpi",
     "hash": "sha256:8ff25b8f923076705513d8b527829893218c803016a8ff37f1c0723dd7a63dd9"
+  },
+  "sponsorblock": {
+    "addonId": "sponsorBlocker@ajay.app",
+    "version": "6.1.7",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/4897574/sponsorblock-6.1.7.xpi",
+    "hash": "sha256:0d50e1632c6f15ee15a543e670e1c572974605a5c02622916e08e026803df83f"
+  },
+  "ublock-origin": {
+    "addonId": "uBlock0@raymondhill.net",
+    "version": "1.76.4",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/5257481/ublock_origin-1.76.4.xpi",
+    "hash": "sha256:66d0e3f21ce3b32b1bc0a9399b93cb2c9aa598ef18805d92118c76f66e266c1e"
   }
 }

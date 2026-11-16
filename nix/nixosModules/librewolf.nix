@@ -11,7 +11,13 @@ let
     pkgs.runCommand "librewolf_config.json" { }
       ''${pkgs.yq-go}/bin/yq -o=json ${./librewolf/config.yaml} > "$out"'';
   pinnedExts = {
-    inherit (pkgs.firefoxExtensions) passff;
+    inherit (pkgs.firefoxExtensions)
+      dark-background-light-text
+      dearrow
+      passff
+      sponsorblock
+      ublock-origin
+      ;
   };
 in
 {
@@ -40,9 +46,7 @@ in
         (pkgs.runCommand "librewolf_policies.json" { } ''
           ${pkgs.jq}/bin/jq '.extensions | {
             policies: {
-              ExtensionSettings: map_values(
-                (.policy // {}) + {installation_mode: "force_installed"}
-              ),
+              ExtensionSettings: map_values(.policy // {}),
               "3rdparty": {
                 Extensions: map_values(select(has("managed")) | .managed)
               }
@@ -57,6 +61,7 @@ in
           lib.nameValuePair v.addonId {
             install_url = "file://${v}";
             updates_disabled = true;
+            installation_mode = "force_installed";
           }
         ) pinnedExts;
         SearchEngines = {
