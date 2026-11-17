@@ -1,0 +1,93 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 16 Nov 2026 22:53:21 -0800
+Subject: [PATCH] Preserve magnet URIs when opening torrents
+
+GVfs rewrites magnet:? links as magnet:///? during GApplication's GFile
+conversion. Transmission rejects the altered URI, so opening magnet links
+from a browser fails with "Unable to add torrent".
+---
+ src/app.rs | 54 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
+
+diff --git a/src/app.rs b/src/app.rs
+index f599bb4..067e553 100644
+--- a/src/app.rs
++++ b/src/app.rs
+@@ -15,7 +15,9 @@
+ // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ use std::cell::{OnceCell, RefCell};
++use std::ffi::{c_char, CStr};
+ use std::path::PathBuf;
++use std::ptr;
+ use std::rc::Rc;
+ 
+ use adw::prelude::*;
+@@ -23,7 +25,7 @@
+ use base64::engine::general_purpose::STANDARD;
+ use base64::Engine;
+ use futures_util::FutureExt;
+-use glib::{clone, Properties, WeakRef};
++use glib::{clone, translate::ToGlibPtr, Properties, WeakRef};
+ use gtk::{gio, glib, FileFilter};
+ use smol::fs;
+ 
+@@ -516,7 +518,57 @@ pub struct FrgApplication(ObjectSubclass<imp::FrgApplication>)
+ }
+ 
+ impl FrgApplication {
++    fn register_magnet_scheme() {
++        // GVfs rewrites magnet:? URIs as magnet:///? when constructing GFiles.
++        // The local VFS instead preserves unsupported URIs verbatim.
++        let vfs = gio::Vfs::default();
++        if vfs == gio::Vfs::local() {
++            return;
++        }
++
++        // gio 0.19's safe binding cannot return None from a lookup callback,
++        // but parse-name lookups must decline unrelated identifiers.
++        unsafe extern "C" fn lookup_magnet_uri(
++            _vfs: *mut gio::ffi::GVfs,
++            identifier: *const c_char,
++            _data: glib::ffi::gpointer,
++        ) -> *mut gio::ffi::GFile {
++            // SAFETY: GIO supplies a non-null, NUL-terminated identifier that
++            // remains valid for the duration of this callback.
++            let identifier_bytes = unsafe { CStr::from_ptr(identifier) }.to_bytes();
++            if !identifier_bytes.starts_with(b"magnet:") {
++                return ptr::null_mut();
++            }
++
++            // SAFETY: The local VFS is distinct from the registered VFS, so
++            // this cannot recurse. Its constructor returns an owned GFile,
++            // matching the lookup callback's transfer-full return contract.
++            unsafe { gio::ffi::g_vfs_get_file_for_uri(gio::ffi::g_vfs_get_local(), identifier) }
++        }
++
++        // SAFETY: Both callbacks are static functions with no user data.
++        // The scheme is NUL-terminated and copied by GIO during registration.
++        let registered = unsafe {
++            gio::ffi::g_vfs_register_uri_scheme(
++                vfs.to_glib_none().0,
++                b"magnet\0".as_ptr().cast(),
++                Some(lookup_magnet_uri),
++                ptr::null_mut(),
++                None,
++                Some(lookup_magnet_uri),
++                ptr::null_mut(),
++                None,
++            )
++        };
++        if registered == glib::ffi::GFALSE {
++            warn!("A magnet URI handler is already registered");
++        }
++    }
++
+     pub fn run() {
++        // Register before GApplication handles command-line arguments or D-Bus Open.
++        Self::register_magnet_scheme();
++
+         debug!(
+             "{} ({}) ({}) - Version {} ({})",
+             config::NAME,

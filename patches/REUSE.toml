@@ -6,6 +6,7 @@ path = [
   "dbus-broker/**",
   "amberol/**",
   "fractal/**",
+  "fragments/**",
   "ccache/**",
 ]
 SPDX-FileCopyrightText = "NOASSERTION"
