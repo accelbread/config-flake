@@ -251,6 +251,14 @@ in
         ".config/librewolf/librewolf/profile/chrome/firefox-gnome-theme".source =
           pkgs.firefox-gnome-theme;
         ".config/GIMP/3.0/gimprc".type = "copy";
+        ".config/fragments/settings.json" = {
+          type = "copy";
+          text = builtins.toJSON {
+            peer-port-random-on-start = true;
+            port-forwarding-enabled = false;
+            encryption = "required";
+          };
+        };
         ".config/environment.d/10-user.conf".text =
           sessionVariables
           |> mapAttrsToList (
