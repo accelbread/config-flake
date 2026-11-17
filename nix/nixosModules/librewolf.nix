@@ -96,6 +96,10 @@ in
             }
           ];
         };
+        Handlers.schemes.magnet = {
+          action = "useSystemDefault";
+          ask = false;
+        };
       };
     }))
   ];

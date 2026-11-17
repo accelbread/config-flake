@@ -7,6 +7,7 @@ image/png=org.gnome.Loupe.desktop
 image/jpeg=org.gnome.Loupe.desktop
 audio/mpeg=io.bassi.Amberol.desktop
 audio/flac=io.bassi.Amberol.desktop
+x-scheme-handler/magnet=de.haeckerfelix.Fragments.desktop
 x-scheme-handler/parabolic=org.nickvision.tubeconverter.desktop
 
 [Removed Associations]
