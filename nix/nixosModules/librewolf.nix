@@ -14,6 +14,7 @@ let
     inherit (pkgs.firefoxExtensions)
       dark-background-light-text
       dearrow
+      parabolic
       passff
       sponsorblock
       ublock-origin

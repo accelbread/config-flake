@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 16 Nov 2026 20:49:43 -0800
+Subject: [PATCH] Remove installation of CMake build files
+
+These cause the output to depend on GCC when build in nixpkgs.
+---
+ cmake/helpers.cmake | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/helpers.cmake b/cmake/helpers.cmake
+index 742ef3f..18c82c2 100644
+--- a/cmake/helpers.cmake
++++ b/cmake/helpers.cmake
+@@ -83,7 +83,9 @@ function(generate_unix_install)
+     if(DBUS_ACTIVATABLE)
+         configure_file("${CMAKE_SOURCE_DIR}/resources/linux/${PROJECT_NAME}.service.in" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.service" @ONLY)
+     endif()
+-    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/" DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}")
++    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/" DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}"
++        PATTERN "CMake*" EXCLUDE
++        PATTERN "cmake*" EXCLUDE)
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_NAME}" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}")
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION "${CMAKE_INSTALL_BINDIR}")
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")

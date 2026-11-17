@@ -1,0 +1,12 @@
+diff --git a/org.nickvision.tubeconverter.gnome/blueprints/add_download_dialog.blp b/org.nickvision.tubeconverter.gnome/blueprints/add_download_dialog.blp
+index 77da18f..7087894 100644
+--- a/org.nickvision.tubeconverter.gnome/blueprints/add_download_dialog.blp
++++ b/org.nickvision.tubeconverter.gnome/blueprints/add_download_dialog.blp
+@@ -70,6 +70,7 @@ Adw.Dialog root {
+             }
+ 
+             Adw.SwitchRow immediatelyRow {
++              active: true;
+               title: _("Download Immediately");
+               subtitle: _("Use your previous download options for this download");
+             }

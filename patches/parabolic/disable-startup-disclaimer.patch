@@ -1,0 +1,13 @@
+diff --git a/libparabolic/src/models/configuration.cpp b/libparabolic/src/models/configuration.cpp
+index bef79d2..1b4de7a 100644
+--- a/libparabolic/src/models/configuration.cpp
++++ b/libparabolic/src/models/configuration.cpp
+@@ -156,7 +156,7 @@ namespace Nickvision::TubeConverter::Shared::Models
+ 
+     bool Configuration::getShowDisclaimerOnStartup() const
+     {
+-        return get("ShowDisclaimerOnStartup", true);
++        return get("ShowDisclaimerOnStartup", false);
+     }
+ 
+     void Configuration::setShowDisclaimerOnStartup(bool showDisclaimerOnStartup)

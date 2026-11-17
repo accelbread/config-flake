@@ -196,6 +196,7 @@ in
           inkscape
           foliate
           warp
+          parabolic
         ]
       )
       ++ [

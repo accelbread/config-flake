@@ -181,3 +181,7 @@ extensions:
       showUpsells: false
       thumbnailFallback: 2 # original thumbnail
       titleFormatting: 2 # sentence case
+
+  addon@nickvision.org:
+    allowedProtocols:
+      - parabolic

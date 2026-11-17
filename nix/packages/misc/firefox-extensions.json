@@ -11,6 +11,12 @@
     "url": "https://addons.mozilla.org/firefox/downloads/file/4897568/dearrow-2.3.10.xpi",
     "hash": "sha256:3151a51db8093746be646c041af3ead553e5de95fa4ebd5fae033e039e1056d1"
   },
+  "parabolic": {
+    "addonId": "addon@nickvision.org",
+    "version": "1.4",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/4643460/parabolic-1.4.xpi",
+    "hash": "sha256:6fcc22affa7ddad5f7c50b753bd9096074ef6424cc32c28d86981c630194a90a"
+  },
   "passff": {
     "addonId": "passff@invicem.pro",
     "version": "1.24",

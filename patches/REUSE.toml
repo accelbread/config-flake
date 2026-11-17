@@ -35,3 +35,8 @@ SPDX-License-Identifier = "LGPL-2.0-or-later"
 path = "morewaita-icon-theme/**"
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "GPL-3.0-only"
+
+[[annotations]]
+path = "parabolic/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "FSFAP"

@@ -29,6 +29,16 @@
     const extensionSettings = config.extensions;
 
     const settings = extensionSettings[extension.id];
+
+    for (const protocol of settings?.allowedProtocols ?? []) {
+      Services.perms.addFromPrincipal(
+        extension.principal,
+        `open-protocol-handler^${protocol}`,
+        Services.perms.ALLOW_ACTION,
+        Services.perms.EXPIRE_NEVER
+      );
+    }
+
     if (!settings?.local && !settings?.sync) {
       return;
     }
