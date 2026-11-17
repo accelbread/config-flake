@@ -185,7 +185,6 @@ in
           fractal
           gimp3
           libreoffice
-          celluloid
           amberol
           fragments
           gnome-decoder
@@ -250,17 +249,6 @@ in
         ".face".source = flake.src + /assets/icon.png;
         ".config/librewolf/librewolf/profile/chrome/firefox-gnome-theme".source =
           pkgs.firefox-gnome-theme;
-        ".config/celluloid/scripts".source =
-          pkgs.buildEnv {
-            name = "mpv-scripts";
-            pathsToLink = [ "/share/mpv/scripts" ];
-            paths = with pkgs.mpvScripts; [
-              autoload
-              mpris
-              sponsorblock-minimal
-            ];
-          }
-          + /share/mpv/scripts;
         ".config/GIMP/3.0/gimprc".type = "copy";
         ".config/environment.d/10-user.conf".text =
           sessionVariables
@@ -512,12 +500,6 @@ in
       "io/bassi/Amberol" = {
         background-play = false;
         replay-gain = "track";
-      };
-      "io/github/celluloid-player/celluloid" = {
-        mpv-config-enable = true;
-        mpv-config-file = "file:///home/archit/.config/mpv/mpv.conf";
-        mpris-enable = false;
-        draggable-video-area-enable = true;
       };
       "net/donnybeelo/Convey" = {
         remember-last-inbox = false;

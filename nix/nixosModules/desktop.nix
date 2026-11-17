@@ -248,7 +248,6 @@ in
       pkgs.gnome-backgrounds
       pkgs.gnome-music
       pkgs.gnome-tour
-      pkgs.showtime
       pkgs.simple-scan
     ];
     sessionVariables = {
