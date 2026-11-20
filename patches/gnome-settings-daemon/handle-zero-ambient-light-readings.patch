@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 19 Nov 2026 19:01:27 -0800
+Subject: [PATCH] Handle zero ambient light readings
+
+Zero-lux readings are currently discarded, leaving automatic brightness
+at its previous target even when the room becomes completely dark.
+---
+ plugins/power/gsd-power-manager.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/plugins/power/gsd-power-manager.c b/plugins/power/gsd-power-manager.c
+index a905ccf..a93d39f 100644
+--- a/plugins/power/gsd-power-manager.c
++++ b/plugins/power/gsd-power-manager.c
+@@ -3000,11 +3000,17 @@ iio_proxy_changed (GsdPowerManager *manager)
+         if (val_has == NULL || !g_variant_get_boolean (val_has))
+                 return;
+         val_als = g_dbus_proxy_get_cached_property (manager->iio_proxy, "LightLevel");
+-        if (val_als == NULL || g_variant_get_double (val_als) <= 0.f)
++        if (val_als == NULL || g_variant_get_double (val_als) < 0.f)
+                 return;
+         ambient_last_absolute = g_variant_get_double (val_als);
+         g_debug ("Read absolute light level: %f", ambient_last_absolute);
+ 
++        if (ambient_last_absolute == 0.f) {
++                manager->ambient_accumulator = 0.f;
++                shell_brightness_set_auto_target (manager, 0.0);
++                return;
++        }
++
+         /* the user has asked to renormalize */
+         if (manager->ambient_norm_required) {
+                 g_debug ("Normalizing light level");
