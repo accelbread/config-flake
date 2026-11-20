@@ -19,7 +19,6 @@
           <rate>60.000</rate>
           <ratemode>variable</ratemode>
         </mode>
-        <colormode>bt2100</colormode>
       </monitor>
     </logicalmonitor>
   </configuration>
