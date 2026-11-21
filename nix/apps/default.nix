@@ -4,7 +4,6 @@
   lib,
   src,
   system,
-  nixVersions,
   writeShellScript,
   emacsAccelbread,
   bubblewrap,
@@ -19,15 +18,6 @@
 let
   inherit (builtins) readFile toJSON;
   inherit (lib) fix removePrefix removeSuffix;
-
-  nix = ''${nixVersions.latest}/bin/nix --extra-experimental-features "${
-    lib.concatStringsSep " " [
-      "nix-command"
-      "flakes"
-      "ca-derivations"
-      "pipe-operators"
-    ]
-  }"'';
 
   awsStack = replaceVars (src + /aws/stack.yaml) {
     ca =
@@ -46,17 +36,6 @@ fix (self: {
     cleanup() { rm -rf "$emacs_dir"; }
     trap cleanup EXIT
     ${emacsAccelbread}/bin/emacs --init-directory="$emacs_dir" "$@"
-  '';
-
-  system = writeShellScript "run-system-action" ''
-    set -eu
-    if [[ $# -eq 1 ]]; then
-      set -- "$(</etc/hostname)" "$1"
-    fi
-    ref="${src}#nixosConfigurations.$1.config.ab.systemActions.$2"
-    ${nix} build --no-link "$ref"
-    script=$(${nix} eval --raw "$ref")
-    exec $script
   '';
 
   aws-deploy = writeShellScript "deploy-aws" ''

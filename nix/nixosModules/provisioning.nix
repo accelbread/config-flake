@@ -197,6 +197,13 @@ in
                 case "$1" in
                   ${
                     config.ab.systemActions
+                    |> lib.getAttrs [
+                      "disk-provision"
+                      "disk-mount"
+                      "disk-unmount"
+                      "install"
+                      "full-install"
+                    ]
                     |> lib.mapAttrsToList (
                       n: v: ''
                         ${lib.escapeShellArg n}) exec ${v};;

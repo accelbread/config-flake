@@ -44,9 +44,9 @@ run0 tailscale up
 
 ```sh
 # Plug in host YubiKey.
-nix run self#system -- provision-yubikey
+sysadmin provision-yubikey
 # Plug in the CA YubiKey too.
-run0 nix run self#system -- provision-keys
+run0 sysadmin provision-keys
 ```
 
 ### Pass
