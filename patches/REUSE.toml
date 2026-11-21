@@ -31,6 +31,11 @@ SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "LGPL-2.0-or-later"
 
 [[annotations]]
+path = "xdg-desktop-portal-gnome/**"
+SPDX-FileCopyrightText = "NOASSERTION"
+SPDX-License-Identifier = "LGPL-2.1-or-later"
+
+[[annotations]]
 path = "morewaita-icon-theme/**"
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "GPL-3.0-only"
@@ -44,3 +49,4 @@ path = [
 ]
 SPDX-FileCopyrightText = "NOASSERTION"
 SPDX-License-Identifier = "FSFAP"
+

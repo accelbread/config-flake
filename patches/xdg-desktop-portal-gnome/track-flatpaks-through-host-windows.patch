@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Sat, 21 Nov 2026 11:18:05 -0800
+Subject: [PATCH] background: Track Flatpaks through host windows
+
+Steam running under host gamescope appears windowless because the
+outer window has no sandbox ID. Recognize its desktop entry's
+X-Flatpak ID so it is not reported as a background app.
+---
+ src/background.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/src/background.c b/src/background.c
+index dcee59c..2556258 100644
+--- a/src/background.c
++++ b/src/background.c
+@@ -66,6 +66,7 @@ get_app_state (void)
+       while (g_variant_iter_loop (iter, "{&s@a{sv}}", &app_id, &dict))
+         {
+           const char *sandboxed_app_id = NULL;
++          g_autofree char *desktop_flatpak_id = NULL;
+           g_autofree const char **seats = NULL;
+           char *app;
+           AppState state = BACKGROUND;
+@@ -73,8 +74,21 @@ get_app_state (void)
+           g_variant_lookup (dict, "sandboxed-app-id", "&s", &sandboxed_app_id);
+           g_variant_lookup (dict, "active-on-seats", "^a&s", &seats);
+ 
+-          /* See https://gitlab.gnome.org/GNOME/gnome-shell/issues/1289 */
++          /* Host wrappers such as gamescope can represent Flatpak windows without
++           * a sandbox ID. Fall back to the associated desktop entry's X-Flatpak ID.
++           */
+           if (sandboxed_app_id == NULL)
++            {
++              g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new (app_id);
++
++              if (info != NULL)
++                desktop_flatpak_id = g_desktop_app_info_get_string (info, "X-Flatpak");
++
++              sandboxed_app_id = desktop_flatpak_id;
++            }
++
++          /* See https://gitlab.gnome.org/GNOME/gnome-shell/issues/1289 */
++          if (sandboxed_app_id == NULL || *sandboxed_app_id == '\0')
+             continue;
+ 
+           app = g_strdup (sandboxed_app_id);
