@@ -192,28 +192,15 @@ in
             };
 
             environment.systemPackages = lib.singleton (
-              pkgs.writeShellScriptBin "sysinstall" ''
-                set -euo pipefail
-                case "$1" in
-                  ${
-                    config.ab.systemActions
-                    |> lib.getAttrs [
-                      "disk-provision"
-                      "disk-mount"
-                      "disk-unmount"
-                      "install"
-                      "full-install"
-                    ]
-                    |> lib.mapAttrsToList (
-                      n: v: ''
-                        ${lib.escapeShellArg n}) exec ${v};;
-                      ''
-                    )
-                    |> lib.concatStringsSep "\n"
-                  }
-                esac
-                exit 1
-              ''
+              import ./scripts/dispatchScript.nix pkgs "sysinstall" (
+                lib.getAttrs [
+                  "disk-provision"
+                  "disk-mount"
+                  "disk-unmount"
+                  "install"
+                  "full-install"
+                ] config.ab.systemActions
+              )
             );
           }
         );

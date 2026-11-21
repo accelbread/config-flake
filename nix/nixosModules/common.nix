@@ -368,25 +368,12 @@ in
     ];
     systemPackages = with pkgs; [
       lkl
-      (writeShellScriptBin "sysadmin" ''
-        set -euo pipefail
-        case "$1" in
-          ${
-            config.ab.systemActions
-            |> lib.getAttrs [
-              "provision-yubikey"
-              "provision-keys"
-            ]
-            |> lib.mapAttrsToList (
-              n: v: ''
-                ${lib.escapeShellArg n}) exec ${v};;
-              ''
-            )
-            |> lib.concatStringsSep "\n"
-          }
-        esac
-        exit 1
-      '')
+      (import ./scripts/dispatchScript.nix pkgs "sysadmin" (
+        lib.getAttrs [
+          "provision-yubikey"
+          "provision-keys"
+        ] config.ab.systemActions
+      ))
     ];
     variables.EDITOR = "zile";
   };
