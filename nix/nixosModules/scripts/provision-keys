@@ -65,6 +65,7 @@ export OPENSSL_CONF=@opensslConfig@
 
 provision_x509() {
     local directory=$1 subject=$2 owner=$3
+    shift 3
 
     if [[ ! -e "$directory/key.pem" ]]; then
         local curves curve=P-256
@@ -81,11 +82,14 @@ provision_x509() {
         -force_pubkey "$directory/key.pem" -subj "$subject" \
         -CA @flake@/misc/ca.pem -CAkey 'pkcs11:id=%05;type=private' \
         -days 3650 -sha512 \
-        -extfile <(printf '%s\n' 'keyUsage=critical,digitalSignature') \
+        -extfile <(printf '%s\n' 'keyUsage=critical,digitalSignature' "$@") \
         -out "$directory/cert.pem"
     chown "$owner:" "$directory"/{key,cert}.pem
     chmod 0600 "$directory"/{key,cert}.pem
 }
 
-provision_x509 /var/lib/x509 "/CN=$hostname/OU=machine" root
-provision_x509 ~archit/.local/share/x509 "/CN=archit@$hostname/OU=user" archit
+provision_x509 /var/lib/x509 "/CN=$hostname/OU=machine" root \
+    'extendedKeyUsage=clientAuth,serverAuth' \
+    "subjectAltName=DNS:$hostname,DNS:$hostname.fluffy-bebop.ts.net"
+provision_x509 ~archit/.local/share/x509 "/CN=archit@$hostname/OU=user" archit \
+    'extendedKeyUsage=clientAuth'
