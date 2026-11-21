@@ -27,6 +27,14 @@ if [[ ! -e ~archit/.ssh/id_ed25519_sk.pub ]]; then
     ssh-keygen -y -f ~archit/.ssh/id_ed25519_sk > ~archit/.ssh/id_ed25519_sk.pub
 fi
 
+set +x
+IFS= read -r -s -p "Enter PIV PIN: " PKCS11_PIN </dev/tty
+printf '\n' >/dev/tty
+export PKCS11_PIN
+set -x
+
+export SSH_ASKPASS=@pinAskpass@ SSH_ASKPASS_REQUIRE=force
+
 ssh-keygen \
     -s @flake@/misc/ssh_ca_key.pub \
     -D @yubico-piv-tool@/lib/libykcs11.so \
@@ -53,7 +61,7 @@ chown archit: ~archit/.ssh/id_ed25519_sk{,.pub,-cert.pub}
 
 /run/current-system/sw/bin/systemctl restart sshd.service
 
-export PKCS11_MODULE_PATH=@yubico-piv-tool@/lib/libykcs11.so
+export OPENSSL_CONF=@opensslConfig@
 
 provision_x509() {
     local directory=$1 subject=$2 owner=$3
@@ -65,15 +73,11 @@ provision_x509() {
             curve=P-384
         fi
 
-        openssl genpkey \
-            -provider @tpm2-openssl@/lib/ossl-modules/tpm2.so \
+        openssl genpkey -propquery 'provider=tpm2' \
             -algorithm EC -pkeyopt group:$curve -out "$directory/key.pem"
     fi
 
     openssl x509 -new \
-        -provider default \
-        -provider @libp11@/lib/ossl-module/pkcs11prov.so \
-        -provider @tpm2-openssl@/lib/ossl-modules/tpm2.so \
         -force_pubkey "$directory/key.pem" -subj "$subject" \
         -CA @flake@/misc/ca.pem -CAkey 'pkcs11:id=%05;type=private' \
         -days 3650 -sha512 \

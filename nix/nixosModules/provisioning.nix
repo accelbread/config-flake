@@ -129,7 +129,30 @@ in
             pkgs.tpm2-tools
           ];
           flake = flake.src;
-          inherit (pkgs) yubico-piv-tool libp11 tpm2-openssl;
+          inherit (pkgs) yubico-piv-tool;
+          pinAskpass = pkgs.writeShellScript "piv-pin-askpass" ''
+            printf '%s\n' "$PKCS11_PIN"
+          '';
+          opensslConfig = pkgs.writeText "provision-keys-openssl.cnf" ''
+            openssl_conf = openssl_init
+            config_diagnostics = 1
+            [openssl_init]
+            providers = providers
+            [providers]
+            default = default_provider
+            pkcs11 = pkcs11_provider
+            tpm2 = tpm2_provider
+            [default_provider]
+            activate = 1
+            [pkcs11_provider]
+            activate = 1
+            module = ${pkgs.pkcs11-provider}/lib/ossl-modules/pkcs11.so
+            pkcs11-module-path = ${pkgs.yubico-piv-tool}/lib/libykcs11.so
+            pkcs11-module-token-pin = $ENV::PKCS11_PIN
+            [tpm2_provider]
+            activate = 1
+            module = ${pkgs.tpm2-openssl}/lib/ossl-modules/tpm2.so
+          '';
         };
       };
     };
