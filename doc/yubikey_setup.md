@@ -63,11 +63,11 @@ Take the corresponding public key from ssh-keygen output and save it in
 Generate the X.509 CA cert:
 
 ```sh
-export OPENSSL_MODULES="$(nix build --no-link --print-out-paths self#libp11.out)/lib/ossl-module"
-export PKCS11_MODULE_PATH="$(nix build --no-link --print-out-paths self#yubico-piv-tool.out)/lib/libykcs11.so"
+export OPENSSL_MODULES="$(nix build --no-link --print-out-paths self#pkcs11-provider.out)/lib/ossl-modules"
+export PKCS11_PROVIDER_MODULE="$(nix build --no-link --print-out-paths self#yubico-piv-tool.out)/lib/libykcs11.so"
 
 openssl req -new -x509 \
-  -provider pkcs11prov -provider default \
+  -provider pkcs11 -provider default \
   -key 'pkcs11:id=%05;type=private' \
   -subj '/CN=Personal CA' \
   -sha512 -days 3650 \
