@@ -45,6 +45,7 @@ exec gamescope \
         }
         trap shutdown_steam EXIT
         trap "exit 0" HUP INT TERM
-        flatpak run com.valvesoftware.Steam -gamepadui "$@" &
+        flatpak run --env=GAMESCOPE_WAYLAND_DISPLAY=wayland-0 \
+            com.valvesoftware.Steam -gamepadui "$@" &
         wait "$!"
     ' steam-gamescope-session "$@"
