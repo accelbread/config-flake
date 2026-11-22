@@ -59,8 +59,17 @@ in
       inherit (cfg) user group;
       mode = "0700";
     };
-    services = {
-      syncthing.serviceConfig = {
+    services.syncthing = {
+      confinement.enable = true;
+      serviceConfig = {
+        BindPaths = [
+          cfg.dataDir
+          cfg.databaseDir
+        ];
+        BindReadOnlyPaths = [
+          "/etc/resolv.conf"
+          "/etc/localtime"
+        ];
         UMask = config.security.loginDefs.settings.UMASK;
         CapabilityBoundingSet = lib.mkForce "";
         IPAddressAllow = "localhost 100.64.0.0/10";
