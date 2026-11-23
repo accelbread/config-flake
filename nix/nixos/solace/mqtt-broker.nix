@@ -1,6 +1,10 @@
 # Copyright (C) Archit Gupta <archit@accelbread.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+let
+  lan = "192.168.0.0/16";
+in
+{
   services.mosquitto = {
     enable = true;
     persistence = false;
@@ -17,8 +21,12 @@
     };
   };
   networking.firewall.extraInputRules = ''
-    ip saddr 192.168.0.0/16 tcp dport 1883 accept
+    ip saddr ${lan} tcp dport 1883 accept
   '';
+  systemd.services.mosquitto.serviceConfig = {
+    IPAddressAllow = "localhost ${lan}";
+    IPAddressDeny = "any";
+  };
   systemd.services."light-temp" = {
     wantedBy = [ "mosquitto.service" ];
     requisite = [ "mosquitto.service" ];
