@@ -28,7 +28,15 @@
     audio.realtek.alc882.enable = true;
   };
 
-  networking.networkmanager.ethernet.macAddress = lib.mkForce "5E:34:87:DE:A3:7A";
+  networking = {
+    networkmanager.ethernet.macAddress = lib.mkForce "5E:34:87:DE:A3:7A";
+    nftables.ruleset = ''
+      add rule inet forwarding forward iifname "tailscale0" accept
+      add rule inet forwarding forward oifname "tailscale0" ct state established,related accept
+    '';
+  };
+
+  ab.tailscale.extraConfig.advertiseExitNode = true;
 
   boot = {
     lanzaboote.autoEnrollKeys.includeChecksumsFromTPM = true;
@@ -45,6 +53,10 @@
       "amdgpu.deep_color=1"
       "amdgpu.gpu_recovery=1"
     ];
+    kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = true;
+      "net.ipv6.conf.all.forwarding" = true;
+    };
     kernelPatches =
       with lib.kernel;
       lib.singleton {

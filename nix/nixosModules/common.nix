@@ -165,7 +165,18 @@ in
       ethernet.macAddress = "random";
     };
     modemmanager.enable = false;
-    nftables.enable = true;
+    nftables = {
+      enable = true;
+      tables.forwarding = {
+        family = "inet";
+        content = ''
+          chain forward {
+            type filter hook forward priority filter; policy drop;
+            ct state invalid drop
+          }
+        '';
+      };
+    };
     firewall = {
       checkReversePath = "loose";
       allowedUDPPorts = [ config.services.tailscale.port ];
