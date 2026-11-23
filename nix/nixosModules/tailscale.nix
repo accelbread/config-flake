@@ -17,7 +17,10 @@ in
 {
   boot.kernelModules = [ "tun" ];
 
+  services.tailscale.disableUpstreamLogging = true;
+
   systemd.services.tailscaled = {
+    confinement.enable = true;
     path = lib.mkForce [ ];
     environment.TS_DEBUG_FIREWALL_MODE = "nftables";
     serviceConfig = {
@@ -25,7 +28,8 @@ in
         ""
         (
           "${pkgs.tailscale}/bin/tailscaled"
-          + " --statedir /var/lib/private/tailscale"
+          + " --statedir /var/lib/tailscale"
+          + " --socket=/run/tailscale/tailscaled.sock"
           + " --config=${configFile}"
         )
       ];
@@ -40,6 +44,12 @@ in
         "CAP_NET_RAW"
         "CAP_NET_ADMIN"
       ];
+      BindPaths = [ "/dev/net/tun" ];
+      BindReadOnlyPaths = [
+        "-/etc/localtime"
+        "/etc/resolv.conf"
+        "/etc/ssl/certs/ca-certificates.crt"
+      ];
       DeviceAllow = "/dev/net/tun rw";
       DevicePolicy = "closed";
       LockPersonality = true;
@@ -48,6 +58,8 @@ in
       PrivateIPC = true;
       PrivateMounts = true;
       PrivateTmp = true;
+      # CAP_NET_ADMIN must apply to the host network namespace.
+      PrivateUsers = false;
       ProtectClock = true;
       ProtectControlGroups = true;
       ProtectHome = true;
