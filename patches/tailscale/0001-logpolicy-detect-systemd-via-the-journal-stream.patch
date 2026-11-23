@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 23 Nov 2026 00:19:39 -0800
+Subject: [PATCH] logpolicy: Detect systemd via the journal stream
+
+ProtectProc can hide /proc/1/stat from tailscaled while systemd still
+routes stderr to the journal. Tailscale then adds timestamps to messages
+that journald already timestamps.
+
+Use the journal stream to recognize systemd without exposing other
+processes. Keep the PID 1 check for units with other log destinations.
+---
+ logpolicy/logpolicy.go | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/logpolicy/logpolicy.go b/logpolicy/logpolicy.go
+index ac40ce5..de6c7a6 100644
+--- a/logpolicy/logpolicy.go
++++ b/logpolicy/logpolicy.go
+@@ -26,6 +26,7 @@
+ 	"runtime"
+ 	"strings"
+ 	"sync"
++	"syscall"
+ 	"time"
+ 
+ 	"golang.org/x/term"
+@@ -287,6 +288,13 @@ func LogsDir(logf logger.Logf) string {
+ 
+ // runningUnderSystemd reports whether we're running under systemd.
+ func runningUnderSystemd() bool {
++	if stream := os.Getenv("JOURNAL_STREAM"); stream != "" {
++		var stat syscall.Stat_t
++		if syscall.Fstat(int(os.Stderr.Fd()), &stat) == nil &&
++			stream == fmt.Sprintf("%d:%d", stat.Dev, stat.Ino) {
++			return true
++		}
++	}
+ 	if runtime.GOOS == "linux" && os.Getppid() == 1 {
+ 		slurp, _ := os.ReadFile("/proc/1/stat")
+ 		return bytes.HasPrefix(slurp, []byte("1 (systemd) "))

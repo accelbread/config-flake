@@ -44,6 +44,7 @@ SPDX-License-Identifier = "GPL-3.0-only"
 path = [
   "webkitgtk_6_0/**",
   "parabolic/**",
+  "tailscale/**",
   "gamescope/**",
   "nix-output-monitor/**",
   "haskellPackages/nix-derivation/**",
