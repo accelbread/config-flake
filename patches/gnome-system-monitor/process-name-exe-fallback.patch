@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Mon, 23 Nov 2026 23:10:10 -0800
+Subject: [PATCH] Recover full process names from executable paths
+
+System Monitor tries to recover full process names by checking whether
+the basename of either of the first two command-line arguments starts
+with comm, the Linux process name limited to 15 characters. If neither
+matches, it displays comm even when /proc/<pid>/exe has the full name.
+
+This change additionally falls back to comparing comm with the basename
+of /proc/<pid>/exe. This allows full name recovery when, for example, a
+binary wrapper executes a binary with a different name while keeping the
+same argv[0]. In that case, comm is the prefix of the inner binary,
+whose name we can recover from /proc/<pid>/exe.
+---
+ src/procinfo.cpp | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/src/procinfo.cpp b/src/procinfo.cpp
+index 15e9c19..1eeb190 100644
+--- a/src/procinfo.cpp
++++ b/src/procinfo.cpp
+@@ -89,6 +89,21 @@ get_process_name (ProcInfo    *info,
+           g_free (basename);
+         }
+     }
++
++  g_autofree char *path = g_strdup_printf ("/proc/%d/exe", info->pid);
++  g_autofree char *exe = g_file_read_link (path, nullptr);
++
++  if (exe)
++    {
++      g_autofree char *basename = g_path_get_basename (exe);
++
++      if (g_str_has_prefix (basename, cmd))
++        {
++          info->name = basename;
++          return;
++        }
++    }
++
+   info->name = cmd;
+ }
+ 
