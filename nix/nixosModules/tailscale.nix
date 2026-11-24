@@ -32,6 +32,10 @@ in
     services.tailscale.disableUpstreamLogging = true;
 
     systemd.services.tailscaled = {
+      after = [
+        "tpm2.target"
+        "tpm2-udev-trigger.service"
+      ];
       confinement.enable = true;
       path = lib.mkForce [ ];
       environment.TS_DEBUG_FIREWALL_MODE = "nftables";
@@ -42,11 +46,13 @@ in
             "${pkgs.tailscale}/bin/tailscaled"
             + " --statedir /var/lib/tailscale"
             + " --socket=/run/tailscale/tailscaled.sock"
+            + " --encrypt-state"
             + " --config=${configFile}"
           )
         ];
         User = "tailscaled";
         Group = "tailscaled";
+        SupplementaryGroups = [ config.security.tpm2.tssGroup ];
         DynamicUser = true;
         AmbientCapabilities = [
           "CAP_NET_RAW"
@@ -56,13 +62,19 @@ in
           "CAP_NET_RAW"
           "CAP_NET_ADMIN"
         ];
-        BindPaths = [ "/dev/net/tun" ];
+        BindPaths = [
+          "/dev/net/tun"
+          "/dev/tpmrm0"
+        ];
         BindReadOnlyPaths = [
           "-/etc/localtime"
           "/etc/resolv.conf"
           "/etc/ssl/certs/ca-certificates.crt"
         ];
-        DeviceAllow = "/dev/net/tun rw";
+        DeviceAllow = [
+          "/dev/net/tun rw"
+          "/dev/tpmrm0 rw"
+        ];
         DevicePolicy = "closed";
         LockPersonality = true;
         MemoryDenyWriteExecute = true;
