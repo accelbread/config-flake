@@ -42,6 +42,12 @@ in
             --subst-var-by config "$(cat ${prefs})"
         '')
       ];
+      extraPrefs = old.extraPrefs or "" + ''
+        Services.env.set(
+          "MOZ_GMP_PATH",
+          "${pkgs.gmp-openh264}/lib/gmp-gmpopenh264/${pkgs.gmp-openh264.version}"
+        );
+      '';
       # The wrapper gives earlier policy files precedence over later ones.
       extraPoliciesFiles = [
         (pkgs.runCommand "librewolf_policies.json" { } ''
@@ -57,6 +63,12 @@ in
       ]
       ++ old.extraPoliciesFiles or [ ];
       extraPolicies = old.extraPolicies or { } // {
+        Preferences = old.extraPolicies.Preferences or { } // {
+          "media.gmp-manager.updateEnabled" = {
+            Value = false;
+            Status = "locked";
+          };
+        };
         ExtensionSettings = lib.mapAttrs' (
           _: v:
           lib.nameValuePair v.addonId {
