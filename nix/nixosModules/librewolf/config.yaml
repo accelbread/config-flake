@@ -122,7 +122,7 @@ extensions:
       enabled: true
 
   passff@invicem.pro:
-    local:
+    managed:
       loginFieldNames: login,user,username,id,email
       loginInputNames: login,user,mail,email,tel,username,opt_login,log,usr_name,acct,oid
       markFillable: false

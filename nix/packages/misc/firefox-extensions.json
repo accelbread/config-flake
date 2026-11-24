@@ -19,9 +19,9 @@
   },
   "passff": {
     "addonId": "passff@invicem.pro",
-    "version": "1.24",
-    "url": "https://addons.mozilla.org/firefox/downloads/file/4985036/passff-1.24.xpi",
-    "hash": "sha256:8ff25b8f923076705513d8b527829893218c803016a8ff37f1c0723dd7a63dd9"
+    "version": "1.26",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/5290360/passff-1.26.xpi",
+    "hash": "sha256:2a312d69c20e5f0c1c6cb172dca4dad66fcfdff13c370d4ca0734fb5156a2be9"
   },
   "sponsorblock": {
     "addonId": "sponsorBlocker@ajay.app",
@@ -31,8 +31,8 @@
   },
   "ublock-origin": {
     "addonId": "uBlock0@raymondhill.net",
-    "version": "1.76.4",
-    "url": "https://addons.mozilla.org/firefox/downloads/file/5257481/ublock_origin-1.76.4.xpi",
-    "hash": "sha256:66d0e3f21ce3b32b1bc0a9399b93cb2c9aa598ef18805d92118c76f66e266c1e"
+    "version": "1.77.0",
+    "url": "https://addons.mozilla.org/firefox/downloads/file/5290541/ublock_origin-1.77.0.xpi",
+    "hash": "sha256:894ea48dedd26a637ab98ba627ae70b7ed94798eabfd4b089f5e5e73524a24eb"
   }
 }
