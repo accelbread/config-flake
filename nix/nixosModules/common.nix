@@ -301,7 +301,7 @@ in
       HandleLidSwitch = "hibernate";
       KillUserProcesses = true;
     };
-    journald.settings.Journal.MaxLevelStore = "notice";
+    journald.settings.Journal.MaxLevelStore = "info";
     usbguard = {
       enable = true;
       IPCAllowedGroups = [ "wheel" ];
