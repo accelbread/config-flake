@@ -150,10 +150,10 @@ Subject: [PATCH 007/101] enable ARM64_SW_TTBR0_PAN by default
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index cab741a695f52..c9c9957069805 100644
+index 70994918fab55..f1685a26b3a81 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -1821,6 +1821,7 @@ config MITIGATE_SPECTRE_BRANCH_HISTORY
+@@ -1822,6 +1822,7 @@ config MITIGATE_SPECTRE_BRANCH_HISTORY
  config ARM64_SW_TTBR0_PAN
  	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
  	depends on !KCSAN
@@ -172,10 +172,10 @@ Subject: [PATCH 008/101] arm64: enable RANDOMIZE_BASE by default
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c9c9957069805..7b9bc4baeeaab 100644
+index f1685a26b3a81..77fae587ee731 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -2448,6 +2448,7 @@ config RELOCATABLE
+@@ -2449,6 +2449,7 @@ config RELOCATABLE
  config RANDOMIZE_BASE
  	bool "Randomize the address of the kernel image"
  	select RELOCATABLE
@@ -285,7 +285,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 6b24a2c89b84d..bcd606a3b76e0 100644
+index 1dc11129f3c2c..ae760175f6a31 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -1052,6 +1052,7 @@ menu "Debug Oops, Lockups and Hangs"
@@ -663,7 +663,7 @@ Subject: [PATCH 029/101] enable IO_STRICT_DEVMEM by default
  1 file changed, 1 insertion(+)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index bcd606a3b76e0..491c4ecbc8c3f 100644
+index ae760175f6a31..a1b35af8c1bef 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -1940,6 +1940,7 @@ config STRICT_DEVMEM
@@ -740,10 +740,10 @@ Subject: [PATCH 032/101] enable protected_{symlinks,hardlinks} by default
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index e45e30603215d..a943ee5ccb5d1 100644
+index 00ef70a4eaf56..0658a6e152285 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1201,8 +1201,8 @@ static inline void put_link(struct nameidata *nd)
+@@ -1207,8 +1207,8 @@ static inline void put_link(struct nameidata *nd)
  		path_put(&last->link);
  }
  
@@ -945,7 +945,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 491c4ecbc8c3f..c4f12c001c30b 100644
+index a1b35af8c1bef..112102b16cc8c 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -705,7 +705,7 @@ config DEBUG_FS
@@ -1238,7 +1238,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 544cff39762c5..fee40dca75bc8 100644
+index 6bb75db087a2d..6693101af83b7 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -1013,13 +1013,13 @@ static inline void *restore_red_left(struct kmem_cache *s, void *p)
@@ -1287,7 +1287,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 7223a7596dabb..7d0fb17d35c06 100644
+index 84366c112f4b1..370d83e31ebc8 100644
 --- a/mm/slab_common.c
 +++ b/mm/slab_common.c
 @@ -37,7 +37,7 @@
@@ -1319,7 +1319,7 @@ Subject: [PATCH 052/101] mark kmem_cache as __ro_after_init
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 7d0fb17d35c06..74add8e87cfc9 100644
+index 370d83e31ebc8..c072c1ff90466 100644
 --- a/mm/slab_common.c
 +++ b/mm/slab_common.c
 @@ -40,7 +40,7 @@
@@ -1414,7 +1414,7 @@ index 4f0990e09b93e..94d775949d2b3 100644
  const struct kobj_ns_type_operations *kobj_child_ns_ops(const struct kobject *parent);
  const struct kobj_ns_type_operations *kobj_ns_ops(const struct kobject *kobj);
 diff --git a/lib/kobject.c b/lib/kobject.c
-index e7b010a989fb9..5463e55f5a25d 100644
+index 76214cb6fd5ac..5b6e3cbbe70d3 100644
 --- a/lib/kobject.c
 +++ b/lib/kobject.c
 @@ -1023,9 +1023,9 @@ EXPORT_SYMBOL_GPL(kset_create_and_add);
@@ -1442,10 +1442,10 @@ Subject: [PATCH 055/101] mark open_softirq as only used for init
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 3bf969ad8fe07..22e9c151247ff 100644
+index 50745608dc15a..3c38b7e75d64f 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -604,7 +604,7 @@ static inline void do_softirq_post_smp_call_flush(unsigned int unused)
+@@ -606,7 +606,7 @@ static inline void do_softirq_post_smp_call_flush(unsigned int unused)
  }
  #endif
  
@@ -1512,7 +1512,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index fee40dca75bc8..bf3db65f6a8c7 100644
+index 6693101af83b7..8c1dbaefdbe1b 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -6589,10 +6589,14 @@ static noinline void warn_free_bad_obj(struct kmem_cache *s, void *obj)
@@ -1548,7 +1548,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index bf3db65f6a8c7..4619d2fc9a8aa 100644
+index 8c1dbaefdbe1b..6865d824b2ae9 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -6600,6 +6600,9 @@ static noinline void warn_free_bad_obj(struct kmem_cache *s, void *obj)
@@ -1603,10 +1603,10 @@ index d7aac9de1c8a4..e998775fcac0f 100644
   * If we pass in a base or tail page, we can zero up to PAGE_SIZE.
   * If we pass in a head page, we can zero up to the size of the compound page.
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 12fac9084c483..9b8c4067bd462 100644
+index 8714425ffe84e..3625b074a7f3c 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -1838,6 +1838,12 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+@@ -1844,6 +1844,12 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
  	 */
  	kernel_unpoison_pages(page, 1 << order);
  
@@ -1681,7 +1681,7 @@ index 8fd6835e42352..eaf59356236c9 100644
  }
  
 diff --git a/mm/slub.c b/mm/slub.c
-index 4619d2fc9a8aa..09a9ef41c88c1 100644
+index 6865d824b2ae9..1950fc000b31f 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -2743,6 +2743,8 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
@@ -1741,7 +1741,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  2 files changed, 43 insertions(+), 3 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 09a9ef41c88c1..dff822c64d08e 100644
+index 1950fc000b31f..1ab4c1e9f08a9 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -251,6 +251,12 @@ static inline bool kmem_cache_debug(struct kmem_cache *s)
@@ -1920,7 +1920,7 @@ index 2d5e7687875b0..254a1c97b35ab 100644
  {
  	return perfmon_capable() ? 0 : -EACCES;
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c4217c996f5a1..b2e2e99028835 100644
+index e8293a0e7945c..12c4f67933e89 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
 @@ -492,8 +492,13 @@ static __always_inline bool is_guest_mediated_pmu_loaded(void)
@@ -1937,7 +1937,7 @@ index c4217c996f5a1..b2e2e99028835 100644
  
  /* Minimum for 512 kiB + 1 user control page. 'free' kiB per user. */
  static int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024);
-@@ -13903,7 +13908,7 @@ SYSCALL_DEFINE5(perf_event_open,
+@@ -13915,7 +13920,7 @@ SYSCALL_DEFINE5(perf_event_open,
  		return err;
  
  	/* Do we allow access to perf_event_open(2) ? */
@@ -1946,7 +1946,7 @@ index c4217c996f5a1..b2e2e99028835 100644
  	if (err)
  		return err;
  
-@@ -14760,6 +14765,15 @@ const struct perf_event_attr *perf_event_attrs(struct perf_event *event)
+@@ -14772,6 +14777,15 @@ const struct perf_event_attr *perf_event_attrs(struct perf_event *event)
  	return &event->attr;
  }
  
@@ -1995,10 +1995,10 @@ index 4fe3b8b1958f6..a7d88cc23a70c 100644
     in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
  
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d4cb455f4a7d4..de94bf0a83ce6 100644
+index 12e05676b0daa..4839224d34b8f 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -4366,6 +4366,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+@@ -4444,6 +4444,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
  		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
  		 ">= 1: Disallow CPU event access\n"
  		 ">= 2: Disallow kernel profiling\n"
@@ -2073,7 +2073,7 @@ index e38d9e60569f0..a4507db093e9d 100644
  {
  	return &init_user_ns;
 diff --git a/kernel/fork.c b/kernel/fork.c
-index efe6157fedb43..6e5e7e5156815 100644
+index ddd3dbc0850b7..0a59acdb83339 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -85,6 +85,7 @@
@@ -2084,7 +2084,7 @@ index efe6157fedb43..6e5e7e5156815 100644
  #include <linux/oom.h>
  #include <linux/khugepaged.h>
  #include <linux/signalfd.h>
-@@ -2042,6 +2043,10 @@ __latent_entropy struct task_struct *copy_process(
+@@ -2051,6 +2052,10 @@ __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -2095,7 +2095,7 @@ index efe6157fedb43..6e5e7e5156815 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -3288,6 +3293,12 @@ int ksys_unshare(unsigned long unshare_flags)
+@@ -3307,6 +3312,12 @@ int ksys_unshare(unsigned long unshare_flags)
  	VFS_WARN_ON_ONCE(unshare_flags & (CLONE_NEWNS | CLONE_FS) &&
  			 current->fs != current->real_fs);
  
@@ -2142,7 +2142,7 @@ index 38597f26b34c3..fe56d267dcba6 100644
  	{
  		.procname	= "sysctl_writes_strict",
 diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 0bed462e9b2a2..c84977d660bec 100644
+index af06883dff0bd..87e826875482a 100644
 --- a/kernel/user_namespace.c
 +++ b/kernel/user_namespace.c
 @@ -23,6 +23,9 @@
@@ -2207,7 +2207,7 @@ index 0136fc46ca0b7..8bbf9049bed3e 100644
  	bool "PID Namespaces"
  	default y
 diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index c84977d660bec..b54a9a25d1c36 100644
+index 87e826875482a..24486b14315a2 100644
 --- a/kernel/user_namespace.c
 +++ b/kernel/user_namespace.c
 @@ -24,7 +24,11 @@
@@ -2244,10 +2244,10 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  3 files changed, 34 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e75344f4e0cde..0bc5a5a143164 100644
+index b92d84e33b551..be6d34b42601c 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5035,6 +5035,11 @@ Kernel parameters
+@@ -5038,6 +5038,11 @@ Kernel parameters
  			the specified number of seconds.  This is to be used if
  			your oopses keep scrolling off the screen.
  
@@ -2260,10 +2260,10 @@ index e75344f4e0cde..0bc5a5a143164 100644
  
  				Some options herein operate on a specific device
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9b8c4067bd462..f1dce5c9703f1 100644
+index 3625b074a7f3c..8456d74cc33e0 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -184,6 +184,15 @@ EXPORT_PER_CPU_SYMBOL(_numa_mem_);
+@@ -185,6 +185,15 @@ EXPORT_PER_CPU_SYMBOL(_numa_mem_);
  
  static DEFINE_MUTEX(pcpu_drain_mutex);
  
@@ -2279,7 +2279,7 @@ index 9b8c4067bd462..f1dce5c9703f1 100644
  #ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
  volatile unsigned long latent_entropy __latent_entropy;
  EXPORT_SYMBOL(latent_entropy);
-@@ -1627,6 +1636,21 @@ void __meminit __free_pages_core(struct page *page, unsigned int order,
+@@ -1630,6 +1639,21 @@ void __meminit __free_pages_core(struct page *page, unsigned int order,
  			set_page_count(p, 0);
  		}
  
@@ -2333,10 +2333,10 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 92233fb25051a..230a2e30e4776 100644
+index 30572ca510de9..95c28959f284e 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -5045,6 +5045,7 @@ void __ata_qc_complete(struct ata_queued_cmd *qc)
+@@ -5060,6 +5060,7 @@ void __ata_qc_complete(struct ata_queued_cmd *qc)
  	struct ata_port *ap;
  	struct ata_link *link;
  
@@ -2401,7 +2401,7 @@ index 70098d448e999..89884541311a6 100644
  	native_write_cr4(cr4);
  }
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index c7352827f491d..11fb8fa471b17 100644
+index a81c1a367f5e9..272853f70aa67 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
 @@ -497,6 +497,7 @@ EXPORT_SYMBOL_GPL(native_write_cr4);
@@ -2751,7 +2751,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 4bf26b0f1e6e3..9caa66ca71f8f 100644
+index 6f22cd76be4f3..6de50fcf291e1 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -154,6 +154,13 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
@@ -2788,7 +2788,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/util.c b/mm/util.c
-index bf0513d1d3d08..94e0be7f3f46d 100644
+index e31eb565445cb..51c637c4c93d1 100644
 --- a/mm/util.c
 +++ b/mm/util.c
 @@ -391,9 +391,9 @@ unsigned long __weak arch_randomize_brk(struct mm_struct *mm)
@@ -2852,7 +2852,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mm/util.c b/mm/util.c
-index 94e0be7f3f46d..c9d134c1841f2 100644
+index 51c637c4c93d1..84b685e603332 100644
 --- a/mm/util.c
 +++ b/mm/util.c
 @@ -391,9 +391,9 @@ unsigned long __weak arch_randomize_brk(struct mm_struct *mm)
@@ -2916,7 +2916,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  4 files changed, 47 insertions(+), 3 deletions(-)
 
 diff --git a/fs/inode.c b/fs/inode.c
-index a9d37be390a17..804f837bfed60 100644
+index bc93c1757a380..729309fb87729 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -163,6 +163,10 @@ late_initcall(mg_debugfs_init);
@@ -2947,7 +2947,7 @@ index a9d37be390a17..804f837bfed60 100644
  
  static int __init init_fs_inode_sysctls(void)
 diff --git a/fs/stat.c b/fs/stat.c
-index c461c30542340..9d310cfa34547 100644
+index e03954c36b33e..0940e15c589d5 100644
 --- a/fs/stat.c
 +++ b/fs/stat.c
 @@ -52,7 +52,10 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
@@ -2995,7 +2995,7 @@ index c461c30542340..9d310cfa34547 100644
  	}
  
  	stat->blksize = i_blocksize(inode);
-@@ -212,6 +225,10 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+@@ -216,6 +229,10 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
  
  		ret = inode->i_op->getattr(idmap, path, stat, request_mask,
  				query_flags);
@@ -3007,10 +3007,10 @@ index c461c30542340..9d310cfa34547 100644
  			return ret;
  	} else {
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index deb411e866617..5dafdeec32d29 100644
+index f155984f5bd04..c37c060161399 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -3689,4 +3689,15 @@ static inline bool extensible_ioctl_valid(unsigned int cmd_a,
+@@ -3691,4 +3691,15 @@ static inline bool extensible_ioctl_valid(unsigned int cmd_a,
  	return true;
  }
  
@@ -3445,10 +3445,10 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  2 files changed, 23 deletions(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0bc5a5a143164..d4968db025b0b 100644
+index be6d34b42601c..8b9f5e918e056 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -779,17 +779,6 @@ Kernel parameters
+@@ -772,17 +772,6 @@ Kernel parameters
  			Format: { "0" | "1" }
  			Default: 0 (1 if CONFIG_DEBUG_VM is set)
  
@@ -3757,10 +3757,10 @@ Subject: [PATCH 089/101] enable BPF JIT hardening by default (if available)
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 7f11555a50702..59835547b9a9d 100644
+index f4682bcaea9d0..d3e5b3a878f83 100644
 --- a/kernel/bpf/core.c
 +++ b/kernel/bpf/core.c
-@@ -549,7 +549,7 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
+@@ -550,7 +550,7 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
  /* All BPF JIT sysctl knobs here. */
  int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
  int bpf_jit_kallsyms __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
@@ -3780,10 +3780,10 @@ Subject: [PATCH 090/101] enable protected_{fifos,regular} by default
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index a943ee5ccb5d1..e0056495ad39f 100644
+index 0658a6e152285..1124c6897a46e 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1203,8 +1203,8 @@ static inline void put_link(struct nameidata *nd)
+@@ -1209,8 +1209,8 @@ static inline void put_link(struct nameidata *nd)
  
  static int sysctl_protected_symlinks __read_mostly = 1;
  static int sysctl_protected_hardlinks __read_mostly = 1;
@@ -3818,7 +3818,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  3 files changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index c4f12c001c30b..ec608e321590e 100644
+index 112102b16cc8c..3441059d77408 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -526,6 +526,9 @@ config SECTION_MISMATCH_WARN_ONLY
@@ -3942,7 +3942,7 @@ index eaf59356236c9..df229f7625ada 100644
  			return flags & __GFP_ZERO;
  		return true;
 diff --git a/mm/slub.c b/mm/slub.c
-index dff822c64d08e..426b1130a53bd 100644
+index 1ab4c1e9f08a9..ce993bd6e9278 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -4716,6 +4716,9 @@ bool slab_post_alloc_hook(struct kmem_cache *s, gfp_t flags, size_t size,
@@ -3992,7 +3992,7 @@ Signed-off-by: Levente Polyak <levente@leventepolyak.net>
  5 files changed, 53 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index f7af0286341c9..6897b93279e76 100644
+index 66a54c5106935..243051645b0a7 100644
 --- a/Documentation/networking/ip-sysctl.rst
 +++ b/Documentation/networking/ip-sysctl.rst
 @@ -929,6 +929,24 @@ tcp_backlog_ack_defer - BOOLEAN
@@ -4064,10 +4064,10 @@ index 0f4cfea8e3c32..3e0237818a3ca 100644
 +
 +	  If unsure, say N.
 diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index e3760daa34706..42b7503ea3d61 100644
+index bf193e7ec5168..7db2683d56b1f 100644
 --- a/net/ipv4/sysctl_net_ipv4.c
 +++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -624,6 +624,15 @@ static struct ctl_table ipv4_table[] = {
+@@ -625,6 +625,15 @@ static struct ctl_table ipv4_table[] = {
  		.extra1		= &sysctl_fib_sync_mem_min,
  		.extra2		= &sysctl_fib_sync_mem_max,
  	},
@@ -4084,7 +4084,7 @@ index e3760daa34706..42b7503ea3d61 100644
  
  static const struct ctl_table ipv4_net_table[] = {
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 99baf14afdfd8..b632f843dc455 100644
+index 3583867487d7f..b1ae03f00fa15 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
 @@ -85,6 +85,7 @@
@@ -4147,10 +4147,10 @@ index 2ac67e04a6fbe..3340e13c959c8 100644
 +
 +	  If unsure, say N.
 diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index bd0a3f9039d25..126f1b93c7777 100644
+index c06bfe9765e25..b572f3195ecae 100644
 --- a/fs/overlayfs/super.c
 +++ b/fs/overlayfs/super.c
-@@ -1574,7 +1574,11 @@ struct file_system_type ovl_fs_type = {
+@@ -1603,7 +1603,11 @@ struct file_system_type ovl_fs_type = {
  	.name			= "overlay",
  	.init_fs_context	= ovl_init_fs_context,
  	.parameters		= ovl_parameter_spec,
@@ -4247,7 +4247,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 4 insertions(+)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 426b1130a53bd..d74b8010385e0 100644
+index ce993bd6e9278..cd55c1252064a 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -6782,8 +6782,12 @@ static void free_large_kmalloc(struct page *page, void *object)
@@ -4285,7 +4285,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 91178f2fca09a..c0308f765a0e7 100644
+index 41a03979cb8bb..4d4ad4daad70d 100644
 --- a/io_uring/io_uring.c
 +++ b/io_uring/io_uring.c
 @@ -127,7 +127,7 @@ static __read_mostly DEFINE_STATIC_KEY_DEFERRED_FALSE(io_key_has_sqarray, HZ);
@@ -4464,7 +4464,7 @@ index df229f7625ada..ff560e1089ff5 100644
  	/*
  	 * Defragmentation by allocating from a remote node.
 diff --git a/mm/slub.c b/mm/slub.c
-index d74b8010385e0..bb7d33c57b566 100644
+index cd55c1252064a..9ae8fbbb4b7dc 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -44,6 +44,7 @@
@@ -5089,7 +5089,7 @@ index d74b8010385e0..bb7d33c57b566 100644
  			if (kfence_obj)
  				__kfence_free(kfence_obj);
  			return false;
-@@ -7850,6 +8028,7 @@ static void early_kmem_cache_node_alloc(int node)
+@@ -7851,6 +8029,7 @@ static void early_kmem_cache_node_alloc(int node)
  #ifdef CONFIG_SLUB_DEBUG
  	init_object(kmem_cache_node, n, SLUB_RED_ACTIVE);
  #endif
@@ -5097,7 +5097,7 @@ index d74b8010385e0..bb7d33c57b566 100644
  	n = kasan_slab_alloc(kmem_cache_node, n, GFP_KERNEL, false);
  	kmem_cache_node->per_node[node].node = n;
  	init_kmem_cache_node(n);
-@@ -8062,6 +8241,9 @@ static int calculate_sizes(struct kmem_cache_args *args, struct kmem_cache *s)
+@@ -8063,6 +8242,9 @@ static int calculate_sizes(struct kmem_cache_args *args, struct kmem_cache *s)
  		s->offset = ALIGN_DOWN(s->object_size / 2, sizeof(void *));
  	}
  
@@ -5107,7 +5107,7 @@ index d74b8010385e0..bb7d33c57b566 100644
  #ifdef CONFIG_SLUB_DEBUG
  	if (flags & SLAB_STORE_USER) {
  		/*
-@@ -8404,6 +8586,10 @@ void __check_heap_object(const void *ptr, unsigned long n,
+@@ -8405,6 +8587,10 @@ void __check_heap_object(const void *ptr, unsigned long n,
  		offset -= s->red_left_pad;
  	}
  
@@ -5118,7 +5118,7 @@ index d74b8010385e0..bb7d33c57b566 100644
  	/* Allow address range falling entirely within usercopy region. */
  	if (offset >= s->useroffset &&
  	    offset - s->useroffset <= s->usersize &&
-@@ -8792,6 +8978,11 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
+@@ -8793,6 +8979,11 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
  	s->flags = kmem_cache_flags(flags, s->name);
  #ifdef CONFIG_SLAB_FREELIST_HARDENED
  	s->random = get_random_long();
@@ -5146,7 +5146,7 @@ Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
  1 file changed, 36 insertions(+), 1 deletion(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index bb7d33c57b566..422b641f129d8 100644
+index 9ae8fbbb4b7dc..72b2ea8f35428 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
 @@ -946,10 +946,45 @@ static inline void set_canary(struct kmem_cache *s, void *object, unsigned long

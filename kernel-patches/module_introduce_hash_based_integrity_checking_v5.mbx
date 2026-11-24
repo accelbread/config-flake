@@ -96,23 +96,21 @@ Use a more generic name for the variable.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- scripts/Makefile.vmlinux | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ scripts/Makefile.vmlinux | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index fcae1e432d9a..6cc661e5292b 100644
+index 95b523fe4f9e..c7ca23736e9b 100644
 --- a/scripts/Makefile.vmlinux
 +++ b/scripts/Makefile.vmlinux
-@@ -91,13 +91,13 @@ remove-symbols := -w --strip-unneeded-symbol='__mod_device_table__*'
+@@ -89,12 +89,12 @@ remove-section-$(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS) += '.rel.*'
  
- # To avoid warnings: "empty loadable segment detected at ..." from GNU objcopy,
- # it is necessary to remove the PT_LOAD flag from the segment.
+ remove-symbols := -w --strip-unneeded-symbol='__mod_device_table__*'
+ 
 -quiet_cmd_strip_relocs = OBJCOPY $@
--      cmd_strip_relocs = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
--                         $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
+-      cmd_strip_relocs = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $< $@
 +quiet_cmd_objcopy_vmlinux = OBJCOPY $@
-+      cmd_objcopy_vmlinux = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
-+                            $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
++      cmd_objcopy_vmlinux = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $< $@
  
  targets += vmlinux
  vmlinux: vmlinux.unstripped FORCE
@@ -235,10 +233,10 @@ index 071999743341..006ada7d4e6e 100644
  	char *secstrings, *strtab;
  	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
 diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 46dd8d25a605..17a352198016 100644
+index c1b34dc1e89a..3e28abb62a56 100644
 --- a/kernel/module/main.c
 +++ b/kernel/module/main.c
-@@ -1898,7 +1898,7 @@ static int validate_section_offset(const struct load_info *info, Elf_Shdr *shdr)
+@@ -1897,7 +1897,7 @@ static int validate_section_offset(const struct load_info *info, Elf_Shdr *shdr)
  static int elf_validity_ehdr(const struct load_info *info)
  {
  	if (info->len < sizeof(*(info->hdr))) {
@@ -275,7 +273,7 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  create mode 100644 kernel/module/auth.c
 
 diff --git a/crypto/algapi.c b/crypto/algapi.c
-index 37de377719ae..14252b780266 100644
+index a6839e2a20f3..594a825e7b3a 100644
 --- a/crypto/algapi.c
 +++ b/crypto/algapi.c
 @@ -24,8 +24,8 @@ static LIST_HEAD(crypto_template_list);
@@ -290,7 +288,7 @@ index 37de377719ae..14252b780266 100644
  }
  
 diff --git a/include/linux/module.h b/include/linux/module.h
-index 7566815fabbe..b4760777daad 100644
+index 96cc98568eea..67f68ac5fac6 100644
 --- a/include/linux/module.h
 +++ b/include/linux/module.h
 @@ -437,9 +437,9 @@ struct module {
@@ -306,7 +304,7 @@ index 7566815fabbe..b4760777daad 100644
  #endif
  
  	bool async_probe_requested;
-@@ -918,16 +918,16 @@ static inline bool retpoline_module_ok(bool has_retpoline)
+@@ -914,16 +914,16 @@ static inline bool retpoline_module_ok(bool has_retpoline)
  }
  #endif
  
@@ -327,7 +325,7 @@ index 7566815fabbe..b4760777daad 100644
  static inline bool is_module_sig_enforced(void)
  {
  	return false;
-@@ -937,11 +937,11 @@ static inline void set_module_sig_enforced(void)
+@@ -933,11 +933,11 @@ static inline void set_module_sig_enforced(void)
  {
  }
  
@@ -423,10 +421,10 @@ index 006ada7d4e6e..f8f425b167f1 100644
  	unsigned long mod_kallsyms_init_off;
  #endif
 diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 17a352198016..cd8a74df117e 100644
+index 3e28abb62a56..c1e7613f1909 100644
 --- a/kernel/module/main.c
 +++ b/kernel/module/main.c
-@@ -2601,10 +2601,10 @@ static void module_augment_kernel_taints(struct module *mod, struct load_info *i
+@@ -2612,10 +2612,10 @@ static void module_augment_kernel_taints(struct module *mod, struct load_info *i
  				mod->name);
  		add_taint_module(mod, TAINT_TEST, LOCKDEP_STILL_OK);
  	}
@@ -641,11 +639,11 @@ index f8f425b167f1..d923e31a5d8e 100644
  void kmemleak_load_module(const struct module *mod, const struct load_info *info);
  #else /* !CONFIG_DEBUG_KMEMLEAK */
 diff --git a/kernel/module/main.c b/kernel/module/main.c
-index cd8a74df117e..55a010383a8d 100644
+index c1e7613f1909..0e944d010bb0 100644
 --- a/kernel/module/main.c
 +++ b/kernel/module/main.c
-@@ -3428,8 +3428,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	char *after_dashes;
+@@ -3439,8 +3439,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	char *args = NULL, *after_dashes;
  
  	/*
 -	 * Do the signature check (if any) first. All that
@@ -655,7 +653,7 @@ index cd8a74df117e..55a010383a8d 100644
  	 * not need any of the section info. That can be
  	 * set up later. This will minimize the chances
  	 * of a corrupt module causing problems before
-@@ -3439,7 +3439,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+@@ -3450,7 +3450,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
  	 * off the sig length at the end of the module, making
  	 * checks against info->len more correct.
  	 */
@@ -1039,7 +1037,7 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  create mode 100644 scripts/modules-merkle-tree.c
 
 diff --git a/.gitignore b/.gitignore
-index 9875120ea7bd..bac9efc90b78 100644
+index 01e6a1f7a49e..c21f18d3598d 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -36,6 +36,7 @@
@@ -1067,10 +1065,10 @@ index bc1eb82211df..b15019678aae 100644
  
  1. Generate a persistent signing key.  Add the certificate for the key
 diff --git a/Makefile b/Makefile
-index ddcc6dca1ece..4d249a0343e9 100644
+index 28ae92d9d760..54c49e25ac2b 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1689,7 +1689,9 @@ ifdef CONFIG_MODULES
+@@ -1732,7 +1732,9 @@ ifdef CONFIG_MODULES
  
  # By default, build modules as well
  
@@ -1080,7 +1078,7 @@ index ddcc6dca1ece..4d249a0343e9 100644
  
  # When we're building modules with modversions, we need to consider
  # the built-in objects during the descend as well, in order to
-@@ -1705,8 +1707,10 @@ endif
+@@ -1748,8 +1750,10 @@ endif
  # is an exception.
  ifdef CONFIG_DEBUG_INFO_BTF_MODULES
  KBUILD_BUILTIN := y
@@ -1091,7 +1089,7 @@ index ddcc6dca1ece..4d249a0343e9 100644
  
  modules: modules_prepare
  
-@@ -2114,7 +2118,7 @@ modules.order: $(build-dir)
+@@ -2157,7 +2161,7 @@ modules.order: $(build-dir)
  # KBUILD_MODPOST_NOFINAL can be set to skip the final link of modules.
  # This is solely useful to speed up test compiles.
  modules: modpost
@@ -1100,7 +1098,7 @@ index ddcc6dca1ece..4d249a0343e9 100644
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modfinal
  endif
  
-@@ -2208,6 +2212,7 @@ clean: $(clean-dirs)
+@@ -2251,6 +2255,7 @@ clean: $(clean-dirs)
  		-o -name '*.c.[012]*.*' \
  		-o -name '*.ll' \
  		-o -name '*.gcno' \
@@ -1109,7 +1107,7 @@ index ddcc6dca1ece..4d249a0343e9 100644
  		\) -type f -print \
  		-o -name '.tmp_*' -print \
 diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 5659f4b5a125..e157b6e92307 100644
+index 7a3e9f00d628..235cfa280788 100644
 --- a/include/asm-generic/vmlinux.lds.h
 +++ b/include/asm-generic/vmlinux.lds.h
 @@ -508,6 +508,8 @@
@@ -1121,7 +1119,7 @@ index 5659f4b5a125..e157b6e92307 100644
  	/* Kernel symbol table */					\
  	__ksymtab         : AT(ADDR(__ksymtab) - LOAD_OFFSET) {		\
  		__start___ksymtab = .;					\
-@@ -913,6 +915,15 @@
+@@ -921,6 +923,15 @@
  #define PRINTK_INDEX
  #endif
  
@@ -1452,7 +1450,7 @@ index 9ba45e5b32b1..68708a039a62 100644
  $(foreach dir, $(sort $(dir $(install-y))), $(shell mkdir -p $(dir)))
  
 diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index 6cc661e5292b..a0332c06bde1 100644
+index c7ca23736e9b..1134626e0af3 100644
 --- a/scripts/Makefile.vmlinux
 +++ b/scripts/Makefile.vmlinux
 @@ -78,6 +78,33 @@ ifdef CONFIG_BUILDTIME_TABLE_SORT
@@ -1489,9 +1487,9 @@ index 6cc661e5292b..a0332c06bde1 100644
  # vmlinux
  # ---------------------------------------------------------------------------
  
-@@ -95,6 +122,11 @@ quiet_cmd_objcopy_vmlinux = OBJCOPY $@
-       cmd_objcopy_vmlinux = $(OBJCOPY) $(patsubst %,--set-section-flags %=noload,$(remove-section-y)) $< $@; \
-                             $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $@
+@@ -92,6 +119,11 @@ remove-symbols := -w --strip-unneeded-symbol='__mod_device_table__*'
+ quiet_cmd_objcopy_vmlinux = OBJCOPY $@
+       cmd_objcopy_vmlinux = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $(remove-symbols) $< $@
  
 +ifdef CONFIG_MODULE_HASHES
 +# Patch module hashes root into vmlinux after modules have been built.
@@ -1547,7 +1545,7 @@ index cdadb07d0592..8294bc0b836f 100644
 +
  #endif /* XALLOC_H */
 diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index f99e196abeea..0edec5ee34dc 100755
+index ab0b8125c8cb..c030f8e2adbf 100755
 --- a/scripts/link-vmlinux.sh
 +++ b/scripts/link-vmlinux.sh
 @@ -103,7 +103,7 @@ vmlinux_link()
@@ -1558,8 +1556,8 @@ index f99e196abeea..0edec5ee34dc 100755
 +		${kallsymso} ${btf_vmlinux_bin_o} ${module_hashes_o} ${arch_vmlinux_o} ${ldlibs}
  }
  
- # Create ${2}.o file with all symbols from the ${1} object file
-@@ -183,6 +183,7 @@ cleanup()
+ # Check if kallsymso_prev and kallsymso differ
+@@ -196,6 +196,7 @@ cleanup()
  btf_vmlinux_bin_o=
  btfids_vmlinux=
  kallsymso=
@@ -2182,7 +2180,7 @@ Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
  5 files changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/.gitignore b/.gitignore
-index bac9efc90b78..bb363ec15624 100644
+index c21f18d3598d..ea42a21b16fe 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -30,6 +30,7 @@
@@ -2246,7 +2244,7 @@ index b95f613e23c8..fd1fb89bb0bd 100644
  endif
  endif
 diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index a0332c06bde1..a2d170241a2f 100644
+index 1134626e0af3..29861a52a98c 100644
 --- a/scripts/Makefile.vmlinux
 +++ b/scripts/Makefile.vmlinux
 @@ -86,7 +86,7 @@ modules.order: vmlinux.unstripped FORCE
