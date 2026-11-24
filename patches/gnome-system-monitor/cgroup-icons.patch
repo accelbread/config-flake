@@ -1,0 +1,126 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Tue, 24 Nov 2026 00:09:22 -0800
+Subject: [PATCH] Fix application icon lookup from cgroups
+
+System Monitor's cgroup fallback searches application IDs in a cache
+keyed by Exec for native desktop entries. This misses GNOME scope
+applications whose desktop ID differs from Exec, and does not recognize
+D-Bus activation service names. It also compares escaped unit-name IDs
+against unescaped application IDs.
+
+This change tries cgroup identities before executable-name matching,
+decodes escaped IDs, and loads desktop entries by ID for GNOME and D-Bus
+units. Flatpak scopes still use the X-Flatpak cache.
+---
+ src/prettytable.cpp | 75 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 59 insertions(+), 16 deletions(-)
+
+diff --git a/src/prettytable.cpp b/src/prettytable.cpp
+index d300ec5..d9660f9 100644
+--- a/src/prettytable.cpp
++++ b/src/prettytable.cpp
+@@ -9,8 +9,10 @@
+ #include <giomm/error.h>
+ #include <giomm/file.h>
+ #include <glibmm/miscutils.h>
++#include <glibmm/regex.h>
+ 
+ #include <iostream>
++#include <optional>
+ #include <vector>
+ 
+ #include "prettytable.h"
+@@ -173,6 +175,39 @@ PrettyTable::get_icon_from_default (const ProcInfo &info)
+   return icon;
+ }
+ 
++static std::optional<std::string>
++unescape_app_id (const std::string &escaped)
++{
++  std::string unescaped;
++
++  for (size_t pos = 0; pos < escaped.size (); ++pos)
++    {
++      char value = escaped[pos];
++
++      if (value == '\\')
++        {
++          if (pos + 3 >= escaped.size () || escaped[pos + 1] != 'x')
++            return std::nullopt;
++
++          const int high = g_ascii_xdigit_value (escaped[pos + 2]);
++          const int low = g_ascii_xdigit_value (escaped[pos + 3]);
++
++          if (high < 0 || low < 0)
++            return std::nullopt;
++
++          value = static_cast<char> ((high << 4) | low);
++          pos += 3;
++        }
++
++      if (value == '\0')
++        return std::nullopt;
++
++      unescaped += value;
++    }
++
++  return unescaped;
++}
++
+ Glib::RefPtr<Gdk::Texture>
+ PrettyTable::get_icon_from_gio (const ProcInfo &info)
+ {
+@@ -180,28 +215,36 @@ PrettyTable::get_icon_from_gio (const ProcInfo &info)
+   Glib::RefPtr<Gio::Icon> gicon;
+   Glib::RefPtr<Gtk::IconTheme> icon_theme;
+   Glib::RefPtr<Gtk::IconPaintable> icon_paintable;
+-  const auto executable = info.name.substr (0, info.name.find (' '));
++  static const auto app_cgroup = Glib::Regex::create (
++    "^(?|app-(flatpak|gnome)-(.+)-[^-]+\\.scope|"
++    "(dbus)-:[0-9]+\\.[0-9]+-(.+)@[0-9]+\\.service)$");
++  const Glib::ustring cgroup = Glib::path_get_basename (info.cgroup_name);
++  Glib::MatchInfo match;
++  Glib::RefPtr<Gio::AppInfo> app;
+ 
+-  Glib::RefPtr<Gio::AppInfo> app = this->gio_apps[executable];
++  if (app_cgroup->match (cgroup, match))
++    {
++      const auto type = match.fetch (1);
++      const auto app_id = unescape_app_id (match.fetch (2));
++
++      if (app_id)
++        {
++          if (type == "flatpak")
++            app = this->gio_apps[*app_id];
++          else
++            app = Gio::DesktopAppInfo::create (*app_id + ".desktop");
++        }
++    }
+ 
+   if (!app)
+     {
+-      std::string flatpak;
+-      size_t last_dash, second_last_dash;
+-
+-      // Extract flatpak id from cgroup_name
+-      flatpak = info.cgroup_name.c_str ();
+-      flatpak = flatpak.substr (flatpak.find_last_of ('/') + 1);
+-      last_dash = flatpak.find_last_of ('-');
+-      second_last_dash = flatpak.find_last_of ('-', flatpak.find_last_of ('-') - 1);
+-      flatpak = flatpak.substr (second_last_dash + 1, last_dash - second_last_dash - 1);
+-
+-      app = this->gio_apps[flatpak];
+-
+-      if (!app)
+-        return icon;
++      const auto executable = info.name.substr (0, info.name.find (' '));
++      app = this->gio_apps[executable];
+     }
+ 
++  if (!app)
++    return icon;
++
+   gicon = app->get_icon ();
+   if (!gicon)
+     return icon;
