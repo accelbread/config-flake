@@ -90,6 +90,23 @@ prev.lib.composeManyExtensions [
     mutter = prev.mutter.overrideAttrs (old: {
       mesonFlags = old.mesonFlags ++ [ "-Dxwayland=false" ];
     });
+    gnome-shell = prev.gnome-shell.overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace src/main.c js/misc/util.js \
+          --replace-fail '@appLauncher@' "$out/lib/gnome-shell/gnome-shell-app-launcher"
+        substituteInPlace js/misc/util.js \
+          --replace-fail '@env@' '${final.coreutils}/bin/env'
+      '';
+      postInstall = (old.postInstall or "") + ''
+        mkdir -p "$out/lib/gnome-shell"
+        $CC -Wall -Wextra -Werror \
+          -DSYSTEMD_RUN='"${final.systemd}/bin/systemd-run"' \
+          -DGIO_LAUNCH_DESKTOP='"${final.glib.out}/libexec/gio-launch-desktop"' \
+          ${./misc/gnome-shell-app-launcher.c} \
+          $(pkg-config --cflags --libs gio-unix-2.0) \
+          -o "$out/lib/gnome-shell/gnome-shell-app-launcher"
+      '';
+    });
     gnome-settings-daemon = prev.gnome-settings-daemon.overrideAttrs (old: {
       mesonFlags = old.mesonFlags ++ [ "-Dxwayland=false" ];
     });

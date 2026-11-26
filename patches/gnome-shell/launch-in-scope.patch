@@ -1,0 +1,129 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Archit Gupta <archit@accelbread.com>
+Date: Thu, 26 Nov 2026 00:20:18 -0800
+Subject: [PATCH] Launch applications inside systemd scopes
+
+Creating scopes after launch races with applications that fork or create
+their own scopes. Use a launcher to enter the scope before executing
+desktop applications and direct commands.
+---
+ js/misc/util.js    | 13 ++++++++-----
+ src/main.c         |  2 ++
+ src/shell-global.c | 38 ++------------------------------------
+ 3 files changed, 12 insertions(+), 41 deletions(-)
+
+diff --git a/js/misc/util.js b/js/misc/util.js
+index 6e61457..d4f397d 100644
+--- a/js/misc/util.js
++++ b/js/misc/util.js
+@@ -3,7 +3,6 @@ import GLib from 'gi://GLib';
+ import Pango from 'gi://Pango';
+ import Shell from 'gi://Shell';
+ import St from 'gi://St';
+-import GnomeDesktop from 'gi://GnomeDesktop';
+ 
+ import {formatTime} from './dateUtils.js';
+ 
+@@ -120,8 +119,15 @@ export function trySpawn(argv) {
+     let pid;
+     try {
+         const launchContext = global.create_app_launch_context(0, -1);
++        // The run dialog tries a file or URI when command lookup fails.
++        const program = GLib.find_program_in_path(argv[0]);
++        if (!program)
++            throw new GLib.SpawnError({code: GLib.SpawnError.NOENT, message: argv[0]});
++
++        const command = ['@appLauncher@', '--command', argv[0],
++            '@env@', '--argv0', argv[0], '--', program, ...argv.slice(1)];
+         pid = Shell.util_spawn_async(
+-            null, argv, launchContext.get_environment(),
++            null, command, launchContext.get_environment(),
+             GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD);
+     } catch (err) {
+         /* Rewrite the error in case of ENOENT */
+@@ -143,9 +149,6 @@ export function trySpawn(argv) {
+         }
+     }
+ 
+-    // Async call, we don't need the reply though
+-    GnomeDesktop.start_systemd_scope(argv[0], pid, null, null, null, () => {});
+-
+     // Dummy child watch; we don't want to double-fork internally
+     // because then we lose the parent-child relationship, which
+     // can break polkit.  See https://bugzilla.redhat.com//show_bug.cgi?id=819275
+diff --git a/src/main.c b/src/main.c
+index f64b18d..9a5253e 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -611,6 +611,8 @@ main (int argc, char **argv)
+   g_setenv ("GJS_DEBUG_OUTPUT", "stderr", TRUE);
+   g_setenv ("GJS_DEBUG_TOPICS", "JS ERROR;JS LOG", TRUE);
+ 
++  g_setenv ("GIO_LAUNCH_DESKTOP", "@appLauncher@", TRUE);
++
+   main_thread = g_thread_self ();
+ 
+   context = meta_create_context (WM_NAME);
+diff --git a/src/shell-global.c b/src/shell-global.c
+index eb16266..1bd4acc 100644
+--- a/src/shell-global.c
++++ b/src/shell-global.c
+@@ -31,9 +31,6 @@
+ #include <meta/meta-x11-display.h>
+ #endif
+ 
+-#define GNOME_DESKTOP_USE_UNSTABLE_API
+-#include <libgnome-desktop/gnome-systemd.h>
+-
+ #if defined __OpenBSD__ || defined __FreeBSD__
+ #include <sys/sysctl.h>
+ #endif
+@@ -1172,35 +1169,6 @@ shell_global_get_current_time (ShellGlobal *global)
+   return clutter_get_current_event_time ();
+ }
+ 
+-static void
+-shell_global_app_launched_cb (GAppLaunchContext *context,
+-                              GAppInfo          *info,
+-                              GVariant          *platform_data,
+-                              gpointer           user_data)
+-{
+-  gint32 pid;
+-  const gchar *app_name;
+-
+-  if (!g_variant_lookup (platform_data, "pid", "i", &pid))
+-    return;
+-
+-  /* If pid == 0 the application was launched through D-Bus
+-   * activation, therefore it's already in its own unit */
+-  if (pid == 0)
+-    return;
+-
+-  app_name = g_app_info_get_id (info);
+-  if (app_name == NULL)
+-    app_name = g_app_info_get_executable (info);
+-
+-  /* Start async request; we don't care about the result */
+-  gnome_start_systemd_scope (app_name,
+-                             pid,
+-                             NULL,
+-                             NULL,
+-                             NULL, NULL, NULL);
+-}
+-
+ /**
+  * shell_global_create_app_launch_context:
+  * @global: A #ShellGlobal
+@@ -1235,10 +1203,8 @@ shell_global_create_app_launch_context (ShellGlobal *global,
+       meta_launch_context_set_workspace (context, ws);
+     }
+ 
+-  g_signal_connect (context,
+-                    "launched",
+-                    G_CALLBACK (shell_global_app_launched_cb),
+-                    NULL);
++  /* GIO reads the launcher from Shell's environment. Keep it out of the child's. */
++  g_app_launch_context_unsetenv (G_APP_LAUNCH_CONTEXT (context), "GIO_LAUNCH_DESKTOP");
+ 
+   return (GAppLaunchContext *) context;
+ }
