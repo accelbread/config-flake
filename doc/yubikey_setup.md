@@ -15,10 +15,6 @@ ykman piv keys generate \
   -a ECCP384 --pin-policy always --touch-policy always 82 key.pub
 ykman piv certificates generate \
   -a sha512 -d 365 -s "ssh key" 82 key.pub
-ykman piv keys generate \
-  -a RSA2048 --pin-policy always --touch-policy always 83 key.pub
-ykman piv certificates generate \
-  -a sha512 -d 365 -s "ssh key" 83 key.pub
 ssh-keygen -D /etc/profiles/per-user/archit/lib/libykcs11.so
 ```
 
